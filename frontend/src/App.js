@@ -5,9 +5,16 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Input from '@material-ui/core/Input';
 import Fab from '@material-ui/core/Fab';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+
 import Comm from './Comm';
 
 import CheckIcon from '@material-ui/icons/DoneOutlined';
+import ErrorIcon from '@material-ui/icons/Cancel';
 
 const NARROW_WIDTH = 500;
 
@@ -58,7 +65,7 @@ class App extends Component {
             url: window.localStorage.getItem('url') || '',
             requesting: false,
             error: '',
-            result: '',
+            result: [],
             screenWidth: window.innerWidth,
         };
 
@@ -82,21 +89,37 @@ class App extends Component {
         if (url.match(/\/$/, '')) {
             url = url.substring(0, url.length - 1);
         }
-        this.setState({error: '', result: '', requesting: true});
+        this.setState({error: '', result: [], requesting: true});
         Comm.check(url, (err, data) => {
-            if (err) {
-                this.setState({error: err, result: '', requesting: false});
+            if (err || (data && data.error)) {
+                this.setState({error: err || data.error, result: data ? data.checks || [] : [], requesting: false});
             } else {
-                this.setState({error: '', result: data.result, requesting: false});
+                this.setState({error: '', result: data.checks, requesting: false});
             }
         });
     }
 
     renderResult() {
-        return (<p className={this.props.classes.ok}>{this.state.result}</p>);
+        return (
+            <List component="nav">
+                {this.state.result.map((line, i) => (<ListItem>
+                    <ListItemIcon>
+                        <CheckIcon className={this.props.classes.ok} />
+                    </ListItemIcon>
+                    <ListItemText primary={line} secondary={i + 1}/>
+                </ListItem>))}
+            </List>);
     }
     renderError() {
-        return (<p className={this.props.classes.error}>{this.state.error}</p>);
+        return (
+            <List component="nav">
+                <ListItem>
+                    <ListItemIcon>
+                        <ErrorIcon className={this.props.classes.error} />
+                    </ListItemIcon>
+                    <ListItemText className={this.props.classes.error} primary={this.state.error} secondary="Error"/>
+                </ListItem>
+            </List>);
     }
     render() {
         return (
@@ -126,8 +149,8 @@ class App extends Component {
                     </Toolbar>
                 </AppBar>
                 <div className={this.props.classes.info}>
-                    {this.state.result ? this.renderResult() : null}
                     {this.state.error ? this.renderError() : null}
+                    {this.state.result ? this.renderResult() : null}
                 </div>
             </div>
         );
