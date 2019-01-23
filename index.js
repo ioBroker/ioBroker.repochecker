@@ -14,10 +14,10 @@ let request;
 if (typeof require !== 'undefined') {
     request = function (url, cb) {
         const https = require('https');
-        https.get(url, (resp) => {
+        https.get(url, resp => {
             let data = '';
             resp.on('data', chunk => data += chunk);
-            resp.on('end', () => cb(null, {statusCode: 200}, data));
+            resp.on('end', () => cb(null, {statusCode: resp.statusCode, headers: resp.headers}, data));
             resp.on('error', () => err => cb(err));
         }).on('error', err => cb(err));
     }
@@ -697,7 +697,7 @@ function checkIOPackageJson(context) {
                 .then(() => {
                     context.checks.push('"extIcon" could be downloaded');
                     if (!context.ioPackageJson.onlyWWW) {
-                        return downloadFile(context.githubUrl, context.packageJson.main)
+                        return downloadFile(context.githubUrl, '/' + context.packageJson.main)
                             .then(() => {
                                 context.checks.push(context.packageJson.main + ' could be downloaded');
                                 resolve(context);
@@ -730,7 +730,7 @@ function checkNpm(context) {
                 if (m[1].indexOf('title="bluefox"') === -1 && m[1].indexOf('title="iobluefox"') === -1) {
                     return reject('Bluefox is not in the collaborators!. Please add.');
                 }
-                context.checks.push('Bluefox found in colloborators');
+                context.checks.push('Bluefox found in collaborators');
             } else {
                 return reject('Bluefox is not in the collaborators!. Please add.');
             }
@@ -738,6 +738,41 @@ function checkNpm(context) {
         });
     });
 }
+
+function checkTravis(context) {
+    return new Promise((resolve, reject) => {
+        let travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
+
+        request(travisURL, (err, status, body) => {
+            if (!status) {
+                return reject('Not found on travis. Please setup travis');
+            }
+            if (!status.headers || !status.headers['content-disposition']){
+                return reject('Not found on travis. Please setup travis');
+            }
+            // inline; filename="passing.png"
+            const m = status.headers['content-disposition'].match(/filename="(.+)"$/);
+            if (!m) {
+                return reject('Not found on travis. Please setup travis');
+            }
+
+            if (m[1] === 'unknown.png') {
+                return reject('Not found on travis. Please setup travis');
+            }
+
+            context.checks.push('Found on travis-ci');
+
+            if (m[1] !== 'passing.png') {
+                return reject('Tests on Travis-ci.org are broken. Please fix.');
+            }
+            context.checks.push('Tests are OK on travis-ci');
+
+            resolve(context);
+        });
+    });
+}
+
+
 function makeResponse(code, data, headers) {
     return {
         statusCode: code || 200,
@@ -761,6 +796,7 @@ function check(request, context, callback) {
                 return checkIOPackageJson(context)
             })
             .then(context => checkNpm(context))
+            .then(context => checkTravis(context))
             .then(context => {
                 console.log('OK');
                 return callback(null, makeResponse(200, {result: 'OK', checks: context.checks}));
@@ -775,10 +811,10 @@ function check(request, context, callback) {
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
-    /*check({queryStringParameters: {
+    check({queryStringParameters: {
         url: 'https://github.com/ioBroker/ioBroker.admin'
     }}, null, (err, data) => {
         console.log(JSON.stringify(data, null, 2));
-    });*/
+    });
 }
 
