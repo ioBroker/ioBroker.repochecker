@@ -69,6 +69,17 @@ class App extends Component {
             screenWidth: window.innerWidth,
         };
 
+        if (window.document.location.search) {
+            const query = window.document.location.search.replace(/^\?/, '');
+            const pairs = query.split('&');
+            pairs.forEach(pair => {
+                const parts = pair.split('=');
+                if (parts[0] === 'q' && parts[1]) {
+                    this.state.url = decodeURIComponent(parts[1]);
+                }
+            });
+        }
+
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 

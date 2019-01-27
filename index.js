@@ -55,6 +55,9 @@ function downloadFile(githubUrl, path) {
 // check package.json
 function checkPackageJson(githubUrl, context) {
     context = context || {checks: []};
+
+    githubUrl = githubUrl.replace('https://raw.githubusercontent.com/', 'https://github.com/');
+
     if (githubUrl.match(/\/$/)) {
         githubUrl = githubUrl.substring(0, githubUrl.length - 1);
     }
