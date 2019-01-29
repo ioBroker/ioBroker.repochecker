@@ -121,6 +121,13 @@ function checkPackageJson(githubUrl, context) {
                 context.checks.push('No invalid characters found in "' + adapterName + '"');
             }
 
+            const n = githubUrl.match(/\/([^\/]+)\/iobroker\./i);
+            if (!n || !n[1]) {
+                context.errors.push('Cannot find author repo in the URL');
+            } else {
+                context.authorName = n[1];
+            }
+
             if (githubUrl.indexOf('/iobroker.') !== -1) {
                 context.errors.push('Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
             } else {
@@ -853,14 +860,17 @@ function checkRepo(context) {
     return new Promise(resolve => {
         if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.type) {
             // download latest repo
-            request('https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist.json', (err, status, body) => {
+            request('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json', (err, status, body) => {
+                err && console.error(err);
+
                 if (!body) {
-                    context.errors.push('Cannot download https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist.json');
+                    context.errors.push('Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json');
                 } else {
                     try {
                         body = JSON.parse(body);
                     } catch (e) {
-                        context.errors.push('Cannot parse https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist.json');
+                        console.error('Cannot parse sources-dist.json: ' + body);
+                        context.errors.push('Cannot parse sources-dist.json');
                         body = null;
                     }
 
@@ -874,27 +884,54 @@ function checkRepo(context) {
                             if (context.latestRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
                                 context.errors.push('Types of adapter in latest repository and in io-package.json are different "' + context.latestRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
                             } else {
-                                context.checks.push('Types of adapter in latest repository and in io-package.json are equal: ' + context.latestRepo[context.adapterName].type);
+                                context.checks.push('Types of adapter in latest repository and in io-package.json are equal: "' + context.latestRepo[context.adapterName].type + '"');
                             }
 
-                            if (context.stableRepo[context.adapterName].version) {
+                            if (context.latestRepo[context.adapterName].version) {
                                 context.errors.push('Version set in latest repository');
                             } else {
                                 context.checks.push('Version does not set in latest repository');
+                            }
+
+                            const url = 'https://raw.githubusercontent.com/' + context.authorName + '/ioBroker.' + context.adapterName + '/master/';
+
+                            if (!context.latestRepo[context.adapterName].icon) {
+                                context.errors.push('Icon does not found in latest repository');
+                            } else {
+                                context.checks.push('Icon found in latest repository');
+
+                                if (!context.latestRepo[context.adapterName].icon.startsWith(url)) {
+                                    context.errors.push('Icon must be in the following path: '  + url);
+                                } else {
+                                    context.checks.push('Icon found in latest repository');
+                                }
+                            }
+                            if (!context.latestRepo[context.adapterName].meta) {
+                                context.errors.push('Meta URL(latest) not found in latest repository');
+                            } else {
+                                context.checks.push('Meta URL(latest) found in latest repository');
+
+                                if (context.latestRepo[context.adapterName].meta !== url + 'io-package.json') {
+                                    context.errors.push('Meta URL(latest) must be equal to '  + url + 'io-package.json');
+                                } else {
+                                    context.checks.push('Meta URL(latest) is OK in latest repository');
+                                }
                             }
                         }
                     }
                 }
 
                 // download stable repo
-                request('https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist-stable.json', (err, status, body) => {
+                request('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json', (err, status, body) => {
+                    err && console.error(err);
                     if (!body) {
-                        context.errors.push('Cannot download https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist-stable.json');
+                        context.errors.push('Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json');
                     } else {
                         try {
                             body = JSON.parse(body);
                         } catch (e) {
-                            context.errors.push('Cannot parse https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist-stable.json');
+                            console.error('Cannot parse sources-dist.json: ' + body);
+                            context.errors.push('Cannot parse sources-dist-stable.json');
                             body = null;
                         }
 
@@ -904,7 +941,7 @@ function checkRepo(context) {
                                 if (context.stableRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
                                     context.errors.push('Types of adapter in stable repository and in io-package.json are different "' + context.stableRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
                                 } else {
-                                    context.checks.push('Types of adapter in stable repository and in io-package.json are equal: "' + context.stableRepo[context.adapterName].type);
+                                    context.checks.push('Types of adapter in stable repository and in io-package.json are equal: "' + context.stableRepo[context.adapterName].type + '"');
                                 }
 
                                 if (!context.latestRepo[context.adapterName]) {
@@ -917,6 +954,30 @@ function checkRepo(context) {
                                     context.errors.push('No version set in stable repository');
                                 } else {
                                     context.checks.push('Version found in stable repository');
+                                }
+                                const url = 'https://raw.githubusercontent.com/' + context.authorName + '/ioBroker.' + context.adapterName + '/master/';
+
+                                if (!context.stableRepo[context.adapterName].icon) {
+                                    context.errors.push('Icon does not found in stable repository');
+                                } else {
+                                    context.checks.push('Icon found in stable repository');
+
+                                    if (!context.stableRepo[context.adapterName].icon.startsWith(url)) {
+                                        context.errors.push('Icon(stable) must be in the following path: '  + url);
+                                    } else {
+                                        context.checks.push('Icon(stable) found in latest repository');
+                                    }
+                                }
+                                if (!context.stableRepo[context.adapterName].meta) {
+                                    context.errors.push('Meta URL(stable) not found in latest repository');
+                                } else {
+                                    context.checks.push('Meta URL(stable) found in latest repository');
+
+                                    if (context.stableRepo[context.adapterName].meta !== url + 'io-package.json') {
+                                        context.errors.push('Meta URL(stable)  must be equal to '  + url + 'io-package.json');
+                                    } else {
+                                        context.checks.push('Meta URL(stable) is OK in latest repository');
+                                    }
                                 }
                             }
                         }

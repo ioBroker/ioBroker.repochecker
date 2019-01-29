@@ -10,7 +10,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Comm from './Comm';
 
@@ -168,14 +168,18 @@ class App extends Component {
                                 this.setState({url: e.target.value});
                             }}
                         />
-                        <Fab className={this.props.classes.buttonCheck} size="small" color="secondary" disabled={!this.state.url || this.state.requesting} onClick={() => this.onCheck()} aria-label="Check"><CheckIcon /></Fab>
+                        {
+                            this.state.requesting ?
+                                (<CircularProgress className={this.props.classes.buttonCheck} color="secondary" />) :
+                                (<Fab className={this.props.classes.buttonCheck} size="small" color="secondary" disabled={!this.state.url} onClick={() => this.onCheck()} aria-label="Check"><CheckIcon /></Fab>)
+                        }
                     </Toolbar>
                 </AppBar>
                 <div className={this.props.classes.info}>
                     {this.state.result.length ? [
-                        (<Button color="primary" onClick={() => this.onOpen('')}>github.com</Button>),
-                        (<Button color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>),
-                        (<Button color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>)
+                        (<Button key="github" color="primary" onClick={() => this.onOpen('')}>github.com</Button>),
+                        (<Button key="package.json" color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>),
+                        (<Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>)
                     ] : null}
                     {this.state.errors ? this.renderError() : null}
                     {this.state.result ? this.renderResult() : null}
