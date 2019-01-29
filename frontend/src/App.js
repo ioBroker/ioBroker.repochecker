@@ -16,6 +16,7 @@ import Comm from './Comm';
 
 import CheckIcon from '@material-ui/icons/DoneOutlined';
 import ErrorIcon from '@material-ui/icons/Cancel';
+import WarningIcon from '@material-ui/icons/Announcement';
 
 const NARROW_WIDTH = 500;
 
@@ -57,6 +58,9 @@ const styles = theme => ({
     error: {
         color: '#bf0000'
     },
+    warning: {
+        color: '#bf9100'
+    },
 });
 
 class App extends Component {
@@ -66,6 +70,7 @@ class App extends Component {
             url: window.localStorage.getItem('url') || '',
             requesting: false,
             errors: [],
+            warnings: [],
             result: [],
             screenWidth: window.innerWidth,
         };
@@ -104,12 +109,22 @@ class App extends Component {
         if (url.match(/\/$/, '')) {
             url = url.substring(0, url.length - 1);
         }
-        this.setState({errors: [], result: [], requesting: true});
+        this.setState({errors: [], result: [], warnings:[], requesting: true});
         Comm.check(url, (err, data) => {
             if (err) {
-                this.setState({errors: [err], result: (data && data.checks) || [], requesting: false});
+                this.setState({
+                    errors: [err],
+                    warnings: (data && data.warnings) || [],
+                    result: (data && data.checks) || [],
+                    requesting: false
+                });
             } else {
-                this.setState({errors: data.errors, result: data.checks, requesting: false});
+                this.setState({
+                    errors: data.errors || [],
+                    warnings: data.warnings || [],
+                    result: data.checks || [],
+                    requesting: false
+                });
             }
         });
     }
@@ -133,6 +148,18 @@ class App extends Component {
                         <ErrorIcon className={this.props.classes.error} />
                     </ListItemIcon>
                     <ListItemText className={this.props.classes.error} primary={line} secondary={i + 1}/>
+                </ListItem>))}
+            </List>);
+    }
+
+    renderWarnings() {
+        return (
+            <List component="nav">
+                {this.state.warnings.map((line, i) => (<ListItem>
+                    <ListItemIcon>
+                        <WarningIcon className={this.props.classes.warning} />
+                    </ListItemIcon>
+                    <ListItemText className={this.props.classes.warning} primary={line} secondary={i + 1}/>
                 </ListItem>))}
             </List>);
     }
@@ -182,6 +209,7 @@ class App extends Component {
                         (<Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>)
                     ] : null}
                     {this.state.errors ? this.renderError() : null}
+                    {this.state.warnings ? this.renderWarnings() : null}
                     {this.state.result ? this.renderResult() : null}
                 </div>
             </div>

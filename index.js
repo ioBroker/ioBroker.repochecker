@@ -54,7 +54,7 @@ function downloadFile(githubUrl, path) {
 
 // check package.json
 function checkPackageJson(githubUrl, context) {
-    context = context || {checks: [], errors: []};
+    context = context || {checks: [], errors: [], warnings: []};
 
     githubUrl = githubUrl.replace('https://raw.githubusercontent.com/', 'https://github.com/');
 
@@ -694,7 +694,7 @@ function checkIOPackageJson(context) {
                 }
 
                 if (!context.ioPackageJson.common.compact && !context.ioPackageJson.common.onlyWWW) {
-                    context.errors.push('Adapter should support compact mode');
+                    context.warnings.push('Adapter should support compact mode');
                 } else
                 if (!context.ioPackageJson.common.onlyWWW) {
                     context.checks.push('"common.compact" found in io-package.json');
@@ -877,7 +877,7 @@ function checkRepo(context) {
                     if (body) {
                         context.latestRepo = body;
                         if (!context.latestRepo[context.adapterName]) {
-                            context.errors.push('Cannot find "' + context.adapterName + '" in latest repository');
+                            context.warnings.push('Cannot find "' + context.adapterName + '" in latest repository');
                         } else {
                             context.checks.push('Adapter found in latest repository');
 
