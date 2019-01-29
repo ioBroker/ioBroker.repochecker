@@ -9,6 +9,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
 
 
 import Comm from './Comm';
@@ -64,7 +65,7 @@ class App extends Component {
         this.state = {
             url: window.localStorage.getItem('url') || '',
             requesting: false,
-            error: '',
+            errors: [],
             result: [],
             screenWidth: window.innerWidth,
         };
@@ -78,6 +79,9 @@ class App extends Component {
                     this.state.url = decodeURIComponent(parts[1]);
                 }
             });
+            setTimeout(() => {
+                this.onCheck();
+            }, 500);
         }
 
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -100,12 +104,12 @@ class App extends Component {
         if (url.match(/\/$/, '')) {
             url = url.substring(0, url.length - 1);
         }
-        this.setState({error: '', result: [], requesting: true});
+        this.setState({errors: [], result: [], requesting: true});
         Comm.check(url, (err, data) => {
-            if (err || (data && data.error)) {
-                this.setState({error: err || data.error, result: data ? data.checks || [] : [], requesting: false});
+            if (err) {
+                this.setState({errors: [err], result: (data && data.checks) || [], requesting: false});
             } else {
-                this.setState({error: '', result: data.checks, requesting: false});
+                this.setState({errors: data.errors, result: data.checks, requesting: false});
             }
         });
     }
@@ -124,14 +128,22 @@ class App extends Component {
     renderError() {
         return (
             <List component="nav">
-                <ListItem>
+                {this.state.errors.map((line, i) => (<ListItem>
                     <ListItemIcon>
                         <ErrorIcon className={this.props.classes.error} />
                     </ListItemIcon>
-                    <ListItemText className={this.props.classes.error} primary={this.state.error} secondary="Error"/>
-                </ListItem>
+                    <ListItemText className={this.props.classes.error} primary={line} secondary={i + 1}/>
+                </ListItem>))}
             </List>);
     }
+
+    onOpen(path) {
+        let url = this.state.url.replace('https://raw.githubusercontent.com/', 'https://github.com/');
+        url = url.replace(/\/$/, '') + path;
+        const win = window.open(url, '_blank');
+        win.focus();
+    }
+
     render() {
         return (
             <div className={this.props.classes.body}>
@@ -160,7 +172,12 @@ class App extends Component {
                     </Toolbar>
                 </AppBar>
                 <div className={this.props.classes.info}>
-                    {this.state.error ? this.renderError() : null}
+                    {this.state.result.length ? [
+                        (<Button color="primary" onClick={() => this.onOpen('')}>github.com</Button>),
+                        (<Button color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>),
+                        (<Button color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>)
+                    ] : null}
+                    {this.state.errors ? this.renderError() : null}
                     {this.state.result ? this.renderResult() : null}
                 </div>
             </div>

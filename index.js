@@ -54,7 +54,7 @@ function downloadFile(githubUrl, path) {
 
 // check package.json
 function checkPackageJson(githubUrl, context) {
-    context = context || {checks: []};
+    context = context || {checks: [], errors: []};
 
     githubUrl = githubUrl.replace('https://raw.githubusercontent.com/', 'https://github.com/');
 
@@ -64,6 +64,7 @@ function checkPackageJson(githubUrl, context) {
     context.githubUrlOriginal = githubUrl;
     githubUrl = githubUrl.replace('https://github.com', 'https://raw.githubusercontent.com');
     githubUrl = githubUrl + '/master';
+    console.log('Original URL: ' + context.githubUrlOriginal + ', raw: ' + githubUrl);
     context.githubUrl = githubUrl;
     return new Promise((resolve, reject) => {
         if (context.packageJson) {
@@ -74,97 +75,130 @@ function checkPackageJson(githubUrl, context) {
                 .catch(e => reject(e));
         }
     }).then(packageJson => {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             context.packageJson = packageJson;
             if (typeof context.packageJson === 'string') {
                 try {
                     context.packageJson = JSON.parse(context.packageJson);
                 } catch (e) {
-                    return reject('Cannot parse packet.json: ' + e);
+                    context.errors.push('Cannot parse packet.json: ' + e);
+                    return resolve(context);
                 }
             }
 
             if (!githubUrl.match(/\/iobroker\./i)) {
-                return reject('No "ioBroker." found in the name of repository');
+                context.errors.push('No "ioBroker." found in the name of repository');
+            } else {
+                context.checks.push('"ioBroker" was found in the name of repository');
             }
-            context.checks.push('"ioBroker" was found in the name of repository');
 
             if (githubUrl.indexOf('/iobroker.') !== -1) {
-                return reject('Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
+                context.errors.push('Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
+            } else {
+                context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
             }
-            context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
 
             const m = githubUrl.match(/\/ioBroker\.(.*)$/);
+            let adapterName = '';
             if (!m || !m[1]) {
-                return reject('No adapter name found in URL: ' + githubUrl);
+                context.errors.push('No adapter name found in URL: ' + githubUrl);
+            } else {
+                context.checks.push('Adapter name found in the URL');
+                adapterName = m[1].replace(/\/master$/, '');
             }
-            context.checks.push('Adapter name found in the URL');
-
-            const adapterName = m[1].replace(/\/master$/, '');
 
             context.adapterName = adapterName;
 
             if (adapterName.match(/[A-Z]/)) {
-                return reject('Adapter name must be lowercase');
+                context.errors.push('Adapter name must be lowercase');
+            } else {
+                context.checks.push('Adapter name is lowercase');
             }
-            context.checks.push('Adapter name is lowercase');
 
             if (adapterName.match(/[^-_a-z0-9]/)) {
-                return reject('Invalid characters found in adapter name "' + adapterName + '". Only lowercase chars, "-" and "_" are allowed');
+                context.errors.push('Invalid characters found in adapter name "' + adapterName + '". Only lowercase chars, "-" and "_" are allowed');
+            } else {
+                context.checks.push('No invalid characters found in "' + adapterName + '"');
             }
-            context.checks.push('No invalid characters found in "' + adapterName + '"');
 
             if (githubUrl.indexOf('/iobroker.') !== -1) {
-                return reject('Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
+                context.errors.push('Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
+            } else {
+                context.checks.push('Repository URL has name  ioBroker.' + adapterName + ' and not iobroker.' + adapterName);
             }
-            context.checks.push('Repository URL has name  ioBroker.' + adapterName + ' and not iobroker.' + adapterName);
 
             if (context.packageJson.name !== 'iobroker.' + adapterName) {
-                return reject('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName + '". Now is "' + packageJson.name + '"');
+                context.errors.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName + '". Now is "' + packageJson.name + '"');
+            } else {
+                context.checks.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName + '".');
             }
-            context.checks.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName + '".');
 
             if (!context.packageJson.version) {
-                return reject('No version found in the package.json');
+                context.errors.push('No version found in the package.json');
+            } else {
+                context.checks.push('Version found in package.json');
             }
-            context.checks.push('Version found in package.json');
 
             if (!context.packageJson.description) {
-                return reject('No description found in the package.json');
+                context.errors.push('No description found in the package.json');
+            } else {
+                context.checks.push('Description found in package.json');
             }
-            context.checks.push('Description found in package.json');
 
             if (!context.packageJson.license) {
-                return reject('No license found in the package.json');
+                context.errors.push('No license found in the package.json');
+            } else {
+                context.checks.push('License found in package.json');
             }
-            context.checks.push('License found in package.json');
 
             if (!context.packageJson.main) {
-                return reject('No main found in the package.json');
+                context.errors.push('No main found in the package.json');
+            } else {
+                context.checks.push('"main" found in package.json');
             }
-            context.checks.push('"main" found in package.json');
-
-            // todo check if the main.js exists
 
             if (!context.packageJson.author) {
-                return reject('No author found in the package.json');
+                context.errors.push('No author found in the package.json');
+            } else {
+                context.checks.push('Author found in package.json');
             }
-            context.checks.push('Author found in package.json');
+
+            if (context.packageJson._args) {
+                context.errors.push('NPM information found in package.json. Please remove all attributes starting with "_"');
+            } else {
+                context.checks.push('No npm generated attributes found in package.json');
+            }
+
+            if (!context.packageJson.license) {
+                context.errors.push('No license found in package.json');
+            } else {
+                context.checks.push('"license" found in package.json');
+
+                // check if license valid
+                if (licenses.indexOf(context.packageJson.license) === -1) {
+                    context.errors.push('No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/');
+                } else {
+                    context.checks.push('"license" is valid in package.json');
+                }
+            }
 
             if (!context.packageJson.repository) {
-                return reject('No repository found in the package.json');
-            }
-            context.checks.push('Repository found in package.json');
+                context.errors.push('No repository found in the package.json');
+            } else {
+                context.checks.push('Repository found in package.json');
 
-            if (context.packageJson.repository.type !== 'git') {
-                return reject('Invalid repository type: ' + context.packageJson.repository.type + '. It should be git');
-            }
-            context.checks.push('Repository type is valid: git');
+                if (context.packageJson.repository.type !== 'git') {
+                    context.errors.push('Invalid repository type: ' + context.packageJson.repository.type + '. It should be git');
+                } else {
+                    context.checks.push('Repository type is valid: git');
+                }
 
-            if (context.packageJson.repository.url.indexOf(context.githubUrlOriginal) === -1) {
-                return reject('Invalid repository URL: ' + context.packageJson.repository.url + '. Expected: ' + githubUrl);
+                if (context.packageJson.repository.url.indexOf(context.githubUrlOriginal) === -1) {
+                    context.errors.push('Invalid repository URL: ' + context.packageJson.repository.url + '. Expected: git+' + context.githubUrlOriginal + '.git');
+                } else {
+                    context.checks.push('Repository URL is valid in package.json');
+                }
             }
-            context.checks.push('Repository URL is valid in package.json');
 
             resolve(context);
         });
@@ -568,162 +602,196 @@ function checkIOPackageJson(context) {
                 .catch(e => reject(e));
         }
     }).then(ioPackageJson => {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             context.ioPackageJson = ioPackageJson;
             if (typeof context.ioPackageJson === 'string') {
                 try {
                     context.ioPackageJson = JSON.parse(context.ioPackageJson);
                 } catch (e) {
-                    return reject('Cannot parse io-package.json: ' + e);
+                    context.errors.push('Cannot parse io-package.json: ' + e);
+                    return resolve(context);
                 }
             }
 
-            if (!context.ioPackageJson.common) {
-                return reject('io-package.json must have common object');
-            }
-            context.checks.push('"common" found in io-package.json');
-
-            if (context.ioPackageJson.common.name !== context.adapterName) {
-                return reject('common.name in io-package.json must be equal to "' + context.adapterName + '". Now is ' + context.ioPackageJson.common.name);
-            }
-            context.checks.push('"common.name" is valid in io-package.json');
-
-            if (!context.ioPackageJson.common.title) {
-                return reject('No common.title found in io-package.json');
-            }
-            context.checks.push('"common.title" found in io-package.json');
-
-            if (context.ioPackageJson.common.title.match(/iobroker/i)) {
-                return reject('Title should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ' + context.ioPackageJson.common.title);
-            }
-            context.checks.push('"common.title" has no ioBroker in it in io-package.json');
-
-            if (context.ioPackageJson.common.title.match(/\sadapter|adapter\s/i)) {
-                return reject('Title should not have word "adapter" in the name. It is clear, that this is adapter. Now: ' + context.ioPackageJson.common.title);
-            }
-            context.checks.push('"common.title" has no "adapter" in it in io-package.json');
-
-            if (!context.ioPackageJson.common.version) {
-                return reject('No version found in io-package.json');
-            }
-            context.checks.push('"common.version" found in io-package.json');
-
-            if (!context.ioPackageJson.common.desc) {
-                return reject('No description found in io-package.json');
-            }
-            context.checks.push('"common.desc" found in io-package.json');
-
-            if (typeof context.ioPackageJson.common.desc !== 'object') {
-                return reject('desc in io-package.json should be an object for many languages. Found only ' + context.ioPackageJson.common.desc);
-            }
-            context.checks.push('"common.desc" is multilingual in io-package.json');
-
-            if (!context.ioPackageJson.common.icon) {
-                return reject('Icon not found in the io-package.json');
-            }
-            context.checks.push('"common.icon" found in io-package.json');
-
-            if (!context.ioPackageJson.common.extIcon) {
-                return reject('extIcon not found in the io-package.json');
-            }
-            context.checks.push('"common.extIcon" found in io-package.json');
-
-            if (context.ioPackageJson.common.icon !== context.ioPackageJson.common.extIcon.substring(context.ioPackageJson.common.extIcon.length - context.ioPackageJson.common.icon.length)) {
-                return reject('extIcon must be the same as an icon but with github path');
-            }
-            context.checks.push('"common.extIcon" has same path as repo in io-package.json');
-
-            if (!context.ioPackageJson.common.compact && !context.ioPackageJson.common.onlyWWW) {
-                return reject('Adapter should support compact mode');
-            }
-            if (!context.ioPackageJson.common.onlyWWW) {
-                context.checks.push('"common.compact" found in io-package.json');
-            }
-
-            if (!context.ioPackageJson.common.materialize) {
-                return reject('No adapter are allowed in the repo without admin3 support');
-            }
-            context.checks.push('"common.materialize" found in io-package.json');
-
-            if (!context.ioPackageJson.common.license) {
-                return reject('No license found');
-            }
-            context.checks.push('"common.license" found in io-package.json');
-
-            // TODO, check if license valid
-            if (licenses.indexOf(context.ioPackageJson.common.license) === -1) {
-                return reject('No SPDX license found. Please use one of listed here: https://spdx.org/licenses/');
-            }
-            context.checks.push('"common.license" is valid in io-package.json');
-
-            if (context.ioPackageJson.common.license !== context.packageJson.license) {
-                return reject('Licenses in package.json and in io-package.json are different');
-            }
-            context.checks.push('"common.license" is equal in pacjage.json and in io-package.json');
-
-            if (context.ioPackageJson.common.version !== context.packageJson.version) {
-                return reject('Versions in package.json and in io-package.json are different');
-            }
-            context.checks.push('"common.version" is equal in package.json adn in io-package.json');
-
-            if (!context.ioPackageJson.common.type) {
-                return reject('No type found in io-package.json');
-            }
-            context.checks.push('"common.type" found in io-package.json');
-
-            if (!allowedTypes[context.ioPackageJson.common.type]) {
-                return reject('Unknown type found in io-package.json');
-            }
-            context.checks.push('"common.type" has known type in io-package.json');
-
-            if (!context.ioPackageJson.common.authors) {
-                return reject('No authors found in io-package.json');
-            }
-            context.checks.push('"common.authors" found in io-package.json');
-
-            if (!(context.ioPackageJson.common.authors instanceof Array)) {
-                return reject('authors must be an Array in io-package.json');
-            }
-            context.checks.push('"common.authors" is array in io-package.json');
-
-            if (!context.ioPackageJson.common.authors.length) {
-                return reject('Authors may not be empty in io-package.json');
-            }
-            context.checks.push('"common.authors" is not empty in io-package.json');
-
             if (!context.ioPackageJson.native) {
-                return reject('io-package.json must have at least empty "native" attribute');
+                context.errors.push('io-package.json must have at least empty "native" attribute');
+            } else {
+                context.checks.push('"native" found in io-package.json');
             }
-            context.checks.push('"native" found in io-package.json');
 
-            return downloadFile(context.ioPackageJson.common.extIcon)
-                .then(() => {
-                    context.checks.push('"extIcon" could be downloaded');
-                    if (!context.ioPackageJson.onlyWWW) {
-                        return downloadFile(context.githubUrl, '/' + context.packageJson.main)
-                            .then(() => {
-                                context.checks.push(context.packageJson.main + ' could be downloaded');
-                                resolve(context);
-                            })
-                            .catch(err => {
-                                reject('Main file not found under URL: ' + context.githubUrl + '/' + context.packageJson.main);
-                            });
+            if (!context.ioPackageJson.common) {
+                context.errors.push('io-package.json must have common object');
+                return resolve(context);
+            } else {
+                context.checks.push('"common" found in io-package.json');
+                if (!context.ioPackageJson.common ||
+                    context.ioPackageJson.common.name !== context.adapterName) {
+                    context.errors.push('common.name in io-package.json must be equal to "' + context.adapterName + '". Now is ' + context.ioPackageJson.common.name);
+                } else {
+                    context.checks.push('"common.name" is valid in io-package.json');
+                }
+
+                if (!context.ioPackageJson.common.title) {
+                    context.errors.push('No common.title found in io-package.json');
+                } else {
+                    context.checks.push('"common.title" found in io-package.json');
+
+                    if (context.ioPackageJson.common.title.match(/iobroker/i)) {
+                        context.errors.push('Title should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ' + context.ioPackageJson.common.title);
                     } else {
-                        resolve(context);
+                        context.checks.push('"common.title" has no ioBroker in it in io-package.json');
                     }
-                })
-                .catch(err => {
-                    reject('External icon not found under URL: ' + context.ioPackageJson.common.extIcon);
-                });
+
+                    if (context.ioPackageJson.common.title.match(/\sadapter|adapter\s/i)) {
+                        context.errors.push('Title should not have word "adapter" in the name. It is clear, that this is adapter. Now: ' + context.ioPackageJson.common.title);
+                    } else {
+                        context.checks.push('"common.title" has no "adapter" in it in io-package.json');
+                    }
+                }
+
+                if (!context.ioPackageJson.common.version) {
+                    context.errors.push('No version found in io-package.json');
+                } else {
+                    context.checks.push('"common.version" found in io-package.json');
+                }
+
+                if (!context.ioPackageJson.common.desc) {
+                    context.errors.push('No description found in io-package.json');
+                } else {
+                    context.checks.push('"common.desc" found in io-package.json');
+                }
+
+                if (typeof context.ioPackageJson.common.desc !== 'object') {
+                    context.errors.push('desc in io-package.json should be an object for many languages. Found only ' + context.ioPackageJson.common.desc);
+                } else {
+                    context.checks.push('"common.desc" is multilingual in io-package.json');
+                }
+
+                if (!context.ioPackageJson.common.icon) {
+                    context.errors.push('Icon not found in the io-package.json');
+                } else {
+                    context.checks.push('"common.icon" found in io-package.json');
+                }
+
+                if (!context.ioPackageJson.common.extIcon) {
+                    context.errors.push('extIcon not found in the io-package.json');
+                } else {
+                    context.checks.push('"common.extIcon" found in io-package.json');
+
+                    if (!context.ioPackageJson.common.extIcon ||
+                        context.ioPackageJson.common.icon !== context.ioPackageJson.common.extIcon.substring(context.ioPackageJson.common.extIcon.length - context.ioPackageJson.common.icon.length)) {
+                        context.errors.push('extIcon must be the same as an icon but with github path');
+                    } else {
+                        context.checks.push('"common.extIcon" has same path as repo in io-package.json');
+                    }
+                }
+
+                if (!context.ioPackageJson.common.compact && !context.ioPackageJson.common.onlyWWW) {
+                    context.errors.push('Adapter should support compact mode');
+                } else
+                if (!context.ioPackageJson.common.onlyWWW) {
+                    context.checks.push('"common.compact" found in io-package.json');
+                }
+
+                if (!context.ioPackageJson.common.materialize) {
+                    context.errors.push('No adapter are allowed in the repo without admin3 support');
+                } else {
+                    context.checks.push('"common.materialize" found in io-package.json');
+                }
+
+                if (!context.ioPackageJson.common.license) {
+                    context.errors.push('No license found in io-package.json');
+                } else {
+                    context.checks.push('"common.license" found in io-package.json');
+
+                    // check if license valid
+                    if (licenses.indexOf(context.ioPackageJson.common.license) === -1) {
+                        context.errors.push('No SPDX license found. Please use one of listed here: https://spdx.org/licenses/');
+                    } else {
+                        context.checks.push('"common.license" is valid in io-package.json');
+                    }
+
+                    if (!context.packageJson ||
+                        context.ioPackageJson.common.license !== context.packageJson.license) {
+                        context.errors.push('Licenses in package.json and in io-package.json are different');
+                    } else {
+                        context.checks.push('"common.license" is equal in pacjage.json and in io-package.json');
+                    }
+                }
+
+                if (!context.packageJson ||
+                    context.ioPackageJson.common.version !== context.packageJson.version) {
+                    context.errors.push('Versions in package.json and in io-package.json are different');
+                } else {
+                    context.checks.push('"common.version" is equal in package.json adn in io-package.json');
+                }
+
+                if (!context.ioPackageJson.common.type) {
+                    context.errors.push('No type found in io-package.json');
+                } else {
+                    context.checks.push('"common.type" found in io-package.json');
+                }
+
+                if (!allowedTypes[context.ioPackageJson.common.type]) {
+                    context.errors.push('Unknown type found in io-package.json');
+                } else {
+                    context.checks.push('"common.type" has known type in io-package.json');
+                }
+
+                if (!context.ioPackageJson.common.authors) {
+                    context.errors.push('No authors found in io-package.json');
+                } else {
+                    context.checks.push('"common.authors" found in io-package.json');
+
+                    if (!(context.ioPackageJson.common.authors instanceof Array)) {
+                        context.errors.push('authors must be an Array in io-package.json');
+                    } else {
+                        context.checks.push('"common.authors" is array in io-package.json');
+                    }
+
+                    if (!context.ioPackageJson.common.authors.length) {
+                        context.errors.push('Authors may not be empty in io-package.json');
+                    } else {
+                        context.checks.push('"common.authors" is not empty in io-package.json');
+                    }
+                }
+
+                if (context.ioPackageJson.common.extIcon) {
+                    return downloadFile(context.ioPackageJson.common.extIcon)
+                        .then(() => {
+                            context.checks.push('"extIcon" could be downloaded');
+                            if (!context.ioPackageJson.onlyWWW) {
+                                return downloadFile(context.githubUrl, '/' + context.packageJson.main)
+                                    .then(() => {
+                                        context.checks.push(context.packageJson.main + ' could be downloaded');
+                                    })
+                                    .catch(err => {
+                                        context.errors.push('Main file not found under URL: ' + context.githubUrl + '/' + context.packageJson.main);
+                                    })
+                                    .then(() => Promise.resolve(context));
+                            } else {
+                                return Promise.resolve(context);
+                            }
+                        })
+                        .catch(err => {
+                            context.errors.push('External icon not found under URL: ' + context.ioPackageJson.common.extIcon);
+                        }).then(() => {
+                            resolve(context);
+                        });
+                } else {
+                    resolve(context);
+                }
+            }
         })
     });
 }
 
 function checkNpm(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         request('https://www.npmjs.com/package/iobroker.' + context.adapterName, (err, status, body) => {
             if (!body) {
-                return reject('Not found on npm. Please publish');
+                context.errors.push('Not found on npm. Please publish');
+                return resolve(context);
             }
             context.checks.push('Adapter found on npm');
 
@@ -731,11 +799,12 @@ function checkNpm(context) {
             const m = body.match(/>collaborators<(.*)<\/ul>/);
             if (m) {
                 if (m[1].indexOf('title="bluefox"') === -1 && m[1].indexOf('title="iobluefox"') === -1) {
-                    return reject('Bluefox is not in the collaborators!. Please add.');
+                    context.errors.push('Bluefox is not in the collaborators!. Please add.');
+                } else {
+                    context.checks.push('Bluefox found in collaborators');
                 }
-                context.checks.push('Bluefox found in collaborators');
             } else {
-                return reject('Bluefox is not in the collaborators!. Please add.');
+                context.errors.push('Bluefox is not in the collaborators!. Please add.');
             }
             resolve(context);
         });
@@ -743,38 +812,123 @@ function checkNpm(context) {
 }
 
 function checkTravis(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         let travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
 
         request(travisURL, (err, status, body) => {
             if (!status) {
-                return reject('Not found on travis. Please setup travis');
+                context.errors.push('Not found on travis. Please setup travis');
+                return resolve(context);
             }
             if (!status.headers || !status.headers['content-disposition']){
-                return reject('Not found on travis. Please setup travis');
+                context.errors.push('Not found on travis. Please setup travis');
+                return resolve(context);
             }
             // inline; filename="passing.png"
             const m = status.headers['content-disposition'].match(/filename="(.+)"$/);
             if (!m) {
-                return reject('Not found on travis. Please setup travis');
+                context.errors.push('Not found on travis. Please setup travis');
+                return resolve(context);
             }
 
             if (m[1] === 'unknown.png') {
-                return reject('Not found on travis. Please setup travis');
+                context.errors.push('Not found on travis. Please setup travis');
+                return resolve(context);
             }
 
             context.checks.push('Found on travis-ci');
 
             if (m[1] !== 'passing.png') {
-                return reject('Tests on Travis-ci.org are broken. Please fix.');
+                context.errors.push('Tests on Travis-ci.org are broken. Please fix.');
+            } else {
+                context.checks.push('Tests are OK on travis-ci');
             }
-            context.checks.push('Tests are OK on travis-ci');
 
             resolve(context);
         });
     });
 }
 
+function checkRepo(context) {
+    return new Promise(resolve => {
+        if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.type) {
+            // download latest repo
+            request('https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist.json', (err, status, body) => {
+                if (!body) {
+                    context.errors.push('Cannot download https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist.json');
+                } else {
+                    try {
+                        body = JSON.parse(body);
+                    } catch (e) {
+                        context.errors.push('Cannot parse https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist.json');
+                        body = null;
+                    }
+
+                    if (body) {
+                        context.latestRepo = body;
+                        if (!context.latestRepo[context.adapterName]) {
+                            context.errors.push('Cannot find "' + context.adapterName + '" in latest repository');
+                        } else {
+                            context.checks.push('Adapter found in latest repository');
+
+                            if (context.latestRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
+                                context.errors.push('Types of adapter in latest repository and in io-package.json are different "' + context.latestRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
+                            } else {
+                                context.checks.push('Types of adapter in latest repository and in io-package.json are equal: ' + context.latestRepo[context.adapterName].type);
+                            }
+
+                            if (context.stableRepo[context.adapterName].version) {
+                                context.errors.push('Version set in latest repository');
+                            } else {
+                                context.checks.push('Version does not set in latest repository');
+                            }
+                        }
+                    }
+                }
+
+                // download stable repo
+                request('https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist-stable.json', (err, status, body) => {
+                    if (!body) {
+                        context.errors.push('Cannot download https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist-stable.json');
+                    } else {
+                        try {
+                            body = JSON.parse(body);
+                        } catch (e) {
+                            context.errors.push('Cannot parse https://github.com/ioBroker/ioBroker.repositories/raw/master/sources-dist-stable.json');
+                            body = null;
+                        }
+
+                        if (body) {
+                            context.stableRepo = body;
+                            if (context.stableRepo[context.adapterName]) {
+                                if (context.stableRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
+                                    context.errors.push('Types of adapter in stable repository and in io-package.json are different "' + context.stableRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
+                                } else {
+                                    context.checks.push('Types of adapter in stable repository and in io-package.json are equal: "' + context.stableRepo[context.adapterName].type);
+                                }
+
+                                if (!context.latestRepo[context.adapterName]) {
+                                    context.errors.push('Adapter was found in stable repository but not in latest repo');
+                                } else {
+                                    context.checks.push('Adapter was found in stable repository and in latest repo');
+                                }
+
+                                if (!context.stableRepo[context.adapterName].version) {
+                                    context.errors.push('No version set in stable repository');
+                                } else {
+                                    context.checks.push('Version found in stable repository');
+                                }
+                            }
+                        }
+                    }
+                    resolve(context);
+                });
+            });
+        } else {
+            resolve(context);
+        }
+    });
+}
 
 function makeResponse(code, data, headers) {
     return {
@@ -800,13 +954,14 @@ function check(request, context, callback) {
             })
             .then(context => checkNpm(context))
             .then(context => checkTravis(context))
+            .then(context => checkRepo(context))
             .then(context => {
                 console.log('OK');
-                return callback(null, makeResponse(200, {result: 'OK', checks: context.checks}));
+                return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors}));
             })
             .catch(err => {
                 console.error(err);
-                return callback(null, makeResponse(501, {error: err.toString(), checks: ctx.checks}));
+                return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors}));
             });
     }
 }
