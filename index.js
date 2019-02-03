@@ -1,4 +1,4 @@
-/* 0.0.2 2019.01.23
+/* 1.0.0 2019.02.03
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -806,12 +806,12 @@ function checkNpm(context) {
             const m = body.match(/>collaborators<(.*)<\/ul>/);
             if (m) {
                 if (m[1].indexOf('title="bluefox"') === -1 && m[1].indexOf('title="iobluefox"') === -1) {
-                    context.errors.push('Bluefox is not in the collaborators!. Please add.');
+                    context.errors.push('Bluefox was not found in the collaborators on NPM!. Please add.');
                 } else {
-                    context.checks.push('Bluefox found in collaborators');
+                    context.checks.push('Bluefox found in collaborators on NPM');
                 }
             } else {
-                context.errors.push('Bluefox is not in the collaborators!. Please add.');
+                context.errors.push('Bluefox was not found in the collaborators on NPM!. Please add.');
             }
             resolve(context);
         });

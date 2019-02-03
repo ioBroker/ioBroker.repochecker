@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "1.0.0",
   "name": "iobroker.repochecker",
   "dependencies": {
     "api-npm": "^1.0.0",
