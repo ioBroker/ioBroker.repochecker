@@ -134,10 +134,10 @@ function checkPackageJson(githubUrl, context) {
                 context.checks.push('Repository URL has name  ioBroker.' + adapterName + ' and not iobroker.' + adapterName);
             }
 
-            if (context.packageJson.name !== 'iobroker.' + adapterName) {
-                context.errors.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName + '". Now is "' + packageJson.name + '"');
+            if (context.packageJson.name !== 'iobroker.' + adapterName.toLowerCase()) {
+                context.errors.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName.toLowerCase() + '". Now is "' + packageJson.name + '"');
             } else {
-                context.checks.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName + '".');
+                context.checks.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName.toLowerCase() + '".');
             }
 
             if (!context.packageJson.version) {
@@ -632,8 +632,8 @@ function checkIOPackageJson(context) {
             } else {
                 context.checks.push('"common" found in io-package.json');
                 if (!context.ioPackageJson.common ||
-                    context.ioPackageJson.common.name !== context.adapterName) {
-                    context.errors.push('common.name in io-package.json must be equal to "' + context.adapterName + '". Now is ' + context.ioPackageJson.common.name);
+                    context.ioPackageJson.common.name !== context.adapterName.toLowerCase()) {
+                    context.errors.push('common.name in io-package.json must be equal to "' + context.adapterName.toLowerCase() + '". Now is ' + context.ioPackageJson.common.name);
                 } else {
                     context.checks.push('"common.name" is valid in io-package.json');
                 }
@@ -1022,7 +1022,11 @@ function check(request, context, callback) {
             })
             .catch(err => {
                 console.error(err);
-                return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors}));
+                if (ctx) {
+                    return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors}));
+                } else {
+                    return callback(null, makeResponse(501, {result: 'Errors found', checks: [], errors: [err]}));
+                }
             });
     }
 }
