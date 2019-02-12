@@ -135,7 +135,7 @@ function checkPackageJson(githubUrl, context) {
             }
 
             if (context.packageJson.name !== 'iobroker.' + adapterName.toLowerCase()) {
-                context.errors.push('[E008] Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName.toLowerCase() + '". Now is "' + packageJson.name + '"');
+                context.errors.push('[E020] Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName.toLowerCase() + '". Now is "' + packageJson.name + '"');
             } else {
                 context.checks.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName.toLowerCase() + '".');
             }
@@ -206,6 +206,7 @@ function checkPackageJson(githubUrl, context) {
                     context.checks.push('Repository URL is valid in package.json');
                 }
             }
+            // max number is E020
 
             resolve(context);
         });
@@ -788,6 +789,7 @@ function checkIOPackageJson(context) {
                 } else {
                     resolve(context);
                 }
+                // max number is E123
             }
         })
     });
@@ -814,6 +816,7 @@ function checkNpm(context) {
                 context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
             }
             resolve(context);
+            // max number is E201
         });
     });
 }
@@ -852,6 +855,7 @@ function checkTravis(context) {
             }
 
             resolve(context);
+            // max number is E301
         });
     });
 }
@@ -988,6 +992,7 @@ function checkRepo(context) {
         } else {
             resolve(context);
         }
+        // max number is E428
     });
 }
 
