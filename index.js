@@ -1,4 +1,4 @@
-/* 1.0.1 2019.02.05
+/* 1.1.0 2019.02.19
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -11,15 +11,27 @@
 
  */
 let request;
+const unzip = require('unzip');
+const stream = require('stream');
+let https;
+
 if (typeof require !== 'undefined') {
-    request = function (url, cb) {
-        const https = require('https');
-        https.get(url, resp => {
-            let data = '';
-            resp.on('data', chunk => data += chunk);
-            resp.on('end', () => cb(null, {statusCode: resp.statusCode, headers: resp.headers}, data));
-            resp.on('error', () => err => cb(err));
-        }).on('error', err => cb(err));
+    try {
+        request = require('request');
+    } catch (e) {
+        request = function (url, options, cb) {
+            if (typeof options === 'function') {
+                cb = options;
+                options = {};
+            }
+            https = https || require('https');
+            https.get(url, resp => {
+                let data = '';
+                resp.on('data', chunk => data += chunk);
+                resp.on('end', () => cb(null, {statusCode: resp.statusCode, headers: resp.headers}, data));
+                resp.on('error', () => err => cb(err));
+            }).on('error', err => cb(err));
+        }
     }
 } else {
     request = function (url, cb) {
@@ -39,12 +51,16 @@ if (typeof require !== 'undefined') {
 }
 
 
-function downloadFile(githubUrl, path) {
+function downloadFile(githubUrl, path, binary) {
     return new Promise((resolve, reject) => {
         console.log('Download ' + githubUrl + (path || ''));
-        request(githubUrl + (path || ''), (err, status, body) => {
+        request(githubUrl + (path || ''), {encoding: binary ? null : 'utf8'}, (err, status, body) => {
             if (!err && status.statusCode === 200) {
-                resolve(body.toString());
+                if (binary) {
+                    resolve(body);
+                } else {
+                    resolve(body.toString());
+                }
             } else {
                 reject(err || status.statusCode);
             }
@@ -126,12 +142,6 @@ function checkPackageJson(githubUrl, context) {
                 context.errors.push('[E007] Cannot find author repo in the URL');
             } else {
                 context.authorName = n[1];
-            }
-
-            if (githubUrl.indexOf('/iobroker.') !== -1) {
-                context.errors.push('[E008] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
-            } else {
-                context.checks.push('Repository URL has name  ioBroker.' + adapterName + ' and not iobroker.' + adapterName);
             }
 
             if (context.packageJson.name !== 'iobroker.' + adapterName.toLowerCase()) {
@@ -768,7 +778,7 @@ function checkIOPackageJson(context) {
                     return downloadFile(context.ioPackageJson.common.extIcon)
                         .then(() => {
                             context.checks.push('"extIcon" could be downloaded');
-                            if (!context.ioPackageJson.onlyWWW) {
+                            if (!context.ioPackageJson.onlyWWW && context.packageJson.main) {
                                 return downloadFile(context.githubUrl, '/' + context.packageJson.main)
                                     .then(() => {
                                         context.checks.push(context.packageJson.main + ' could be downloaded');
@@ -881,7 +891,7 @@ function checkRepo(context) {
                     if (body) {
                         context.latestRepo = body;
                         if (!context.latestRepo[context.adapterName]) {
-                            context.warnings.push('Cannot find "' + context.adapterName + '" in latest repository');
+                            context.warnings.push('[W400] Cannot find "' + context.adapterName + '" in latest repository');
                         } else {
                             context.checks.push('Adapter found in latest repository');
 
@@ -996,6 +1006,38 @@ function checkRepo(context) {
     });
 }
 
+function checkCode(context) {
+    // https://github.com/userName/ioBroker.adaptername/archive/master.zip
+    return new Promise((resolve, reject) => {
+        return downloadFile(context.githubUrlOriginal, '/archive/master.zip', true)
+            .then(data => {
+                console.log('master.zip ' + data.length + ' bytes');
+                let found = false;
+                const bufferStream = new stream.PassThrough();
+                bufferStream.end(data);
+                bufferStream
+                    .pipe(unzip.Parse())
+                    .on('entry', entry => {
+                        // console.log('Check ' + entry.path);
+                        if (!found && entry.type === 'Directory' && entry.path.match(/\/node_modules\/$/)) {
+                            console.log('Found ' + entry.path);
+                            found = true;
+                            context.errors.push('[E500] node_modules found in repo. Please delete it');
+                        }
+                        entry.autodrain();
+                    })
+                    .on('error', () => {
+                        context.errors.push('[E501] Cannot get master.zip on github');
+                        resolve(context);
+                    })
+                    .on('close', () => {
+                        resolve(context)
+                    });
+            })
+            .catch(e => reject(e));
+    });
+}
+
 function makeResponse(code, data, headers) {
     return {
         statusCode: code || 200,
@@ -1021,6 +1063,7 @@ function check(request, context, callback) {
             .then(context => checkNpm(context))
             .then(context => checkTravis(context))
             .then(context => checkRepo(context))
+            .then(context => checkCode(context))
             .then(context => {
                 console.log('OK');
                 return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors}));
@@ -1040,7 +1083,7 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        url: 'https://github.com/ioBroker/ioBroker.admin'
+        url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
         console.log(JSON.stringify(data, null, 2));
     });

@@ -171,6 +171,14 @@ class App extends Component {
         win.focus();
     }
 
+    onOpenTravis() {
+        let url = this.state.url.replace('https://raw.githubusercontent.com/', 'https://travis-ci.org/');
+        url = url.replace(/\/$/, '');
+        const win = window.open(url, '_blank');
+        win.focus();
+    }
+
+
     render() {
         return (
             <div className={this.props.classes.body}>
@@ -207,6 +215,7 @@ class App extends Component {
                         (<Button key="github" color="primary" onClick={() => this.onOpen('')}>github.com</Button>),
                         (<Button key="package.json" color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>),
                         (<Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>)
+                        (<Button key="travis" color="primary" onClick={() => this.onOpenTravis()}>travis-ci.org</Button>)
                     ] : null}
                     {this.state.errors ? this.renderError() : null}
                     {this.state.warnings ? this.renderWarnings() : null}
