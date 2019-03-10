@@ -7,5 +7,5 @@ If you want to add your adapter to the public iobroker repository, all tests on 
 ## Todo
 - check if not onlyWWW, then show warnings if www, widgtes directories are found
 - Adapters, that have only widgets, should start with vis-
-- Do not allow too long news, max 20 entries in io-package.json
-- width and height of the logo must be equal and be greater than 32 and less than 512
+- Check, that README.md has Changelog with date
+- Check that in Github Repo the description and the flags are set. (at the top)

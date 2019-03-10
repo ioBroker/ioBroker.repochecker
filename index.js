@@ -14,6 +14,7 @@ let request;
 const unzip = require('unzip');
 const stream = require('stream');
 let https;
+const sizeOf = require('image-size');
 
 if (typeof require !== 'undefined') {
     try {
@@ -774,9 +775,31 @@ function checkIOPackageJson(context) {
                     }
                 }
 
+                if (!context.ioPackageJson.common.news) {
+                    context.errors.push('[E130] No news found in io-package.json');
+                } else {
+                    context.checks.push('"common.news" found in io-package.json');
+
+                    if (Object.keys(context.ioPackageJson.common.news).length > 20) {
+                        context.errors.push('[E130] Too many news found in io-package.json. Mast be less than 21. Please remove old news.');
+                    }
+                }
+
                 if (context.ioPackageJson.common.extIcon) {
-                    return downloadFile(context.ioPackageJson.common.extIcon)
-                        .then(() => {
+                    return downloadFile(context.ioPackageJson.common.extIcon, null, true)
+                        .then(icon => {
+                            const image = sizeOf(icon);
+                            if (image.width !== image.height) {
+                                context.errors.push('[E140] width and height of logo are not equal');
+                            } else {
+                                context.checks.push('Width and height of logo are equal');
+                                if (image.width < 32) {
+                                    context.errors.push('[E141] logo is too small. It mast be greater or equal than 32x32');
+                                } else if (image.width >512) {
+                                    context.errors.push('[E142] logo is too big. It mast be less or equal than 512x512');
+                                }
+                            }
+
                             context.checks.push('"extIcon" could be downloaded');
                             if (!context.ioPackageJson.onlyWWW && context.packageJson.main) {
                                 return downloadFile(context.githubUrl, '/' + context.packageJson.main)
@@ -1038,6 +1061,73 @@ function checkCode(context) {
     });
 }
 
+function checkReadme(context) {
+    // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/README.md
+    return new Promise((resolve, reject) => {
+        return downloadFile(context.githubUrl, '/README.md', true)
+            .then(data => {
+                if (!data) {
+                    context.errors.push('[E601] NO readme found');
+                } else {
+                    data = data.toString();
+                    context.checks.push('README.md found');
+
+                    if (data.indexOf('## Changelog') === -1) {
+                        context.errors.push('[E603] NO "## Changelog" found in README.md');
+                    } else {
+                        context.checks.push('## Changelog found in README.md');
+                    }
+                    if (data.indexOf('## License') === -1) {
+                        context.errors.push('[E604] NO "## License" found in README.md');
+                    } else {
+                        context.checks.push('## License found in README.md');
+                    }
+                    const pos = data.indexOf('## License');
+                    if (pos === -1) {
+                        context.errors.push('[E604] NO "## License" found in README.md');
+                    } else {
+                        context.checks.push('## License found in README.md');
+                        const text = data.substring(pos);
+                        const year = new Date().getFullYear().toString();
+                        if (text.indexOf(year) === -1) {
+                            context.errors.push(`[E605] No actual year found in copyright. Please add "Copyright (c) ${year} ${context.packageJson.author}" or "Copyright (c) 20xx-${year} ${context.packageJson.author}" at the end of Readme`);
+                        } else {
+                            context.errors.push('Valid copyright year found in README.md');
+                        }
+                    }
+                    resolve(context);
+                }
+            })
+            .catch(e => reject(e));
+    });
+}
+
+function checkLicenseFile(context) {
+    // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/LICENSE
+    return new Promise((resolve, reject) => {
+        return downloadFile(context.githubUrl, '/LICENSE', true)
+            .then(data => {
+                if (!data) {
+                    context.errors.push('[E701] NO LICENSE file found');
+                } else {
+                    data = data.toString();
+                    context.checks.push('LICENSE file found');
+
+                    if (context.packageJson.license === 'MIT') {
+                        const year = new Date().getFullYear().toString();
+                        if (data.indexOf(year) === -1) {
+                            context.errors.push(`[E701] No actual year found in LICENSE. Please add "Copyright (c) ${year} ${context.packageJson.author}" or "Copyright (c) 20xx-${year} ${context.packageJson.author}" at start of LICENSE`);
+                        } else {
+                            context.errors.push('Valid copyright year found in LICENSE');
+                        }
+                    }
+                }
+                resolve(context);
+            })
+            .catch(e => reject(e));
+    });
+}
+
 function makeResponse(code, data, headers) {
     return {
         statusCode: code || 200,
@@ -1064,6 +1154,8 @@ function check(request, context, callback) {
             .then(context => checkTravis(context))
             .then(context => checkRepo(context))
             .then(context => checkCode(context))
+            .then(context => checkReadme(context))
+            .then(context => checkLicenseFile(context))
             .then(context => {
                 console.log('OK');
                 return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors}));
