@@ -1093,7 +1093,7 @@ function checkReadme(context) {
                         if (text.indexOf(year) === -1) {
                             context.errors.push(`[E605] No actual year found in copyright. Please add "Copyright (c) ${year} ${context.packageJson.author}" or "Copyright (c) 20xx-${year} ${context.packageJson.author}" at the end of Readme`);
                         } else {
-                            context.errors.push('Valid copyright year found in README.md');
+                            context.checks.push('Valid copyright year found in README.md');
                         }
                     }
                     resolve(context);
