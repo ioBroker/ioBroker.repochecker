@@ -1,4 +1,4 @@
-/* 1.1.0 2019.02.19
+/* 1.1.1 2019.03.10
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -167,6 +167,12 @@ function checkPackageJson(githubUrl, context) {
                 context.errors.push('[E011] No license found in the package.json');
             } else {
                 context.checks.push('License found in package.json');
+            }
+
+            if (context.packageJson.licenses) {
+                context.errors.push('[E021] "licenses" in package.json are depricated. Please use only "license": "NAME" field.');
+            } else {
+                context.checks.push('No "licenses" found in package.json');
             }
 
             if (!context.packageJson.main) {
@@ -1077,14 +1083,9 @@ function checkReadme(context) {
                     } else {
                         context.checks.push('## Changelog found in README.md');
                     }
-                    if (data.indexOf('## License') === -1) {
-                        context.errors.push('[E604] NO "## License" found in README.md');
-                    } else {
-                        context.checks.push('## License found in README.md');
-                    }
                     const pos = data.indexOf('## License');
                     if (pos === -1) {
-                        context.errors.push('[E604] NO "## License" found in README.md');
+                        context.errors.push('[E604] No "## License" found in README.md');
                     } else {
                         context.checks.push('## License found in README.md');
                         const text = data.substring(pos);
