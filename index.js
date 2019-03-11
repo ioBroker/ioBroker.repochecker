@@ -1119,7 +1119,7 @@ function checkLicenseFile(context) {
                         if (data.indexOf(year) === -1) {
                             context.errors.push(`[E701] No actual year found in LICENSE. Please add "Copyright (c) ${year} ${context.packageJson.author}" or "Copyright (c) 20xx-${year} ${context.packageJson.author}" at start of LICENSE`);
                         } else {
-                            context.errors.push('Valid copyright year found in LICENSE');
+                            context.checks.push('Valid copyright year found in LICENSE');
                         }
                     }
                 }
