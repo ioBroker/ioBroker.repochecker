@@ -1159,14 +1159,14 @@ function check(request, context, callback) {
             .then(context => checkLicenseFile(context))
             .then(context => {
                 console.log('OK');
-                return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors}));
+                return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors, warnings: context.warnings}));
             })
             .catch(err => {
                 console.error(err);
                 if (ctx) {
-                    return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors}));
+                    return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings}));
                 } else {
-                    return callback(null, makeResponse(501, {result: 'Errors found', checks: [], errors: [err]}));
+                    return callback(null, makeResponse(501, {result: 'Errors found', checks: [], errors: [err], warnings: []}));
                 }
             });
     }
