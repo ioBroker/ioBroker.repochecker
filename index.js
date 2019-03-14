@@ -1,4 +1,4 @@
-/* 1.1.1 2019.03.10
+/* 1.2.0 2019.03.14
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -51,7 +51,6 @@ if (typeof require !== 'undefined') {
     }
 }
 
-
 function downloadFile(githubUrl, path, binary) {
     return new Promise((resolve, reject) => {
         console.log('Download ' + githubUrl + (path || ''));
@@ -70,6 +69,7 @@ function downloadFile(githubUrl, path, binary) {
 }
 
 // check package.json
+// E0xx
 function checkPackageJson(githubUrl, context) {
     context = context || {checks: [], errors: [], warnings: []};
 
@@ -616,6 +616,7 @@ const licenses = [
     'ZPL-2.1',
 ];
 
+// E1xx
 function checkIOPackageJson(context) {
     context = context || {};
     return new Promise((resolve, reject) => {
@@ -834,6 +835,7 @@ function checkIOPackageJson(context) {
     });
 }
 
+// E2xx
 function checkNpm(context) {
     return new Promise(resolve => {
         request('https://www.npmjs.com/package/iobroker.' + context.adapterName, (err, status, body) => {
@@ -860,6 +862,7 @@ function checkNpm(context) {
     });
 }
 
+// E3xx
 function checkTravis(context) {
     return new Promise(resolve => {
         let travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
@@ -899,6 +902,7 @@ function checkTravis(context) {
     });
 }
 
+// E4xx
 function checkRepo(context) {
     return new Promise(resolve => {
         if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.type) {
@@ -1035,6 +1039,7 @@ function checkRepo(context) {
     });
 }
 
+// E5xx
 function checkCode(context) {
     // https://github.com/userName/ioBroker.adaptername/archive/master.zip
     return new Promise((resolve, reject) => {
@@ -1067,15 +1072,61 @@ function checkCode(context) {
     });
 }
 
+function getAuthor(author) {
+    if (author && typeof author === 'object') {
+        return `${author.name} <${author.email}>`;
+    } else {
+        return author;
+    }
+}
+
+function checkCommits(context) {
+    return new Promise((resolve, reject) =>
+        downloadFile(context.githubUrlOriginal, '/commits/master')
+            .then(data => {
+                const m = data.match(/Commits on [\w\s\d]+, (\d\d\d\d)/);
+                if (m) {
+                    context.lastCommitYear = m[1];
+                }
+                resolve(context);
+            })
+            .catch(e => reject(e)));
+}
+
+// E8xx
+function checkGithubRepo(context) {
+    return new Promise((resolve, reject) =>
+        downloadFile(context.githubUrlOriginal, '')
+            .then(data => {
+                data = data.replace(/[\r\n]/g, '');
+                let m = data.match(/itemprop="about">([^<]+)?<\/span/);
+                if (!m || !m[1] || !m[1].trim()) {
+                    context.errors.push(`[E801] No repository about text found. Please go to "${context.githubUrlOriginal}", press the first "Edit" button you will find on the page and add the description.`);
+                } else {
+                    context.checks.push('Github repository about found.');
+                }
+
+                m = data.replace(/[\r\n]/g, '').match(/list-topics-container[^"]*">/);
+                if (!m) {
+                    context.errors.push(`[E802] No topics found in the repository. Please go to "${context.githubUrlOriginal}" and press "Manage topics"`);
+                } else {
+                    context.checks.push('Github repository about found.');
+                }
+
+                resolve(context);
+            })
+            .catch(e => reject(e)));
+}
+
+// E6xx
 function checkReadme(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/README.md
-    return new Promise((resolve, reject) => {
-        return downloadFile(context.githubUrl, '/README.md', true)
+    return new Promise((resolve, reject) =>
+        downloadFile(context.githubUrl, '/README.md')
             .then(data => {
                 if (!data) {
                     context.errors.push('[E601] NO readme found');
                 } else {
-                    data = data.toString();
                     context.checks.push('README.md found');
 
                     if (data.indexOf('## Changelog') === -1) {
@@ -1090,8 +1141,13 @@ function checkReadme(context) {
                         context.checks.push('## License found in README.md');
                         const text = data.substring(pos);
                         const year = new Date().getFullYear().toString();
-                        if (text.indexOf(year) === -1) {
-                            context.errors.push(`[E605] No actual year found in copyright. Please add "Copyright (c) ${year} ${context.packageJson.author}" or "Copyright (c) 20xx-${year} ${context.packageJson.author}" at the end of Readme`);
+                        if (text.indexOf(context.lastCommitYear || year) === -1) {
+                            const m = text.match(/(\d\d\d\d)-\d\d\d\d/);
+                            if (m) {
+                                context.errors.push(`[E605] No actual year found in copyright. Please add "Copyright (c) ${m[1]}-${year} ${getAuthor(context.packageJson.author)}" at the end of README.md`);
+                            } else {
+                                context.errors.push(`[E605] No actual year found in copyright. Please add "Copyright (c) ${year} ${getAuthor(context.packageJson.author)}" at the end of README.md`);
+                            }
                         } else {
                             context.checks.push('Valid copyright year found in README.md');
                         }
@@ -1099,27 +1155,31 @@ function checkReadme(context) {
                     resolve(context);
                 }
             })
-            .catch(e => reject(e));
-    });
+            .catch(e => reject(e)));
 }
 
+// E7xx
 function checkLicenseFile(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/LICENSE
     return new Promise((resolve, reject) => {
-        return downloadFile(context.githubUrl, '/LICENSE', true)
+        return downloadFile(context.githubUrl, '/LICENSE')
             .then(data => {
                 if (!data) {
                     context.errors.push('[E701] NO LICENSE file found');
                 } else {
-                    data = data.toString();
                     context.checks.push('LICENSE file found');
 
                     if (context.packageJson.license === 'MIT') {
                         const year = new Date().getFullYear().toString();
-                        if (data.indexOf(year) === -1) {
-                            context.errors.push(`[E701] No actual year found in LICENSE. Please add "Copyright (c) ${year} ${context.packageJson.author}" or "Copyright (c) 20xx-${year} ${context.packageJson.author}" at start of LICENSE`);
+                        if (data.indexOf(context.lastCommitYear || year) === -1) {
+                            const m = data.match(/(\d\d\d\d)-\d\d\d\d/);
+                            if (m) {
+                                context.errors.push(`[E701] No actual year found in LICENSE. Please add "Copyright (c) ${m[1]}-${year} ${getAuthor(context.packageJson.author)}" at the start of LICENSE`);
+                            } else {
+                                context.errors.push(`[E701] No actual year found in LICENSE. Please add "Copyright (c) ${year} ${getAuthor(context.packageJson.author)}" at the start of LICENSE`);
+                            }
                         } else {
-                            context.errors.push('Valid copyright year found in LICENSE');
+                            context.checks.push('Valid copyright year found in LICENSE');
                         }
                     }
                 }
@@ -1153,20 +1213,22 @@ function check(request, context, callback) {
             })
             .then(context => checkNpm(context))
             .then(context => checkTravis(context))
+            .then(context => checkCommits(context))
             .then(context => checkRepo(context))
             .then(context => checkCode(context))
+            .then(context => checkGithubRepo(context))
             .then(context => checkReadme(context))
             .then(context => checkLicenseFile(context))
             .then(context => {
                 console.log('OK');
-                return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors}));
+                return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors, warnings: context.warnings}));
             })
             .catch(err => {
                 console.error(err);
                 if (ctx) {
-                    return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors}));
+                    return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings}));
                 } else {
-                    return callback(null, makeResponse(501, {result: 'Errors found', checks: [], errors: [err]}));
+                    return callback(null, makeResponse(501, {result: 'Errors found', checks: [], errors: [err], warnings: []}));
                 }
             });
     }
@@ -1176,7 +1238,8 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
+        url: 'https://github.com/ioBroker/ioBroker.hm-rpc'
+        //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
         console.log(JSON.stringify(data, null, 2));
     });
