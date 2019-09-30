@@ -1,4 +1,4 @@
-/* 1.2.0 2019.03.14
+/* 1.2.1 2019.09.30
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -704,8 +704,17 @@ function checkIOPackageJson(context) {
                 } else {
                     context.checks.push('"common.extIcon" found in io-package.json');
 
-                    if (!context.ioPackageJson.common.extIcon ||
-                        context.ioPackageJson.common.icon !== context.ioPackageJson.common.extIcon.substring(context.ioPackageJson.common.extIcon.length - context.ioPackageJson.common.icon.length)) {
+                    // extract icon name
+                    let fileName = context.ioPackageJson.common.extIcon;
+                    let pos = fileName.indexOf('?');
+
+                    if (pos !== -1) {
+                        fileName = fileName.substring(0, pos);
+                    }
+                    pos = fileName.lastIndexOf('/');
+                    fileName = fileName.substring(pos + 1, fileName.length);
+
+                    if (fileName !== context.ioPackageJson.common.icon) {
                         context.errors.push('[E112] extIcon must be the same as an icon but with github path');
                     } else {
                         context.checks.push('"common.extIcon" has same path as repo in io-package.json');
