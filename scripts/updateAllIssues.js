@@ -3,6 +3,7 @@ const test = true;
 
 const toGet = "checkError";
 const toSet = "checkError2";
+const checkOkCheck = true;
 
 const issueTitle = "Think about to fix the issues found by adapter checker";
 
@@ -78,11 +79,13 @@ const startFunc = async function () {
 
         let result = await findAllAdapters(adapterList);
 
-        adapterList.checkOk.forEach(function (full_name) {
-            adapterList[toGet][full_name] = {};
-            adapterList[toGet][full_name].issue = null;
-        });
-        adapterList.checkOk = [];
+				if(checkOkCheck){
+          adapterList.checkOk.forEach(function (full_name) {
+              adapterList[toGet][full_name] = {};
+              adapterList[toGet][full_name].issue = null;
+          });
+          adapterList.checkOk = [];
+        }
 
         for (const full_name in adapterList[toGet]) {
             const testLink = "https://raw.githubusercontent.com/" + full_name;
@@ -228,10 +231,10 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
 function closeIssue(repo, issueNr) {
 
     if (issueNr) {
-        var url = "https://api.github.com/repos/" + repo + "/issues/" + issueNr + "/comments";
+        var urlComment = "https://api.github.com/repos/" + repo + "/issues/" + issueNr + "/comments";
         const issueBody = "Thanks, that all bugs have been fixed.";
         $.ajax({
-            url: url,
+            url: urlComment,
             type: "POST",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "token " + interactor.token);
@@ -248,6 +251,19 @@ function closeIssue(repo, issueNr) {
                 body: issueBody
             })
         });
+        
+        var urlIssue = "https://api.github.com/repos/" + repo + "/issues/" + issueNr;
+        $.ajax({
+            url: urlIssue,
+            type: "PATCH",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "token " + interactor.token);
+            },
+            data: JSON.stringify({
+                state: "closed"
+            })
+        });
+        
     } else {
         adapterList.checkOk.push(repo);
         delete adapterList[toGet][repo];
@@ -328,7 +344,7 @@ async function checkIoPackage(ioPackageLink, adapter) {
 
 async function doTheTest(testLink) {
     try {
-        return await (await fetch(adapterTestLink + testLink)).json();
+        return await (await fetch(adapterTestLink + testLink, {mode: 'cors'})).json();
     } catch (e) {
         return {};
     }
