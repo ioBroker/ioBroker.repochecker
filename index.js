@@ -1,4 +1,4 @@
-/* 1.2.1 2019.09.30
+/* 1.2.2 2019.11.01
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -223,7 +223,13 @@ function checkPackageJson(githubUrl, context) {
                     context.checks.push('Repository URL is valid in package.json');
                 }
             }
-            // max number is E020
+            if (reservedAdapterNames.indexOf(adapterName) !== -1) {
+                context.errors.push('[E022] Adapter name is reserved!');
+            } else {
+                context.checks.push('Adapter name is not reserved');
+            }
+
+            // max number is E022
 
             resolve(context);
         });
@@ -258,6 +264,13 @@ const allowedTypes = {
     "visualization-widgets": "iobroker.vis widgets",
     "weather": "weather info, air quality, environment statistics"
 };
+
+const reservedAdapterNames = [
+    'config',
+    'system',
+    'alias',
+    'design',
+];
 
 const licenses = [
     '0BSD',
