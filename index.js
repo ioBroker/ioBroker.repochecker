@@ -248,6 +248,7 @@ const allowedTypes = {
     "geoposition": "geo-positioning. These adapters delivers or accepst the position of other objects or persons.",
     "hardware": "different multi-purpose hardware, arduino, esp, bluetooth, ...",
     "household": "vacuum-cleaner, kitchen devices, ...",
+    "health": "Fitness sensors, scales, blood pressure, ...",
     "infrastructure": "Network, printers, phones, NAS, ...",
     "iot-systems": "Other comprehensive smarthome systems (software and hardware)",
     "lighting": "light",
