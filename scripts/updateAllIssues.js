@@ -1,8 +1,8 @@
 const githubToken = ""; //https://github.com/settings/tokens
 const test = true;
 
-const toGet = "checkError";
-const toSet = "checkError2";
+const toGet = 'checkError';
+const toSet = 'checkError2';
 const checkOkCheck = true;
 
 const issueTitle = "Think about to fix the issues found by adapter checker";
@@ -79,7 +79,7 @@ const startFunc = async function () {
 
         let result = await findAllAdapters(adapterList);
 
-				if(checkOkCheck){
+		if (checkOkCheck) {
           adapterList.checkOk.forEach(function (full_name) {
               adapterList[toGet][full_name] = {};
               adapterList[toGet][full_name].issue = null;
