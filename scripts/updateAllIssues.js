@@ -1,13 +1,13 @@
-const githubToken = ""; //https://github.com/settings/tokens
+const githubToken = ''; //https://github.com/settings/tokens
 const test = true;
 
 const toGet = 'checkError';
 const toSet = 'checkError2';
 const checkOkCheck = true;
 
-const issueTitle = "Think about to fix the issues found by adapter checker";
+const issueTitle = 'Think about to fix the issues found by adapter checker';
 
-const adapterTestLink = "https://3jjxddo33l.execute-api.eu-west-1.amazonaws.com/default/checkAdapter?url=";
+const adapterTestLink = 'https://3jjxddo33l.execute-api.eu-west-1.amazonaws.com/default/checkAdapter?url=';
 
 let adapterList;
 
@@ -17,12 +17,12 @@ const start = async function () {
         if (!adapterList[toSet]) {
             adapterList[toSet] = {};
         }
-        $('#listeSuccess').append("<li style='color: blue;'>ignored: " + adapterList["ignore"].length + "/<span id='ignore'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>noIoPackage: " + adapterList["noIoPackage"].length + "/<span id='noIoPackage'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>checkErrorOld: " + Object.keys(adapterList["checkErrorOld"]).length + "/<span id='checkErrorOld'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>" + toGet + ": " + Object.keys(adapterList[toGet]).length + "/<span id='" + toGet + "'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>" + toSet + ": " + Object.keys(adapterList[toSet]).length + "/<span id='" + toSet + "'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>checkOk: " + adapterList.checkOk.length + "/<span id='checkOk'></span></li>");
+        $('#listeSuccess').append(`<li style='color: blue;'>ignored: ${adapterList.ignore.length}/<span id='ignore'></span></li>`);
+        $('#listeSuccess').append(`<li style='color: blue;'>noIoPackage: ${adapterList.noIoPackage.length}/<span id='noIoPackage'></span></li>`);
+        $('#listeSuccess').append(`<li style='color: blue;'>checkErrorOld:${Object.keys(adapterList.checkErrorOld).length}/<span id='checkErrorOld'></span></li>`);
+        $('#listeSuccess').append(`<li style='color: blue;'>${toGet}: ${Object.keys(adapterList[toGet]).length}/<span id='${toGet}'></span></li>`);
+        $('#listeSuccess').append(`<li style='color: blue;'>${toSet}: ${Object.keys(adapterList[toSet]).length}/<span id='${toSet}'></span></li>`);
+        $('#listeSuccess').append(`<li style='color: blue;'>checkOk: ${adapterList.checkOk.length}/<span id='checkOk'></span></li>`);
         await startFunc();
         await delay(10000);
         console.log(JSON.stringify(adapterList));
@@ -34,7 +34,7 @@ const start = async function () {
         $('#' + toGet).text(Object.keys(adapterList[toGet]).length);
         $('#result').text(JSON.stringify(adapterList));
     } else {
-        $('#liste').append("<li style='color: red;'>ERROR " + Object.keys(adapterList[toGet]).length + " " + Object.keys(adapterList[toSet]).length + "</li>");
+        $('#liste').append(`<li style='color: red;'>ERROR ${Object.keys(adapterList[toGet]).length} ${Object.keys(adapterList[toSet]).length}</li>`);
     }
 };
 
@@ -88,37 +88,37 @@ const startFunc = async function () {
         }
 
         for (const full_name in adapterList[toGet]) {
-            const testLink = "https://raw.githubusercontent.com/" + full_name;
+            const testLink = 'https://raw.githubusercontent.com/' + full_name;
             const testResult = await doTheTest(testLink);
 
             let issueNr = adapterList[toGet][full_name].issue;
             let issuesList = [];
             if (issueNr) {
                 issuesList = adapterList[toGet][full_name].errorList;
-                if (adapterList[toGet][full_name].status !== "open") {
+                if (adapterList[toGet][full_name].status !== 'open') {
                     issueNr = null;
                 }
             }
 
             if (testResult && testResult.errors && testResult.errors.length > 0) {
                 try {
-                    let issueBody = "I am an automatic service that looks for possible errors in ioBroker and creates an issue for it. The link below leads directly to the test:\r\n\r\n";
-                    issueBody += "https://adapter-check.iobroker.in/?q=" + testLink + "\r\n\r\n";
+                    let issueBody = 'I am an automatic service that looks for possible errors in ioBroker and creates an issue for it. The link below leads directly to the test:\r\n\r\n';
+                    issueBody += `https://adapter-check.iobroker.in/?q=${testLink}\r\n\r\n`;
                     const errorList = [];
                     const warningList = [];
                     testResult.errors.forEach(function (issue) {
-                        issueBody += "- [ ] " + issue + "\r\n";
+                        issueBody += `- [ ] ${issue}\r\n`;
                         errorList.push(issue.substring(1, 5));
                     });
                     if (testResult.warnings && testResult.warnings.length > 0) {
-                        issueBody += "\r\nI have also found warnings that may be fixed if possible.\r\n\r\n";
+                        issueBody += '\r\nI have also found warnings that may be fixed if possible.\r\n\r\n';
                         testResult.warnings.forEach(function (issue) {
-                            issueBody += "- [ ] " + issue + "\r\n";
+                            issueBody += `- [ ] ${issue}\r\n`;
                             warningList.push(issue.substring(1, 5));
                         });
                     }
 
-                    issueBody += "\r\nThanks,\r\nyour automatic adapter checker.";
+                    issueBody += '\r\nThanks,\r\nyour automatic adapter checker.';
                     issueBody += addComminityText(full_name);
 
                     const errorNotChanged = issueNr !== null && (errorList.length === issuesList.length && errorList.sort().every(function (value, index) {
@@ -132,33 +132,33 @@ const startFunc = async function () {
                     } else if (githubToken && errorNotChanged) {
                         adapterList[toSet][full_name] = adapterList[toGet][full_name];
                         delete adapterList[toGet][full_name];
-                        $('#liste').append("<li style='color: ble;'>" + full_name + " no error changes</li>");
+                        $('#liste').append(`<li style='color: ble;'>${full_name} no error changes</li>`);
                     } else {
-                        testIssueCreation("NO TOKEN - " + full_name, testResult.errors.length);
+                        testIssueCreation('NO TOKEN - ' + full_name, testResult.errors.length);
                     }
                 } catch (e) {
-                    console.error(full_name + " - " + e);
+                    console.error(full_name + ' - ' + e);
                 }
             } else if (testResult && testResult.errors && testResult.errors.length === 0) {
                 if (!test && githubToken) {
                     closeIssue(full_name, issueNr);
                 }
-                $('#liste').append("<li style='color: green;'>" + full_name + " fixed - checked but no error found</li>");
+                $('#liste').append(`<li style='color: green;'>${full_name} fixed - checked but no error found</li>`);
             }
         }
 
     }
 };
 
-$("button").on("click", function () {
+$('button').on('click', function () {
     start();
 });
 
 function addComminityText(full_name) {
-    if (!full_name.startsWith("ioBroker/") && !full_name.startsWith("iobroker-community-adapters/")) {
-        return "\r\n\r\nP.S.: There is a community in Github, which supports the maintenance and further development of adapters. There you will find many experienced developers who are always ready to assist anyone. New developers are always welcome there. For more informations visit: https://github.com/iobroker-community-adapters/info";
+    if (!full_name.startsWith('ioBroker/') && !full_name.startsWith('iobroker-community-adapters/')) {
+        return '\r\n\r\nP.S.: There is a community in Github, which supports the maintenance and further development of adapters. There you will find many experienced developers who are always ready to assist anyone. New developers are always welcome there. For more informations visit: https://github.com/iobroker-community-adapters/info';
     } else {
-        return "";
+        return '';
     }
 }
 
@@ -355,7 +355,7 @@ function testIssueCreation(repo, count, notChanged, warnings, closed) {
     if (warnings) {
         countW = warnings.length;
     }
-    $('#liste').append("<li style='color: " + (notChanged ? "red" : "blue") + "'>" + repo + " (" + count + " err & " + countW + " war) - issue " + (notChanged ? "is the same" : "has been changed (UPDATE)") + " </li>");
+    $('#liste').append(`<li style="color: ${notChanged ? 'red' : 'blue'}">${repo} (${count} err & ${countW} war) - issue ${notChanged ? 'is the same' : 'has been changed (UPDATE)'} </li>`);
 }
 
 async function getDataV4(query) {
@@ -373,9 +373,9 @@ function getQueryForRepos(cursor) {
     let query = getRepoSearchQL;
 
     if (cursor) {
-        query = query.replace("$cursor", ', after: "' + cursor + '"');
+        query = query.replace('$cursor', ', after: "' + cursor + '"');
     } else {
-        query = query.replace("$cursor", "");
+        query = query.replace('$cursor', '');
     }
     return query;
 }
