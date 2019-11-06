@@ -1,4 +1,4 @@
-/* 1.2.2 2019.11.01
+/* 1.2.3 2019.11.06
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -861,24 +861,31 @@ function checkIOPackageJson(context) {
 // E2xx
 function checkNpm(context) {
     return new Promise(resolve => {
-        request('https://www.npmjs.com/package/iobroker.' + context.adapterName, (err, status, body) => {
+        request('https://api.npms.io/v2/package/iobroker.' + context.adapterName, (err, status, body) => {
             if (!body) {
                 context.errors.push('[E200] Not found on npm. Please publish');
                 return resolve(context);
             }
             context.checks.push('Adapter found on npm');
 
-            body = body.toString();
-            const m = body.match(/>collaborators<(.*)<\/ul>/);
-            if (m) {
-                if (m[1].indexOf('title="bluefox"') === -1 && m[1].indexOf('title="iobluefox"') === -1) {
-                    context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
-                } else {
-                    context.checks.push('Bluefox found in collaborators on NPM');
-                }
-            } else {
-                context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
+            try {
+                body = JSON.parse(body.toString());
+            } catch (e) {
+                context.errors.push('[E200] Cannot parse npm response');
+                return resolve(context);
             }
+
+            if (!body ||
+                !body.collected ||
+                !body.collected.metadata ||
+                !body.collected.metadata.maintainers ||
+                !body.collected.metadata.maintainers.length ||
+                !body.collected.metadata.maintainers.find(user => user.username === 'bluefox' || user.username === 'iobluefox')) {
+                context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
+            } else {
+                context.checks.push('Bluefox found in collaborators on NPM');
+            }
+
             resolve(context);
             // max number is E201
         });
@@ -1261,7 +1268,7 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        url: 'https://github.com/ioBroker/ioBroker.hm-rpc'
+        url: 'https://github.com/AlCalzone/ioBroker.zwave2'
         //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
         console.log(JSON.stringify(data, null, 2));
