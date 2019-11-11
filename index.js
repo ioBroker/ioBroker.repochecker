@@ -742,7 +742,7 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.compact" found in io-package.json');
                 }
 
-                if (!context.ioPackageJson.common.materialize) {
+                if (!context.ioPackageJson.common.materialize && !context.ioPackageJson.common.noConfig) {
                     context.errors.push('[E114] No adapter are allowed in the repo without admin3 support');
                 } else {
                     context.checks.push('"common.materialize" found in io-package.json');
