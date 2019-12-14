@@ -1,4 +1,4 @@
-/* 1.2.3 2019.11.06
+/* 1.2.4 2019.12.14
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -271,6 +271,8 @@ const reservedAdapterNames = [
     'system',
     'alias',
     'design',
+    'all',
+    'self',
 ];
 
 const licenses = [
