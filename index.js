@@ -1,4 +1,4 @@
-/* 1.2.4 2019.12.14
+/* 1.2.5 2020.01.06
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -260,6 +260,7 @@ const allowedTypes = {
     "protocols": "Communication protocols: MQTT,",
     "storage": "logging, data protocols, SQL/NoSQL DBs, file storage, ...",
     "utility": "different help adapters. Like backup, export/import",
+    "vehicle": "cars",
     "visualization": "visualisation, like vis, material, mobile",
     "visualization-icons": "icons for visualisation",
     "visualization-widgets": "iobroker.vis widgets",
