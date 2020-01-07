@@ -12,9 +12,37 @@
  */
 let request;
 const unzip = require('unzip');
+const util = require('util');
 const stream = require('stream');
+const Writable = stream.Writable;
 let https;
 const sizeOf = require('image-size');
+
+
+const memStore = { };
+
+/* Writable memory stream */
+function WMStrm(key, options) {
+    // allow use without new operator
+    if (!(this instanceof WMStrm)) {
+        return new WMStrm(key, options);
+    }
+    Writable.call(this, options); // init super
+    this.key = key; // save key
+    memStore[key] = Buffer.from(''); // empty
+}
+util.inherits(WMStrm, Writable);
+
+WMStrm.prototype._write = function (chunk, enc, cb) {
+    // our memory store stores things in buffers
+    const buffer = Buffer.isBuffer(chunk) ?
+        chunk :  // already is Buffer use it
+        new Buffer(chunk, enc);  // string, convert
+
+    // concat to the buffer already there
+    memStore[this.key] = Buffer.concat([memStore[this.key], buffer]);
+    cb();
+};
 
 if (typeof require !== 'undefined') {
     try {
@@ -1074,6 +1102,8 @@ function checkRepo(context) {
 
 // E5xx
 function checkCode(context) {
+    const readFiles = ['.npmignore', '.gitignore'];
+
     // https://github.com/userName/ioBroker.adaptername/archive/master.zip
     return new Promise((resolve, reject) => {
         return downloadFile(context.githubUrlOriginal, '/archive/master.zip', true)
@@ -1082,6 +1112,10 @@ function checkCode(context) {
                 let found = false;
                 const bufferStream = new stream.PassThrough();
                 bufferStream.end(data);
+                context.filesList = [];
+
+                const promises = [];
+
                 bufferStream
                     .pipe(unzip.Parse())
                     .on('entry', entry => {
@@ -1091,14 +1125,30 @@ function checkCode(context) {
                             found = true;
                             context.errors.push('[E500] node_modules found in repo. Please delete it');
                         }
-                        entry.autodrain();
+                        // Get list of all files and .npmignore + .gitignore
+
+                        const name = entry.path.replace(/^[^\/]+\//, '');
+                        context.filesList.push(name);
+
+                        if (readFiles.includes(name)) {
+                            promises.push(new Promise(resolve => {
+                                const wstream = new WMStrm(name);
+                                wstream.on('finish', () => {
+                                    context['/' + name] = memStore[name].toString();
+                                    resolve(context['/' + name]);
+                                });
+                                entry.pipe(wstream);
+                            }));
+                        } else {
+                            entry.autodrain();
+                        }
                     })
                     .on('error', () => {
                         context.errors.push('[E501] Cannot get master.zip on github');
-                        resolve(context);
+                        return Promise.all(promises).then(() => resolve(context));
                     })
                     .on('close', () => {
-                        resolve(context)
+                        return Promise.all(promises).then(() => resolve(context));
                     });
             })
             .catch(e => reject(e));
@@ -1222,6 +1272,117 @@ function checkLicenseFile(context) {
     });
 }
 
+function paddingNum(num) {
+    if (num >= 10) return num;
+    return '0' + num;
+}
+// E8xx
+function checkNpmIgnore(context) {
+    const checkFiles = [
+        'node_modules/',
+        'test/',
+        'src/',
+        'appveyor.yml',
+        'tsconfig.json',
+        'tsconfig.build.json',
+//         '.git/',
+//         '.github/',
+//         '.idea/',
+//         '.gitignore',
+// //        '.npmignore',
+//         '.travis.yml',
+//         '.babelrc',
+//         '.editorconfig',
+//         '.eslintignore',
+//         '.eslintrc.js',
+//         '.fimbullinter.yaml',
+//         '.lgtm.yml',
+//         '.prettierignore',
+//         '.prettierignore',
+//         '.prettierrc.js',
+//         '.vscode/',
+    ];
+
+    // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/.npmignore
+    return new Promise((resolve, reject) => {
+        if (!context.filesList.includes('.npmignore')) {
+            context.warnings.push(`[E801] .npmignore not found`);
+        } else {
+            const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
+            rules.forEach((name, i) => {
+                 if (name.includes('*')) {
+                     rules[i] = new RegExp(name
+                         .replace('.', '\\.')
+                         .replace('/', '\\/')
+                         .replace('**', '.*')
+                         .replace('*', '[^\\/]*')
+                     );
+                 }
+            });
+
+            checkFiles.forEach((file, i) => {
+                if (context.filesList.includes(file)) {
+                    // may be it is with regex
+                    const check = rules.some(rule => {
+                        if (typeof rule === 'string') {
+                            return rule === file || rule === file.replace(/\/$/, '');
+                        } else {
+                            return rule.test(file);
+                        }
+                    });
+
+                    !check && context.errors.push(`[E8${paddingNum(i + 11)}] file ${file} found in repository, but not found in .npmignore`);
+                }
+            });
+        }
+        resolve(context);
+    });
+}
+
+// E9xx
+function checkGitIgnore(context) {
+    const checkFiles = [
+        '.idea',
+        'tmp',
+        'node_modules'
+    ];
+
+    // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/.gitignore
+    return new Promise((resolve, reject) => {
+        if (!context.filesList.includes('.gitignore')) {
+            context.warnings.push(`[E901] .gitignore not found`);
+        } else {
+            const rules = (context['/.gitignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
+            rules.forEach((name, i) => {
+                if (name.includes('*')) {
+                    rules[i] = new RegExp(name
+                        .replace('.', '\\.')
+                        .replace('/', '\\/')
+                        .replace('**', '.*')
+                        .replace('*', '[^\\/]*')
+                    );
+                }
+            });
+
+            checkFiles.forEach((file, i) => {
+                if (context.filesList.includes(file)) {
+                    // may be it is with regex
+                    const check = rules.some(rule => {
+                        if (typeof rule === 'string') {
+                            return rule === file || rule === file.replace(/\/$/, '');
+                        } else {
+                            return rule.test(file);
+                        }
+                    });
+
+                    !check && context.errors.push(`[E9${paddingNum(i + 11)}] file ${file} found in repository, but not found in .gitignore`);
+                }
+            });
+        }
+        resolve(context);
+    });
+}
+
 function makeResponse(code, data, headers) {
     return {
         statusCode: code || 200,
@@ -1252,6 +1413,8 @@ function check(request, context, callback) {
             .then(context => checkGithubRepo(context))
             .then(context => checkReadme(context))
             .then(context => checkLicenseFile(context))
+            .then(context => checkNpmIgnore(context))
+            .then(context => checkGitIgnore(context))
             .then(context => {
                 console.log('OK');
                 return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors, warnings: context.warnings}));
@@ -1274,6 +1437,10 @@ if (typeof module !== 'undefined' && module.parent) {
         url: 'https://github.com/AlCalzone/ioBroker.zwave2'
         //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
+        const context = JSON.parse(data.body);
+        if (context.errors.length) {
+            console.error(JSON.stringify(context.errors, null, 2));
+        }
         console.log(JSON.stringify(data, null, 2));
     });
 }
