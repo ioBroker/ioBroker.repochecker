@@ -1,4 +1,4 @@
-/* 1.2.5 2020.01.06
+/* 1.2.6 2020.01.13
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -1102,7 +1102,7 @@ function checkRepo(context) {
 
 // E5xx
 function checkCode(context) {
-    const readFiles = ['.npmignore', '.gitignore'];
+    const readFiles = ['.npmignore', '.gitignore', 'admin/index_m.html'];
 
     // https://github.com/userName/ioBroker.adaptername/archive/master.zip
     return new Promise((resolve, reject) => {
@@ -1116,40 +1116,48 @@ function checkCode(context) {
 
                 const promises = [];
 
-                bufferStream
-                    .pipe(unzip.Parse())
-                    .on('entry', entry => {
-                        // console.log('Check ' + entry.path);
-                        if (!found && entry.type === 'Directory' && entry.path.match(/\/node_modules\/$/)) {
-                            console.log('Found ' + entry.path);
-                            found = true;
-                            context.errors.push('[E500] node_modules found in repo. Please delete it');
-                        }
-                        // Get list of all files and .npmignore + .gitignore
+                return new Promise(_resolve => {
+                    bufferStream
+                        .pipe(unzip.Parse())
+                        .on('entry', entry => {
+                            // console.log('Check ' + entry.path);
+                            if (!found && entry.type === 'Directory' && entry.path.match(/\/node_modules\/$/)) {
+                                console.log('Found ' + entry.path);
+                                found = true;
+                                context.errors.push('[E500] node_modules found in repo. Please delete it');
+                            }
+                            // Get list of all files and .npmignore + .gitignore
 
-                        const name = entry.path.replace(/^[^\/]+\//, '');
-                        context.filesList.push(name);
+                            const name = entry.path.replace(/^[^\/]+\//, '');
+                            context.filesList.push(name);
 
-                        if (readFiles.includes(name)) {
-                            promises.push(new Promise(resolve => {
-                                const wstream = new WMStrm(name);
-                                wstream.on('finish', () => {
-                                    context['/' + name] = memStore[name].toString();
-                                    resolve(context['/' + name]);
-                                });
-                                entry.pipe(wstream);
-                            }));
-                        } else {
-                            entry.autodrain();
-                        }
-                    })
-                    .on('error', () => {
-                        context.errors.push('[E501] Cannot get master.zip on github');
-                        return Promise.all(promises).then(() => resolve(context));
-                    })
-                    .on('close', () => {
-                        return Promise.all(promises).then(() => resolve(context));
-                    });
+                            if (readFiles.includes(name)) {
+                                promises.push(new Promise(resolve => {
+                                    const wstream = new WMStrm(name);
+                                    wstream.on('finish', () => {
+                                        context['/' + name] = memStore[name].toString();
+                                        resolve(context['/' + name]);
+                                    });
+                                    entry.pipe(wstream);
+                                }));
+                            } else {
+                                entry.autodrain();
+                            }
+                        })
+                        .on('error', () => {
+                            context.errors.push('[E501] Cannot get master.zip on github');
+                            return Promise.all(promises).then(() => _resolve(context));
+                        })
+                        .on('close', () => {
+                            return Promise.all(promises).then(() => _resolve(context));
+                        });
+                });
+            })
+            .then(context => {
+                if (context['/admin/index_m.html'] && context['/admin/index_m.html'].includes('selectID.js') && !context.filesList.includes('admin/img/info-big.png')) {
+                    context.errors.push('[E502] "admin/img/info-big.png" not found, but selectID.js used in index_m.html ');
+                }
+                resolve(context);
             })
             .catch(e => reject(e));
     });
@@ -1434,7 +1442,8 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        url: 'https://github.com/AlCalzone/ioBroker.zwave2'
+        url: 'https://github.com/ioBroker/ioBroker.cloud',
+        //url: 'https://github.com/AlCalzone/ioBroker.zwave2'
         //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
         const context = JSON.parse(data.body);
