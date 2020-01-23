@@ -1102,7 +1102,7 @@ function checkRepo(context) {
 
 // E5xx
 function checkCode(context) {
-    const readFiles = ['.npmignore', '.gitignore', 'admin/index_m.html'];
+    const readFiles = ['.npmignore', '.gitignore', 'admin/index_m.html', 'iob_npm.done'];
 
     // https://github.com/userName/ioBroker.adaptername/archive/master.zip
     return new Promise((resolve, reject) => {
@@ -1156,6 +1156,9 @@ function checkCode(context) {
             .then(context => {
                 if (context['/admin/index_m.html'] && context['/admin/index_m.html'].includes('selectID.js') && !context.filesList.includes('admin/img/info-big.png')) {
                     context.errors.push('[E502] "admin/img/info-big.png" not found, but selectID.js used in index_m.html ');
+                }
+                if (context['/iob_npm.done']) {
+                    context.errors.push('[E503] "iob_npm.done" found in repo! Please add it to .gitignore');
                 }
                 resolve(context);
             })
@@ -1291,8 +1294,10 @@ function checkNpmIgnore(context) {
         'test/',
         'src/',
         'appveyor.yml',
+        '.travis.yml',
         'tsconfig.json',
         'tsconfig.build.json',
+        'iob_npm.done',
 //         '.git/',
 //         '.github/',
 //         '.idea/',
@@ -1328,6 +1333,13 @@ function checkNpmIgnore(context) {
                  }
             });
 
+            if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
+                !check && context.errors.push(`[E802}] node_modules not found in .npmignore`);
+            }
+            if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
+                !check && context.errors.push(`[E803}] iob_npm.done not found in .npmignore`);
+            }
+
             checkFiles.forEach((file, i) => {
                 if (context.filesList.includes(file)) {
                     // may be it is with regex
@@ -1352,7 +1364,8 @@ function checkGitIgnore(context) {
     const checkFiles = [
         '.idea',
         'tmp',
-        'node_modules'
+        'node_modules',
+        'iob_npm.done',
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/.gitignore
@@ -1371,6 +1384,13 @@ function checkGitIgnore(context) {
                     );
                 }
             });
+
+            if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
+                !check && context.errors.push(`[E902}] node_modules not found in .npmignore`);
+            }
+            if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
+                !check && context.errors.push(`[E903}] iob_npm.done not found in .npmignore`);
+            }
 
             checkFiles.forEach((file, i) => {
                 if (context.filesList.includes(file)) {
