@@ -1,4 +1,4 @@
-/* 1.2.6 2020.01.13
+/* 1.2.7 2020.01.29
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -17,7 +17,6 @@ const stream = require('stream');
 const Writable = stream.Writable;
 let https;
 const sizeOf = require('image-size');
-
 
 const memStore = { };
 
