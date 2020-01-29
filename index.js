@@ -202,12 +202,6 @@ function checkPackageJson(githubUrl, context) {
                 context.checks.push('No "licenses" found in package.json');
             }
 
-            if (!context.packageJson.main) {
-                context.errors.push('[E012] No main found in the package.json');
-            } else {
-                context.checks.push('"main" found in package.json');
-            }
-
             if (!context.packageJson.author) {
                 context.errors.push('[E013] No author found in the package.json');
             } else {
@@ -845,6 +839,13 @@ function checkIOPackageJson(context) {
                     }
                 }
 
+                // now check the package.json again, because it is valid only for onlyWWW
+                if (!context.packageJson.main) {
+                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E143] No main found in the package.json');
+                } else {
+                    context.checks.push('"main" found in package.json');
+                }
+
                 if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {
@@ -882,7 +883,7 @@ function checkIOPackageJson(context) {
                 } else {
                     resolve(context);
                 }
-                // max number is E123
+                // max number is E143
             }
         })
     });
@@ -1461,7 +1462,7 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        url: 'https://github.com/ioBroker/ioBroker.cloud',
+        url: 'https://github.com/ioBroker/ioBroker.tileboard',
         //url: 'https://github.com/AlCalzone/ioBroker.zwave2'
         //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
