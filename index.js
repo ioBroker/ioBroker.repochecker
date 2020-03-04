@@ -1103,6 +1103,9 @@ function checkRepo(context) {
 // E5xx
 function checkCode(context) {
     const readFiles = ['.npmignore', '.gitignore', 'admin/index_m.html', 'iob_npm.done'];
+    if (context.packageJson.main) {
+        readFiles.push(context.packageJson.main);
+    }
 
     // https://github.com/userName/ioBroker.adaptername/archive/master.zip
     return new Promise((resolve, reject) => {
@@ -1159,6 +1162,18 @@ function checkCode(context) {
                 }
                 if (context['/iob_npm.done']) {
                     context.errors.push('[E503] "iob_npm.done" found in repo! Please add it to .gitignore');
+                }
+                if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
+                    if (!context['/' + context.packageJson.main]) {
+                        context.errors.push('[E504] "' + context.packageJson.main + ' found in package.json, but not found as file');
+                    } else {
+                        if (context['/' + context.packageJson.main].includes('setInterval(') && !context['/' + context.packageJson.main].includes('clearInterval(')) {
+                            context.errors.push('[E504] found setInterval in "' + context.packageJson.main + ', but no clearInterval detected');
+                        }
+                        if (context['/' + context.packageJson.main].includes('setTimeout(') && !context['/' + context.packageJson.main].includes('clearTimeout(')) {
+                            context.warnings.push('[W505] setTimout found in "' + context.packageJson.main + ', but no clearTimeout detected');
+                        }
+                    }
                 }
                 resolve(context);
             })
@@ -1319,7 +1334,7 @@ function checkNpmIgnore(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/.npmignore
     return new Promise((resolve, reject) => {
         if (!context.filesList.includes('.npmignore')) {
-            context.warnings.push(`[E801] .npmignore not found`);
+            context.warnings.push(`[W801] .npmignore not found`);
         } else {
             const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
             rules.forEach((name, i) => {
@@ -1371,7 +1386,7 @@ function checkGitIgnore(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/.gitignore
     return new Promise((resolve, reject) => {
         if (!context.filesList.includes('.gitignore')) {
-            context.warnings.push(`[E901] .gitignore not found`);
+            context.warnings.push(`[W901] .gitignore not found`);
         } else {
             const rules = (context['/.gitignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
             rules.forEach((name, i) => {
@@ -1462,8 +1477,8 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        url: 'https://github.com/ioBroker/ioBroker.tileboard',
-        //url: 'https://github.com/AlCalzone/ioBroker.zwave2'
+        //url: 'https://github.com/ioBroker/ioBroker.tileboard',
+        url: 'https://github.com/AlCalzone/ioBroker.zwave2'
         //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
         const context = JSON.parse(data.body);
