@@ -1104,9 +1104,38 @@ function checkRepo(context) {
     });
 }
 
+function extractWords(words) {
+    try {
+        const lines = words.split(/\r\n|\r|\n/g);
+        let i = 0;
+        while (!lines[i].match(/^systemDictionary = {/)) {
+            i++;
+        }
+        lines.splice(0, i);
+
+        // remove last empty lines
+        i = lines.length - 1;
+        while (!lines[i]) {
+            i--;
+        }
+        if (i < lines.length - 1) {
+            lines.splice(i + 1);
+        }
+
+        lines[0] = lines[0].replace('systemDictionary = ', '');
+        lines[lines.length - 1] = lines[lines.length - 1].trim().replace(/};$/, '}');
+        words = lines.join('\n');
+        const resultFunc = new Function('return ' + words + ';');
+
+        return resultFunc();
+    } catch (e) {
+        return null;
+    }
+}
+
 // E5xx
 function checkCode(context) {
-    const readFiles = ['.npmignore', '.gitignore', 'admin/index_m.html', 'iob_npm.done'];
+    const readFiles = ['.npmignore', '.gitignore', 'admin/index_m.html', 'iob_npm.done', 'admin/words.js'];
     if (context.packageJson.main) {
         readFiles.push(context.packageJson.main);
     }
@@ -1167,6 +1196,27 @@ function checkCode(context) {
                 if (context['/iob_npm.done']) {
                     context.errors.push('[E503] "iob_npm.done" found in repo! Please add it to .gitignore');
                 }
+
+                if (context['/admin/words.js']) {
+                    // at least 3 languages must be in
+                    const words = extractWords(context['/admin/words.js']);
+                    if (words) {
+                        const problem = Object.keys(words).filter(word => !words[word].de || !words[word].ru);
+                        if (problem.length > 3) {
+                            context.errors.push(`[E506] More non translated in german or russian words found in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
+                        } else {
+                            problem.forEach(word => {
+                                if (!words[word].de) {
+                                    context.errors.push(`[E506] Word "${word}" is not translated to german in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
+                                }
+                                if (!words[word].ru) {
+                                    context.errors.push(`[E506] Word "${word}" is not translated to russian in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
+                                }
+                            });
+                        }
+                    }
+                }
+
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
                     if (!context['/' + context.packageJson.main]) {
                         context.errors.push('[E504] "' + context.packageJson.main + ' found in package.json, but not found as file');
@@ -1481,9 +1531,10 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        //url: 'https://github.com/ioBroker/ioBroker.tileboard',
-        url: 'https://github.com/AlCalzone/ioBroker.zwave2'
-        //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
+        // url: 'https://github.com/ioBroker/ioBroker.tileboard',
+        // url: 'https://github.com/AlCalzone/ioBroker.zwave2',
+        url: 'https://github.com/klein0r/ioBroker.trashschedule',
+        // url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
         const context = JSON.parse(data.body);
         if (context.errors.length) {
