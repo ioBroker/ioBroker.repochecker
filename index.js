@@ -846,6 +846,10 @@ function checkIOPackageJson(context) {
                     context.checks.push('"main" found in package.json');
                 }
 
+                if (context.ioPackageJson.common.installedFrom) {
+                    context.errors.push('[E144] common.installedFrom field found in io-package.json. Must be removed.');
+                }
+
                 if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {
@@ -883,7 +887,7 @@ function checkIOPackageJson(context) {
                 } else {
                     resolve(context);
                 }
-                // max number is E143
+                // max number is E144
             }
         })
     });
