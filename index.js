@@ -1225,7 +1225,7 @@ function checkCode(context) {
                             context.errors.push('[E504] found setInterval in "' + context.packageJson.main + ', but no clearInterval detected');
                         }
                         if (context['/' + context.packageJson.main].includes('setTimeout(') && !context['/' + context.packageJson.main].includes('clearTimeout(')) {
-                            context.warnings.push('[W505] setTimout found in "' + context.packageJson.main + ', but no clearTimeout detected');
+                            context.warnings.push('[W505] setTimeout found in "' + context.packageJson.main + ', but no clearTimeout detected');
                         }
                     }
                 }
