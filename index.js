@@ -160,7 +160,7 @@ function checkPackageJson(githubUrl, context) {
             }
 
             if (adapterName.match(/[^-_a-z0-9]/)) {
-                context.errors.push('[E006] Invalid characters found in adapter name "' + adapterName + '". Only lowercase chars, "-" and "_" are allowed');
+                context.errors.push('[E006] Invalid characters found in adapter name "' + adapterName + '". Only lowercase chars, digits, "-" and "_" are allowed');
             } else {
                 context.checks.push('No invalid characters found in "' + adapterName + '"');
             }
