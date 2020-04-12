@@ -15,6 +15,7 @@ const util     = require('util');
 const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
+const version  = '1.2.9';
 
 let request;
 let https;
@@ -901,9 +902,21 @@ function checkIOPackageJson(context) {
 function checkNpm(context) {
     return new Promise(resolve => {
         request('https://api.npms.io/v2/package/iobroker.' + context.adapterName, (err, status, body) => {
-            if (!body) {
-                context.errors.push('[E200] Not found on npm. Please publish');
-                return resolve(context);
+            // bug in NPM some modules could be accessed via normal web page, but not by API
+            if (!body || (status && status.statusCode >= 400)) {
+                return request('https://www.npmjs.com/package/iobroker.' + context.adapterName, (err, status, body) => {
+                    if (!body || (status && status.statusCode >= 400)) {
+                        context.errors.push('[E200] Not found on npm. Please publish');
+                    } else {
+                        context.checks.push('Adapter found on npm');
+                        if (!body.includes('href="/~bluefox"') && body.includes('href="/~iobluefox"')) {
+                            context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
+                        } else {
+                            context.checks.push('Bluefox found in collaborators on NPM');
+                        }
+                    }
+                    resolve(context);
+                });
             }
             context.checks.push('Adapter found on npm');
 
@@ -1519,14 +1532,14 @@ function check(request, context, callback) {
             .then(context => checkGitIgnore(context))
             .then(context => {
                 console.log('OK');
-                return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors, warnings: context.warnings}));
+                return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors, warnings: context.warnings, version}));
             })
             .catch(err => {
                 console.error(err);
                 if (ctx) {
-                    return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings}));
+                    return callback(null, makeResponse(501, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings, version}));
                 } else {
-                    return callback(null, makeResponse(501, {result: 'Errors found', checks: [], errors: [err], warnings: []}));
+                    return callback(null, makeResponse(501, {result: 'Errors found', checks: [], errors: [err], warnings: [], version}));
                 }
             });
     }

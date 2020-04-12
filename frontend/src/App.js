@@ -73,6 +73,7 @@ class App extends Component {
             warnings: [],
             result: [],
             screenWidth: window.innerWidth,
+            version: 'Adapter checker',
         };
 
         if (window.document.location.search) {
@@ -84,9 +85,8 @@ class App extends Component {
                     this.state.url = decodeURIComponent(parts[1]);
                 }
             });
-            setTimeout(() => {
-                this.onCheck();
-            }, 500);
+
+            setTimeout(() => this.onCheck(), 500);
         }
 
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -123,6 +123,7 @@ class App extends Component {
                     errors: data.errors || [],
                     warnings: data.warnings || [],
                     result: data.checks || [],
+                    version: 'v' + data.version,
                     requesting: false
                 });
             }
@@ -132,22 +133,23 @@ class App extends Component {
     renderResult() {
         return (
             <List component="nav">
-                {this.state.result.map((line, i) => (<ListItem>
+                {this.state.result.map((line, i) => (<ListItem key={line}>
                     <ListItemIcon>
                         <CheckIcon className={this.props.classes.ok} />
                     </ListItemIcon>
-                    <ListItemText primary={line} secondary={i + 1}/>
+                    <ListItemText primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
                 </ListItem>))}
             </List>);
     }
+
     renderError() {
         return (
             <List component="nav">
-                {this.state.errors.map((line, i) => (<ListItem>
+                {this.state.errors.map((line, i) => (<ListItem key={line}>
                     <ListItemIcon>
                         <ErrorIcon className={this.props.classes.error} />
                     </ListItemIcon>
-                    <ListItemText className={this.props.classes.error} primary={line} secondary={i + 1}/>
+                    <ListItemText className={this.props.classes.error} primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
                 </ListItem>))}
             </List>);
     }
@@ -155,11 +157,11 @@ class App extends Component {
     renderWarnings() {
         return (
             <List component="nav">
-                {this.state.warnings.map((line, i) => (<ListItem>
+                {this.state.warnings.map((line, i) => (<ListItem key={line}>
                     <ListItemIcon>
                         <WarningIcon className={this.props.classes.warning} />
                     </ListItemIcon>
-                    <ListItemText className={this.props.classes.warning} primary={line} secondary={i + 1}/>
+                    <ListItemText className={this.props.classes.warning} primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
                 </ListItem>))}
             </List>);
     }
@@ -184,7 +186,7 @@ class App extends Component {
             <div className={this.props.classes.body}>
                 <AppBar position="static" color="primary">
                     <Toolbar>
-                        {this.state.screenWidth > NARROW_WIDTH ? (<h4 className={this.props.classes.toolbarTitle}>Adapter checker</h4>) : null}
+                        {this.state.screenWidth > NARROW_WIDTH ? (<h4 className={this.props.classes.toolbarTitle}>{this.state.version}</h4>) : null}
                         <Input
                             type="text"
                             placeholder="https://github.com/USER/ioBroker.ADAPTER"
@@ -212,14 +214,14 @@ class App extends Component {
                 </AppBar>
                 <div className={this.props.classes.info}>
                     {this.state.result.length ? [
-                        (<Button key="github" color="primary" onClick={() => this.onOpen('')}>github.com</Button>),
-                        (<Button key="package.json" color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>),
-                        (<Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>)
-                        (<Button key="travis" color="primary" onClick={() => this.onOpenTravis()}>travis-ci.org</Button>)
+                        (<Button key="github"          color="primary" onClick={() => this.onOpen('')}>github.com</Button>),
+                        (<Button key="package.json"    color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>),
+                        (<Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>),
+                        (<Button key="travis"          color="primary" onClick={() => this.onOpenTravis()}>travis-ci.org</Button>)
                     ] : null}
-                    {this.state.errors ? this.renderError() : null}
+                    {this.state.errors   ? this.renderError()    : null}
                     {this.state.warnings ? this.renderWarnings() : null}
-                    {this.state.result ? this.renderResult() : null}
+                    {this.state.result   ? this.renderResult()   : null}
                 </div>
             </div>
         );
