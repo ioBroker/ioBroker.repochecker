@@ -1,4 +1,4 @@
-/* 1.2.8 2020.03.08
+/* 1.2.9 2020.04.12
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -10,13 +10,14 @@
                    |_|
 
  */
-let request;
-const unzip = require('unzip');
-const util = require('util');
-const stream = require('stream');
+const unzip    = require('unzip');
+const util     = require('util');
+const stream   = require('stream');
 const Writable = stream.Writable;
+const sizeOf   = require('image-size');
+
+let request;
 let https;
-const sizeOf = require('image-size');
 
 const memStore = { };
 
