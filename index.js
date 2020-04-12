@@ -837,6 +837,9 @@ function checkIOPackageJson(context) {
                     if (Object.keys(context.ioPackageJson.common.news).length > 20) {
                         context.errors.push('[E130] Too many news found in io-package.json. Mast be less than 21. Please remove old news.');
                     }
+                    if (!context.ioPackageJson.common.news[context.ioPackageJson.common.version]) {
+                        context.errors.push(`[E145] No news found for actual version ${context.ioPackageJson.common.version}`);
+                    }
                 }
 
                 // now check the package.json again, because it is valid only for onlyWWW
@@ -887,7 +890,7 @@ function checkIOPackageJson(context) {
                 } else {
                     resolve(context);
                 }
-                // max number is E144
+                // max number is E145
             }
         })
     });
