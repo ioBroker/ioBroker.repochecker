@@ -1282,14 +1282,14 @@ function checkGithubRepo(context) {
                 data = data.replace(/[\r\n]/g, '');
                 let m = data.match(/About<\/h2>\s+<p.*?>([^<]+)<\/p>/);
                 if (!m || !m[1] || !m[1].trim()) {
-                    context.errors.push(`[E801] No repository about text found. Please go to "${context.githubUrlOriginal}", press the first "Edit" button you will find on the page and add the description.`);
+                    context.errors.push(`[E801] No repository about text found. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add the description.`);
                 } else {
                     context.checks.push('Github repository about found.');
                 }
 
                 m = data.replace(/[\r\n]/g, '').match(/Topics<\/h3>/);
                 if (!m) {
-                    context.errors.push(`[E802] No topics found in the repository. Please go to "${context.githubUrlOriginal}" and press "Manage topics"`);
+                    context.errors.push(`[E802] No topics found in the repository. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add some topics.`);
                 } else {
                     context.checks.push('Github repository about found.');
                 }
