@@ -855,6 +855,34 @@ function checkIOPackageJson(context) {
                     context.errors.push('[E144] common.installedFrom field found in io-package.json. Must be removed.');
                 }
 
+                if (context.ioPackageJson.instanceObjects) {
+                    const instanceObjects = context.ioPackageJson.instanceObjects;
+                    if (!(instanceObjects instanceof Array)) {
+                        context.errors.push('[E146] instanceObjects must be an Array in io-package.json');
+                    } else {
+                        const allowedObjectTypes = ['state', 'channel', 'device', 'enum', 'host', 'adapter', 'instance', 'meta', 'config', 'script', 'user', 'group', 'chart', 'folder'];
+                        const allowedStateTypes = ['number', 'string', 'boolean', 'array', 'object', 'mixed', 'file', 'json'];
+
+                        instanceObjects.forEach(instanceObject => {
+                            if (instanceObject.type !== undefined && !allowedObjectTypes.includes(instanceObject.type)) {
+                                context.errors.push('[E147] instanceObject type has an invalid type: ' + instanceObject.type);
+                            }
+
+                            if (instanceObject.common) {
+                                if (instanceObject.common.type !== undefined) {
+                                    if (typeof instanceObject.common.type !== 'string') {
+                                        context.errors.push(`[E148] instanceObject common.type has an invalid type! Expected "string", received  "${typeof instanceObject.common.type}"`);
+                                    }
+
+                                    if (instanceObject.type === 'state' && !allowedStateTypes.includes(instanceObject.common.type)) {
+                                        context.errors.push('[E149] instanceObject common.type has an invalid value: ' + instanceObject.common.type);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+
                 if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {
@@ -892,7 +920,8 @@ function checkIOPackageJson(context) {
                 } else {
                     resolve(context);
                 }
-                // max number is E145
+
+                // max number is E149
             }
         });
     });
