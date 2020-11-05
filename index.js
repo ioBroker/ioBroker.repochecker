@@ -15,7 +15,7 @@ const util     = require('util');
 const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
-const version  = '1.2.9';
+const version  = '1.2.10';
 
 let request;
 let https;
@@ -61,12 +61,12 @@ if (typeof require !== 'undefined') {
                 resp.on('end', () => cb(null, {statusCode: resp.statusCode, headers: resp.headers}, data));
                 resp.on('error', () => err => cb(err));
             }).on('error', err => cb(err));
-        }
+        };
     }
 } else {
     request = function (url, cb) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
                     cb(null, {statusCode: this.status}, this.responseText);
@@ -77,7 +77,7 @@ if (typeof require !== 'undefined') {
         };
         xhttp.open('GET', url, true);
         xhttp.send();
-    }
+    };
 }
 
 function downloadFile(githubUrl, path, binary) {
@@ -260,34 +260,34 @@ function checkPackageJson(githubUrl, context) {
 }
 
 const allowedTypes = {
-    "alarm": "security of home, car, boat, ...",
-    "climate-control": "climate, heaters, air filters, water heaters, ...",
-    "communication": "deliver data for other services via RESTapi, websockets",
-    "date-and-time": "schedules, calendars, ...",
-    "energy": "energy metering",
-    "metering": "other, but energy metering (water, gas, oil, ...)",
-    "garden": "mower, springs, ...",
-    "general": "general purpose adapters, like admin, web, discovery, ...",
-    "geoposition": "geo-positioning. These adapters delivers or accepst the position of other objects or persons.",
-    "hardware": "different multi-purpose hardware, arduino, esp, bluetooth, ...",
-    "household": "vacuum-cleaner, kitchen devices, ...",
-    "health": "Fitness sensors, scales, blood pressure, ...",
-    "infrastructure": "Network, printers, phones, NAS, ...",
-    "iot-systems": "Other comprehensive smarthome systems (software and hardware)",
-    "lighting": "light",
-    "logic": "rules, scripts, parsers, scenes, ...",
-    "messaging": "these adapters send and receive messages from message services: telegram, email, whatsapp, ...",
-    "misc-data": "export/import of some unsorted information, contacts, systeminfo, gazoline prises, share curses, currents (EUR=>USD), ...",
-    "multimedia": "TV, AV Receivers, TV play boxes, Android/apple TV boxes, multi-room music, IR controls, speech input/output, ...",
-    "network": "ping, network detectors, UPnP, ...",
-    "protocols": "Communication protocols: MQTT,",
-    "storage": "logging, data protocols, SQL/NoSQL DBs, file storage, ...",
-    "utility": "different help adapters. Like backup, export/import",
-    "vehicle": "cars",
-    "visualization": "visualisation, like vis, material, mobile",
-    "visualization-icons": "icons for visualisation",
-    "visualization-widgets": "iobroker.vis widgets",
-    "weather": "weather info, air quality, environment statistics"
+    'alarm': 'security of home, car, boat, ...',
+    'climate-control': 'climate, heaters, air filters, water heaters, ...',
+    'communication': 'deliver data for other services via RESTapi, websockets',
+    'date-and-time': 'schedules, calendars, ...',
+    'energy': 'energy metering',
+    'metering': 'other, but energy metering (water, gas, oil, ...)',
+    'garden': 'mower, springs, ...',
+    'general': 'general purpose adapters, like admin, web, discovery, ...',
+    'geoposition': 'geo-positioning. These adapters delivers or accepst the position of other objects or persons.',
+    'hardware': 'different multi-purpose hardware, arduino, esp, bluetooth, ...',
+    'household': 'vacuum-cleaner, kitchen devices, ...',
+    'health': 'Fitness sensors, scales, blood pressure, ...',
+    'infrastructure': 'Network, printers, phones, NAS, ...',
+    'iot-systems': 'Other comprehensive smarthome systems (software and hardware)',
+    'lighting': 'light',
+    'logic': 'rules, scripts, parsers, scenes, ...',
+    'messaging': 'these adapters send and receive messages from message services: telegram, email, whatsapp, ...',
+    'misc-data': 'export/import of some unsorted information, contacts, systeminfo, gazoline prises, share curses, currents (EUR=>USD), ...',
+    'multimedia': 'TV, AV Receivers, TV play boxes, Android/apple TV boxes, multi-room music, IR controls, speech input/output, ...',
+    'network': 'ping, network detectors, UPnP, ...',
+    'protocols': 'Communication protocols: MQTT,',
+    'storage': 'logging, data protocols, SQL/NoSQL DBs, file storage, ...',
+    'utility': 'different help adapters. Like backup, export/import',
+    'vehicle': 'cars',
+    'visualization': 'visualisation, like vis, material, mobile',
+    'visualization-icons': 'icons for visualisation',
+    'visualization-widgets': 'iobroker.vis widgets',
+    'weather': 'weather info, air quality, environment statistics'
 };
 
 const reservedAdapterNames = [
@@ -894,7 +894,7 @@ function checkIOPackageJson(context) {
                 }
                 // max number is E145
             }
-        })
+        });
     });
 }
 
@@ -947,14 +947,14 @@ function checkNpm(context) {
 // E3xx
 function checkTravis(context) {
     return new Promise(resolve => {
-        let travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
+        const travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
 
         request(travisURL, (err, status, body) => {
             if (!status) {
                 context.errors.push('[E300] Not found on travis. Please setup travis');
                 return resolve(context);
             }
-            if (!status.headers || !status.headers['content-disposition']){
+            if (!status.headers || !status.headers['content-disposition']) {
                 context.errors.push('[E300] Not found on travis. Please setup travis');
                 return resolve(context);
             }
@@ -1385,22 +1385,22 @@ function checkNpmIgnore(context) {
         'tsconfig.json',
         'tsconfig.build.json',
         'iob_npm.done',
-//         '.git/',
-//         '.github/',
-//         '.idea/',
-//         '.gitignore',
-// //        '.npmignore',
-//         '.travis.yml',
-//         '.babelrc',
-//         '.editorconfig',
-//         '.eslintignore',
-//         '.eslintrc.js',
-//         '.fimbullinter.yaml',
-//         '.lgtm.yml',
-//         '.prettierignore',
-//         '.prettierignore',
-//         '.prettierrc.js',
-//         '.vscode/',
+        //         '.git/',
+        //         '.github/',
+        //         '.idea/',
+        //         '.gitignore',
+        //         '.npmignore',
+        //         '.travis.yml',
+        //         '.babelrc',
+        //         '.editorconfig',
+        //         '.eslintignore',
+        //         '.eslintrc.js',
+        //         '.fimbullinter.yaml',
+        //         '.lgtm.yml',
+        //         '.prettierignore',
+        //         '.prettierignore',
+        //         '.prettierrc.js',
+        //         '.vscode/',
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/.npmignore
@@ -1410,14 +1410,14 @@ function checkNpmIgnore(context) {
         } else {
             const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
             rules.forEach((name, i) => {
-                 if (name.includes('*')) {
-                     rules[i] = new RegExp(name
-                         .replace('.', '\\.')
-                         .replace('/', '\\/')
-                         .replace('**', '.*')
-                         .replace('*', '[^\\/]*')
-                     );
-                 }
+                if (name.includes('*')) {
+                    rules[i] = new RegExp(name
+                        .replace('.', '\\.')
+                        .replace('/', '\\/')
+                        .replace('**', '.*')
+                        .replace('*', '[^\\/]*')
+                    );
+                }
             });
 
             if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
@@ -1518,7 +1518,7 @@ function check(request, context, callback) {
         checkPackageJson(request.queryStringParameters.url)
             .then(context => {
                 ctx = context;
-                return checkIOPackageJson(context)
+                return checkIOPackageJson(context);
             })
             .then(context => checkNpm(context))
             .then(context => checkTravis(context))
