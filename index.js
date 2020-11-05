@@ -10,7 +10,7 @@
                    |_|
 
  */
-const unzip    = require('unzip');
+const unzipper = require('unzipper');
 const util     = require('util');
 const stream   = require('stream');
 const Writable = stream.Writable;
@@ -1171,7 +1171,7 @@ function checkCode(context) {
 
                 return new Promise(_resolve => {
                     bufferStream
-                        .pipe(unzip.Parse())
+                        .pipe(unzipper.Parse())
                         .on('entry', entry => {
                             // console.log('Check ' + entry.path);
                             if (!found && entry.type === 'Directory' && entry.path.match(/\/node_modules\/$/)) {
