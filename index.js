@@ -883,6 +883,18 @@ function checkIOPackageJson(context) {
                     }
                 }
 
+                if (!context.ioPackageJson.common.connectionType) {
+                    context.errors.push('[E150] No common.connectionType found in io-package.json');
+                } else if (context.ioPackageJson.common.connectionType !== undefined && !['local', 'cloud'].includes(context.ioPackageJson.common.connectionType)) {
+                    context.errors.push('[E151] common.connectionType type has an invalid type ' + context.ioPackageJson.common.connectionType);
+                }
+
+                if (!context.ioPackageJson.common.dataSource) {
+                    context.errors.push('[E152] No common.dataSource found in io-package.json');
+                } else if (context.ioPackageJson.common.dataSource !== undefined && !['poll', 'push', 'assumption'].includes(context.ioPackageJson.common.dataSource)) {
+                    context.errors.push('[E152] common.dataSource type has an invalid type ' + context.ioPackageJson.common.dataSource);
+                }
+
                 if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {
@@ -921,7 +933,7 @@ function checkIOPackageJson(context) {
                     resolve(context);
                 }
 
-                // max number is E149
+                // max number is E152
             }
         });
     });
