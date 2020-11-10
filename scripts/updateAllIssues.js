@@ -57,7 +57,7 @@ const start = async function () {
             }
             // confirm array is populated
             if (arr) {
-                var len = arr.length;
+                const len = arr.length;
                 i = i ? (i < 0 ? Math.max(0, len + i) : i) : 0;
                 elem = elem.toLowerCase();
                 for (; i < len; i++) {
@@ -78,14 +78,14 @@ const startFunc = async function () {
 
     if (adapterList) {
 
-        let result = await findAllAdapters(adapterList);
+        const result = await findAllAdapters(adapterList);
 
-		if (checkOkCheck) {
-          adapterList.checkOk.forEach(function (full_name) {
-              adapterList[toGet][full_name] = {};
-              adapterList[toGet][full_name].issue = null;
-          });
-          adapterList.checkOk = [];
+        if (checkOkCheck) {
+            adapterList.checkOk.forEach(function (full_name) {
+                adapterList[toGet][full_name] = {};
+                adapterList[toGet][full_name].issue = null;
+            });
+            adapterList.checkOk = [];
         }
 
         for (const full_name in adapterList[toGet]) {
@@ -180,7 +180,7 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
                 xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
             error: function (xhr, status, error) {
-                var err = JSON.parse(xhr.responseText);
+                const err = JSON.parse(xhr.responseText);
                 $('#liste').append(`<li style='color: red;'>${repo} - issue failed (${status}: ${error})</li>`);
             },
             success: function (issue) {
@@ -207,7 +207,7 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
                 xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
             error: function (xhr, status, error) {
-                var err = JSON.parse(xhr.responseText);
+                const err = JSON.parse(xhr.responseText);
                 $('#liste').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error})</li>`);
             },
             success: function (issue) {
@@ -232,7 +232,7 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
 function closeIssue(repo, issueNr) {
 
     if (issueNr) {
-        var urlComment = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr + '/comments';
+        const urlComment = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr + '/comments';
         const issueBody = 'Thanks, that all bugs have been fixed.';
         $.ajax({
             url: urlComment,
@@ -241,7 +241,7 @@ function closeIssue(repo, issueNr) {
                 xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
             error: function (xhr, status, error) {
-                var err = JSON.parse(xhr.responseText);
+                const err = JSON.parse(xhr.responseText);
                 $('#liste').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error})</li>`);
             },
             success: function (issue) {
@@ -252,8 +252,8 @@ function closeIssue(repo, issueNr) {
                 body: issueBody
             })
         });
-        
-        var urlIssue = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr;
+
+        const urlIssue = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr;
         $.ajax({
             url: urlIssue,
             type: 'PATCH',
@@ -264,7 +264,7 @@ function closeIssue(repo, issueNr) {
                 state: 'closed'
             })
         });
-        
+
     } else {
         adapterList.checkOk.push(repo);
         delete adapterList[toGet][repo];
@@ -322,7 +322,7 @@ async function findAllAdapters() {
                 cursor = repos.data.search.pageInfo.endCursor;
             } else {
                 hasNext = false;
-                cursor = "";
+                cursor = '';
             }
         }
     }

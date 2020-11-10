@@ -3,8 +3,15 @@
   "version": "1.2.10",
   "name": "iobroker.repochecker",
   "dependencies": {
-    "unzip": "^0.1.11",
+    "image-size": "^0.8.3",
     "request": "^2.88.2",
-    "image-size": "^0.8.3"
+    "unzipper": "^0.10.11"
+  },
+  "devDependencies": {
+    "eslint": "^7.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint"
   }
 }

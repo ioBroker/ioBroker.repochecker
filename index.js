@@ -10,12 +10,12 @@
                    |_|
 
  */
-const unzip    = require('unzip');
+const unzipper = require('unzipper');
 const util     = require('util');
 const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
-const version  = '1.2.9';
+const version  = '1.2.10';
 
 let request;
 let https;
@@ -61,12 +61,12 @@ if (typeof require !== 'undefined') {
                 resp.on('end', () => cb(null, {statusCode: resp.statusCode, headers: resp.headers}, data));
                 resp.on('error', () => err => cb(err));
             }).on('error', err => cb(err));
-        }
+        };
     }
 } else {
     request = function (url, cb) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
                     cb(null, {statusCode: this.status}, this.responseText);
@@ -77,7 +77,7 @@ if (typeof require !== 'undefined') {
         };
         xhttp.open('GET', url, true);
         xhttp.send();
-    }
+    };
 }
 
 function downloadFile(githubUrl, path, binary) {
@@ -260,34 +260,34 @@ function checkPackageJson(githubUrl, context) {
 }
 
 const allowedTypes = {
-    "alarm": "security of home, car, boat, ...",
-    "climate-control": "climate, heaters, air filters, water heaters, ...",
-    "communication": "deliver data for other services via RESTapi, websockets",
-    "date-and-time": "schedules, calendars, ...",
-    "energy": "energy metering",
-    "metering": "other, but energy metering (water, gas, oil, ...)",
-    "garden": "mower, springs, ...",
-    "general": "general purpose adapters, like admin, web, discovery, ...",
-    "geoposition": "geo-positioning. These adapters delivers or accepst the position of other objects or persons.",
-    "hardware": "different multi-purpose hardware, arduino, esp, bluetooth, ...",
-    "household": "vacuum-cleaner, kitchen devices, ...",
-    "health": "Fitness sensors, scales, blood pressure, ...",
-    "infrastructure": "Network, printers, phones, NAS, ...",
-    "iot-systems": "Other comprehensive smarthome systems (software and hardware)",
-    "lighting": "light",
-    "logic": "rules, scripts, parsers, scenes, ...",
-    "messaging": "these adapters send and receive messages from message services: telegram, email, whatsapp, ...",
-    "misc-data": "export/import of some unsorted information, contacts, systeminfo, gazoline prises, share curses, currents (EUR=>USD), ...",
-    "multimedia": "TV, AV Receivers, TV play boxes, Android/apple TV boxes, multi-room music, IR controls, speech input/output, ...",
-    "network": "ping, network detectors, UPnP, ...",
-    "protocols": "Communication protocols: MQTT,",
-    "storage": "logging, data protocols, SQL/NoSQL DBs, file storage, ...",
-    "utility": "different help adapters. Like backup, export/import",
-    "vehicle": "cars",
-    "visualization": "visualisation, like vis, material, mobile",
-    "visualization-icons": "icons for visualisation",
-    "visualization-widgets": "iobroker.vis widgets",
-    "weather": "weather info, air quality, environment statistics"
+    'alarm': 'security of home, car, boat, ...',
+    'climate-control': 'climate, heaters, air filters, water heaters, ...',
+    'communication': 'deliver data for other services via RESTapi, websockets',
+    'date-and-time': 'schedules, calendars, ...',
+    'energy': 'energy metering',
+    'metering': 'other, but energy metering (water, gas, oil, ...)',
+    'garden': 'mower, springs, ...',
+    'general': 'general purpose adapters, like admin, web, discovery, ...',
+    'geoposition': 'geo-positioning. These adapters delivers or accepst the position of other objects or persons.',
+    'hardware': 'different multi-purpose hardware, arduino, esp, bluetooth, ...',
+    'household': 'vacuum-cleaner, kitchen devices, ...',
+    'health': 'Fitness sensors, scales, blood pressure, ...',
+    'infrastructure': 'Network, printers, phones, NAS, ...',
+    'iot-systems': 'Other comprehensive smarthome systems (software and hardware)',
+    'lighting': 'light',
+    'logic': 'rules, scripts, parsers, scenes, ...',
+    'messaging': 'these adapters send and receive messages from message services: telegram, email, whatsapp, ...',
+    'misc-data': 'export/import of some unsorted information, contacts, systeminfo, gazoline prises, share curses, currents (EUR=>USD), ...',
+    'multimedia': 'TV, AV Receivers, TV play boxes, Android/apple TV boxes, multi-room music, IR controls, speech input/output, ...',
+    'network': 'ping, network detectors, UPnP, ...',
+    'protocols': 'Communication protocols: MQTT,',
+    'storage': 'logging, data protocols, SQL/NoSQL DBs, file storage, ...',
+    'utility': 'different help adapters. Like backup, export/import',
+    'vehicle': 'cars',
+    'visualization': 'visualisation, like vis, material, mobile',
+    'visualization-icons': 'icons for visualisation',
+    'visualization-widgets': 'iobroker.vis widgets',
+    'weather': 'weather info, air quality, environment statistics'
 };
 
 const reservedAdapterNames = [
@@ -855,6 +855,46 @@ function checkIOPackageJson(context) {
                     context.errors.push('[E144] common.installedFrom field found in io-package.json. Must be removed.');
                 }
 
+                if (context.ioPackageJson.instanceObjects) {
+                    const instanceObjects = context.ioPackageJson.instanceObjects;
+                    if (!(instanceObjects instanceof Array)) {
+                        context.errors.push('[E146] instanceObjects must be an Array in io-package.json');
+                    } else {
+                        const allowedObjectTypes = ['state', 'channel', 'device', 'enum', 'host', 'adapter', 'instance', 'meta', 'config', 'script', 'user', 'group', 'chart', 'folder'];
+                        const allowedStateTypes = ['number', 'string', 'boolean', 'array', 'object', 'mixed', 'file', 'json'];
+
+                        instanceObjects.forEach(instanceObject => {
+                            if (instanceObject.type !== undefined && !allowedObjectTypes.includes(instanceObject.type)) {
+                                context.errors.push('[E147] instanceObject type has an invalid type: ' + instanceObject.type);
+                            }
+
+                            if (instanceObject.common) {
+                                if (instanceObject.common.type !== undefined) {
+                                    if (typeof instanceObject.common.type !== 'string') {
+                                        context.errors.push(`[E148] instanceObject common.type has an invalid type! Expected "string", received  "${typeof instanceObject.common.type}"`);
+                                    }
+
+                                    if (instanceObject.type === 'state' && !allowedStateTypes.includes(instanceObject.common.type)) {
+                                        context.errors.push('[E149] instanceObject common.type has an invalid value: ' + instanceObject.common.type);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+
+                if (!context.ioPackageJson.common.connectionType) {
+                    context.errors.push('[E150] No common.connectionType found in io-package.json');
+                } else if (context.ioPackageJson.common.connectionType !== undefined && !['local', 'cloud'].includes(context.ioPackageJson.common.connectionType)) {
+                    context.errors.push('[E151] common.connectionType type has an invalid type ' + context.ioPackageJson.common.connectionType);
+                }
+
+                if (!context.ioPackageJson.common.dataSource) {
+                    context.errors.push('[E152] No common.dataSource found in io-package.json');
+                } else if (context.ioPackageJson.common.dataSource !== undefined && !['poll', 'push', 'assumption'].includes(context.ioPackageJson.common.dataSource)) {
+                    context.errors.push('[E152] common.dataSource type has an invalid type ' + context.ioPackageJson.common.dataSource);
+                }
+
                 if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {
@@ -892,9 +932,10 @@ function checkIOPackageJson(context) {
                 } else {
                     resolve(context);
                 }
-                // max number is E145
+
+                // max number is E152
             }
-        })
+        });
     });
 }
 
@@ -947,14 +988,14 @@ function checkNpm(context) {
 // E3xx
 function checkTravis(context) {
     return new Promise(resolve => {
-        let travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
+        const travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
 
         request(travisURL, (err, status, body) => {
             if (!status) {
                 context.errors.push('[E300] Not found on travis. Please setup travis');
                 return resolve(context);
             }
-            if (!status.headers || !status.headers['content-disposition']){
+            if (!status.headers || !status.headers['content-disposition']) {
                 context.errors.push('[E300] Not found on travis. Please setup travis');
                 return resolve(context);
             }
@@ -1171,7 +1212,7 @@ function checkCode(context) {
 
                 return new Promise(_resolve => {
                     bufferStream
-                        .pipe(unzip.Parse())
+                        .pipe(unzipper.Parse())
                         .on('entry', entry => {
                             // console.log('Check ' + entry.path);
                             if (!found && entry.type === 'Directory' && entry.path.match(/\/node_modules\/$/)) {
@@ -1385,22 +1426,22 @@ function checkNpmIgnore(context) {
         'tsconfig.json',
         'tsconfig.build.json',
         'iob_npm.done',
-//         '.git/',
-//         '.github/',
-//         '.idea/',
-//         '.gitignore',
-// //        '.npmignore',
-//         '.travis.yml',
-//         '.babelrc',
-//         '.editorconfig',
-//         '.eslintignore',
-//         '.eslintrc.js',
-//         '.fimbullinter.yaml',
-//         '.lgtm.yml',
-//         '.prettierignore',
-//         '.prettierignore',
-//         '.prettierrc.js',
-//         '.vscode/',
+        //         '.git/',
+        //         '.github/',
+        //         '.idea/',
+        //         '.gitignore',
+        //         '.npmignore',
+        //         '.travis.yml',
+        //         '.babelrc',
+        //         '.editorconfig',
+        //         '.eslintignore',
+        //         '.eslintrc.js',
+        //         '.fimbullinter.yaml',
+        //         '.lgtm.yml',
+        //         '.prettierignore',
+        //         '.prettierignore',
+        //         '.prettierrc.js',
+        //         '.vscode/',
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/master/.npmignore
@@ -1410,14 +1451,14 @@ function checkNpmIgnore(context) {
         } else {
             const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
             rules.forEach((name, i) => {
-                 if (name.includes('*')) {
-                     rules[i] = new RegExp(name
-                         .replace('.', '\\.')
-                         .replace('/', '\\/')
-                         .replace('**', '.*')
-                         .replace('*', '[^\\/]*')
-                     );
-                 }
+                if (name.includes('*')) {
+                    rules[i] = new RegExp(name
+                        .replace('.', '\\.')
+                        .replace('/', '\\/')
+                        .replace('**', '.*')
+                        .replace('*', '[^\\/]*')
+                    );
+                }
             });
 
             if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
@@ -1518,7 +1559,7 @@ function check(request, context, callback) {
         checkPackageJson(request.queryStringParameters.url)
             .then(context => {
                 ctx = context;
-                return checkIOPackageJson(context)
+                return checkIOPackageJson(context);
             })
             .then(context => checkNpm(context))
             .then(context => checkTravis(context))
