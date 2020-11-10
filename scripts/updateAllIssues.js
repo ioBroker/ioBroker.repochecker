@@ -17,7 +17,7 @@ const start = async function () {
         if (!adapterList[toSet]) {
             adapterList[toSet] = {};
         }
-        $listeSuccess = $('#listeSuccess');
+        $listeSuccess = $('#listSuccess');
         $listeSuccess.append(`<li style='color: blue;'>ignored: ${adapterList.ignore.length}/<span id='ignore'></span></li>`);
         $listeSuccess.append(`<li style='color: blue;'>noIoPackage: ${adapterList.noIoPackage.length}/<span id='noIoPackage'></span></li>`);
         $listeSuccess.append(`<li style='color: blue;'>checkErrorOld:${Object.keys(adapterList.checkErrorOld).length}/<span id='checkErrorOld'></span></li>`);
@@ -35,7 +35,7 @@ const start = async function () {
         $('#' + toGet).text(Object.keys(adapterList[toGet]).length);
         $('#result').text(JSON.stringify(adapterList));
     } else {
-        $('#liste').append(`<li style='color: red;'>ERROR ${Object.keys(adapterList[toGet]).length} ${Object.keys(adapterList[toSet]).length}</li>`);
+        $('#list').append(`<li style='color: red;'>ERROR ${Object.keys(adapterList[toGet]).length} ${Object.keys(adapterList[toSet]).length}</li>`);
     }
 };
 
@@ -75,28 +75,30 @@ const start = async function () {
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const startFunc = async function () {
-
     if (adapterList) {
 
         const result = await findAllAdapters(adapterList);
 
         if (checkOkCheck) {
-            adapterList.checkOk.forEach(function (full_name) {
-                adapterList[toGet][full_name] = {};
-                adapterList[toGet][full_name].issue = null;
+            adapterList.checkOk.forEach(fullName => {
+                adapterList[toGet][fullName] = {};
+                adapterList[toGet][fullName].issue = null;
             });
             adapterList.checkOk = [];
         }
 
-        for (const full_name in adapterList[toGet]) {
-            const testLink = 'https://raw.githubusercontent.com/' + full_name;
+        for (const fullName in adapterList[toGet]) {
+            if (!adapterList[toGet].hasOwnProperty(fullName)) {
+                continue;
+            }
+            const testLink = `https://raw.githubusercontent.com/${fullName}`;
             const testResult = await doTheTest(testLink);
 
-            let issueNr = adapterList[toGet][full_name].issue;
+            let issueNr = adapterList[toGet][fullName].issue;
             let issuesList = [];
             if (issueNr) {
-                issuesList = adapterList[toGet][full_name].errorList;
-                if (adapterList[toGet][full_name].status !== 'open') {
+                issuesList = adapterList[toGet][fullName].errorList;
+                if (adapterList[toGet][fullName].status !== 'open') {
                     issueNr = null;
                 }
             }
@@ -113,50 +115,50 @@ const startFunc = async function () {
                     });
                     if (testResult.warnings && testResult.warnings.length > 0) {
                         issueBody += '\r\nI have also found warnings that may be fixed if possible.\r\n\r\n';
-                        testResult.warnings.forEach(function (issue) {
+                        testResult.warnings.forEach(issue => {
                             issueBody += `- [ ] ${issue}\r\n`;
                             warningList.push(issue.substring(1, 5));
                         });
                     }
 
                     issueBody += '\r\nThanks,\r\nyour automatic adapter checker.';
-                    issueBody += addComminityText(full_name);
+                    issueBody += addComminityText(fullName);
 
-                    const errorNotChanged = issueNr !== null && (errorList.length === issuesList.length && errorList.sort().every(function (value, index) {
-                        return value === issuesList.sort()[index];
-                    }));
+                    const errorNotChanged = issueNr !== null &&
+                        (errorList.length === issuesList.length && errorList
+                            .sort()
+                            .every((value, index) => value === issuesList.sort()[index])
+                        );
 
                     if (test) {
-                        testIssueCreation(full_name, testResult.errors.length, errorNotChanged, testResult.warnings);
+                        testIssueCreation(fullName, testResult.errors.length, errorNotChanged, testResult.warnings);
                     } else if (githubToken && !errorNotChanged) {
-                        createIssue(full_name, issueBody, testResult.errors.length, issueNr, errorList, warningList);
+                        createIssue(fullName, issueBody, testResult.errors.length, issueNr, errorList, warningList);
                     } else if (githubToken && errorNotChanged) {
-                        adapterList[toSet][full_name] = adapterList[toGet][full_name];
-                        delete adapterList[toGet][full_name];
-                        $('#liste').append(`<li style='color: blue;'>${full_name} no error changes</li>`);
+                        adapterList[toSet][fullName] = adapterList[toGet][fullName];
+                        delete adapterList[toGet][fullName];
+                        $('#list').append(`<li style='color: blue;'>${fullName} no error changes</li>`);
                     } else {
-                        testIssueCreation('NO TOKEN - ' + full_name, testResult.errors.length);
+                        testIssueCreation(`NO TOKEN - ${fullName}`, testResult.errors.length);
                     }
                 } catch (e) {
-                    console.error(full_name + ' - ' + e);
+                    console.error(`${fullName} - ${e}`);
                 }
             } else if (testResult && testResult.errors && testResult.errors.length === 0) {
                 if (!test && githubToken) {
-                    closeIssue(full_name, issueNr);
+                    closeIssue(fullName, issueNr);
                 }
-                $('#liste').append(`<li style='color: green;'>${full_name} fixed - checked but no error found</li>`);
+                $('#list').append(`<li style='color: green;'>${fullName} fixed - checked but no error found</li>`);
             }
         }
 
     }
 };
 
-$('button').on('click', function () {
-    start();
-});
+$('button').on('click', () => start());
 
-function addComminityText(full_name) {
-    if (!full_name.startsWith('ioBroker/') && !full_name.startsWith('iobroker-community-adapters/')) {
+function addComminityText(fullName) {
+    if (!fullName.startsWith('ioBroker/') && !fullName.startsWith('iobroker-community-adapters/')) {
         return '\r\n\r\nP.S.: There is a community in Github, which supports the maintenance and further development of adapters. There you will find many experienced developers who are always ready to assist anyone. New developers are always welcome there. For more informations visit: https://github.com/iobroker-community-adapters/info';
     } else {
         return '';
@@ -172,16 +174,16 @@ const interactor = new GithubInteractor(githubToken);
 function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
 
     if (issueNr) {
-        const url = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr;
+        const url = `https://api.github.com/repos/${repo}/issues/${issueNr}`;
         $.ajax({
             url: url,
             type: 'PATCH',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
+                xhr.setRequestHeader('Authorization', `token ${interactor.token}`);
             },
             error: function (xhr, status, error) {
                 const err = JSON.parse(xhr.responseText);
-                $('#liste').append(`<li style='color: red;'>${repo} - issue failed (${status}: ${error})</li>`);
+                $('#list').append(`<li style='color: red;'>${repo} - issue failed (${status}: ${error})</li>`);
             },
             success: function (issue) {
                 adapterList[toSet][repo] = {};
@@ -192,23 +194,23 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
                 adapterList[toSet][repo].status = issue.state;
                 adapterList[toSet][repo].createdDate = issue.created_at;
                 delete adapterList[toGet][repo];
-                $('#listeSuccess').append(`<li>${repo} (${count} errors) - issue updated</li>`);
+                $('#listSuccess').append(`<li>${repo} (${count} errors) - issue updated</li>`);
             },
             data: JSON.stringify({
                 body: issueBody
             })
         });
     } else {
-        const url = 'https://api.github.com/repos/' + repo + '/issues';
+        const url = `https://api.github.com/repos/${repo}/issues`;
         $.ajax({
             url: url,
             type: 'POST',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
+                xhr.setRequestHeader('Authorization', `token ${interactor.token}`);
             },
             error: function (xhr, status, error) {
                 const err = JSON.parse(xhr.responseText);
-                $('#liste').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error})</li>`);
+                $('#list').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error})</li>`);
             },
             success: function (issue) {
                 adapterList[toSet][repo] = {};
@@ -219,7 +221,7 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
                 adapterList[toSet][repo].status = issue.state;
                 adapterList[toSet][repo].createdDate = issue.created_at;
                 delete adapterList[toGet][repo];
-                $('#listeSuccess').append(`<li>${repo} (${count} errors) - new issue created</li>`);
+                $('#listSuccess').append(`<li>${repo} (${count} errors) - new issue created</li>`);
             },
             data: JSON.stringify({
                 title: issueTitle,
@@ -232,17 +234,17 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
 function closeIssue(repo, issueNr) {
 
     if (issueNr) {
-        const urlComment = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr + '/comments';
+        const urlComment = `https://api.github.com/repos/${repo}/issues/${issueNr}/comments`;
         const issueBody = 'Thanks, that all bugs have been fixed.';
         $.ajax({
             url: urlComment,
             type: 'POST',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
+                xhr.setRequestHeader('Authorization', `token ${interactor.token}`);
             },
             error: function (xhr, status, error) {
                 const err = JSON.parse(xhr.responseText);
-                $('#liste').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error})</li>`);
+                $('#list').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error})</li>`);
             },
             success: function (issue) {
                 adapterList.checkOk.push(repo);
@@ -253,7 +255,7 @@ function closeIssue(repo, issueNr) {
             })
         });
 
-        const urlIssue = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr;
+        const urlIssue = `https://api.github.com/repos/${repo}/issues/${issueNr}`;
         $.ajax({
             url: urlIssue,
             type: 'PATCH',
@@ -280,8 +282,8 @@ async function getAdapterList() {
     }
 }
 
-function checkIgnores(full_name) {
-    return $.inArrayIn(full_name, adapterList.ignore) !== -1 || $.inArrayIn(full_name, Object.keys(adapterList[toGet])) !== -1 || $.inArrayIn(full_name, adapterList.checkOk) !== -1 || $.inArrayIn(full_name, Object.keys(adapterList.checkErrorOld)) !== -1 || $.inArrayIn(full_name, Object.keys(adapterList[toSet])) !== -1 || $.inArrayIn(full_name, adapterList.noIoPackage) !== -1;
+function checkIgnores(fullName) {
+    return $.inArrayIn(fullName, adapterList.ignore) !== -1 || $.inArrayIn(fullName, Object.keys(adapterList[toGet])) !== -1 || $.inArrayIn(fullName, adapterList.checkOk) !== -1 || $.inArrayIn(fullName, Object.keys(adapterList.checkErrorOld)) !== -1 || $.inArrayIn(fullName, Object.keys(adapterList[toSet])) !== -1 || $.inArrayIn(fullName, adapterList.noIoPackage) !== -1;
 }
 
 async function findAllAdapters() {
@@ -290,14 +292,14 @@ async function findAllAdapters() {
     let repos = await getDataV4(firstQL);
     if (repos && repos.data && repos.data.search) {
         repos.data.search.edges.forEach(async function (repoNode) {
-            const full_name = repoNode.node.nameWithOwner;
-            if (!repoNode.node.hasIssuesEnabled || repoNode.node.isArchived || checkIgnores(full_name)) {
+            const fullName = repoNode.node.nameWithOwner;
+            if (!repoNode.node.hasIssuesEnabled || repoNode.node.isArchived || checkIgnores(fullName)) {
                 return true;
             }
-            const check = await checkIoPackage('https://raw.githubusercontent.com/' + full_name + '/master/io-package.json', full_name);
+            const check = await checkIoPackage('https://raw.githubusercontent.com/' + fullName + '/master/io-package.json', fullName);
             if (check) {
-                adapterList[toGet][full_name] = {};
-                adapterList[toGet][full_name].issue = null;
+                adapterList[toGet][fullName] = {};
+                adapterList[toGet][fullName].issue = null;
             }
         });
 
@@ -308,14 +310,14 @@ async function findAllAdapters() {
             repos = await getDataV4(nextQL);
             if (repos && repos.data && repos.data.search) {
                 repos.data.search.edges.forEach(async function (repoNode) {
-                    const full_name = repoNode.node.nameWithOwner;
-                    if (!repoNode.node.hasIssuesEnabled || repoNode.node.isArchived || checkIgnores(full_name)) {
+                    const fullName = repoNode.node.nameWithOwner;
+                    if (!repoNode.node.hasIssuesEnabled || repoNode.node.isArchived || checkIgnores(fullName)) {
                         return true;
                     }
-                    const check = await checkIoPackage('https://raw.githubusercontent.com/' + full_name + '/master/io-package.json', full_name);
+                    const check = await checkIoPackage(`https://raw.githubusercontent.com/${fullName}/master/io-package.json`, fullName);
                     if (check) {
-                        adapterList[toGet][full_name] = {};
-                        adapterList[toGet][full_name].issue = null;
+                        adapterList[toGet][fullName] = {};
+                        adapterList[toGet][fullName].issue = null;
                     }
                 });
                 hasNext = repos.data.search.pageInfo.hasNextPage;
@@ -356,7 +358,7 @@ function testIssueCreation(repo, count, notChanged, warnings, closed) {
     if (warnings) {
         countW = warnings.length;
     }
-    $('#liste').append(`<li style="color: ${notChanged ? 'red' : 'blue'}">${repo} (${count} err & ${countW} war) - issue ${notChanged ? 'is the same' : 'has been changed (UPDATE)'} </li>`);
+    $('#list').append(`<li style="color: ${notChanged ? 'red' : 'blue'}">${repo} (${count} err & ${countW} war) - issue ${notChanged ? 'is the same' : 'has been changed (UPDATE)'} </li>`);
 }
 
 async function getDataV4(query) {
@@ -374,7 +376,7 @@ function getQueryForRepos(cursor) {
     let query = getRepoSearchQL;
 
     if (cursor) {
-        query = query.replace('$cursor', ', after: "' + cursor + '"');
+        query = query.replace('$cursor', `, after: "${cursor}"`);
     } else {
         query = query.replace('$cursor', '');
     }

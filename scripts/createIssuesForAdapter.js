@@ -12,15 +12,15 @@ const issuesListFiltered = [];
 const start = async function () {
     adapterList = await getAdapterList();
     if (adapterList) {
-    		$('#listeSuccess').append("<li style='color: blue;'>Done last time: <span id='alreadydone'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>Total Repos: <span id='totalrepos'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>Done now: <span id='donenow'></span></li>");
+        $('#listSuccess').append('<li style="color: blue;">Done last time: <span id="alreadydone"></span></li>');
+        $('#listSuccess').append('<li style="color: blue;">Total Repos: <span id="totalrepos"></span></li>');
+        $('#listSuccess').append('<li style="color: blue;">Done now: <span id="donenow"></span></li>');
         await startFunc();
         await delay(15000);
         $('#donenow').text(issuesCreated.length);
         console.log(JSON.stringify(issuesCreated));
     } else {
-        $('#liste').append("<li style='color: red;'>ERROR - NO ADAPTER LIST</li>");
+        $('#list').append("<li style='color: red;'>ERROR - NO ADAPTER LIST</li>");
     }
 };
 
@@ -52,7 +52,7 @@ async function asyncForEach(array, callback) {
                 i = i ? (i < 0 ? Math.max(0, len + i) : i) : 0;
                 elem = elem.toLowerCase();
                 for (; i < len; i++) {
-                    if (i in arr && arr[i].toLowerCase() == elem) {
+                    if (i in arr && arr[i].toLowerCase() === elem) {
                         return i;
                     }
                 }
@@ -69,34 +69,30 @@ const startFunc = async function () {
 
     let issuesList = [];
 
-    adapterList.checkOk.forEach(function (full_name) {
-        issuesList.push(full_name);
-    });
+    adapterList.checkOk.forEach(fullName => issuesList.push(fullName));
 
-    for (const full_name in adapterList.checkError) {
-        issuesList.push(full_name);
+    for (const fullName in adapterList.checkError) {
+        issuesList.push(fullName);
   	}
-  	for (const full_name in adapterList.checkError2) {
-        issuesList.push(full_name);
+  	for (const fullName in adapterList.checkError2) {
+        issuesList.push(fullName);
   	}
-    for (const full_name in adapterList.checkErrorOld) {
-        issuesList.push(full_name);
+    for (const fullName in adapterList.checkErrorOld) {
+        issuesList.push(fullName);
   	}
 
     if (adapterList.alreadydone) {
-        adapterList.alreadydone.forEach(function (full_name) {
-            issuesList = issuesList.filter(e => e !== full_name);
-        });
+        adapterList.alreadydone.forEach(fullName =>
+            issuesList = issuesList.filter(e => e !== fullName));
+
         $('#alreadydone').text(adapterList.alreadydone.length);
     }
 
     await filterList(issuesList);
-
 };
 
-$('button').on('click', function () {
-    start();
-});
+$('button').on('click', () =>
+    start());
 
 
 function GithubInteractor(token) {
@@ -107,14 +103,14 @@ const interactor = new GithubInteractor(githubToken);
 
 async function filterList(array) {
 
-    await asyncForEach(array, async function (full_name) {
-        const link = 'https://raw.githubusercontent.com/' + full_name + '/master/io-package.json';
+    await asyncForEach(array, async function (fullName) {
+        const link = `https://raw.githubusercontent.com/${fullName}/master/io-package.json`;
         try {
             const ioPackage = await (await fetch(link)).json();
             const isCompact = ioPackage && ioPackage.common && ioPackage.common.compact;
             const isOnlyWWW = ioPackage && ioPackage.common && ioPackage.common.onlyWWW === true;
             if (isCompact && !isOnlyWWW) {
-                issuesListFiltered.push(full_name);
+                issuesListFiltered.push(fullName);
             }
         } catch (e) {
             console.log(e);
@@ -137,30 +133,26 @@ async function getAdapterList() {
 function doTheIssues() {
 	  $('#totalrepos').text(issuesListFiltered.length);
 
-    issuesListFiltered.forEach(function (full_name) {
+    issuesListFiltered.forEach(function (fullName) {
 
-    	  const adapter = full_name.split('/')[1];
+    	  const adapter = fullName.split('/')[1];
 
         if (issueTitle === '') {
-        	issueTitle = 'Please check ' + adapter + ' with js-controller 2.0';
+        	issueTitle = `Please check ${adapter} with js-controller 2.0`;
         }
 
-        const url = 'https://api.github.com/repos/' + full_name + '/issues';
+        const url = `https://api.github.com/repos/${fullName}/issues`;
 
         if (!test) {
             $.ajax({
                 url: url,
                 type: 'POST',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
-                },
-                error: function (xhr, status, error) {
-                    const err = JSON.parse(xhr.responseText);
-                    $('#liste').append("<li style='color: red;'>" + full_name + ' - issue failed (' + status + ': ' + error + ')</li>');
-                },
-                success: function (issue) {
-                    issuesCreated.push(full_name);
-                    $('#liste').append('<li>' + full_name + ' - new issue created</li>');
+                beforeSend: xhr => xhr.setRequestHeader('Authorization', 'token ' + interactor.token),
+                error: (xhr, status, error) =>
+                    $('#list').append(`<li style="color: red;">${fullName} - issue failed (${status}: ${error})</li>`),
+                success: issue => {
+                    issuesCreated.push(fullName);
+                    $('#list').append(`<li>${fullName} - new issue created</li>`);
                 },
                 data: JSON.stringify({
                     title: issueTitle,
@@ -168,8 +160,8 @@ function doTheIssues() {
                 })
             });
         } else {
-        	issuesCreated.push(full_name);
-        	$('#liste').append('<li>' + full_name + ' - new TEST created</li>');
+        	issuesCreated.push(fullName);
+        	$('#list').append(`<li>${fullName} - new TEST created</li>`);
         }
     });
 }

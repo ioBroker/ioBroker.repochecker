@@ -1,4 +1,4 @@
-/* 1.2.10 2020.07.19
+/* 1.2.11 2020.11.10
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -885,13 +885,13 @@ function checkIOPackageJson(context) {
 
                 if (!context.ioPackageJson.common.connectionType) {
                     context.errors.push('[E150] No common.connectionType found in io-package.json');
-                } else if (context.ioPackageJson.common.connectionType !== undefined && !['local', 'cloud'].includes(context.ioPackageJson.common.connectionType)) {
+                } else if (!['local', 'cloud'].includes(context.ioPackageJson.common.connectionType)) {
                     context.errors.push('[E151] common.connectionType type has an invalid type ' + context.ioPackageJson.common.connectionType);
                 }
 
                 if (!context.ioPackageJson.common.dataSource) {
                     context.errors.push('[E152] No common.dataSource found in io-package.json');
-                } else if (context.ioPackageJson.common.dataSource !== undefined && !['poll', 'push', 'assumption'].includes(context.ioPackageJson.common.dataSource)) {
+                } else if (!['poll', 'push', 'assumption'].includes(context.ioPackageJson.common.dataSource)) {
                     context.errors.push('[E152] common.dataSource type has an invalid type ' + context.ioPackageJson.common.dataSource);
                 }
 
