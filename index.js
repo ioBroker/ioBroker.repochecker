@@ -989,7 +989,7 @@ function checkNpm(context) {
 function checkTests(context) {
     return new Promise(resolve => {
         // if found some file in \.github\workflows with test inside => it is OK too
-        if (context && context.filesList.find(name => name.startsWith('.github/workflows/') && name.endsWith('.yml') && name.includes('test'))) {
+        if (context && context.filesList.find(name => name.startsWith('.github/workflows/') && name.endsWith('.yml') && name.toLowerCase().includes('test'))) {
             context.checks.push('Tests found on github actions');
             return resolve(context);
         }
