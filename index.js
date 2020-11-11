@@ -986,8 +986,14 @@ function checkNpm(context) {
 }
 
 // E3xx
-function checkTravis(context) {
+function checkTests(context) {
     return new Promise(resolve => {
+        // if found some file in \.github\workflows with test inside => it is OK too
+        if (context && context.filesList.find(name => name.startsWith('.github/workflows/') && name.endsWith('.yml') && name.includes('test'))) {
+            context.checks.push('Tests found on github actions');
+            return resolve(context);
+        }
+
         const travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
 
         request(travisURL, (err, status, body) => {
@@ -1562,10 +1568,10 @@ function check(request, context, callback) {
                 return checkIOPackageJson(context);
             })
             .then(context => checkNpm(context))
-            .then(context => checkTravis(context))
             .then(context => checkCommits(context))
             .then(context => checkRepo(context))
             .then(context => checkCode(context))
+            .then(context => checkTests(context))
             .then(context => checkGithubRepo(context))
             .then(context => checkReadme(context))
             .then(context => checkLicenseFile(context))
@@ -1590,9 +1596,9 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        // url: 'https://github.com/ioBroker/ioBroker.tileboard',
+        url: 'https://github.com/ioBroker/ioBroker.devices',
         // url: 'https://github.com/AlCalzone/ioBroker.zwave2',
-        url: 'https://github.com/klein0r/ioBroker.trashschedule',
+        // url: 'https://github.com/klein0r/ioBroker.trashschedule',
         // url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
     }}, null, (err, data) => {
         const context = JSON.parse(data.body);
