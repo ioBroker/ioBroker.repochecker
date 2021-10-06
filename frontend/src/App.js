@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles, MuiThemeProvider} from '@material-ui/core/styles';
 import './App.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,22 +12,30 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import Comm from './Comm';
-
 import CheckIcon from '@material-ui/icons/DoneOutlined';
 import ErrorIcon from '@material-ui/icons/Cancel';
 import WarningIcon from '@material-ui/icons/Announcement';
+
+import Comm from './Comm';
+import ToggleThemeMenu from './ToggleThemeMenu';
+import Utils from '@iobroker/adapter-react/Components/Utils';
+import theme from '@iobroker/adapter-react/Theme';
 
 const NARROW_WIDTH = 500;
 
 const styles = theme => ({
     toolbarTitle: {
-        position: 'absolute',
+        //position: 'absolute',
         top: 0,
-        right: 20
+        right: 20,
+        whiteSpace: 'nowrap'
     },
     urlInput: {
-        width: 'calc(100% - 200px)',
+        color: 'white'
+    },
+    branchInput: {
+        width: 100,
+        marginLeft: 10,
         color: 'white'
     },
     attrTitle: {
@@ -47,13 +55,17 @@ const styles = theme => ({
         marginRight: 20,
     },
     body: {
-
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
     },
     info: {
         padding: 20,
+        overflow: 'auto',
+        height: 'calc(100% - 104px)'
     },
     ok: {
-        color: '#00b200'
+        color: '#111',
     },
     error: {
         color: '#bf0000'
@@ -66,6 +78,9 @@ const styles = theme => ({
 class App extends Component {
     constructor(props) {
         super(props);
+
+        const _theme = theme(Utils.getThemeName());
+
         this.state = {
             url: window.localStorage.getItem('url') || '',
             requesting: false,
@@ -74,6 +89,11 @@ class App extends Component {
             result: [],
             screenWidth: window.innerWidth,
             version: 'Adapter checker',
+            branch: window.localStorage.getItem('branch') || '',
+            theme: _theme,
+            themeName: _theme.name,
+            themeType: _theme.palette.type,
+            hasTravis: false,
         };
 
         if (window.document.location.search) {
@@ -110,13 +130,14 @@ class App extends Component {
             url = url.substring(0, url.length - 1);
         }
         this.setState({errors: [], result: [], warnings:[], requesting: true});
-        Comm.check(url, (err, data) => {
+        Comm.check(url, this.state.branch.trim(), (err, data) => {
             if (err) {
                 this.setState({
                     errors: [err],
                     warnings: (data && data.warnings) || [],
                     result: (data && data.checks) || [],
-                    requesting: false
+                    requesting: false,
+                    hasTravis: (data && data.hasTravis) || false,
                 });
             } else {
                 this.setState({
@@ -124,52 +145,56 @@ class App extends Component {
                     warnings: data.warnings || [],
                     result: data.checks || [],
                     version: 'v' + data.version,
-                    requesting: false
+                    requesting: false,
+                    hasTravis: data.hasTravis || false,
                 });
             }
         });
     }
 
     renderResult() {
-        return (
-            <List component="nav">
-                {this.state.result.map((line, i) => (<ListItem key={line}>
-                    <ListItemIcon>
-                        <CheckIcon className={this.props.classes.ok} />
-                    </ListItemIcon>
-                    <ListItemText primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
-                </ListItem>))}
-            </List>);
+        return <List component="nav">
+            {this.state.result.map((line, i) => <ListItem key={line}>
+                <ListItemIcon>
+                    <CheckIcon className={this.props.classes.ok} style={{color: this.state.themeType === 'dark' ? '#1F1' : '#1F1'}} />
+                </ListItemIcon>
+                <ListItemText primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
+            </ListItem>)}
+        </List>;
     }
 
     renderError() {
-        return (
-            <List component="nav">
-                {this.state.errors.map((line, i) => (<ListItem key={line}>
-                    <ListItemIcon>
-                        <ErrorIcon className={this.props.classes.error} />
-                    </ListItemIcon>
-                    <ListItemText className={this.props.classes.error} primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
-                </ListItem>))}
-            </List>);
+        return <List component="nav">
+            {this.state.errors.length ? <br/> : null}
+            {this.state.errors.map((line, i) => <ListItem key={line}>
+                <ListItemIcon>
+                    <ErrorIcon className={this.props.classes.error} />
+                </ListItemIcon>
+                <ListItemText className={this.props.classes.error} primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
+            </ListItem>)}
+        </List>;
     }
 
     renderWarnings() {
-        return (
-            <List component="nav">
-                {this.state.warnings.map((line, i) => (<ListItem key={line}>
-                    <ListItemIcon>
-                        <WarningIcon className={this.props.classes.warning} />
-                    </ListItemIcon>
-                    <ListItemText className={this.props.classes.warning} primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
-                </ListItem>))}
-            </List>);
+        return <List component="nav">
+            {this.state.warnings.map((line, i) => <ListItem key={line}>
+                <ListItemIcon>
+                    <WarningIcon className={this.props.classes.warning} />
+                </ListItemIcon>
+                <ListItemText className={this.props.classes.warning} primary={typeof line === 'string' ? line : JSON.stringify(line)} secondary={i + 1}/>
+            </ListItem>)}
+        </List>;
     }
 
     onOpen(path) {
         let url = this.state.url.replace('https://raw.githubusercontent.com/', 'https://github.com/');
         url = url.replace(/\/$/, '') + path;
         const win = window.open(url, '_blank');
+        win.focus();
+    }
+
+    onOpenLink(href) {
+        const win = window.open(href, '_blank');
         win.focus();
     }
 
@@ -180,13 +205,38 @@ class App extends Component {
         win.focus();
     }
 
+    toggleTheme() {
+        const themeName = this.state.themeName;
+
+        // dark => blue => colored => light => dark
+        let newThemeName = themeName === 'dark' ? 'blue' :
+            (themeName === 'blue' ? 'colored' :
+                (themeName === 'colored' ? 'light' : 'dark'));
+
+        Utils.setThemeName(newThemeName);
+
+        const _theme = theme(newThemeName);
+
+        this.setState({
+            theme: _theme,
+            themeName: _theme.name,
+            themeType: _theme.palette.type
+        });
+    }
 
     render() {
-        return (
-            <div className={this.props.classes.body}>
+        const narrowScreen = this.state.screenWidth <= NARROW_WIDTH;
+
+        return <MuiThemeProvider theme={this.state.theme}>
+            <div
+                className={this.props.classes.body}
+                style={{
+                    background: this.state.themeType === 'dark' ? '#111' : '#EEE',
+                    color: this.state.themeType === 'dark' ? '#FFF' : '#000',
+                }}
+            >
                 <AppBar position="static" color="primary">
                     <Toolbar>
-                        {this.state.screenWidth > NARROW_WIDTH ? (<h4 className={this.props.classes.toolbarTitle}>{this.state.version}</h4>) : null}
                         <Input
                             type="text"
                             placeholder="https://github.com/USER/ioBroker.ADAPTER"
@@ -199,32 +249,56 @@ class App extends Component {
                             }}
                             readOnly={this.state.requesting}
                             className={this.props.classes.urlInput}
-                            style={{maxWidth: this.state.screenWidth - 130}}
+                            style={{maxWidth: narrowScreen ? this.state.screenWidth - 35 : this.state.screenWidth - 250, width: narrowScreen ? 'calc(100% - 35px)' : 'calc(100% - 350px)'}}
                             onChange={e => {
                                 window.localStorage.setItem('url', e.target.value);
                                 this.setState({url: e.target.value});
                             }}
                         />
+                        {!narrowScreen ? <Input
+                            type="text"
+                            placeholder="branch"
+                            value={this.state.branch}
+                            margin="none"
+                            onKeyUp={e => {
+                                if (e.key === 'Enter' && this.state.url && !this.state.requesting) {
+                                    this.onCheck();
+                                }
+                            }}
+                            readOnly={this.state.requesting}
+                            className={this.props.classes.branchInput}
+                            onChange={e => {
+                                window.localStorage.setItem('branch', e.target.value);
+                                this.setState({branch: e.target.value});
+                            }}
+                        /> : null}
                         {
                             this.state.requesting ?
-                                (<CircularProgress className={this.props.classes.buttonCheck} color="secondary" />) :
-                                (<Fab className={this.props.classes.buttonCheck} size="small" color="secondary" disabled={!this.state.url} onClick={() => this.onCheck()} aria-label="Check"><CheckIcon /></Fab>)
+                                <CircularProgress className={this.props.classes.buttonCheck} color="secondary" /> :
+                                <Fab className={this.props.classes.buttonCheck} size="small" color="secondary" disabled={!this.state.url} onClick={() => this.onCheck()} aria-label="Check"><CheckIcon /></Fab>
                         }
+                        {!narrowScreen ? <h4 className={this.props.classes.toolbarTitle}>{this.state.version}</h4> : null}
+                        {!narrowScreen ? <ToggleThemeMenu
+                            toggleTheme={() => this.toggleTheme()}
+                            themeName={this.state.themeName}
+                            t={w => w}
+                        /> : null}
                     </Toolbar>
                 </AppBar>
                 <div className={this.props.classes.info}>
                     {this.state.result.length ? [
-                        (<Button key="github"          color="primary" onClick={() => this.onOpen('')}>github.com</Button>),
-                        (<Button key="package.json"    color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>),
-                        (<Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>),
-                        (<Button key="travis"          color="primary" onClick={() => this.onOpenTravis()}>travis-ci.org</Button>)
+                        <Button key="github"          color="primary" onClick={() => this.onOpen('')}>github.com</Button>,
+                        <Button key="package.json"    color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>,
+                        <Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>,
+                        this.state.hasTravis ? <Button key="travis" color="primary" onClick={() => this.onOpenTravis()}>travis-ci.org</Button> : null,
+                        this.state.errors && this.state.errors.length ? <Button key="practices" variant="contained" color="primary" onClick={() => this.onOpenLink('https://github.com/ioBroker/ioBroker.repositories#development-and-coding-best-practices')}>Best practices</Button> : null,
                     ] : null}
                     {this.state.errors   ? this.renderError()    : null}
                     {this.state.warnings ? this.renderWarnings() : null}
                     {this.state.result   ? this.renderResult()   : null}
                 </div>
             </div>
-        );
+        </MuiThemeProvider>;
     }
 }
 
