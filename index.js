@@ -798,7 +798,11 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.compact" found in io-package.json');
                 }
 
-                if (!context.ioPackageJson.common.materialize && !context.ioPackageJson.common.noConfig) {
+                if (!context.ioPackageJson.common.materialize &&
+                    !context.ioPackageJson.common.noConfig &&
+                    !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') &&
+                    !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')
+                ) {
                     context.errors.push('[E114] No adapter are allowed in the repo without admin3 support');
                 } else {
                     context.checks.push('"common.materialize" found in io-package.json');
@@ -1537,6 +1541,10 @@ function checkNpmIgnore(context) {
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.npmignore
     return new Promise((resolve, reject) => {
+        if (context.packageJson.files && context.packageJson.files.length) {
+            return resolve(context);
+        }
+
         if (!context.filesList.includes('.npmignore')) {
             context.warnings.push(`[W801] .npmignore not found`);
         } else {
@@ -1688,7 +1696,8 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     check({queryStringParameters: {
-        url: 'https://github.com/ioBroker/ioBroker.s7',
+        url: 'https://raw.githubusercontent.com/foxriver76/ioBroker.benchmark',
+        // url: 'https://github.com/ioBroker/ioBroker.s7',
         // url: 'https://github.com/AlCalzone/ioBroker.zwave2',
         // url: 'https://github.com/klein0r/ioBroker.trashschedule',
         //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
