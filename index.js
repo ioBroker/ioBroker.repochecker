@@ -169,7 +169,7 @@ function checkPackageJson(githubUrl, branch, context) {
                 context.errors.push('[E004] No adapter name found in URL: ' + githubUrl);
             } else {
                 context.checks.push('Adapter name found in the URL');
-                adapterName = m[1].replace(/\/master$/, '');
+                adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
             }
 
             context.adapterName = adapterName;
@@ -1649,7 +1649,7 @@ function makeResponse(code, data, headers) {
 }
 
 function check(request, context, callback) {
-    console.log(JSON.stringify(request));
+    console.log('PROCESS: ' + JSON.stringify(request));
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, {error: 'No github URL provided'}));
     } else {
