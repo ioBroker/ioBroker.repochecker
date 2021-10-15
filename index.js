@@ -1676,9 +1676,9 @@ function check(request, context, callback) {
             .catch(err => {
                 console.error(err);
                 if (ctx) {
-                    return callback(null, makeResponse(200, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings, version, hasTravis: context.hasTravis}));
+                    return callback(null, makeResponse(200, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings, version, hasTravis: ctx.hasTravis}));
                 } else {
-                    return callback(null, makeResponse(200, {result: 'Errors found', checks: [], errors: [err], warnings: [], version, hasTravis: context.hasTravis}));
+                    return callback(null, makeResponse(200, {result: 'Errors found', checks: [], errors: [err], warnings: [], version}));
                 }
             });
     }
