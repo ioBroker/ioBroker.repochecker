@@ -1067,8 +1067,18 @@ function checkNpm(context) {
                 context.checks.push('Bluefox found in collaborators on NPM');
             }
 
+            if (!body ||
+                !body.collected ||
+                !body.collected.metadata ||
+                !body.collected.metadata.version ||
+                context.packageJson.version != body.collected.metadata.version) {
+                context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${body.collected.metadata.version})`);
+            } else {
+                context.checks.push('Version of package.json matches latest version on NPM');
+            }
+
             resolve(context);
-            // max number is E201
+            // max number is E202
         });
     });
 }
