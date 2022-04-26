@@ -100,7 +100,10 @@ function downloadFile(githubUrl, path, binary) {
 // check package.json
 // E0xx
 function checkPackageJson(githubUrl, branch, context) {
-    githubUrl = githubUrl.replace('https://raw.githubusercontent.com/', 'https://github.com/');
+    githubUrl = githubUrl
+        .replace('http://', 'https://')
+        .replace('https://www.github.com', 'https://github.com')
+        .replace('https://raw.githubusercontent.com/', 'https://github.com/');
 
     if (githubUrl.match(/\/$/)) {
         githubUrl = githubUrl.substring(0, githubUrl.length - 1);
@@ -251,16 +254,27 @@ function checkPackageJson(githubUrl, branch, context) {
             } else {
                 context.checks.push('Repository found in package.json');
 
-                if (context.packageJson.repository.type !== 'git') {
-                    context.errors.push('[E018] Invalid repository type: ' + context.packageJson.repository.type + '. It should be git');
-                } else {
-                    context.checks.push('Repository type is valid: git');
-                }
+                // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
+                if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
+                    if (context.packageJson.repository.type !== 'git') {
+                        context.errors.push('[E018] Invalid repository type: ' + context.packageJson.repository.type + '. It should be git');
+                    } else {
+                        context.checks.push('Repository type is valid: git');
+                    }
 
-                if (context.packageJson.repository.url.indexOf(context.githubUrlOriginal) === -1) {
-                    context.errors.push('[E019] Invalid repository URL: ' + context.packageJson.repository.url + '. Expected: git+' + context.githubUrlOriginal + '.git');
+                    if (context.packageJson.repository.url.indexOf(context.githubUrlOriginal) === -1) {
+                        context.errors.push('[E019] Invalid repository URL: ' + context.packageJson.repository.url + '. Expected: git+' + context.githubUrlOriginal + '.git');
+                    } else {
+                        context.checks.push('Repository URL is valid in package.json');
+                    }
+                } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
+                    if (context.packageJson.repository.indexOf(context.githubUrlOriginal) === -1) {
+                        context.errors.push('[E019] Invalid repository URL: ' + context.packageJson.repository + '. Expected: git+' + context.githubUrlOriginal + '.git');
+                    } else {
+                        context.checks.push('Repository URL is valid in package.json');
+                    }
                 } else {
-                    context.checks.push('Repository URL is valid in package.json');
+                    context.errors.push('[E019] Invalid repository URL');
                 }
             }
             if (reservedAdapterNames.indexOf(adapterName) !== -1) {
@@ -1450,7 +1464,8 @@ function checkReadme(context) {
         downloadFile(context.githubUrl, '/README.md')
             .then(data => {
                 if (!data) {
-                    context.errors.push('[E601] NO readme found');
+                    context.errors.push('[E601] No README.md found');
+                    resolve(context);
                 } else {
                     context.checks.push('README.md found');
 
