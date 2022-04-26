@@ -1695,12 +1695,16 @@ function check(request, context, callback) {
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
+    let repoUrl = 'https://github.com/ioBroker/ioBroker.admin';
+
+    // Get url from parameters if possible
+    if (process.argv.length > 2) {
+        repoUrl = process.argv[2];
+    }
+
+    console.log(`Checking repository ${repoUrl}`);
     check({queryStringParameters: {
-        url: 'https://raw.githubusercontent.com/foxriver76/ioBroker.benchmark',
-        // url: 'https://github.com/ioBroker/ioBroker.s7',
-        // url: 'https://github.com/AlCalzone/ioBroker.zwave2',
-        // url: 'https://github.com/klein0r/ioBroker.trashschedule',
-        //url: 'https://github.com/bluerai/ioBroker.mobile-alerts'
+        url: repoUrl
     }}, null, (err, data) => {
         const context = JSON.parse(data.body);
         if (context.errors.length) {
