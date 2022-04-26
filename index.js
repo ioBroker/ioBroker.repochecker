@@ -949,7 +949,7 @@ function checkIOPackageJson(context) {
                     context.errors.push(`[E152] common.dataSource type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
                 }
 
-                if (context.packageJson.dependencies['@iobroker/adapter-core']) {
+                if (context.packageJson.dependencies && context.packageJson.dependencies['@iobroker/adapter-core']) {
                     if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.3')) {
                         if (!context.ioPackageJson.common.dependencies) {
                             context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or {"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
@@ -963,8 +963,7 @@ function checkIOPackageJson(context) {
                                 context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or {"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
                             }
                         }
-                    } else
-                    if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.4') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.5')) {
+                    } else if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.4') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.5')) {
                         if (!context.ioPackageJson.common.dependencies) {
                             context.errors.push(`[E154] common.dependencies must contain{"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
                         } else {
