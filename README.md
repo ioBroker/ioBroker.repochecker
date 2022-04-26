@@ -8,9 +8,11 @@ If you want to add your adapter to the public ioBroker repository, all tests on 
 
 You can pass your repository as a parameter to test
 
+``npm run start <repo> [branch]``
+
 ```
 npm i
-npm run start https://github.com/ioBroker/ioBroker.javascript
+npm run start https://github.com/ioBroker/ioBroker.javascript main
 ```
 
 ## Todo

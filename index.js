@@ -1678,7 +1678,6 @@ function check(request, context, callback) {
             .then(context => checkNpmIgnore(context))
             .then(context => checkGitIgnore(context))
             .then(context => {
-                console.log('OK');
                 return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors, warnings: context.warnings, version, hasTravis: context.hasTravis}));
             })
             .catch(err => {
@@ -1696,21 +1695,29 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     let repoUrl = 'https://github.com/ioBroker/ioBroker.admin';
+    let repoBranch = 'main';
 
     // Get url from parameters if possible
     if (process.argv.length > 2) {
         repoUrl = process.argv[2];
     }
 
-    console.log(`Checking repository ${repoUrl}`);
+    // Get branch from parameters if possible
+    if (process.argv.length > 3) {
+        repoBranch = process.argv[3];
+    }
+
+    console.log(`Checking repository ${repoUrl} (branch ${repoBranch})`);
     check({queryStringParameters: {
-        url: repoUrl
+        url: repoUrl,
+        branch: repoBranch
     }}, null, (err, data) => {
         const context = JSON.parse(data.body);
+        console.log(context.result);
+
         if (context.errors.length) {
             console.error(JSON.stringify(context.errors, null, 2));
         }
-        console.log(JSON.stringify(data, null, 2));
     });
 }
 
