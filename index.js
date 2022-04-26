@@ -1088,26 +1088,28 @@ function checkTests(context) {
 
         request(travisURL, (err, status, body) => {
             if (!status) {
-                context.errors.push('[E300] Not found on travis. Please setup travis');
+                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
                 return resolve(context);
             }
             if (!status.headers || !status.headers['content-disposition']) {
-                context.errors.push('[E300] Not found on travis. Please setup travis');
+                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
                 return resolve(context);
             }
             // inline; filename="passing.png"
             const m = status.headers['content-disposition'].match(/filename="(.+)"$/);
             if (!m) {
-                context.errors.push('[E300] Not found on travis. Please setup travis');
+                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
                 return resolve(context);
             }
 
             if (m[1] === 'unknown.png') {
-                context.errors.push('[E300] Not found on travis. Please setup travis');
+                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
                 return resolve(context);
             }
 
             context.checks.push('Found on travis-ci');
+
+            context.warnings.push('[W302] Use github actions instead of travis-ci');
 
             if (m[1] !== 'passing.png') {
                 context.errors.push('[E301] Tests on Travis-ci.org are broken. Please fix.');
@@ -1116,7 +1118,7 @@ function checkTests(context) {
             }
 
             resolve(context);
-            // max number is E301
+            // max number is E302
         });
     });
 }
