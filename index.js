@@ -100,8 +100,6 @@ function downloadFile(githubUrl, path, binary) {
 // check package.json
 // E0xx
 function checkPackageJson(githubUrl, branch, context) {
-    context = context || {checks: [], errors: [], warnings: []};
-
     githubUrl = githubUrl.replace('https://raw.githubusercontent.com/', 'https://github.com/');
 
     if (githubUrl.match(/\/$/)) {
@@ -683,6 +681,7 @@ const licenses = [
 function checkIOPackageJson(context) {
     context = context || {};
     return new Promise((resolve, reject) => {
+        console.log('checkIOPackageJson [E1xx]');
         if (context.ioPackageJson) {
             return Promise.resolve(context.ioPackageJson);
         } else {
@@ -1010,6 +1009,7 @@ function checkIOPackageJson(context) {
 // E2xx
 function checkNpm(context) {
     return new Promise(resolve => {
+        console.log('checkNpm [E2xx]');
         request('https://api.npms.io/v2/package/iobroker.' + context.adapterName, (err, status, body) => {
             // bug in NPM some modules could be accessed via normal web page, but not by API
             if (!body || (status && status.statusCode >= 400)) {
@@ -1056,6 +1056,7 @@ function checkNpm(context) {
 // E3xx
 function checkTests(context) {
     return new Promise(resolve => {
+        console.log('checkTests [E3xx]');
         // if found some file in \.github\workflows with test inside => it is OK too
         if (context && context.filesList.find(name => name.startsWith('.github/workflows/') && name.endsWith('.yml') && name.toLowerCase().includes('test'))) {
             context.checks.push('Tests found on github actions');
@@ -1102,6 +1103,7 @@ function checkTests(context) {
 // E4xx
 function checkRepo(context) {
     return new Promise(resolve => {
+        console.log('checkRepo [E4xx]');
         if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.type) {
             // download latest repo
             request('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json', (err, status, body) => {
@@ -1282,6 +1284,7 @@ function checkCode(context) {
 
     // https://github.com/userName/ioBroker.adaptername/archive/${context.branch}.zip
     return new Promise((resolve, reject) => {
+        console.log('checkCode [E5xx]');
         return downloadFile(context.githubUrlOriginal, `/archive/${context.branch}.zip`, true)
             .then(data => {
                 console.log(`${context.branch}.zip ${data.length} bytes`);
@@ -1398,7 +1401,8 @@ function getAuthor(author) {
 }
 
 function checkCommits(context) {
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve, reject) => {
+        console.log('checkCommits');
         downloadFile(context.githubUrlOriginal, `/commits/${context.branch}`)
             .then(data => {
                 const m = data.match(/Commits on [\w\s\d]+, (\d\d\d\d)/);
@@ -1407,12 +1411,14 @@ function checkCommits(context) {
                 }
                 resolve(context);
             })
-            .catch(e => reject(e)));
+            .catch(e => reject(e));
+    });
 }
 
 // E8xx
 function checkGithubRepo(context) {
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve, reject) => {
+        console.log('checkGithubRepo [E8xx]');
         downloadFile(context.githubUrlOriginal, '')
             .then(data => {
                 data = data.replace(/[\r\n]/g, '');
@@ -1432,13 +1438,15 @@ function checkGithubRepo(context) {
 
                 resolve(context);
             })
-            .catch(e => reject(e)));
+            .catch(e => reject(e));
+    });
 }
 
 // E6xx
 function checkReadme(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/README.md
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve, reject) => {
+        console.log('checkReadme [E6xx]');
         downloadFile(context.githubUrl, '/README.md')
             .then(data => {
                 if (!data) {
@@ -1472,14 +1480,16 @@ function checkReadme(context) {
                     resolve(context);
                 }
             })
-            .catch(e => reject(e)));
+            .catch(e => reject(e));
+    });
 }
 
 // E7xx
 function checkLicenseFile(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/LICENSE
     return new Promise((resolve, reject) => {
-        return downloadFile(context.githubUrl, '/LICENSE')
+        console.log('checkLicenseFile [E7xx]');
+        downloadFile(context.githubUrl, '/LICENSE')
             .then(data => {
                 if (!data) {
                     context.errors.push('[E701] NO LICENSE file found');
@@ -1510,6 +1520,7 @@ function paddingNum(num) {
     if (num >= 10) return num;
     return '0' + num;
 }
+
 // E8xx
 function checkNpmIgnore(context) {
     const checkFiles = [
@@ -1541,6 +1552,7 @@ function checkNpmIgnore(context) {
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.npmignore
     return new Promise((resolve, reject) => {
+        console.log('checkNpmIgnore [E8xx]');
         if (context.packageJson.files && context.packageJson.files.length) {
             return resolve(context);
         }
@@ -1604,6 +1616,7 @@ function checkGitIgnore(context) {
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.gitignore
     return new Promise((resolve, reject) => {
+        console.log('checkGitIgnore [E9xx]');
         if (!context.filesList.includes('.gitignore')) {
             context.warnings.push(`[W901] .gitignore not found`);
         } else {
@@ -1661,12 +1674,10 @@ function check(request, context, callback) {
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, {error: 'No github URL provided'}));
     } else {
-        let ctx;
-        checkPackageJson(request.queryStringParameters.url, request.queryStringParameters.branch)
-            .then(context => {
-                ctx = context;
-                return checkIOPackageJson(context);
-            })
+        const ctx = {checks: [], errors: [], warnings: []};
+
+        checkPackageJson(request.queryStringParameters.url, request.queryStringParameters.branch, ctx)
+            .then(context => checkIOPackageJson(context))
             .then(context => checkNpm(context))
             .then(context => checkCommits(context))
             .then(context => checkRepo(context))
@@ -1682,11 +1693,8 @@ function check(request, context, callback) {
             })
             .catch(err => {
                 console.error(err);
-                if (ctx) {
-                    return callback(null, makeResponse(200, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings, version, hasTravis: ctx.hasTravis}));
-                } else {
-                    return callback(null, makeResponse(200, {result: 'Errors found', checks: [], errors: [err], warnings: [], version}));
-                }
+
+                return callback(err, makeResponse(200, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings, version, hasTravis: ctx.hasTravis}));
             });
     }
 }
@@ -1717,6 +1725,9 @@ if (typeof module !== 'undefined' && module.parent) {
 
         if (context.errors.length) {
             console.error(JSON.stringify(context.errors, null, 2));
+        }
+        if (context.warnings.length) {
+            console.warn(JSON.stringify(context.warnings, null, 2));
         }
     });
 }
