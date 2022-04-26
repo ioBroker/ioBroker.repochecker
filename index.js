@@ -1,4 +1,4 @@
-/* 1.3.0 2021.10.06
+/* 1.4.0 2022.04.26
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -15,7 +15,7 @@ const util     = require('util');
 const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
-const version  = '1.3.0';
+const version  = '1.4.0';
 
 let request;
 let https;
