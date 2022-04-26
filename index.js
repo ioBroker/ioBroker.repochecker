@@ -811,14 +811,21 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.compact" found in io-package.json');
                 }
 
-                if (!context.ioPackageJson.common.materialize &&
-                    !context.ioPackageJson.common.noConfig &&
-                    !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') &&
-                    !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')
-                ) {
-                    context.errors.push('[E114] No adapter are allowed in the repo without admin3 support');
+                if (!context.ioPackageJson.common.noConfig) {
+                    if (!context.ioPackageJson.common.materialize &&
+                        !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') &&
+                        !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')
+                    ) {
+                        context.errors.push('[E114] No adapter are allowed in the repo without admin support (set "common.noconfig" if adapter has no configuration)');
+                    } else {
+                        context.checks.push('"common.materialize" or "common.adminUI.config" found in io-package.json');
+                    }
+
+                    if (!(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json')) {
+                        context.warnings.push('[W156] Adapter should support admin 5 UI (jsonConfig)');
+                    }
                 } else {
-                    context.checks.push('"common.materialize" found in io-package.json');
+                    context.checks.push('adapter has no admin config');
                 }
 
                 if (!context.ioPackageJson.common.license) {
@@ -1014,7 +1021,7 @@ function checkIOPackageJson(context) {
                 // do not put any code behind this line
 
 
-                // max number is E155
+                // max number is E156
             }
         });
     });
@@ -1286,14 +1293,27 @@ function checkCode(context) {
     const readFiles = [
         '.npmignore',
         '.gitignore',
-        'admin/index_m.html',
         'iob_npm.done',
-        'admin/words.js',
-        '.travis.yml',
-        'jsonCustom.json'
+        '.travis.yml'
     ];
     if (context.packageJson.main) {
         readFiles.push(context.packageJson.main);
+    }
+
+    if (!context.ioPackageJson.common.noConfig) {
+        if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
+            readFiles.push('admin/index_m.html');
+            readFiles.push('admin/words.js');
+        }
+
+        if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
+            readFiles.push('admin/jsonConfig.json');
+            readFiles.push('admin/i18n/en/translations.json');
+        }
+
+        if (context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
+            readFiles.push('admin/jsonCustom.json');
+        }
     }
 
     // https://github.com/userName/ioBroker.adaptername/archive/${context.branch}.zip
@@ -1347,43 +1367,74 @@ function checkCode(context) {
                 });
             })
             .then(context => {
-                if (context['/admin/index_m.html'] && context['/admin/index_m.html'].includes('selectID.js') && !context.filesList.includes('admin/img/info-big.png')) {
-                    context.errors.push('[E502] "admin/img/info-big.png" not found, but selectID.js used in index_m.html ');
+                if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
+                    if (context['/admin/index_m.html'] && context['/admin/index_m.html'].includes('selectID.js') && !context.filesList.includes('admin/img/info-big.png')) {
+                        context.errors.push('[E502] "admin/img/info-big.png" not found, but selectID.js used in index_m.html ');
+                    }
+
+                    if (context['/admin/words.js']) {
+                        // at least 3 languages must be in
+                        const words = extractWords(context['/admin/words.js']);
+                        if (words) {
+                            const problem = Object.keys(words).filter(word => !words[word].de || !words[word].ru);
+                            if (problem.length > 3) {
+                                context.errors.push(`[E506] More non translated in german or russian words found in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
+                            } else {
+                                problem.forEach(word => {
+                                    if (!words[word].de) {
+                                        context.errors.push(`[E506] Word "${word}" is not translated to german in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
+                                    }
+                                    if (!words[word].ru) {
+                                        context.errors.push(`[E506] Word "${word}" is not translated to russian in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        context.checks.push('admin/words.js found.');
+                    }
                 }
+
+                if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
+                    if (context['/admin/jsonConfig.json']) {
+                        try {
+                            JSON.parse(context['/admin/jsonConfig.json']);
+                        } catch (e) {
+                            context.errors.push('[E507] Cannot parse "admin/jsonConfig.json": ' + e);
+                        }
+                    } else {
+                        context.errors.push(`[E508] "admin/jsonConfig.json" not found, but admin support is declared`);
+                    }
+
+                    if (context['/admin/i18n/en/translations.json']) {
+                        try {
+                            JSON.parse(context['/admin/i18n/en/translations.json']);
+                        } catch (e) {
+                            context.errors.push('[E509] Cannot parse "admin/i18n/en/translations.json": ' + e);
+                        }
+                    } else {
+                        context.errors.push(`[E510] "/admin/i18n/en/translations.json" not found, but admin support is declared`);
+                    }
+                }
+
+                if (context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
+                    if (context['/admin/jsonCustom.json']) {
+                        try {
+                            JSON.parse(context['/admin/jsonCustom.json']);
+                        } catch (e) {
+                            context.errors.push('[E511] Cannot parse "admin/jsonCustom.json": ' + e);
+                        }
+                    } else {
+                        context.errors.push(`[E512] "admin/jsonCustom.json" not found, but custom support is declared`);
+                    }
+                }
+
                 if (context['/iob_npm.done']) {
                     context.errors.push('[E503] "iob_npm.done" found in repo! Please add it to .gitignore');
                 }
 
                 if (context['/.travis.yml']) {
                     context.hasTravis = true;
-                }
-
-                if (context['/admin/words.js']) {
-                    // at least 3 languages must be in
-                    const words = extractWords(context['/admin/words.js']);
-                    if (words) {
-                        const problem = Object.keys(words).filter(word => !words[word].de || !words[word].ru);
-                        if (problem.length > 3) {
-                            context.errors.push(`[E506] More non translated in german or russian words found in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
-                        } else {
-                            problem.forEach(word => {
-                                if (!words[word].de) {
-                                    context.errors.push(`[E506] Word "${word}" is not translated to german in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
-                                }
-                                if (!words[word].ru) {
-                                    context.errors.push(`[E506] Word "${word}" is not translated to russian in admin/words.js. You can use https://translator.iobroker.in/ for translations`);
-                                }
-                            });
-                        }
-                    }
-                }
-
-                if (context.ioPackageJson.common &&
-                    ((context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json') ||
-                        context.ioPackageJson.common.jsonCustom)) {
-                    if (!context['/admin/jsonCustom.json']) {
-                        context.errors.push(`[E506] "admin/jsonCustom.json" not found, but custom support is declared`);
-                    }
                 }
 
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
@@ -1399,7 +1450,7 @@ function checkCode(context) {
                         }
                     }
                 }
-                // max E506
+                // max E512
                 resolve(context);
             })
             .catch(e => reject(e));
@@ -1573,7 +1624,6 @@ function checkNpmIgnore(context) {
         }
 
         if (!context.filesList.includes('.npmignore')) {
-            console.log('nononono');
             context.warnings.push(`[W801] .npmignore not found`);
         } else {
             const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
