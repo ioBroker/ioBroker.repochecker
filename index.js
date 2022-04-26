@@ -1444,11 +1444,20 @@ function checkCode(context) {
                         context.errors.push(`[E504] "${context.packageJson.main} found in package.json, but not found as file`);
                     } else {
                         if (context['/' + context.packageJson.main].includes('setInterval(') && !context['/' + context.packageJson.main].includes('clearInterval(')) {
-                            context.errors.push(`[E504] found setInterval in "${context.packageJson.main}, but no clearInterval detected`);
+                            if (context.ioPackageJson.compact) {
+                                // if compact mode supported, it is critical
+                                context.errors.push(`[E504] setInterval found in "${context.packageJson.main}", but no clearInterval detected`);
+                            } else {
+                                context.warnings.push(`[W504] setInterval found in "${context.packageJson.main}", but no clearInterval detected`);
+                            }
                         }
                         if (context['/' + context.packageJson.main].includes('setTimeout(') && !context['/' + context.packageJson.main].includes('clearTimeout(')) {
-                            // if compact mode supported, it is critical
-                            context.warnings.push(`[${context.ioPackageJson.compact ? 'E505' : 'W505'}] setTimeout found in "${context.packageJson.main}", but no clearTimeout detected`);
+                            if (context.ioPackageJson.compact) {
+                                // if compact mode supported, it is critical
+                                context.errors.push(`[E505] setTimeout found in "${context.packageJson.main}", but no clearTimeout detected`);
+                            } else {
+                                context.warnings.push(`[W505] setTimeout found in "${context.packageJson.main}", but no clearTimeout detected`);
+                            }
                         }
                     }
                 }
