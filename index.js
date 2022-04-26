@@ -918,14 +918,14 @@ function checkIOPackageJson(context) {
 
                 if (!context.ioPackageJson.common.connectionType) {
                     context.errors.push('[E150] No common.connectionType found in io-package.json');
-                } else if (!['local', 'cloud'].includes(context.ioPackageJson.common.connectionType)) {
-                    context.errors.push('[E151] common.connectionType type has an invalid type ' + context.ioPackageJson.common.connectionType);
+                } else if (!['local', 'cloud', 'none'].includes(context.ioPackageJson.common.connectionType)) {
+                    context.errors.push(`[E151] common.connectionType type has an invalid value "${context.ioPackageJson.common.connectionType}"`);
                 }
 
                 if (!context.ioPackageJson.common.dataSource) {
                     context.errors.push('[E152] No common.dataSource found in io-package.json');
-                } else if (!['poll', 'push', 'assumption'].includes(context.ioPackageJson.common.dataSource)) {
-                    context.errors.push('[E152] common.dataSource type has an invalid type ' + context.ioPackageJson.common.dataSource);
+                } else if (!['poll', 'push', 'assumption', 'none'].includes(context.ioPackageJson.common.dataSource)) {
+                    context.errors.push(`[E152] common.dataSource type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
                 }
 
                 if (context.packageJson.dependencies['@iobroker/adapter-core']) {
@@ -1558,6 +1558,7 @@ function checkNpmIgnore(context) {
         }
 
         if (!context.filesList.includes('.npmignore')) {
+            console.log('nononono');
             context.warnings.push(`[W801] .npmignore not found`);
         } else {
             const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
