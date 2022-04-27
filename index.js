@@ -949,31 +949,38 @@ function checkIOPackageJson(context) {
                     context.errors.push(`[E152] common.dataSource type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
                 }
 
+                const recommendedJsControllerVersion = '3.3.22';
+
                 if (context.packageJson.dependencies && context.packageJson.dependencies['@iobroker/adapter-core']) {
+                    /*
+                        - adapter-core <2.3 has no special dep requirements
+                        - adapter-core 2.3.x requires js-controller 1.5.8+ as dep
+                        - adapter-core 2.4.0+ required js-controller 2.0.0+ as dep
+                    */
                     if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.3')) {
                         if (!context.ioPackageJson.common.dependencies) {
-                            context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or {"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
+                            context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                         } else {
                             const dep = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
                             if (dep) {
                                 if (dep['js-controller'] !== '>=1.5.8' && dep['js-controller'] !== '>=2.0.0' && !dep['js-controller'].startsWith('>=3')) {
-                                    context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or {"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
+                                    context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                                 }
                             } else {
-                                context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or {"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
+                                context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                             }
                         }
-                    } else if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.4') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.5')) {
+                    } else if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.4') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.5') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.6')) {
                         if (!context.ioPackageJson.common.dependencies) {
-                            context.errors.push(`[E154] common.dependencies must contain{"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
+                            context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                         } else {
                             const dep = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
                             if (dep) {
-                                if (!dep['js-controller'].startsWith('>=2') && !dep['js-controller'].startsWith('>=3')) {
-                                    context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
+                                if (!dep['js-controller'].startsWith('>=2') && !dep['js-controller'].startsWith('>=3') && !dep['js-controller'].startsWith('>=4')) {
+                                    context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                                 }
                             } else {
-                                context.errors.push(`[E154] common.dependencies must contain{"js-controller": ">=2.0.0"} or {"js-controller": ">=3.0.0"}`);
+                                context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                             }
                         }
                     }
