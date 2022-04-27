@@ -1239,14 +1239,14 @@ function checkRepo(context) {
                                 }
                             }
                             if (!context.latestRepo[context.adapterName].meta) {
-                                context.errors.push('[E406] Meta URL(latest) not found in latest repository');
+                                context.errors.push('[E406] Meta URL (latest) not found in latest repository');
                             } else {
                                 context.checks.push('Meta URL(latest) found in latest repository');
 
                                 if (context.latestRepo[context.adapterName].meta !== url + 'io-package.json') {
-                                    context.errors.push(`[E407] Meta URL(latest) must be equal to ${url}io-package.json`);
+                                    context.errors.push(`[E407] Meta URL (latest) must be equal to ${url}io-package.json`);
                                 } else {
-                                    context.checks.push('Meta URL(latest) is OK in latest repository');
+                                    context.checks.push('Meta URL (latest) is OK in latest repository');
                                 }
                             }
                         }
@@ -1287,6 +1287,7 @@ function checkRepo(context) {
                                 } else {
                                     context.checks.push('Version found in stable repository');
                                 }
+
                                 const url = `https://raw.githubusercontent.com/${context.authorName}/ioBroker.${context.adapterName}/${context.branch}/`;
 
                                 if (!context.stableRepo[context.adapterName].icon) {
@@ -1295,20 +1296,21 @@ function checkRepo(context) {
                                     context.checks.push('Icon found in stable repository');
 
                                     if (!context.stableRepo[context.adapterName].icon.startsWith(url)) {
-                                        context.errors.push('[E426] Icon(stable) must be in the following path: '  + url);
+                                        context.errors.push('[E426] Icon (stable) must be in the following path: '  + url);
                                     } else {
-                                        context.checks.push('Icon(stable) found in latest repository');
+                                        context.checks.push('Icon (stable) found in latest repository');
                                     }
                                 }
+
                                 if (!context.stableRepo[context.adapterName].meta) {
-                                    context.errors.push('[E427] Meta URL(stable) not found in latest repository');
+                                    context.errors.push('[E427] Meta URL (stable) not found in latest repository');
                                 } else {
-                                    context.checks.push('Meta URL(stable) found in latest repository');
+                                    context.checks.push('Meta URL (stable) found in latest repository');
 
                                     if (context.stableRepo[context.adapterName].meta !== url + 'io-package.json') {
-                                        context.errors.push(`[E428] Meta URL(stable)  must be equal to ${url}io-package.json`);
+                                        context.errors.push(`[E428] Meta URL (stable) must be equal to ${url}io-package.json`);
                                     } else {
-                                        context.checks.push('Meta URL(stable) is OK in latest repository');
+                                        context.checks.push('Meta URL (stable) is OK in latest repository');
                                     }
                                 }
                             }
@@ -1359,7 +1361,8 @@ function checkCode(context) {
         '.npmignore',
         '.gitignore',
         'iob_npm.done',
-        '.travis.yml'
+        '.travis.yml',
+        'gulpfile.js'
     ];
     if (context.packageJson.main) {
         readFiles.push(context.packageJson.main);
@@ -1502,6 +1505,10 @@ function checkCode(context) {
                     context.hasTravis = true;
                 }
 
+                if (context['/gulpfile.js']) {
+                    context.warnings.push('[W513] "gulpfile.js" found in repo! Think about migrating to @iobroker/adapter-dev package');
+                }
+
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
                     if (!context['/' + context.packageJson.main]) {
                         context.errors.push(`[E504] "${context.packageJson.main} found in package.json, but not found as file`);
@@ -1524,7 +1531,7 @@ function checkCode(context) {
                         }
                     }
                 }
-                // max E512
+                // max E513
                 resolve(context);
             })
             .catch(e => reject(e));
