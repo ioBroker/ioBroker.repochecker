@@ -17,7 +17,6 @@ const Writable = stream.Writable;
 const sizeOf   = require('image-size');
 const axios = require('axios').default;
 const compareVersions = require('compare-versions');
-const { resolve } = require('path');
 
 const version  = '1.4.0';
 const recommendedJsControllerVersion = '3.3.22';
