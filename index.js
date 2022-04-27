@@ -248,15 +248,14 @@ function checkPackageJson(context) {
             } else {
                 context.checks.push('Repository found in package.json');
 
-                /*
-                    Valid URLs (from GitHub API):
-
-                    - "git_url": "git://github.com/klein0r/ioBroker.luftdaten.git",
-                    - "ssh_url": "git@github.com:klein0r/ioBroker.luftdaten.git",
-                    - "clone_url": "https://github.com/klein0r/ioBroker.luftdaten.git",
-
-                    or git+https://github.com/klein0r/ioBroker.luftdaten.git
-                */
+                const allowedRepoUrls = [
+                    context.githubApiData.html_url, // https://github.com/klein0r/ioBroker.luftdaten
+                    `git+${context.githubApiData.html_url}`, // git+https://github.com/klein0r/ioBroker.luftdaten
+                    context.githubApiData.git_url, // git://github.com/klein0r/ioBroker.luftdaten.git
+                    context.githubApiData.ssh_url, // git@github.com:klein0r/ioBroker.luftdaten.git
+                    context.githubApiData.clone_url, // https://github.com/klein0r/ioBroker.luftdaten.git
+                    `git+${context.githubApiData.clone_url}` // git+https://github.com/klein0r/ioBroker.luftdaten.git
+                ];
 
                 // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
                 if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
@@ -266,21 +265,13 @@ function checkPackageJson(context) {
                         context.checks.push('Repository type is valid: git');
                     }
 
-                    if (
-                        context.packageJson.repository.url.indexOf(context.githubApiData.git_url) === -1 &&
-                        context.packageJson.repository.url.indexOf(context.githubApiData.ssh_url) === -1 &&
-                        context.packageJson.repository.url.indexOf(context.githubApiData.clone_url) === -1
-                    ) {
+                    if (allowedRepoUrls.indexOf(context.packageJson.repository.url) === -1) {
                         context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                     } else {
                         context.checks.push('Repository URL is valid in package.json');
                     }
                 } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
-                    if (
-                        context.packageJson.repository.indexOf(context.githubApiData.git_url) === -1 &&
-                        context.packageJson.repository.indexOf(context.githubApiData.ssh_url) === -1 &&
-                        context.packageJson.repository.indexOf(context.githubApiData.clone_url) === -1
-                    ) {
+                    if (allowedRepoUrls.indexOf(context.packageJson.repository) === -1) {
                         context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                     } else {
                         context.checks.push('Repository URL is valid in package.json');
