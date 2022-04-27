@@ -1441,7 +1441,7 @@ function checkCode(context) {
                 }
 
                 if (context['/iob_npm.done']) {
-                    context.errors.push('[E503] "iob_npm.done" found in repo! Please add it to .gitignore');
+                    context.errors.push('[E503] "iob_npm.done" found in repo! Remove that file');
                 }
 
                 if (context['/.travis.yml']) {
