@@ -248,6 +248,16 @@ function checkPackageJson(context) {
             } else {
                 context.checks.push('Repository found in package.json');
 
+                /*
+                    Valid URLs (from GitHub API):
+
+                    - "git_url": "git://github.com/klein0r/ioBroker.luftdaten.git",
+                    - "ssh_url": "git@github.com:klein0r/ioBroker.luftdaten.git",
+                    - "clone_url": "https://github.com/klein0r/ioBroker.luftdaten.git",
+
+                    or git+https://github.com/klein0r/ioBroker.luftdaten.git
+                */
+
                 // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
                 if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
                     if (context.packageJson.repository.type !== 'git') {
@@ -256,14 +266,22 @@ function checkPackageJson(context) {
                         context.checks.push('Repository type is valid: git');
                     }
 
-                    if (context.packageJson.repository.url.indexOf(context.githubUrlOriginal) === -1) {
-                        context.errors.push('[E019] Invalid repository URL: ' + context.packageJson.repository.url + '. Expected: git+' + context.githubUrlOriginal + '.git');
+                    if (
+                        context.packageJson.repository.url.indexOf(context.githubApiData.git_url) === -1 &&
+                        context.packageJson.repository.url.indexOf(context.githubApiData.ssh_url) === -1 &&
+                        context.packageJson.repository.url.indexOf(context.githubApiData.clone_url) === -1
+                    ) {
+                        context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                     } else {
                         context.checks.push('Repository URL is valid in package.json');
                     }
                 } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
-                    if (context.packageJson.repository.indexOf(context.githubUrlOriginal) === -1) {
-                        context.errors.push('[E019] Invalid repository URL: ' + context.packageJson.repository + '. Expected: git+' + context.githubUrlOriginal + '.git');
+                    if (
+                        context.packageJson.repository.indexOf(context.githubApiData.git_url) === -1 &&
+                        context.packageJson.repository.indexOf(context.githubApiData.ssh_url) === -1 &&
+                        context.packageJson.repository.indexOf(context.githubApiData.clone_url) === -1
+                    ) {
+                        context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                     } else {
                         context.checks.push('Repository URL is valid in package.json');
                     }
@@ -1533,28 +1551,22 @@ function checkCommits(context) {
 
 // E8xx
 function checkGithubRepo(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         console.log('checkGithubRepo [E8xx]');
-        downloadFile(context.githubUrlOriginal, '')
-            .then(data => {
-                data = data.replace(/[\r\n]/g, '');
-                let m = data.match(/About<\/h2>\s+<p.*?>([^<]+)<\/p>/);
-                if (!m || !m[1] || !m[1].trim()) {
-                    context.errors.push(`[E801] No repository about text found. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add the description.`);
-                } else {
-                    context.checks.push('Github repository about found.');
-                }
 
-                m = data.replace(/[\r\n]/g, '').match(/Topics<\/h3>/);
-                if (!m) {
-                    context.errors.push(`[E802] No topics found in the repository. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add some topics.`);
-                } else {
-                    context.checks.push('Github repository about found.');
-                }
+        if (!context.githubApiData.description) {
+            context.errors.push(`[E801] No repository about text found. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add the description.`);
+        } else {
+            context.checks.push('Github repository about found.');
+        }
 
-                resolve(context);
-            })
-            .catch(e => reject(e));
+        if (!context.githubApiData.topics || context.githubApiData.topics.length === 0) {
+            context.errors.push(`[E802] No topics found in the repository. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add some topics.`);
+        } else {
+            context.checks.push('Github repository about found.');
+        }
+
+        resolve(context);
     });
 }
 
