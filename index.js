@@ -808,8 +808,7 @@ function checkIOPackageJson(context) {
 
                 if (!context.ioPackageJson.common.compact && !context.ioPackageJson.common.onlyWWW) {
                     context.warnings.push('[W113] Adapter should support compact mode');
-                } else
-                if (!context.ioPackageJson.common.onlyWWW) {
+                } else if (!context.ioPackageJson.common.onlyWWW) {
                     context.checks.push('"common.compact" found in io-package.json');
                 }
 
@@ -940,13 +939,13 @@ function checkIOPackageJson(context) {
                 }
 
                 if (!context.ioPackageJson.common.connectionType) {
-                    context.errors.push('[E150] No common.connectionType found in io-package.json');
+                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E150] No common.connectionType found in io-package.json');
                 } else if (!['local', 'cloud', 'none'].includes(context.ioPackageJson.common.connectionType)) {
                     context.errors.push(`[E151] common.connectionType type has an invalid value "${context.ioPackageJson.common.connectionType}"`);
                 }
 
                 if (!context.ioPackageJson.common.dataSource) {
-                    context.errors.push('[E152] No common.dataSource found in io-package.json');
+                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E152] No common.dataSource found in io-package.json');
                 } else if (!['poll', 'push', 'assumption', 'none'].includes(context.ioPackageJson.common.dataSource)) {
                     context.errors.push(`[E152] common.dataSource type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
                 }
