@@ -205,14 +205,8 @@ function checkPackageJson(context) {
                 context.checks.push('Description found in package.json');
             }
 
-            if (!context.packageJson.license) {
-                context.errors.push('[E011] No license found in the package.json');
-            } else {
-                context.checks.push('License found in package.json');
-            }
-
             if (context.packageJson.licenses) {
-                context.errors.push('[E021] "licenses" in package.json are depricated. Please use only "license": "NAME" field.');
+                context.errors.push('[E021] "licenses" in package.json are deprecated. Please use only "license": "NAME" field.');
             } else {
                 context.checks.push('No "licenses" found in package.json');
             }
