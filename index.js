@@ -770,12 +770,12 @@ function checkIOPackageJson(context) {
                     context.errors.push('[E108] No description found in io-package.json');
                 } else {
                     context.checks.push('"common.desc" found in io-package.json');
-                }
 
-                if (typeof context.ioPackageJson.common.desc !== 'object') {
-                    context.errors.push('[E109] desc in io-package.json should be an object for many languages. Found only ' + context.ioPackageJson.common.desc);
-                } else {
-                    context.checks.push('"common.desc" is multilingual in io-package.json');
+                    if (typeof context.ioPackageJson.common.desc !== 'object') {
+                        context.errors.push('[E109] desc in io-package.json should be an object for many languages. Found only ' + context.ioPackageJson.common.desc);
+                    } else {
+                        context.checks.push('"common.desc" is multilingual in io-package.json');
+                    }
                 }
 
                 if (!context.ioPackageJson.common.icon) {
@@ -1047,9 +1047,9 @@ function checkIOPackageJson(context) {
                             } else {
                                 context.checks.push('Width and height of logo are equal');
                                 if (image.width < 32) {
-                                    context.errors.push('[E141] logo is too small. It mast be greater or equal than 32x32');
-                                } else if (image.width >512) {
-                                    context.errors.push('[E142] logo is too big. It mast be less or equal than 512x512');
+                                    context.errors.push('[E141] logo is too small. It must be greater or equal than 32x32');
+                                } else if (image.width > 512) {
+                                    context.errors.push('[E142] logo is too big. It must be less or equal than 512x512');
                                 }
                             }
 
