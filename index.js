@@ -15,6 +15,8 @@ const util     = require('util');
 const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
+const compareVersions = require('compare-versions');
+
 const version  = '1.4.0';
 const recommendedJsControllerVersion = '3.3.22';
 
@@ -955,8 +957,13 @@ function checkIOPackageJson(context) {
                 if (context.ioPackageJson.common.dependencies) {
                     const jsControllerDependency = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
                     if (jsControllerDependency) {
-                        currentJsControllerVersion = jsControllerDependency['js-controller'];
-                        console.log(`Found current js-controller dependency "${currentJsControllerVersion}"`);
+                        console.log(`Found current js-controller dependency "${jsControllerDependency['js-controller']}"`);
+
+                        if (!jsControllerDependency['js-controller'].startsWith('>=')) {
+                            context.errors.push(`[E159] common.dependencies "js-controller" dependency should always allow future versions (>=x.x.x) - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                        } else {
+                            currentJsControllerVersion = jsControllerDependency['js-controller'].replace(/[^\d.]/g, '');
+                        }
                     }
                 }
 
@@ -971,13 +978,10 @@ function checkIOPackageJson(context) {
                             context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                         } else {
                             if (currentJsControllerVersion) {
-                                if (
-                                    currentJsControllerVersion !== '>=1.5.8' &&
-                                    currentJsControllerVersion !== '>=2.0.0' &&
-                                    !currentJsControllerVersion.startsWith('>=3') &&
-                                    !currentJsControllerVersion.startsWith('>=4')
-                                ) {
+                                if (!compareVersions.compare(currentJsControllerVersion, '1.5.8', '>=')) {
                                     context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                                } else {
+                                    context.checks.push('adapter-core 2.3 dependency matches js-controller dependency');
                                 }
                             } else {
                                 context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
@@ -988,17 +992,31 @@ function checkIOPackageJson(context) {
                             context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                         } else {
                             if (currentJsControllerVersion) {
-                                if (
-                                    !currentJsControllerVersion.startsWith('>=2') &&
-                                    !currentJsControllerVersion.startsWith('>=3') &&
-                                    !currentJsControllerVersion.startsWith('>=4')
-                                ) {
+                                if (!compareVersions.compare(currentJsControllerVersion, '2.0.0', '>=')) {
                                     context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                                } else {
+                                    context.checks.push('adapter-core >=2.4 dependency matches js-controller dependency');
                                 }
                             } else {
                                 context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                             }
                         }
+                    }
+                }
+
+                if (context.ioPackageJson.common.protectedNative) {
+                    if (!currentJsControllerVersion) {
+                        context.errors.push(`[E157] common.protectedNative requires dependency {"js-controller": ">=2.0.2"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                    } else if (!compareVersions.compare(currentJsControllerVersion, '2.0.2', '>=')) {
+                        context.errors.push(`[E157] common.protectedNative requires dependency {"js-controller": ">=2.0.2"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                    }
+                }
+
+                if (context.ioPackageJson.common.encryptedNative) {
+                    if (!currentJsControllerVersion) {
+                        context.errors.push(`[E158] common.encryptedNative requires dependency {"js-controller": ">=3.0.3"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                    } else if (!compareVersions.compare(currentJsControllerVersion, '3.0.3', '>=')) {
+                        context.errors.push(`[E158] common.encryptedNative requires dependency {"js-controller": ">=3.0.3"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                     }
                 }
 
@@ -1042,8 +1060,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-
-                // max number is E156
+                // max number is E159
             }
         });
     });

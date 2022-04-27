@@ -3,6 +3,7 @@
   "version": "1.4.0",
   "name": "iobroker.repochecker",
   "dependencies": {
+    "compare-versions": "^3.6.0",
     "image-size": "^1.0.0",
     "request": "^2.88.2",
     "unzipper": "^0.10.11"
