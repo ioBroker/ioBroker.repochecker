@@ -101,6 +101,12 @@ function downloadFile(githubUrl, path, binary) {
     });
 }
 
+function getDependencyArray(deps) {
+    return deps
+        .map(dep => typeof dep === 'object' ? Object.keys(dep) : [dep])
+        .reduce((acc, dep) => acc.concat(dep), []);
+}
+
 function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
         axios.get(context.githubUrlApi)
@@ -948,6 +954,13 @@ function checkIOPackageJson(context) {
                 let currentJsControllerVersion = undefined;
 
                 if (context.ioPackageJson.common.dependencies) {
+                    const dependencyArray = getDependencyArray(context.ioPackageJson.common.dependencies);
+
+                    // Admin is not allowed in dependencies (globalDependencies only)
+                    if (dependencyArray.indexOf('admin') > -1) {
+                        context.errors.push(`[E160] "admin" is not allowed in common.dependencies`);
+                    }
+
                     const jsControllerDependency = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
                     if (jsControllerDependency) {
                         console.log(`Found current js-controller dependency "${jsControllerDependency['js-controller']}"`);
@@ -957,6 +970,15 @@ function checkIOPackageJson(context) {
                         } else {
                             currentJsControllerVersion = jsControllerDependency['js-controller'].replace(/[^\d.]/g, '');
                         }
+                    }
+                }
+
+                if (context.ioPackageJson.common.globalDependencies) {
+                    const dependencyArray = getDependencyArray(context.ioPackageJson.common.globalDependencies);
+
+                    // js-controller is not allowed in global dependencies (dependencies only)
+                    if (dependencyArray.indexOf('js-controller') > -1) {
+                        context.errors.push(`[E161] "js-controller" is not allowed in common.globalDependencies`);
                     }
                 }
 
@@ -1053,7 +1075,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E159
+                // max number is E161
             }
         });
     });
