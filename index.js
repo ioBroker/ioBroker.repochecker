@@ -15,7 +15,9 @@ const util     = require('util');
 const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
+const axios = require('axios').default;
 const compareVersions = require('compare-versions');
+const { resolve } = require('path');
 
 const version  = '1.4.0';
 const recommendedJsControllerVersion = '3.3.22';
@@ -100,48 +102,37 @@ function downloadFile(githubUrl, path, binary) {
     });
 }
 
+function getGithubApiData(context) {
+    return new Promise((resolve, reject) => {
+        axios.get(context.githubUrlApi)
+            .then(response => {
+                context.githubApiData = response.data;
+                // console.log(`API Data: ${JSON.stringify(context.githubApiData)}`);
+
+                if (!context.branch) {
+                    context.branch = context.githubApiData.default_branch; // main vs. master
+                    console.log(`Branch was not defined by user - checking branch: ${context.branch}`);
+                }
+
+                context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
+                console.log(`Original URL: ${context.githubUrlOriginal}, raw: ${context.githubUrl}, api: ${context.githubUrlApi}`);
+
+                resolve(context);
+            })
+            .catch(e => reject(e.toJSON()));
+    });
+}
+
 // check package.json
 // E0xx
-function checkPackageJson(githubUrl, branch, context) {
-    githubUrl = githubUrl
-        .replace('http://', 'https://')
-        .replace('https://www.github.com', 'https://github.com')
-        .replace('https://raw.githubusercontent.com/', 'https://github.com/');
-
-    if (githubUrl.match(/\/$/)) {
-        githubUrl = githubUrl.substring(0, githubUrl.length - 1);
-    }
-    context.githubUrlOriginal = githubUrl;
-    context.branch = branch || 'main';
-    githubUrl = githubUrl.replace('https://github.com', 'https://raw.githubusercontent.com');
-    githubUrl = githubUrl + '/' + context.branch;
-    console.log(`Original URL: ${context.githubUrlOriginal}, raw: ${githubUrl}`);
-    context.githubUrl = githubUrl;
+function checkPackageJson(context) {
     return new Promise((resolve, reject) => {
         if (context.packageJson) {
             return Promise.resolve(context.packageJson);
         } else {
-            return downloadFile(githubUrl, '/package.json')
+            return downloadFile(context.githubUrl, '/package.json')
                 .then(packageJson => resolve(packageJson))
-                .catch(e => {
-                    if (e === 404) {
-                        context.branch = 'master';
-                        githubUrl = githubUrl.replace(/main$/, 'master');
-                        context.githubUrl = githubUrl;
-                        console.log(`Original URL: ${context.githubUrlOriginal}, raw: ${githubUrl}`);
-                        return downloadFile(githubUrl, '/package.json')
-                            .then(packageJson => resolve(packageJson))
-                            .catch(e => {
-                                if (e === 404) {
-                                    reject('404: Invalid URL');
-                                } else {
-                                    reject(e);
-                                }
-                            });
-                    } else {
-                        reject(e);
-                    }
-                });
+                .catch(e => reject(e));
         }
     }).then(packageJson => {
         return new Promise(resolve => {
@@ -155,22 +146,22 @@ function checkPackageJson(githubUrl, branch, context) {
                 }
             }
 
-            if (!githubUrl.match(/\/iobroker\./i)) {
+            if (!context.githubUrlOriginal.match(/\/iobroker\./i)) {
                 context.errors.push('[E002] No "ioBroker." found in the name of repository');
             } else {
                 context.checks.push('"ioBroker" was found in the name of repository');
             }
 
-            if (githubUrl.indexOf('/iobroker.') !== -1) {
+            if (context.githubUrlOriginal.indexOf('/iobroker.') !== -1) {
                 context.errors.push('[E003] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
             } else {
                 context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
             }
 
-            const m = githubUrl.match(/\/ioBroker\.(.*)$/);
+            const m = context.githubUrlOriginal.match(/\/ioBroker\.(.*)$/);
             let adapterName = '';
             if (!m || !m[1]) {
-                context.errors.push('[E004] No adapter name found in URL: ' + githubUrl);
+                context.errors.push('[E004] No adapter name found in URL: ' + context.githubUrlOriginal);
             } else {
                 context.checks.push('Adapter name found in the URL');
                 adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
@@ -190,7 +181,7 @@ function checkPackageJson(githubUrl, branch, context) {
                 context.checks.push(`No invalid characters found in "${adapterName}"`);
             }
 
-            const n = githubUrl.match(/\/([^\/]+)\/iobroker\./i);
+            const n = context.githubUrlOriginal.match(/\/([^\/]+)\/iobroker\./i);
             if (!n || !n[1]) {
                 context.errors.push('[E007] Cannot find author repo in the URL');
             } else {
@@ -1795,14 +1786,30 @@ function makeResponse(code, data, headers) {
     };
 }
 
-function check(request, context, callback) {
+function check(request, ctx, callback) {
     console.log('PROCESS: ' + JSON.stringify(request));
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, {error: 'No github URL provided'}));
     } else {
-        const ctx = {checks: [], errors: [], warnings: []};
+        const context = {checks: [], errors: [], warnings: []};
+        let githubUrl = request.queryStringParameters.url;
+        let githubBranch = request.queryStringParameters.branch;
 
-        checkPackageJson(request.queryStringParameters.url, request.queryStringParameters.branch, ctx)
+        githubUrl = githubUrl
+            .replace('http://', 'https://')
+            .replace('https://www.github.com', 'https://github.com')
+            .replace('https://raw.githubusercontent.com/', 'https://github.com/');
+
+        if (githubUrl.match(/\/$/)) {
+            githubUrl = githubUrl.substring(0, githubUrl.length - 1);
+        }
+
+        context.githubUrlOriginal = githubUrl;
+        context.githubUrlApi = githubUrl.replace('https://github.com/', 'https://api.github.com/repos/');
+        context.branch = githubBranch || null;
+
+        getGithubApiData(context)
+            .then(context => checkPackageJson(context))
             .then(context => checkIOPackageJson(context))
             .then(context => checkNpm(context))
             .then(context => checkCommits(context))
@@ -1820,7 +1827,7 @@ function check(request, context, callback) {
             .catch(err => {
                 console.error(err);
 
-                return callback(err, makeResponse(200, {result: 'Errors found', checks: ctx.checks, errors: ctx.errors, warnings: ctx.warnings, version, hasTravis: ctx.hasTravis}));
+                return callback(err, makeResponse(200, {result: 'Errors found', checks: context.checks, errors: context.errors, warnings: context.warnings, version, hasTravis: context.hasTravis}));
             });
     }
 }
@@ -1829,7 +1836,7 @@ if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     let repoUrl = 'https://github.com/ioBroker/ioBroker.admin';
-    let repoBranch = 'main';
+    let repoBranch = null;
 
     // Get url from parameters if possible
     if (process.argv.length > 2) {
