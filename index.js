@@ -1322,7 +1322,7 @@ function checkCode(context) {
             readFiles.push('admin/i18n/en/translations.json');
         }
 
-        if (context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
+        if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
             readFiles.push('admin/jsonCustom.json');
         }
     }
@@ -1428,7 +1428,7 @@ function checkCode(context) {
                     }
                 }
 
-                if (context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
+                if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
                     if (context['/admin/jsonCustom.json']) {
                         try {
                             JSON.parse(context['/admin/jsonCustom.json']);
