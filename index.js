@@ -16,6 +16,7 @@ const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
 const version  = '1.4.0';
+const recommendedJsControllerVersion = '3.3.22';
 
 let request;
 let https;
@@ -949,7 +950,15 @@ function checkIOPackageJson(context) {
                     context.errors.push(`[E152] common.dataSource type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
                 }
 
-                const recommendedJsControllerVersion = '3.3.22';
+                let currentJsControllerVersion = undefined;
+
+                if (context.ioPackageJson.common.dependencies) {
+                    const jsControllerDependency = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
+                    if (jsControllerDependency) {
+                        currentJsControllerVersion = jsControllerDependency['js-controller'];
+                        console.log(`Found current js-controller dependency "${currentJsControllerVersion}"`);
+                    }
+                }
 
                 if (context.packageJson.dependencies && context.packageJson.dependencies['@iobroker/adapter-core']) {
                     /*
@@ -961,9 +970,13 @@ function checkIOPackageJson(context) {
                         if (!context.ioPackageJson.common.dependencies) {
                             context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                         } else {
-                            const dep = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
-                            if (dep) {
-                                if (dep['js-controller'] !== '>=1.5.8' && dep['js-controller'] !== '>=2.0.0' && !dep['js-controller'].startsWith('>=3')) {
+                            if (currentJsControllerVersion) {
+                                if (
+                                    currentJsControllerVersion !== '>=1.5.8' &&
+                                    currentJsControllerVersion !== '>=2.0.0' &&
+                                    !currentJsControllerVersion.startsWith('>=3') &&
+                                    !currentJsControllerVersion.startsWith('>=4')
+                                ) {
                                     context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                                 }
                             } else {
@@ -974,9 +987,12 @@ function checkIOPackageJson(context) {
                         if (!context.ioPackageJson.common.dependencies) {
                             context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                         } else {
-                            const dep = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
-                            if (dep) {
-                                if (!dep['js-controller'].startsWith('>=2') && !dep['js-controller'].startsWith('>=3') && !dep['js-controller'].startsWith('>=4')) {
+                            if (currentJsControllerVersion) {
+                                if (
+                                    !currentJsControllerVersion.startsWith('>=2') &&
+                                    !currentJsControllerVersion.startsWith('>=3') &&
+                                    !currentJsControllerVersion.startsWith('>=4')
+                                ) {
                                     context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
                                 }
                             } else {
