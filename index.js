@@ -1566,6 +1566,10 @@ function checkGithubRepo(context) {
             context.checks.push('Github repository about found.');
         }
 
+        if (context.githubApiData.archived) {
+            context.errors.push(`[E803] Archived repositories are not allowed.`);
+        }
+
         resolve(context);
     });
 }
