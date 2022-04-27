@@ -1664,11 +1664,11 @@ function checkNpmIgnore(context) {
 
             // There's no need to put node_modules in .npmignore. npm will never publish node_modules in the package, except if one of the modules is explicitly mentioned in bundledDependencies.
             /*if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
-                !check && context.errors.push(`[E804}] node_modules not found in .npmignore`);
+                !check && context.errors.push(`[E804] node_modules not found in .npmignore`);
             }*/
             if (!tooComplexToCheck) {
                 if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
-                    !check && context.errors.push(`[E803}] iob_npm.done not found in .npmignore`);
+                    !check && context.errors.push(`[E803] iob_npm.done not found in .npmignore`);
                 }
 
                 checkFiles.forEach((file, i) => {
@@ -1719,10 +1719,10 @@ function checkGitIgnore(context) {
             });
 
             if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
-                !check && context.errors.push(`[E902}] node_modules not found in .npmignore`);
+                !check && context.errors.push(`[E902] node_modules not found in .npmignore`);
             }
             if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
-                !check && context.errors.push(`[E903}] iob_npm.done not found in .npmignore`);
+                !check && context.errors.push(`[E903] iob_npm.done not found in .gitignore`);
             }
 
             checkFiles.forEach((file, i) => {
