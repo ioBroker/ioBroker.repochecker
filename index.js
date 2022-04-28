@@ -1676,6 +1676,7 @@ function checkGithubRepo(context) {
             context.errors.push(`[E803] Archived repositories are not allowed.`);
         }
 
+        // max E803
         resolve(context);
     });
 }
@@ -1689,15 +1690,21 @@ function checkReadme(context) {
             .then(data => {
                 if (!data) {
                     context.errors.push('[E601] No README.md found');
-                    resolve(context);
                 } else {
                     context.checks.push('README.md found');
 
                     if (data.indexOf('## Changelog') === -1) {
                         context.errors.push('[E603] NO "## Changelog" found in README.md');
                     } else {
-                        context.checks.push('## Changelog found in README.md');
+                        context.checks.push('README.md contains Changelog');
+
+                        if (data.indexOf(`### ${context.packageJson.version}`) === - 1) {
+                            context.errors.push(`[E606] Current adapter version ${context.packageJson.version} not found in README.md`);
+                        } else {
+                            context.checks.push('README.md contains current adapter version');
+                        }
                     }
+
                     const pos = data.indexOf('## License');
                     if (pos === -1) {
                         context.errors.push('[E604] No "## License" found in README.md');
@@ -1716,8 +1723,10 @@ function checkReadme(context) {
                             context.checks.push('Valid copyright year found in README.md');
                         }
                     }
-                    resolve(context);
                 }
+
+                // max E606
+                resolve(context);
             })
             .catch(e => reject(e));
     });
