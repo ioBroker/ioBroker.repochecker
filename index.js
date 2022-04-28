@@ -817,7 +817,7 @@ function checkIOPackageJson(context) {
                         !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') &&
                         !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')
                     ) {
-                        context.errors.push('[E114] No adapter are allowed in the repo without admin support (set "common.noconfig" if adapter has no configuration)');
+                        context.errors.push('[E114] No adapter are allowed in the repo without admin support (set "common.noConfig = true" and "common.adminUI.config = none" if adapter has no configuration)');
                     } else {
                         context.checks.push('"common.materialize" or "common.adminUI.config" found in io-package.json');
                     }
@@ -827,6 +827,10 @@ function checkIOPackageJson(context) {
                     }
                 } else {
                     context.checks.push('adapter has no admin config');
+
+                    if (!context.ioPackageJson.common.adminUI || context.ioPackageJson.common.adminUI.config !== 'none') {
+                        context.warnings.push('[W164] Adapters without config "common.noConfig = true" should also set "common.adminUI.config" to "none"');
+                    }
                 }
 
                 if (!context.ioPackageJson.common.license) {
@@ -1082,7 +1086,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E163
+                // max number is E164
             }
         });
     });
