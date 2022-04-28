@@ -1071,6 +1071,14 @@ function checkIOPackageJson(context) {
                     }
                 }
 
+                if (context.ioPackageJson.common.notifications) {
+                    if (!currentJsControllerVersion) {
+                        context.errors.push(`[E168] common.notifications requires dependency {"js-controller": ">=3.2.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                    } else if (!compareVersions.compare(currentJsControllerVersion, '3.2.0', '>=')) {
+                        context.errors.push(`[E168] common.notifications requires dependency {"js-controller": ">=3.2.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                    }
+                }
+
                 if (context.ioPackageJson.common.tier && ![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
                     context.errors.push(`[E155] Invalid tier value: ${context.ioPackageJson.common.tier}. Only 1, 2 or 3 are allowed!`);
                 }
@@ -1111,7 +1119,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E167
+                // max number is E168
             }
         });
     });
