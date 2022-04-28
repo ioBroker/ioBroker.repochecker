@@ -739,13 +739,13 @@ function checkIOPackageJson(context) {
                 context.checks.push('"common" found in io-package.json');
                 if (!context.ioPackageJson.common ||
                     context.ioPackageJson.common.name !== context.adapterName.toLowerCase()) {
-                    context.errors.push('[E103] common.name in io-package.json must be equal to "' + context.adapterName.toLowerCase() + '". Now is ' + context.ioPackageJson.common.name);
+                    context.errors.push('[E103] "common.name" in io-package.json must be equal to "' + context.adapterName.toLowerCase() + '". Now is ' + context.ioPackageJson.common.name);
                 } else {
                     context.checks.push('"common.name" is valid in io-package.json');
                 }
 
                 if (!context.ioPackageJson.common.titleLang) {
-                    context.errors.push('[E104] No common.titleLang found in io-package.json');
+                    context.errors.push('[E104] No "common.titleLang" found in io-package.json');
                 } else {
                     context.checks.push('"common.titleLang" found in io-package.json');
 
@@ -755,7 +755,7 @@ function checkIOPackageJson(context) {
                         Object.keys(context.ioPackageJson.common.titleLang).forEach(lang => {
                             const text = context.ioPackageJson.common.titleLang[lang];
                             if (text.match(/iobroker/i)) {
-                                context.errors.push('[E105] Title should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
+                                context.errors.push('[E105] "common.titleLang" should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
                             } else {
                                 context.checks.push('"common.titleLang" has no ioBroker in it in io-package.json');
                             }
@@ -770,13 +770,19 @@ function checkIOPackageJson(context) {
                 }
 
                 if (!context.ioPackageJson.common.version) {
-                    context.errors.push('[E107] No version found in io-package.json');
+                    context.errors.push('[E107] No "common.version" found in io-package.json');
                 } else {
                     context.checks.push('"common.version" found in io-package.json');
+
+                    if (!context.packageJson || context.ioPackageJson.common.version !== context.packageJson.version) {
+                        context.errors.push('[E118] Versions in package.json and in io-package.json are different');
+                    } else {
+                        context.checks.push('"common.version" is equal in package.json adn in io-package.json');
+                    }
                 }
 
                 if (!context.ioPackageJson.common.desc) {
-                    context.errors.push('[E108] No description found in io-package.json');
+                    context.errors.push('[E108] No "common.desc" found in io-package.json');
                 } else {
                     context.checks.push('"common.desc" found in io-package.json');
 
@@ -785,6 +791,17 @@ function checkIOPackageJson(context) {
                     } else {
                         context.checks.push('"common.desc" is multilingual in io-package.json');
                     }
+                }
+
+                if (context.ioPackageJson.common.keywords) {
+                    const forbiddenKeywords = ['iobroker', 'adapter', 'smart home'];
+                    if (!Array.isArray(context.ioPackageJson.common.keywords)) {
+                        context.errors.push('[E169] "common.keywords" must be an array in the io-package.json');
+                    } else if (forbiddenKeywords.filter(keyword => context.ioPackageJson.common.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
+                        context.warnings.push(`[W170] "common.keywords" should not contain "${forbiddenKeywords.join(', ')}" io-package.json`);
+                    }
+
+                    context.checks.push('"common.keywords" found in io-package.json');
                 }
 
                 if (!context.ioPackageJson.common.icon) {
@@ -860,13 +877,6 @@ function checkIOPackageJson(context) {
                     } else {
                         context.checks.push('"common.license" is equal in pacjage.json and in io-package.json');
                     }
-                }
-
-                if (!context.packageJson ||
-                    context.ioPackageJson.common.version !== context.packageJson.version) {
-                    context.errors.push('[E118] Versions in package.json and in io-package.json are different');
-                } else {
-                    context.checks.push('"common.version" is equal in package.json adn in io-package.json');
                 }
 
                 if (!context.ioPackageJson.common.mode) {
@@ -1119,7 +1129,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E168
+                // max number is E170
             }
         });
     });
