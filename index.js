@@ -860,12 +860,16 @@ function checkIOPackageJson(context) {
                     context.errors.push('[E119] No type found in io-package.json');
                 } else {
                     context.checks.push('"common.type" found in io-package.json');
-                }
 
-                if (!allowedTypes[context.ioPackageJson.common.type]) {
-                    context.errors.push('[E120] Unknown type found in io-package.json');
-                } else {
-                    context.checks.push('"common.type" has known type in io-package.json');
+                    if (!allowedTypes[context.ioPackageJson.common.type]) {
+                        context.errors.push('[E120] Unknown type found in io-package.json');
+                    } else {
+                        context.checks.push('"common.type" has known type in io-package.json');
+
+                        if (context.ioPackageJson.common.onlyWWW && context.ioPackageJson.common.type !== 'none') {
+                            context.errors.push('[E162] onlyWWW should have common.type "none" in io-package.json');
+                        }
+                    }
                 }
 
                 if (!context.ioPackageJson.common.authors) {
@@ -892,7 +896,7 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.news" found in io-package.json');
 
                     if (Object.keys(context.ioPackageJson.common.news).length > 20) {
-                        context.errors.push('[E130] Too many news found in io-package.json. Mast be less than 21. Please remove old news.');
+                        context.errors.push('[E130] Too many news found in io-package.json. Must be less than 20. Please remove old news.');
                     }
                     if (!context.ioPackageJson.common.news[context.ioPackageJson.common.version]) {
                         context.errors.push(`[E145] No news found for actual version ${context.ioPackageJson.common.version}`);
@@ -904,6 +908,10 @@ function checkIOPackageJson(context) {
                     !context.ioPackageJson.common.onlyWWW && context.errors.push('[E143] No main found in the package.json');
                 } else {
                     context.checks.push('"main" found in package.json');
+
+                    if (context.ioPackageJson.common.type !== 'none' && !context.packageJson.main.endsWith('.js')) {
+                        context.errors.push(`[E163] common.type "${context.ioPackageJson.common.type}" requires JavaScript file for "main" in package.json`);
+                    }
                 }
 
                 if (context.ioPackageJson.common.installedFrom) {
@@ -1074,7 +1082,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E161
+                // max number is E163
             }
         });
     });
@@ -1511,7 +1519,7 @@ function checkCode(context) {
 
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
                     if (!context['/' + context.packageJson.main]) {
-                        context.errors.push(`[E504] "${context.packageJson.main} found in package.json, but not found as file`);
+                        context.errors.push(`[E504] "${context.packageJson.main}" found in package.json, but not found as file`);
                     } else {
                         if (context['/' + context.packageJson.main].includes('setInterval(') && !context['/' + context.packageJson.main].includes('clearInterval(')) {
                             if (context.ioPackageJson.compact) {
