@@ -292,6 +292,15 @@ function checkPackageJson(context) {
     });
 }
 
+const allowedModes = {
+    'none': 'this adapter will not be started',
+    'daemon': 'always running process (will be restarted if process exits)',
+    'subscribe': 'is started when state system.adapter…alive changes to true. Is killed when .alive changes to false and sets .alive to false if process exits (will not be restarted when process exits)',
+    'schedule': 'is started by schedule found in system.adapter…common.schedule - reacts on changes of .schedule by rescheduling with new state',
+    'once' : 'his adapter will be started every time the system.adapter.. object changed. It will not be restarted after termination.',
+    'extension': ''
+};
+
 const allowedTypes = {
     'alarm': 'security of home, car, boat, ...',
     'climate-control': 'climate, heaters, air filters, water heaters, ...',
@@ -829,7 +838,7 @@ function checkIOPackageJson(context) {
                     context.checks.push('adapter has no admin config');
 
                     if (!context.ioPackageJson.common.adminUI || context.ioPackageJson.common.adminUI.config !== 'none') {
-                        context.warnings.push('[W164] Adapters without config "common.noConfig = true" should also set "common.adminUI.config" to "none"');
+                        context.warnings.push('[W164] Adapters without config "common.noConfig = true" should also set "common.adminUI.config = none"');
                     }
                 }
 
@@ -860,6 +869,26 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.version" is equal in package.json adn in io-package.json');
                 }
 
+                if (!context.ioPackageJson.common.mode) {
+                    context.errors.push('[E165] Node mode found in package.json');
+                } else {
+                    context.checks.push('"common.mode" found in io-package.json');
+
+                    if (!allowedModes[context.ioPackageJson.common.mode]) {
+                        context.errors.push('[E166] Unknown type found in io-package.json');
+                    } else {
+                        context.checks.push('"common.mode" has known mode in io-package.json');
+
+                        if (context.ioPackageJson.common.onlyWWW && context.ioPackageJson.common.mode !== 'none') {
+                            context.errors.push('[E162] onlyWWW should have common.mode "none" in io-package.json');
+                        }
+
+                        if (context.ioPackageJson.common.mode === 'schedule' && !context.ioPackageJson.common.schedule) {
+                            context.errors.push('[E167] schedule adapters must have common.schedule property in io-package.json');
+                        }
+                    }
+                }
+
                 if (!context.ioPackageJson.common.type) {
                     context.errors.push('[E119] No type found in io-package.json');
                 } else {
@@ -869,10 +898,6 @@ function checkIOPackageJson(context) {
                         context.errors.push('[E120] Unknown type found in io-package.json');
                     } else {
                         context.checks.push('"common.type" has known type in io-package.json');
-
-                        if (context.ioPackageJson.common.onlyWWW && context.ioPackageJson.common.type !== 'none') {
-                            context.errors.push('[E162] onlyWWW should have common.type "none" in io-package.json');
-                        }
                     }
                 }
 
@@ -913,8 +938,8 @@ function checkIOPackageJson(context) {
                 } else {
                     context.checks.push('"main" found in package.json');
 
-                    if (context.ioPackageJson.common.type !== 'none' && !context.packageJson.main.endsWith('.js')) {
-                        context.errors.push(`[E163] common.type "${context.ioPackageJson.common.type}" requires JavaScript file for "main" in package.json`);
+                    if (context.ioPackageJson.common.mode !== 'none' && !context.packageJson.main.endsWith('.js')) {
+                        context.errors.push(`[E163] common.mode "${context.ioPackageJson.common.mode}" requires JavaScript file for "main" in package.json`);
                     }
                 }
 
@@ -1086,7 +1111,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E164
+                // max number is E167
             }
         });
     });
