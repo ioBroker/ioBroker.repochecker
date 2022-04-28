@@ -107,6 +107,12 @@ function getDependencyArray(deps) {
         .reduce((acc, dep) => acc.concat(dep), []);
 }
 
+function checkLanguages(langObj) {
+    if (Object.keys(langObj).length !== allowedLanguages.length) return false;
+
+    return Object.keys(langObj).filter(lang => allowedLanguages.includes(lang)).length === allowedLanguages.length;
+}
+
 function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
         axios.get(context.githubUrlApi)
@@ -291,6 +297,19 @@ function checkPackageJson(context) {
         });
     });
 }
+
+const allowedLanguages = [
+    'en',
+    'de',
+    'ru',
+    'pt',
+    'nl',
+    'fr',
+    'it',
+    'es',
+    'pl',
+    'zh-cn'
+];
 
 const allowedModes = {
     'none': 'this adapter will not be started',
@@ -750,18 +769,20 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.titleLang" found in io-package.json');
 
                     if (typeof context.ioPackageJson.common.titleLang !== 'object') {
-                        context.errors.push('[E105] Title with languages must be an object. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
+                        context.errors.push('[E105] "common.titleLang" must be an object. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
+                    } else if (!checkLanguages(context.ioPackageJson.common.titleLang)) {
+                        context.warnings.push(`[W105] "common.titleLang" should be translated into all supported languages (${allowedLanguages.join(', ')})`);
                     } else {
                         Object.keys(context.ioPackageJson.common.titleLang).forEach(lang => {
                             const text = context.ioPackageJson.common.titleLang[lang];
                             if (text.match(/iobroker/i)) {
-                                context.errors.push('[E105] "common.titleLang" should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
+                                context.errors.push('[W105] "common.titleLang" should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
                             } else {
                                 context.checks.push('"common.titleLang" has no ioBroker in it in io-package.json');
                             }
 
                             if (text.match(/\sadapter|adapter\s/i)) {
-                                context.errors.push('[E106] Title should not have word "adapter" in the name. It is clear, that this is adapter. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
+                                context.errors.push('[E106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
                             } else {
                                 context.checks.push('"common.titleLang" has no "adapter" in it in io-package.json');
                             }
@@ -787,7 +808,9 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.desc" found in io-package.json');
 
                     if (typeof context.ioPackageJson.common.desc !== 'object') {
-                        context.errors.push('[E109] desc in io-package.json should be an object for many languages. Found only ' + context.ioPackageJson.common.desc);
+                        context.errors.push('[E109] "common.desc" in io-package.json should be an object for many languages. Found only ' + context.ioPackageJson.common.desc);
+                    } else if (!checkLanguages(context.ioPackageJson.common.desc)) {
+                        context.warnings.push(`[W109] "common.desc" should be translated into all supported languages (${allowedLanguages.join(', ')})`);
                     } else {
                         context.checks.push('"common.desc" is multilingual in io-package.json');
                     }
@@ -930,16 +953,23 @@ function checkIOPackageJson(context) {
                 }
 
                 if (!context.ioPackageJson.common.news) {
-                    context.errors.push('[E130] No news found in io-package.json');
+                    context.errors.push('[E130] No "common.news" found in io-package.json');
                 } else {
                     context.checks.push('"common.news" found in io-package.json');
 
                     if (Object.keys(context.ioPackageJson.common.news).length > 20) {
-                        context.errors.push('[E130] Too many news found in io-package.json. Must be less than 20. Please remove old news.');
+                        context.errors.push('[E130] Too many "common.news" found in io-package.json. Must be less than 20. Please remove old news.');
                     }
+
                     if (!context.ioPackageJson.common.news[context.ioPackageJson.common.version]) {
-                        context.errors.push(`[E145] No news found for actual version ${context.ioPackageJson.common.version}`);
+                        context.errors.push(`[E145] No "common.news" found for actual version ${context.ioPackageJson.common.version}`);
                     }
+
+                    Object.keys(context.ioPackageJson.common.news).forEach(version => {
+                        if (!checkLanguages(context.ioPackageJson.common.news[version])) {
+                            context.warnings.push(`[W145] Each "common.news" should be translated into all supported languages (${allowedLanguages.join(', ')})`);
+                        }
+                    });
                 }
 
                 // now check the package.json again, because it is valid only for onlyWWW
