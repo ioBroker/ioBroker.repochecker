@@ -939,7 +939,7 @@ function checkIOPackageJson(context) {
                     context.checks.push('"main" found in package.json');
 
                     if (context.ioPackageJson.common.mode !== 'none' && !context.packageJson.main.endsWith('.js')) {
-                        context.errors.push(`[E163] common.mode "${context.ioPackageJson.common.mode}" requires JavaScript file for "main" in package.json`);
+                        !context.ioPackageJson.common.onlyWWW && context.errors.push(`[E163] common.mode "${context.ioPackageJson.common.mode}" requires JavaScript file for "main" in package.json`);
                     }
                 }
 
@@ -1401,6 +1401,7 @@ function checkCode(context) {
         '.travis.yml',
         'gulpfile.js'
     ];
+
     if (context.packageJson.main) {
         readFiles.push(context.packageJson.main);
     }
@@ -1419,6 +1420,10 @@ function checkCode(context) {
         if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
             readFiles.push('admin/jsonCustom.json');
         }
+    }
+
+    if (context.ioPackageJson.common.blockly) {
+        readFiles.push('admin/blockly.js');
     }
 
     // https://github.com/userName/ioBroker.adaptername/archive/${context.branch}.zip
@@ -1534,6 +1539,10 @@ function checkCode(context) {
                     }
                 }
 
+                if (context.ioPackageJson.common.blockly && !context['/admin/blockly.js']) {
+                    context.errors.push('[E514] "admin/blockly.js" not found, but blockly support is declared');
+                }
+
                 if (context['/iob_npm.done']) {
                     context.errors.push('[E503] "iob_npm.done" found in repo! Remove that file');
                 }
@@ -1568,7 +1577,7 @@ function checkCode(context) {
                         }
                     }
                 }
-                // max E513
+                // max E514
                 resolve(context);
             })
             .catch(e => reject(e));
