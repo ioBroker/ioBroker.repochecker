@@ -1462,7 +1462,9 @@ function checkCode(context) {
 
         if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
             readFiles.push('admin/jsonConfig.json');
-            readFiles.push('admin/i18n/en/translations.json');
+            allowedLanguages.forEach(lang => {
+                readFiles.push(`admin/i18n/${lang}/translations.json`);
+            });
         }
 
         if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
@@ -1564,15 +1566,17 @@ function checkCode(context) {
                         context.errors.push(`[E508] "admin/jsonConfig.json" not found, but admin support is declared`);
                     }
 
-                    if (context['/admin/i18n/en/translations.json']) {
-                        try {
-                            JSON.parse(context['/admin/i18n/en/translations.json']);
-                        } catch (e) {
-                            context.errors.push('[E509] Cannot parse "admin/i18n/en/translations.json": ' + e);
+                    allowedLanguages.forEach(lang => {
+                        if (context[`/admin/i18n/${lang}/translations.json`]) {
+                            try {
+                                JSON.parse(context[`/admin/i18n/${lang}/translations.json`]);
+                            } catch (e) {
+                                context.errors.push(`[E509] Cannot parse "admin/i18n/${lang}/translations.json": ${e}`);
+                            }
+                        } else {
+                            context.errors.push(`[E510] "/admin/i18n/${lang}/translations.json" not found, but admin support is declared`);
                         }
-                    } else {
-                        context.errors.push(`[E510] "/admin/i18n/en/translations.json" not found, but admin support is declared`);
-                    }
+                    });
                 }
 
                 if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
