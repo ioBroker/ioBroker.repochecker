@@ -756,11 +756,14 @@ function checkIOPackageJson(context) {
                 return resolve(context);
             } else {
                 context.checks.push('"common" found in io-package.json');
-                if (!context.ioPackageJson.common ||
-                    context.ioPackageJson.common.name !== context.adapterName.toLowerCase()) {
-                    context.errors.push('[E103] "common.name" in io-package.json must be equal to "' + context.adapterName.toLowerCase() + '". Now is ' + context.ioPackageJson.common.name);
+                if (!context.ioPackageJson.common.name || context.ioPackageJson.common.name !== context.adapterName.toLowerCase()) {
+                    context.errors.push(`[E103] "common.name" in io-package.json must be equal to "${context.adapterName.toLowerCase()}'". Now is ${context.ioPackageJson.common.name}`);
                 } else {
                     context.checks.push('"common.name" is valid in io-package.json');
+                }
+
+                if (context.ioPackageJson.common.title) {
+                    context.warnings.push('[W171] "common.title" is deprecated in io-package.json');
                 }
 
                 if (!context.ioPackageJson.common.titleLang) {
@@ -1159,7 +1162,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E170
+                // max number is E171
             }
         });
     });
