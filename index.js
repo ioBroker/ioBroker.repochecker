@@ -955,6 +955,12 @@ function checkIOPackageJson(context) {
                     }
                 }
 
+                if (context.ioPackageJson.common.localLink) {
+                    context.warnings.push('[W172] "common.localLink" in io-package.json is deprecated. Please define object "common.localLinks": { "_default": "..." }');
+                } else {
+                    context.checks.push('No "common.localLink" found in io-package.json');
+                }
+
                 if (!context.ioPackageJson.common.news) {
                     context.errors.push('[E130] No "common.news" found in io-package.json');
                 } else {
@@ -1162,7 +1168,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E171
+                // max number is E172
             }
         });
     });
