@@ -15,13 +15,12 @@ const util     = require('util');
 const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
-const axios = require('axios').default;
+const axios    = require('axios');
 const compareVersions = require('compare-versions');
 
 const version  = '1.4.0';
 const recommendedJsControllerVersion = '3.3.22';
 
-let request;
 let https;
 
 const memStore = { };
@@ -49,56 +48,19 @@ WMStrm.prototype._write = function (chunk, enc, cb) {
     cb();
 };
 
-if (typeof require !== 'undefined') {
-    try {
-        request = require('request');
-    } catch (e) {
-        request = function (url, options, cb) {
-            if (typeof options === 'function') {
-                cb = options;
-                options = {};
-            }
-            https = https || require('https');
-            https.get(url, resp => {
-                let data = '';
-                resp.on('data', chunk => data += chunk);
-                resp.on('end', () => cb(null, {statusCode: resp.statusCode, headers: resp.headers}, data));
-                resp.on('error', () => err => cb(err));
-            }).on('error', err => cb(err));
-        };
+function downloadFile(githubUrl, path, binary, noError) {
+    console.log('Download ' + githubUrl + (path || ''));
+    const options = {};
+    if (binary) {
+        options.responseType = 'arraybuffer';
     }
-} else {
-    request = function (url, cb) {
-        const xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState === 4) {
-                if (this.status === 200) {
-                    cb(null, {statusCode: this.status}, this.responseText);
-                } else {
-                    cb(xhttp.statusText, {statusCode: this.status});
-                }
-            }
-        };
-        xhttp.open('GET', url, true);
-        xhttp.send();
-    };
-}
 
-function downloadFile(githubUrl, path, binary) {
-    return new Promise((resolve, reject) => {
-        console.log('Download ' + githubUrl + (path || ''));
-        request(githubUrl + (path || ''), {encoding: binary ? null : 'utf8'}, (err, status, body) => {
-            if (!err && status.statusCode === 200) {
-                if (binary) {
-                    resolve(body);
-                } else {
-                    resolve(body.toString());
-                }
-            } else {
-                reject(err || status.statusCode);
-            }
+    return axios(githubUrl + (path || ''), options)
+        .then(response => response.data)
+        .catch(e => {
+            !noError && console.error(`Cannot download ${githubUrl}${path || ''}`);
+            throw e;
         });
-    });
 }
 
 function getDependencyArray(deps) {
@@ -139,7 +101,7 @@ function getGithubApiData(context) {
 function checkPackageJson(context) {
     return new Promise((resolve, reject) => {
         if (context.packageJson) {
-            return Promise.resolve(context.packageJson);
+            return resolve(context.packageJson);
         } else {
             return downloadFile(context.githubUrl, '/package.json')
                 .then(packageJson => resolve(packageJson))
@@ -163,7 +125,7 @@ function checkPackageJson(context) {
                 context.checks.push('"ioBroker" was found in the name of repository');
             }
 
-            if (context.githubUrlOriginal.indexOf('/iobroker.') !== -1) {
+            if (context.githubUrlOriginal.includes('/iobroker.')) {
                 context.errors.push('[E003] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
             } else {
                 context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
@@ -241,7 +203,7 @@ function checkPackageJson(context) {
                 context.checks.push('"license" found in package.json');
 
                 // check if license valid
-                if (licenses.indexOf(context.packageJson.license) === -1) {
+                if (!licenses.includes(context.packageJson.license)) {
                     context.errors.push('[E016] No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/');
                 } else {
                     context.checks.push('"license" is valid in package.json');
@@ -270,13 +232,13 @@ function checkPackageJson(context) {
                         context.checks.push('Repository type is valid: git');
                     }
 
-                    if (allowedRepoUrls.indexOf(context.packageJson.repository.url) === -1) {
+                    if (!allowedRepoUrls.includes(context.packageJson.repository.url)) {
                         context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                     } else {
                         context.checks.push('Repository URL is valid in package.json');
                     }
                 } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
-                    if (allowedRepoUrls.indexOf(context.packageJson.repository) === -1) {
+                    if (!allowedRepoUrls.includes(context.packageJson.repository)) {
                         context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                     } else {
                         context.checks.push('Repository URL is valid in package.json');
@@ -285,7 +247,7 @@ function checkPackageJson(context) {
                     context.errors.push('[E019] Invalid repository URL');
                 }
             }
-            if (reservedAdapterNames.indexOf(adapterName) !== -1) {
+            if (reservedAdapterNames.includes(adapterName)) {
                 context.errors.push('[E022] Adapter name is reserved!');
             } else {
                 context.checks.push('Adapter name is not reserved');
@@ -727,7 +689,7 @@ function checkIOPackageJson(context) {
     return new Promise((resolve, reject) => {
         console.log('checkIOPackageJson [E1xx]');
         if (context.ioPackageJson) {
-            return Promise.resolve(context.ioPackageJson);
+            return resolve(context.ioPackageJson);
         } else {
             return downloadFile(context.githubUrl, '/io-package.json')
                 .then(packageJson => resolve(packageJson))
@@ -891,7 +853,7 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.license" found in io-package.json');
 
                     // check if license valid
-                    if (licenses.indexOf(context.ioPackageJson.common.license) === -1) {
+                    if (!licenses.includes(context.ioPackageJson.common.license)) {
                         context.errors.push('[E116] No SPDX license found. Please use one of listed here: https://spdx.org/licenses/');
                     } else {
                         context.checks.push('"common.license" is valid in io-package.json');
@@ -1042,7 +1004,7 @@ function checkIOPackageJson(context) {
                     const dependencyArray = getDependencyArray(context.ioPackageJson.common.dependencies);
 
                     // Admin is not allowed in dependencies (globalDependencies only)
-                    if (dependencyArray.indexOf('admin') > -1) {
+                    if (dependencyArray.includes('admin')) {
                         context.errors.push(`[E160] "admin" is not allowed in common.dependencies`);
                     }
 
@@ -1062,7 +1024,7 @@ function checkIOPackageJson(context) {
                     const dependencyArray = getDependencyArray(context.ioPackageJson.common.globalDependencies);
 
                     // js-controller is not allowed in global dependencies (dependencies only)
-                    if (dependencyArray.indexOf('js-controller') > -1) {
+                    if (dependencyArray.includes('js-controller')) {
                         context.errors.push(`[E161] "js-controller" is not allowed in common.globalDependencies`);
                     }
                 }
@@ -1150,18 +1112,14 @@ function checkIOPackageJson(context) {
                             context.checks.push('"extIcon" could be downloaded');
                             if (!context.ioPackageJson.onlyWWW && context.packageJson.main) {
                                 return downloadFile(context.githubUrl, '/' + context.packageJson.main)
-                                    .then(() => {
-                                        context.checks.push(context.packageJson.main + ' could be downloaded');
-                                    })
-                                    .catch(err => {
-                                        context.errors.push(`[E124] Main file not found under URL: ${context.githubUrl}/${context.packageJson.main}`);
-                                    })
+                                    .then(() => context.checks.push(context.packageJson.main + ' could be downloaded'))
+                                    .catch(() => context.errors.push(`[E124] Main file not found under URL: ${context.githubUrl}/${context.packageJson.main}`))
                                     .then(() => Promise.resolve(context));
                             } else {
                                 return Promise.resolve(context);
                             }
                         })
-                        .catch(err => context.errors.push(`[E125] External icon not found under URL: ${context.ioPackageJson.common.extIcon}`))
+                        .catch(() => context.errors.push(`[E125] External icon not found under URL: ${context.ioPackageJson.common.extIcon}`))
                         .then(() => resolve(context));
                 } else {
                     resolve(context);
@@ -1176,15 +1134,21 @@ function checkIOPackageJson(context) {
 
 // E2xx
 function checkNpm(context) {
-    return new Promise(resolve => {
-        console.log('checkNpm [E2xx]');
-        request('https://api.npms.io/v2/package/iobroker.' + context.adapterName, (err, status, body) => {
+    console.log('checkNpm [E2xx]');
+    return axios('https://api.npms.io/v2/package/iobroker.' + context.adapterName)
+        .catch(() => ({body: null}))
+        .then(async response => {
+            let body = response.data;
             // bug in NPM some modules could be accessed via normal web page, but not by API
-            if (!body || (status && status.statusCode >= 400)) {
-                return request('https://www.npmjs.com/package/iobroker.' + context.adapterName, (err, status, body) => {
-                    if (!body || (status && status.statusCode >= 400)) {
+            if (!body) {
+                try {
+                    const _response = await axios('https://www.npmjs.com/package/iobroker.' + context.adapterName);
+                    if (!_response.data) {
                         context.errors.push('[E200] Not found on npm. Please publish');
+                        return context;
                     } else {
+                        body = _response.data;
+
                         context.checks.push('Adapter found on npm');
                         if (!body.includes('href="/~bluefox"') && body.includes('href="/~iobluefox"')) {
                             context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
@@ -1192,17 +1156,12 @@ function checkNpm(context) {
                             context.checks.push('Bluefox found in collaborators on NPM');
                         }
                     }
-                    resolve(context);
-                });
+                } catch (error) {
+                    context.errors.push('[E200] Not found on npm. Please publish');
+                    return context;
+                }
             }
             context.checks.push('Adapter found on npm');
-
-            try {
-                body = JSON.parse(body.toString());
-            } catch (e) {
-                context.errors.push('[E200] Cannot parse npm response');
-                return resolve(context);
-            }
 
             if (!body ||
                 !body.collected ||
@@ -1219,49 +1178,48 @@ function checkNpm(context) {
                 !body.collected ||
                 !body.collected.metadata ||
                 !body.collected.metadata.version ||
-                context.packageJson.version != body.collected.metadata.version) {
+                context.packageJson.version !== body.collected.metadata.version) {
                 context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${body.collected.metadata.version})`);
             } else {
                 context.checks.push('Version of package.json matches latest version on NPM');
             }
 
-            resolve(context);
+            return context;
             // max number is E202
         });
-    });
 }
 
 // E3xx
 function checkTests(context) {
-    return new Promise(resolve => {
-        console.log('checkTests [E3xx]');
-        // if found some file in \.github\workflows with test inside => it is OK too
-        if (context && context.filesList.find(name => name.startsWith('.github/workflows/') && name.endsWith('.yml') && name.toLowerCase().includes('test'))) {
-            context.checks.push('Tests found on github actions');
-            return resolve(context);
-        }
+    console.log('checkTests [E3xx]');
+    // if found some file in \.github\workflows with test inside => it is OK too
+    if (context && context.filesList.find(name => name.startsWith('.github/workflows/') && name.endsWith('.yml') && name.toLowerCase().includes('test'))) {
+        context.checks.push('Tests found on github actions');
+        return Promise.resolve(context);
+    }
 
-        const travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
+    const travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
 
-        request(travisURL, (err, status, body) => {
-            if (!status) {
+    return axios(travisURL)
+        .then(response => {
+            if (!response.data) {
                 context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-                return resolve(context);
+                return context;
             }
-            if (!status.headers || !status.headers['content-disposition']) {
+            if (!response.headers || !response.headers['content-disposition']) {
                 context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-                return resolve(context);
+                return context;
             }
             // inline; filename="passing.png"
-            const m = status.headers['content-disposition'].match(/filename="(.+)"$/);
+            const m = response.headers['content-disposition'].match(/filename="(.+)"$/);
             if (!m) {
                 context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-                return resolve(context);
+                return context;
             }
 
             if (m[1] === 'unknown.png') {
                 context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-                return resolve(context);
+                return context;
             }
 
             context.checks.push('Found on travis-ci');
@@ -1274,150 +1232,126 @@ function checkTests(context) {
                 context.checks.push('Tests are OK on travis-ci');
             }
 
-            resolve(context);
+            return context;
             // max number is E302
         });
-    });
 }
 
 // E4xx
 function checkRepo(context) {
-    return new Promise(resolve => {
-        console.log('checkRepo [E4xx]');
-        if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.type) {
-            // download latest repo
-            request('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json', (err, status, body) => {
-                err && console.error(err);
-
+    console.log('checkRepo [E4xx]');
+    if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.type) {
+        // download latest repo
+        return axios('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json')
+            .then(async response => {
+                let body = response.data;
                 if (!body) {
                     context.errors.push('[E400] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json');
                 } else {
-                    try {
-                        body = JSON.parse(body);
-                    } catch (e) {
-                        console.error('Cannot parse sources-dist.json: ' + body);
-                        context.errors.push('[E401] Cannot parse sources-dist.json');
-                        body = null;
-                    }
+                    context.latestRepo = body;
+                    if (!context.latestRepo[context.adapterName]) {
+                        context.warnings.push('[W400] Cannot find "' + context.adapterName + '" in latest repository');
+                    } else {
+                        context.checks.push('Adapter found in latest repository');
 
-                    if (body) {
-                        context.latestRepo = body;
-                        if (!context.latestRepo[context.adapterName]) {
-                            context.warnings.push('[W400] Cannot find "' + context.adapterName + '" in latest repository');
+                        if (context.latestRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
+                            context.errors.push('[E402] Types of adapter in latest repository and in io-package.json are different "' + context.latestRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
                         } else {
-                            context.checks.push('Adapter found in latest repository');
+                            context.checks.push('Types of adapter in latest repository and in io-package.json are equal: "' + context.latestRepo[context.adapterName].type + '"');
+                        }
 
-                            if (context.latestRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
-                                context.errors.push('[E402] Types of adapter in latest repository and in io-package.json are different "' + context.latestRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
-                            } else {
-                                context.checks.push('Types of adapter in latest repository and in io-package.json are equal: "' + context.latestRepo[context.adapterName].type + '"');
-                            }
+                        if (context.latestRepo[context.adapterName].version) {
+                            context.errors.push('[E403] Version set in latest repository');
+                        } else {
+                            context.checks.push('Version does not set in latest repository');
+                        }
 
-                            if (context.latestRepo[context.adapterName].version) {
-                                context.errors.push('[E403] Version set in latest repository');
-                            } else {
-                                context.checks.push('Version does not set in latest repository');
-                            }
+                        const url = `https://raw.githubusercontent.com/${context.authorName}/ioBroker.${context.adapterName}/${context.branch}/`;
 
-                            const url = `https://raw.githubusercontent.com/${context.authorName}/ioBroker.${context.adapterName}/${context.branch}/`;
+                        if (!context.latestRepo[context.adapterName].icon) {
+                            context.errors.push('[E404] Icon does not found in latest repository');
+                        } else {
+                            context.checks.push('Icon found in latest repository');
 
-                            if (!context.latestRepo[context.adapterName].icon) {
-                                context.errors.push('[E404] Icon does not found in latest repository');
+                            if (!context.latestRepo[context.adapterName].icon.startsWith(url)) {
+                                context.errors.push('[E405] Icon must be in the following path: '  + url);
                             } else {
                                 context.checks.push('Icon found in latest repository');
-
-                                if (!context.latestRepo[context.adapterName].icon.startsWith(url)) {
-                                    context.errors.push('[E405] Icon must be in the following path: '  + url);
-                                } else {
-                                    context.checks.push('Icon found in latest repository');
-                                }
                             }
-                            if (!context.latestRepo[context.adapterName].meta) {
-                                context.errors.push('[E406] Meta URL (latest) not found in latest repository');
-                            } else {
-                                context.checks.push('Meta URL(latest) found in latest repository');
+                        }
+                        if (!context.latestRepo[context.adapterName].meta) {
+                            context.errors.push('[E406] Meta URL (latest) not found in latest repository');
+                        } else {
+                            context.checks.push('Meta URL(latest) found in latest repository');
 
-                                if (context.latestRepo[context.adapterName].meta !== url + 'io-package.json') {
-                                    context.errors.push(`[E407] Meta URL (latest) must be equal to ${url}io-package.json`);
-                                } else {
-                                    context.checks.push('Meta URL (latest) is OK in latest repository');
-                                }
+                            if (context.latestRepo[context.adapterName].meta !== url + 'io-package.json') {
+                                context.errors.push(`[E407] Meta URL (latest) must be equal to ${url}io-package.json`);
+                            } else {
+                                context.checks.push('Meta URL (latest) is OK in latest repository');
                             }
                         }
                     }
                 }
 
                 // download stable repo
-                request('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json', (err, status, body) => {
-                    err && console.error(err);
-                    if (!body) {
-                        context.errors.push('[E420] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json');
-                    } else {
-                        try {
-                            body = JSON.parse(body);
-                        } catch (e) {
-                            console.error('Cannot parse sources-dist.json: ' + body);
-                            context.errors.push('[E421] Cannot parse sources-dist-stable.json');
-                            body = null;
+                const _response = await axios('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json');
+                body = _response.data;
+                if (!body) {
+                    context.errors.push('[E420] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json');
+                } else {
+                    context.stableRepo = body;
+                    if (context.stableRepo[context.adapterName]) {
+                        if (context.stableRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
+                            context.errors.push('[E422] Types of adapter in stable repository and in io-package.json are different "' + context.stableRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
+                        } else {
+                            context.checks.push('Types of adapter in stable repository and in io-package.json are equal: "' + context.stableRepo[context.adapterName].type + '"');
                         }
 
-                        if (body) {
-                            context.stableRepo = body;
-                            if (context.stableRepo[context.adapterName]) {
-                                if (context.stableRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
-                                    context.errors.push('[E422] Types of adapter in stable repository and in io-package.json are different "' + context.stableRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
-                                } else {
-                                    context.checks.push('Types of adapter in stable repository and in io-package.json are equal: "' + context.stableRepo[context.adapterName].type + '"');
-                                }
+                        if (!context.latestRepo[context.adapterName]) {
+                            context.errors.push('[E423] Adapter was found in stable repository but not in latest repo');
+                        } else {
+                            context.checks.push('Adapter was found in stable repository and in latest repo');
+                        }
 
-                                if (!context.latestRepo[context.adapterName]) {
-                                    context.errors.push('[E423] Adapter was found in stable repository but not in latest repo');
-                                } else {
-                                    context.checks.push('Adapter was found in stable repository and in latest repo');
-                                }
+                        if (!context.stableRepo[context.adapterName].version) {
+                            context.errors.push('[E424] No version set in stable repository');
+                        } else {
+                            context.checks.push('Version found in stable repository');
+                        }
 
-                                if (!context.stableRepo[context.adapterName].version) {
-                                    context.errors.push('[E424] No version set in stable repository');
-                                } else {
-                                    context.checks.push('Version found in stable repository');
-                                }
+                        const url = `https://raw.githubusercontent.com/${context.authorName}/ioBroker.${context.adapterName}/${context.branch}/`;
 
-                                const url = `https://raw.githubusercontent.com/${context.authorName}/ioBroker.${context.adapterName}/${context.branch}/`;
+                        if (!context.stableRepo[context.adapterName].icon) {
+                            context.errors.push('[E425] Icon does not found in stable repository');
+                        } else {
+                            context.checks.push('Icon found in stable repository');
 
-                                if (!context.stableRepo[context.adapterName].icon) {
-                                    context.errors.push('[E425] Icon does not found in stable repository');
-                                } else {
-                                    context.checks.push('Icon found in stable repository');
+                            if (!context.stableRepo[context.adapterName].icon.startsWith(url)) {
+                                context.errors.push('[E426] Icon (stable) must be in the following path: '  + url);
+                            } else {
+                                context.checks.push('Icon (stable) found in latest repository');
+                            }
+                        }
 
-                                    if (!context.stableRepo[context.adapterName].icon.startsWith(url)) {
-                                        context.errors.push('[E426] Icon (stable) must be in the following path: '  + url);
-                                    } else {
-                                        context.checks.push('Icon (stable) found in latest repository');
-                                    }
-                                }
+                        if (!context.stableRepo[context.adapterName].meta) {
+                            context.errors.push('[E427] Meta URL (stable) not found in latest repository');
+                        } else {
+                            context.checks.push('Meta URL (stable) found in latest repository');
 
-                                if (!context.stableRepo[context.adapterName].meta) {
-                                    context.errors.push('[E427] Meta URL (stable) not found in latest repository');
-                                } else {
-                                    context.checks.push('Meta URL (stable) found in latest repository');
-
-                                    if (context.stableRepo[context.adapterName].meta !== url + 'io-package.json') {
-                                        context.errors.push(`[E428] Meta URL (stable) must be equal to ${url}io-package.json`);
-                                    } else {
-                                        context.checks.push('Meta URL (stable) is OK in latest repository');
-                                    }
-                                }
+                            if (context.stableRepo[context.adapterName].meta !== url + 'io-package.json') {
+                                context.errors.push(`[E428] Meta URL (stable) must be equal to ${url}io-package.json`);
+                            } else {
+                                context.checks.push('Meta URL (stable) is OK in latest repository');
                             }
                         }
                     }
-                    resolve(context);
-                });
+                }
+                return context;
             });
-        } else {
-            resolve(context);
-        }
-        // max number is E428
-    });
+    } else {
+        return Promise.resolve(context);
+    }
+    // max number is E428
 }
 
 function extractWords(words) {
@@ -1654,18 +1588,15 @@ function getAuthor(author) {
 }
 
 function checkCommits(context) {
-    return new Promise((resolve, reject) => {
-        console.log('checkCommits');
-        downloadFile(context.githubUrlOriginal, `/commits/${context.branch}`)
-            .then(data => {
-                const m = data.match(/Commits on [\w\s\d]+, (\d\d\d\d)/);
-                if (m) {
-                    context.lastCommitYear = m[1];
-                }
-                resolve(context);
-            })
-            .catch(e => reject(e));
-    });
+    console.log('checkCommits');
+    return downloadFile(context.githubUrlOriginal, `/commits/${context.branch}`)
+        .then(data => {
+            const m = data.match(/Commits on [\w\s\d]+, (\d\d\d\d)/);
+            if (m) {
+                context.lastCommitYear = m[1];
+            }
+            return context;
+        });
 }
 
 // E8xx
@@ -1706,12 +1637,12 @@ function checkReadme(context) {
                 } else {
                     context.checks.push('README.md found');
 
-                    if (data.indexOf('## Changelog') === -1) {
+                    if (!data.includes('## Changelog')) {
                         context.errors.push('[E603] NO "## Changelog" found in README.md');
                     } else {
                         context.checks.push('README.md contains Changelog');
 
-                        if (data.indexOf(`### ${context.packageJson.version}`) === - 1) {
+                        if (!data.includes(`### ${context.packageJson.version}`) ) {
                             context.errors.push(`[E606] Current adapter version ${context.packageJson.version} not found in README.md`);
                         } else {
                             context.checks.push('README.md contains current adapter version');
@@ -1725,7 +1656,7 @@ function checkReadme(context) {
                         context.checks.push('## License found in README.md');
                         const text = data.substring(pos);
                         const year = new Date().getFullYear().toString();
-                        if (text.indexOf(context.lastCommitYear || year) === -1) {
+                        if (!text.includes(context.lastCommitYear || year)) {
                             const m = text.match(/(\d\d\d\d)-\d\d\d\d/);
                             if (m) {
                                 context.errors.push(`[E605] No actual year found in copyright. Please add "Copyright (c) ${m[1]}-${year} ${getAuthor(context.packageJson.author)}" at the end of README.md`);
@@ -1759,7 +1690,7 @@ function checkLicenseFile(context) {
 
                     if (context.packageJson.license === 'MIT') {
                         const year = new Date().getFullYear().toString();
-                        if (data.indexOf(context.lastCommitYear || year) === -1) {
+                        if (!data.includes(context.lastCommitYear || year)) {
                             const m = data.match(/(\d\d\d\d)-\d\d\d\d/);
                             if (m) {
                                 context.errors.push(`[E701] No actual year found in LICENSE. Please add "Copyright (c) ${m[1]}-${year} ${getAuthor(context.packageJson.author)}" at the start of LICENSE`);

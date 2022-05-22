@@ -1,19 +1,27 @@
 {
-  "private": true,
-  "version": "1.4.0",
-  "name": "iobroker.repochecker",
+  "version": "1.5.0",
+  "name": "@iobroker/repochecker",
   "dependencies": {
     "axios": "^0.27.2",
     "compare-versions": "^3.6.0",
-    "image-size": "^1.0.0",
-    "request": "^2.88.2",
+    "image-size": "^1.0.1",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
-    "eslint": "^7.32.0"
+    "@alcalzone/release-script": "^3.5.9",
+    "eslint": "^8.16.0"
   },
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "bin": "./index.js",
   "scripts": {
     "start": "node index.js",
-    "lint": "eslint"
+    "lint": "eslint",
+    "release": "release-script",
+    "release-patch": "release-script patch --yes --no-update-lockfile",
+    "release-minor": "release-script minor --yes --no-update-lockfile",
+    "release-major": "release-script major --yes --no-update-lockfile"
   }
 }
