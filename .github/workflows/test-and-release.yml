@@ -18,10 +18,8 @@ on:
 
 jobs:
   # Runs adapter tests on all supported node versions and OSes
-  adapter-tests:
+  tests:
     if: contains(github.event.head_commit.message, '[skip ci]') == false
-
-    needs: [check-and-lint]
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -47,7 +45,7 @@ jobs:
 
   # Deploys the final package to NPM
   deploy:
-    needs: [adapter-tests]
+    needs: [tests]
 
     # Trigger this step only when a commit on master is tagged with a version number
     if: |
