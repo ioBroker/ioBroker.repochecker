@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* 1.4.0 2022.04.26
+/*
 
    ___      _             _              _____ _               _
   / _ \    | |           | |            /  __ \ |             | |
@@ -22,8 +22,6 @@ const compareVersions = require('compare-versions');
 
 const version  = '1.4.0';
 const recommendedJsControllerVersion = '3.3.22';
-
-let https;
 
 const memStore = { };
 
@@ -110,155 +108,160 @@ function checkPackageJson(context) {
                 .catch(e => reject(e));
         }
     }).then(packageJson => {
-        return new Promise(resolve => {
-            context.packageJson = packageJson;
-            if (typeof context.packageJson === 'string') {
-                try {
-                    context.packageJson = JSON.parse(context.packageJson);
-                } catch (e) {
-                    context.errors.push('[E001] Cannot parse packet.json: ' + e);
-                    return resolve(context);
-                }
+        context.packageJson = packageJson;
+        if (typeof context.packageJson === 'string') {
+            try {
+                context.packageJson = JSON.parse(context.packageJson);
+            } catch (e) {
+                context.errors.push('[E001] Cannot parse packet.json: ' + e);
+                return context;
             }
+        }
 
-            if (!context.githubUrlOriginal.match(/\/iobroker\./i)) {
-                context.errors.push('[E002] No "ioBroker." found in the name of repository');
+        if (!context.githubUrlOriginal.match(/\/iobroker\./i)) {
+            context.errors.push('[E002] No "ioBroker." found in the name of repository');
+        } else {
+            context.checks.push('"ioBroker" was found in the name of repository');
+        }
+
+        if (context.githubUrlOriginal.includes('/iobroker.')) {
+            context.errors.push('[E003] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
+        } else {
+            context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
+        }
+
+        const m = context.githubUrlOriginal.match(/\/ioBroker\.(.*)$/);
+        let adapterName = '';
+        if (!m || !m[1]) {
+            context.errors.push('[E004] No adapter name found in URL: ' + context.githubUrlOriginal);
+        } else {
+            context.checks.push('Adapter name found in the URL');
+            adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
+        }
+
+        context.adapterName = adapterName;
+
+        if (adapterName.match(/[A-Z]/)) {
+            context.errors.push('[E005] Adapter name must be lowercase');
+        } else {
+            context.checks.push('Adapter name is lowercase');
+        }
+
+        if (adapterName.match(/[^-_a-z\d]/)) {
+            context.errors.push(`[E006] Invalid characters found in adapter name "${adapterName}". Only lowercase chars, digits, "-" and "_" are allowed`);
+        } else {
+            context.checks.push(`No invalid characters found in "${adapterName}"`);
+        }
+
+        const n = context.githubUrlOriginal.match(/\/([^/]+)\/iobroker\./i);
+        if (!n || !n[1]) {
+            context.errors.push('[E007] Cannot find author repo in the URL');
+        } else {
+            context.authorName = n[1];
+        }
+
+        if (context.packageJson.name !== 'iobroker.' + adapterName.toLowerCase()) {
+            context.errors.push(`[E020] Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}". Now is "${packageJson.name}"`);
+        } else {
+            context.checks.push(`Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}".`);
+        }
+
+        if (!context.packageJson.version) {
+            context.errors.push('[E009] No version found in the package.json');
+        } else {
+            context.checks.push('Version found in package.json');
+        }
+
+        if (!context.packageJson.description) {
+            context.errors.push('[E010] No description found in the package.json');
+        } else {
+            context.checks.push('Description found in package.json');
+        }
+
+        if (context.packageJson.licenses) {
+            context.errors.push('[E021] "licenses" in package.json are deprecated. Please use only "license": "NAME" field.');
+        } else {
+            context.checks.push('No "licenses" found in package.json');
+        }
+
+        if (!context.packageJson.author) {
+            context.errors.push('[E013] No author found in the package.json');
+        } else {
+            context.checks.push('Author found in package.json');
+        }
+
+        if (context.packageJson._args) {
+            context.errors.push('[E014] NPM information found in package.json. Please remove all attributes starting with "_"');
+        } else {
+            context.checks.push('No npm generated attributes found in package.json');
+        }
+
+        if (!context.packageJson.license) {
+            context.errors.push('[E015] No license found in package.json');
+        } else {
+            context.checks.push('"license" found in package.json');
+
+            // check if license valid
+            if (!licenses.includes(context.packageJson.license)) {
+                context.errors.push('[E016] No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/');
             } else {
-                context.checks.push('"ioBroker" was found in the name of repository');
+                context.checks.push('"license" is valid in package.json');
             }
+        }
 
-            if (context.githubUrlOriginal.includes('/iobroker.')) {
-                context.errors.push('[E003] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
-            } else {
-                context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
-            }
+        if (!context.packageJson.repository) {
+            context.errors.push('[E017] No repository found in the package.json');
+        } else {
+            context.checks.push('Repository found in package.json');
 
-            const m = context.githubUrlOriginal.match(/\/ioBroker\.(.*)$/);
-            let adapterName = '';
-            if (!m || !m[1]) {
-                context.errors.push('[E004] No adapter name found in URL: ' + context.githubUrlOriginal);
-            } else {
-                context.checks.push('Adapter name found in the URL');
-                adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
-            }
+            const allowedRepoUrls = [
+                context.githubApiData.html_url, // https://github.com/klein0r/ioBroker.luftdaten
+                `git+${context.githubApiData.html_url}`, // git+https://github.com/klein0r/ioBroker.luftdaten
+                context.githubApiData.git_url, // git://github.com/klein0r/ioBroker.luftdaten.git
+                context.githubApiData.ssh_url, // git@github.com:klein0r/ioBroker.luftdaten.git
+                context.githubApiData.clone_url, // https://github.com/klein0r/ioBroker.luftdaten.git
+                `git+${context.githubApiData.clone_url}` // git+https://github.com/klein0r/ioBroker.luftdaten.git
+            ];
 
-            context.adapterName = adapterName;
-
-            if (adapterName.match(/[A-Z]/)) {
-                context.errors.push('[E005] Adapter name must be lowercase');
-            } else {
-                context.checks.push('Adapter name is lowercase');
-            }
-
-            if (adapterName.match(/[^-_a-z0-9]/)) {
-                context.errors.push(`[E006] Invalid characters found in adapter name "${adapterName}". Only lowercase chars, digits, "-" and "_" are allowed`);
-            } else {
-                context.checks.push(`No invalid characters found in "${adapterName}"`);
-            }
-
-            const n = context.githubUrlOriginal.match(/\/([^\/]+)\/iobroker\./i);
-            if (!n || !n[1]) {
-                context.errors.push('[E007] Cannot find author repo in the URL');
-            } else {
-                context.authorName = n[1];
-            }
-
-            if (context.packageJson.name !== 'iobroker.' + adapterName.toLowerCase()) {
-                context.errors.push('[E020] Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName.toLowerCase() + '". Now is "' + packageJson.name + '"');
-            } else {
-                context.checks.push('Name of adapter in package.json must be lowercase and be equal to "iobroker.' + adapterName.toLowerCase() + '".');
-            }
-
-            if (!context.packageJson.version) {
-                context.errors.push('[E009] No version found in the package.json');
-            } else {
-                context.checks.push('Version found in package.json');
-            }
-
-            if (!context.packageJson.description) {
-                context.errors.push('[E010] No description found in the package.json');
-            } else {
-                context.checks.push('Description found in package.json');
-            }
-
-            if (context.packageJson.licenses) {
-                context.errors.push('[E021] "licenses" in package.json are deprecated. Please use only "license": "NAME" field.');
-            } else {
-                context.checks.push('No "licenses" found in package.json');
-            }
-
-            if (!context.packageJson.author) {
-                context.errors.push('[E013] No author found in the package.json');
-            } else {
-                context.checks.push('Author found in package.json');
-            }
-
-            if (context.packageJson._args) {
-                context.errors.push('[E014] NPM information found in package.json. Please remove all attributes starting with "_"');
-            } else {
-                context.checks.push('No npm generated attributes found in package.json');
-            }
-
-            if (!context.packageJson.license) {
-                context.errors.push('[E015] No license found in package.json');
-            } else {
-                context.checks.push('"license" found in package.json');
-
-                // check if license valid
-                if (!licenses.includes(context.packageJson.license)) {
-                    context.errors.push('[E016] No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/');
+            // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
+            if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
+                if (context.packageJson.repository.type !== 'git') {
+                    context.errors.push('[E018] Invalid repository type: ' + context.packageJson.repository.type + '. It should be git');
                 } else {
-                    context.checks.push('"license" is valid in package.json');
+                    context.checks.push('Repository type is valid: git');
                 }
-            }
 
-            if (!context.packageJson.repository) {
-                context.errors.push('[E017] No repository found in the package.json');
-            } else {
-                context.checks.push('Repository found in package.json');
-
-                const allowedRepoUrls = [
-                    context.githubApiData.html_url, // https://github.com/klein0r/ioBroker.luftdaten
-                    `git+${context.githubApiData.html_url}`, // git+https://github.com/klein0r/ioBroker.luftdaten
-                    context.githubApiData.git_url, // git://github.com/klein0r/ioBroker.luftdaten.git
-                    context.githubApiData.ssh_url, // git@github.com:klein0r/ioBroker.luftdaten.git
-                    context.githubApiData.clone_url, // https://github.com/klein0r/ioBroker.luftdaten.git
-                    `git+${context.githubApiData.clone_url}` // git+https://github.com/klein0r/ioBroker.luftdaten.git
-                ];
-
-                // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
-                if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
-                    if (context.packageJson.repository.type !== 'git') {
-                        context.errors.push('[E018] Invalid repository type: ' + context.packageJson.repository.type + '. It should be git');
-                    } else {
-                        context.checks.push('Repository type is valid: git');
-                    }
-
-                    if (!allowedRepoUrls.includes(context.packageJson.repository.url)) {
-                        context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
-                    } else {
-                        context.checks.push('Repository URL is valid in package.json');
-                    }
-                } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
-                    if (!allowedRepoUrls.includes(context.packageJson.repository)) {
-                        context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
-                    } else {
-                        context.checks.push('Repository URL is valid in package.json');
-                    }
+                if (!allowedRepoUrls.includes(context.packageJson.repository.url)) {
+                    context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                 } else {
-                    context.errors.push('[E019] Invalid repository URL');
+                    context.checks.push('Repository URL is valid in package.json');
                 }
-            }
-            if (reservedAdapterNames.includes(adapterName)) {
-                context.errors.push('[E022] Adapter name is reserved!');
+            } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
+                if (!allowedRepoUrls.includes(context.packageJson.repository)) {
+                    context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
+                } else {
+                    context.checks.push('Repository URL is valid in package.json');
+                }
             } else {
-                context.checks.push('Adapter name is not reserved');
+                context.errors.push('[E019] Invalid repository URL');
             }
+        }
 
-            // max number is E022
+        if (reservedAdapterNames.includes(adapterName)) {
+            context.errors.push('[E022] Adapter name is reserved!');
+        } else {
+            context.checks.push('Adapter name is not reserved');
+        }
 
-            resolve(context);
-        });
+        if ((context.packageJson.dependencies && context.packageJson.dependencies.npm) || (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies.npm)) {
+            context.errors.push('[E023] Do not include "npm" as dependency!');
+        } else {
+            context.checks.push('npm is not in dependencies');
+        }
+
+        // max number is E023
+
+        return context;
     });
 }
 
@@ -1446,7 +1449,7 @@ function checkCode(context) {
                             }
                             // Get list of all files and .npmignore + .gitignore
 
-                            const name = entry.path.replace(/^[^\/]+\//, '');
+                            const name = entry.path.replace(/^[^/]+\//, '');
                             context.filesList.push(name);
 
                             if (readFiles.includes(name)) {
@@ -1745,58 +1748,56 @@ function checkNpmIgnore(context) {
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.npmignore
-    return new Promise((resolve, reject) => {
-        console.log('checkNpmIgnore [E8xx]');
-        if (context.packageJson.files && context.packageJson.files.length) {
-            return resolve(context);
-        }
+    console.log('checkNpmIgnore [E8xx]');
+    if (context.packageJson.files && context.packageJson.files.length) {
+        return Promise.resolve(context);
+    }
 
-        if (!context.filesList.includes('.npmignore')) {
-            context.warnings.push(`[W801] .npmignore not found`);
-        } else {
-            const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
-            let tooComplexToCheck = false;
-            rules.forEach((name, i) => {
-                if (name.includes('*')) {
-                    rules[i] = new RegExp(name
-                        .replace('.', '\\.')
-                        .replace('/', '\\/')
-                        .replace('**', '.*')
-                        .replace('*', '[^\\/]*')
-                    );
-                }
-                if (name.startsWith('!')) {
-                    tooComplexToCheck = true;
+    if (!context.filesList.includes('.npmignore')) {
+        context.warnings.push(`[W801] .npmignore not found`);
+    } else {
+        const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
+        let tooComplexToCheck = false;
+        rules.forEach((name, i) => {
+            if (name.includes('*')) {
+                rules[i] = new RegExp(name
+                    .replace('.', '\\.')
+                    .replace('/', '\\/')
+                    .replace('**', '.*')
+                    .replace('*', '[^\\/]*')
+                );
+            }
+            if (name.startsWith('!')) {
+                tooComplexToCheck = true;
+            }
+        });
+
+        // There's no need to put node_modules in .npmignore. npm will never publish node_modules in the package, except if one of the modules is explicitly mentioned in bundledDependencies.
+        /*if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
+            !check && context.errors.push(`[E804] node_modules not found in .npmignore`);
+        }*/
+        if (!tooComplexToCheck) {
+            if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
+                !check && context.errors.push(`[E803] iob_npm.done not found in .npmignore`);
+            }
+
+            checkFiles.forEach((file, i) => {
+                if (context.filesList.includes(file)) {
+                    // maybe it is with regex
+                    const check = rules.some(rule => {
+                        if (typeof rule === 'string') {
+                            return rule === file || rule === file.replace(/\/$/, '');
+                        } else {
+                            return rule.test(file);
+                        }
+                    });
+
+                    !check && context.errors.push(`[E8${paddingNum(i + 11)}] file ${file} found in repository, but not found in .npmignore`);
                 }
             });
-
-            // There's no need to put node_modules in .npmignore. npm will never publish node_modules in the package, except if one of the modules is explicitly mentioned in bundledDependencies.
-            /*if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
-                !check && context.errors.push(`[E804] node_modules not found in .npmignore`);
-            }*/
-            if (!tooComplexToCheck) {
-                if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
-                    !check && context.errors.push(`[E803] iob_npm.done not found in .npmignore`);
-                }
-
-                checkFiles.forEach((file, i) => {
-                    if (context.filesList.includes(file)) {
-                        // may be it is with regex
-                        const check = rules.some(rule => {
-                            if (typeof rule === 'string') {
-                                return rule === file || rule === file.replace(/\/$/, '');
-                            } else {
-                                return rule.test(file);
-                            }
-                        });
-
-                        !check && context.errors.push(`[E8${paddingNum(i + 11)}] file ${file} found in repository, but not found in .npmignore`);
-                    }
-                });
-            }
         }
-        resolve(context);
-    });
+    }
+    return Promise.resolve(context);
 }
 
 // E9xx
@@ -1809,50 +1810,49 @@ function checkGitIgnore(context) {
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.gitignore
-    return new Promise((resolve, reject) => {
-        console.log('checkGitIgnore [E9xx]');
-        if (!context.filesList.includes('.gitignore')) {
-            context.warnings.push(`[W901] .gitignore not found`);
-        } else {
-            const rules = (context['/.gitignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
-            rules.forEach((name, i) => {
-                if (name.includes('*')) {
-                    rules[i] = new RegExp(name
-                        .replace('.', '\\.')
-                        .replace('/', '\\/')
-                        .replace('**', '.*')
-                        .replace('*', '[^\\/]*')
-                    );
-                }
-            });
-
-            if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
-                !check && context.errors.push(`[E902] node_modules not found in .npmignore`);
+    console.log('checkGitIgnore [E9xx]');
+    if (!context.filesList.includes('.gitignore')) {
+        context.warnings.push(`[W901] .gitignore not found`);
+    } else {
+        const rules = (context['/.gitignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
+        rules.forEach((name, i) => {
+            if (name.includes('*')) {
+                rules[i] = new RegExp(name
+                    .replace('.', '\\.')
+                    .replace('/', '\\/')
+                    .replace('**', '.*')
+                    .replace('*', '[^\\/]*')
+                );
             }
-            if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
-                !check && context.errors.push(`[E903] iob_npm.done not found in .gitignore`);
-            }
+        });
 
-            checkFiles.forEach((file, i) => {
-                if (context.filesList.includes(file)) {
-                    // may be it is with regex
-                    const check = rules.some(rule => {
-                        if (typeof rule === 'string') {
-                            return rule === file || rule === file.replace(/\/$/, '');
-                        } else {
-                            return rule.test(file);
-                        }
-                    });
-
-                    !check && context.errors.push(`[E9${paddingNum(i + 11)}] file ${file} found in repository, but not found in .gitignore`);
-                }
-            });
+        if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
+            !check && context.errors.push(`[E902] node_modules not found in .npmignore`);
         }
-        resolve(context);
-    });
+        if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
+            !check && context.errors.push(`[E903] iob_npm.done not found in .gitignore`);
+        }
+
+        checkFiles.forEach((file, i) => {
+            if (context.filesList.includes(file)) {
+                // maybe it is with regex
+                const check = rules.some(rule => {
+                    if (typeof rule === 'string') {
+                        return rule === file || rule === file.replace(/\/$/, '');
+                    } else {
+                        return rule.test(file);
+                    }
+                });
+
+                !check && context.errors.push(`[E9${paddingNum(i + 11)}] file ${file} found in repository, but not found in .gitignore`);
+            }
+        });
+    }
+
+    return Promise.resolve(context);
 }
 
-function makeResponse(code, data, headers) {
+function makeResponse(code, data) {
     return {
         statusCode: code || 200,
         headers: {
@@ -1870,7 +1870,7 @@ function check(request, ctx, callback) {
     } else {
         const context = {checks: [], errors: [], warnings: []};
         let githubUrl = request.queryStringParameters.url;
-        let githubBranch = request.queryStringParameters.branch;
+        const githubBranch = request.queryStringParameters.branch;
 
         githubUrl = githubUrl
             .replace('http://', 'https://')
