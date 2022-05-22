@@ -18,7 +18,7 @@
     "index.js"
   ],
   "main": "index.js",
-  "bin": "node ./index.js",
+  "bin": "index.js",
   "scripts": {
     "start": "node index.js",
     "lint": "eslint",
