@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### 2.0.1 (2022-05-22)
+### **WORK IN PROGRESS**
 * (bluefox) Made it possible to run with npx
 
 ## License
