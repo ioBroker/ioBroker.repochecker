@@ -18,9 +18,10 @@ const stream   = require('stream');
 const Writable = stream.Writable;
 const sizeOf   = require('image-size');
 const axios    = require('axios');
+const JSON5    = require('json5');
 const compareVersions = require('compare-versions');
 
-const version  = '1.4.0';
+const version  = require('./package.json').version;
 const recommendedJsControllerVersion = '3.3.22';
 
 const memStore = { };
@@ -1410,13 +1411,14 @@ function checkCode(context) {
 
         if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
             readFiles.push('admin/jsonConfig.json');
-            allowedLanguages.forEach(lang => {
-                readFiles.push(`admin/i18n/${lang}/translations.json`);
-            });
+            readFiles.push('admin/jsonConfig.json5');
+            allowedLanguages.forEach(lang =>
+                readFiles.push(`admin/i18n/${lang}/translations.json`));
         }
 
         if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
             readFiles.push('admin/jsonCustom.json');
+            readFiles.push('admin/jsonCustom.json5');
         }
     }
 
@@ -1504,14 +1506,14 @@ function checkCode(context) {
                 }
 
                 if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
-                    if (context['/admin/jsonConfig.json']) {
+                    if (context['/admin/jsonConfig.json'] || context['/admin/jsonConfig.json5']) {
                         try {
-                            JSON.parse(context['/admin/jsonConfig.json']);
+                            context['/admin/jsonConfig.json'] ? JSON.parse(context['/admin/jsonConfig.json']) : JSON5.parse(context['/admin/jsonConfig.json5']);
                         } catch (e) {
-                            context.errors.push('[E507] Cannot parse "admin/jsonConfig.json": ' + e);
+                            context.errors.push(`[E507] Cannot parse "admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}": ${e}`);
                         }
                     } else {
-                        context.errors.push(`[E508] "admin/jsonConfig.json" not found, but admin support is declared`);
+                        context.errors.push(`[E508] "admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}" not found, but admin support is declared`);
                     }
 
                     allowedLanguages.forEach(lang => {
@@ -1528,14 +1530,14 @@ function checkCode(context) {
                 }
 
                 if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
-                    if (context['/admin/jsonCustom.json']) {
+                    if (context['/admin/jsonCustom.json'] || context['/admin/jsonCustom.json5']) {
                         try {
-                            JSON.parse(context['/admin/jsonCustom.json']);
+                            context['/admin/jsonCustom.json'] ? JSON.parse(context['/admin/jsonCustom.json']) : JSON5.parse(context['/admin/jsonCustom.json5']);
                         } catch (e) {
-                            context.errors.push('[E511] Cannot parse "admin/jsonCustom.json": ' + e);
+                            context.errors.push(`[E511] Cannot parse "admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}": ${e}`);
                         }
                     } else {
-                        context.errors.push(`[E512] "admin/jsonCustom.json" not found, but custom support is declared`);
+                        context.errors.push(`[E512] "admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}" not found, but custom support is declared`);
                     }
                 }
 

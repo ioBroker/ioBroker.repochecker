@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added support of jsonConfig.json5 and jsonCustom.json5
+
 ### 2.0.5 (2022-05-22)
 * (bluefox) Made it possible to run with npx
 
