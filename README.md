@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.1.0 (2022-05-26)
 * (bluefox) Added support of jsonConfig.json5 and jsonCustom.json5
 
 ### 2.0.5 (2022-05-22)
