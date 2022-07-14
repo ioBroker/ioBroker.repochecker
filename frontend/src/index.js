@@ -1,25 +1,28 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { MuiThemeProvider} from '@material-ui/core/styles';
 
-import theme from '@iobroker/adapter-react/Theme';
-import Utils from '@iobroker/adapter-react/Components/Utils';
+import theme from '@iobroker/adapter-react-v5/Theme';
+import Utils from '@iobroker/adapter-react-v5/Components/Utils';
 let themeName = Utils.getThemeName();
 
 function build() {
-    return ReactDOM.render(
-        <MuiThemeProvider theme={theme(themeName)}>
+    const container = document.getElementById('root');
+    const root = createRoot(container);
+    return root.render(
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme(themeName)}>
             <App
                 onThemeChange={_theme => {
                     themeName = _theme;
                     build();
                 }}
             />
-        </MuiThemeProvider>,
-        document.getElementById('root')
+            </ThemeProvider>
+        </StyledEngineProvider>
     );
 }
 

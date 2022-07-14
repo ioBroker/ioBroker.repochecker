@@ -1,25 +1,29 @@
 import React, {Component} from 'react';
-import {withStyles, MuiThemeProvider} from '@material-ui/core/styles';
-import './App.css';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Input from '@material-ui/core/Input';
-import Fab from '@material-ui/core/Fab';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles } from '@mui/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
-import CheckIcon from '@material-ui/icons/DoneOutlined';
-import ErrorIcon from '@material-ui/icons/Cancel';
-import WarningIcon from '@material-ui/icons/Announcement';
+import './App.css';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Input from '@mui/material/Input';
+import Fab from '@mui/material/Fab';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import CheckIcon from '@mui/icons-material/DoneOutlined';
+import ErrorIcon from '@mui/icons-material/Cancel';
+import WarningIcon from '@mui/icons-material/Announcement';
 
 import Comm from './Comm';
 import ToggleThemeMenu from './ToggleThemeMenu';
-import Utils from '@iobroker/adapter-react/Components/Utils';
-import theme from '@iobroker/adapter-react/Theme';
+import Utils from '@iobroker/adapter-react-v5/Components/Utils';
+import theme from '@iobroker/adapter-react-v5/Theme';
+import MessageDialog from '@iobroker/adapter-react-v5/Dialogs/Message';
+import I18n from '@iobroker/adapter-react-v5/i18n';
 
 const NARROW_WIDTH = 500;
 
@@ -81,6 +85,22 @@ class App extends Component {
 
         const _theme = theme(Utils.getThemeName());
 
+        const translations = {
+            'en': require('@iobroker/adapter-react-v5/i18n/en'),
+            'de': require('@iobroker/adapter-react-v5/i18n/de'),
+            'ru': require('@iobroker/adapter-react-v5/i18n/ru'),
+            'pt': require('@iobroker/adapter-react-v5/i18n/pt'),
+            'nl': require('@iobroker/adapter-react-v5/i18n/nl'),
+            'fr': require('@iobroker/adapter-react-v5/i18n/fr'),
+            'it': require('@iobroker/adapter-react-v5/i18n/it'),
+            'es': require('@iobroker/adapter-react-v5/i18n/es'),
+            'pl': require('@iobroker/adapter-react-v5/i18n/pl'),
+            'zh-cn': require('@iobroker/adapter-react-v5/i18n/zh-cn'),
+        };
+
+        I18n.setTranslations(translations);
+        I18n.setLanguage((navigator.language || navigator.userLanguage || 'en').substring(0, 2).toLowerCase());
+
         this.state = {
             url: window.localStorage.getItem('url') || '',
             requesting: false,
@@ -94,6 +114,7 @@ class App extends Component {
             themeName: _theme.name,
             themeType: _theme.palette.type,
             hasTravis: false,
+            globalError: null,
         };
 
         if (window.document.location.search) {
@@ -129,11 +150,14 @@ class App extends Component {
         if (url.match(/\/$/, '')) {
             url = url.substring(0, url.length - 1);
         }
+
         this.setState({errors: [], result: [], warnings:[], requesting: true});
+
         Comm.check(url, this.state.branch.trim(), (err, data) => {
             if (err) {
                 this.setState({
-                    errors: [err],
+                    errors: data.errors || [],
+                    globalError: err,
                     warnings: (data && data.warnings) || [],
                     result: (data && data.checks) || [],
                     requesting: false,
@@ -218,87 +242,101 @@ class App extends Component {
         const _theme = theme(newThemeName);
 
         this.setState({
-            theme: _theme,
+            theme:     _theme,
             themeName: _theme.name,
             themeType: _theme.palette.type
         });
     }
 
+    showError() {
+        if (this.state.globalError) {
+            return <MessageDialog
+                onClose={() => this.setState({globalError: null})}
+                title={this.state.globalError}
+            />;
+        } else {
+            return null;
+        }
+    }
+
     render() {
         const narrowScreen = this.state.screenWidth <= NARROW_WIDTH;
 
-        return <MuiThemeProvider theme={this.state.theme}>
-            <div
-                className={this.props.classes.body}
-                style={{
-                    background: this.state.themeType === 'dark' ? '#111' : '#EEE',
-                    color: this.state.themeType === 'dark' ? '#FFF' : '#000',
-                }}
-            >
-                <AppBar position="static" color="primary">
-                    <Toolbar>
-                        <Input
-                            type="text"
-                            placeholder="https://github.com/USER/ioBroker.ADAPTER"
-                            value={this.state.url}
-                            margin="none"
-                            onKeyUp={e => {
-                                if (e.key === 'Enter' && this.state.url && !this.state.requesting) {
-                                    this.onCheck();
-                                }
-                            }}
-                            readOnly={this.state.requesting}
-                            className={this.props.classes.urlInput}
-                            style={{maxWidth: narrowScreen ? this.state.screenWidth - 35 : this.state.screenWidth - 250, width: narrowScreen ? 'calc(100% - 35px)' : 'calc(100% - 350px)'}}
-                            onChange={e => {
-                                window.localStorage.setItem('url', e.target.value);
-                                this.setState({url: e.target.value});
-                            }}
-                        />
-                        {!narrowScreen ? <Input
-                            type="text"
-                            placeholder="branch"
-                            value={this.state.branch}
-                            margin="none"
-                            onKeyUp={e => {
-                                if (e.key === 'Enter' && this.state.url && !this.state.requesting) {
-                                    this.onCheck();
-                                }
-                            }}
-                            readOnly={this.state.requesting}
-                            className={this.props.classes.branchInput}
-                            onChange={e => {
-                                window.localStorage.setItem('branch', e.target.value);
-                                this.setState({branch: e.target.value});
-                            }}
-                        /> : null}
-                        {
-                            this.state.requesting ?
-                                <CircularProgress className={this.props.classes.buttonCheck} color="secondary" /> :
-                                <Fab className={this.props.classes.buttonCheck} size="small" color="secondary" disabled={!this.state.url} onClick={() => this.onCheck()} aria-label="Check"><CheckIcon /></Fab>
-                        }
-                        {!narrowScreen ? <h4 className={this.props.classes.toolbarTitle}>{this.state.version}</h4> : null}
-                        {!narrowScreen ? <ToggleThemeMenu
-                            toggleTheme={() => this.toggleTheme()}
-                            themeName={this.state.themeName}
-                            t={w => w}
-                        /> : null}
-                    </Toolbar>
-                </AppBar>
-                <div className={this.props.classes.info}>
-                    {this.state.result.length ? [
-                        <Button key="github"          color="primary" onClick={() => this.onOpen('')}>github.com</Button>,
-                        <Button key="package.json"    color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>,
-                        <Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>,
-                        this.state.hasTravis ? <Button key="travis" color="primary" onClick={() => this.onOpenTravis()}>travis-ci.org</Button> : null,
-                        this.state.errors && this.state.errors.length ? <Button key="practices" variant="contained" color="primary" onClick={() => this.onOpenLink('https://github.com/ioBroker/ioBroker.repositories#development-and-coding-best-practices')}>Best practices</Button> : null,
-                    ] : null}
-                    {this.state.errors   ? this.renderError()    : null}
-                    {this.state.warnings ? this.renderWarnings() : null}
-                    {this.state.result   ? this.renderResult()   : null}
+        return <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={this.state.theme}>
+                <div
+                    className={this.props.classes.body}
+                    style={{
+                        background: this.state.themeType === 'dark' ? '#111' : '#EEE',
+                        color: this.state.themeType === 'dark' ? '#FFF' : '#000',
+                    }}
+                >
+                    <AppBar position="static" color="primary">
+                        <Toolbar>
+                            <Input
+                                type="text"
+                                placeholder="https://github.com/USER/ioBroker.ADAPTER"
+                                value={this.state.url}
+                                margin="none"
+                                onKeyUp={e => {
+                                    if (e.key === 'Enter' && this.state.url && !this.state.requesting) {
+                                        this.onCheck();
+                                    }
+                                }}
+                                readOnly={this.state.requesting}
+                                className={this.props.classes.urlInput}
+                                style={{maxWidth: narrowScreen ? this.state.screenWidth - 35 : this.state.screenWidth - 250, width: narrowScreen ? 'calc(100% - 35px)' : 'calc(100% - 350px)'}}
+                                onChange={e => {
+                                    window.localStorage.setItem('url', e.target.value);
+                                    this.setState({url: e.target.value});
+                                }}
+                            />
+                            {!narrowScreen ? <Input
+                                type="text"
+                                placeholder="branch"
+                                value={this.state.branch}
+                                margin="none"
+                                onKeyUp={e => {
+                                    if (e.key === 'Enter' && this.state.url && !this.state.requesting) {
+                                        this.onCheck();
+                                    }
+                                }}
+                                readOnly={this.state.requesting}
+                                className={this.props.classes.branchInput}
+                                onChange={e => {
+                                    window.localStorage.setItem('branch', e.target.value);
+                                    this.setState({branch: e.target.value});
+                                }}
+                            /> : null}
+                            {
+                                this.state.requesting ?
+                                    <CircularProgress className={this.props.classes.buttonCheck} color="secondary" /> :
+                                    <Fab className={this.props.classes.buttonCheck} size="small" color="secondary" disabled={!this.state.url} onClick={() => this.onCheck()} aria-label="Check"><CheckIcon /></Fab>
+                            }
+                            {!narrowScreen ? <h4 className={this.props.classes.toolbarTitle}>{this.state.version}</h4> : null}
+                            {!narrowScreen ? <ToggleThemeMenu
+                                toggleTheme={() => this.toggleTheme()}
+                                themeName={this.state.themeName}
+                                t={w => w}
+                            /> : null}
+                        </Toolbar>
+                    </AppBar>
+                    <div className={this.props.classes.info}>
+                        {this.state.result.length ? [
+                            <Button key="github"          color="primary" onClick={() => this.onOpen('')}>github.com</Button>,
+                            <Button key="package.json"    color="primary" onClick={() => this.onOpen('/blob/master/package.json')}>package.json</Button>,
+                            <Button key="io-package.json" color="primary" onClick={() => this.onOpen('/blob/master/io-package.json')}>io-package.json</Button>,
+                            this.state.hasTravis ? <Button key="travis" color="primary" onClick={() => this.onOpenTravis()}>travis-ci.org</Button> : null,
+                            this.state.errors && this.state.errors.length ? <Button key="practices" variant="contained" color="primary" onClick={() => this.onOpenLink('https://github.com/ioBroker/ioBroker.repositories#development-and-coding-best-practices')}>Best practices</Button> : null,
+                        ] : null}
+                        {this.state.errors   ? this.renderError()    : null}
+                        {this.state.warnings ? this.renderWarnings() : null}
+                        {this.state.result   ? this.renderResult()   : null}
+                    </div>
+                    {this.showError()}
                 </div>
-            </div>
-        </MuiThemeProvider>;
+            </ThemeProvider>
+        </StyledEngineProvider>;
     }
 }
 

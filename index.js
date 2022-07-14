@@ -1912,9 +1912,17 @@ function check(request, ctx, callback) {
                 return callback(null, makeResponse(200, {result: 'OK', checks: context.checks, errors: context.errors, warnings: context.warnings, version, hasTravis: context.hasTravis}));
             })
             .catch(err => {
-                console.error(err);
+                console.error('GLOBAL ERROR' + err);
 
-                return callback(err, makeResponse(200, {result: 'Errors found', checks: context.checks, errors: context.errors, warnings: context.warnings, version, hasTravis: context.hasTravis}));
+                return callback(null, makeResponse(200, {
+                    result: 'Errors found',
+                    checks: context.checks,
+                    errors: context.errors,
+                    warnings: context.warnings,
+                    version,
+                    hasTravis: context.hasTravis,
+                    error: `${err.request ? err.request.path : ''} ${err.message}`,
+                }));
             });
     }
 }
@@ -1922,7 +1930,7 @@ function check(request, ctx, callback) {
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
-    let repoUrl = 'https://github.com/ioBroker/ioBroker.admin';
+    let repoUrl = 'https://github.com/Dirk-Peter-md/ioBroker.sprinklecontrol';
     let repoBranch = null;
 
     // Get url from parameters if possible

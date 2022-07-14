@@ -6,7 +6,7 @@ class Comm {
             fetch(url)
                 .then(res => res.json())
                 .then(
-                    result => cb && cb(null, result),
+                    result => cb && cb(result.error || null, result),
                     error => cb && cb(error)
                 );
         } catch (error) {
