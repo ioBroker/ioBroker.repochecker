@@ -1508,9 +1508,10 @@ function checkCode(context) {
                 }
 
                 if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
+                    let jsonConfig;
                     if (context['/admin/jsonConfig.json'] || context['/admin/jsonConfig.json5']) {
                         try {
-                            context['/admin/jsonConfig.json'] ? JSON.parse(context['/admin/jsonConfig.json']) : JSON5.parse(context['/admin/jsonConfig.json5']);
+                            jsonConfig = context['/admin/jsonConfig.json'] ? JSON.parse(context['/admin/jsonConfig.json']) : JSON5.parse(context['/admin/jsonConfig.json5']);
                         } catch (e) {
                             context.errors.push(`[E507] Cannot parse "admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}": ${e}`);
                         }
@@ -1518,17 +1519,22 @@ function checkCode(context) {
                         context.errors.push(`[E508] "admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}" not found, but admin support is declared`);
                     }
 
-                    allowedLanguages.forEach(lang => {
-                        if (context[`/admin/i18n/${lang}/translations.json`]) {
-                            try {
-                                JSON.parse(context[`/admin/i18n/${lang}/translations.json`]);
-                            } catch (e) {
-                                context.errors.push(`[E509] Cannot parse "admin/i18n/${lang}/translations.json": ${e}`);
+                    if (jsonConfig && jsonConfig.i18n === true) {
+                        allowedLanguages.forEach(lang => {
+                            if (context[`/admin/i18n/${lang}/translations.json`]) {
+                                try {
+                                    JSON.parse(context[`/admin/i18n/${lang}/translations.json`]);
+                                } catch (e) {
+                                    context.errors.push(`[E509] Cannot parse "admin/i18n/${lang}/translations.json": ${e}`);
+                                }
+                            } else {
+                                context.errors.push(`[E510] "/admin/i18n/${lang}/translations.json" not found, but admin support is declared`);
                             }
-                        } else {
-                            context.errors.push(`[E510] "/admin/i18n/${lang}/translations.json" not found, but admin support is declared`);
-                        }
-                    });
+                        });
+                    }
+                    if (jsonConfig && jsonConfig.i18n === false) {
+                        context.warnings.push(`[W515] Why you decided to disable i18n support?`);
+                    }
                 }
 
                 if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
@@ -1581,7 +1587,7 @@ function checkCode(context) {
                         }
                     }
                 }
-                // max E514
+                // max E515
                 resolve(context);
             })
             .catch(e => reject(e));
