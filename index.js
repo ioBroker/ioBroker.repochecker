@@ -1184,8 +1184,10 @@ function checkNpm(context) {
                 !body.collected ||
                 !body.collected.metadata ||
                 !body.collected.metadata.version ||
-                context.packageJson.version !== body.collected.metadata.version) {
-                context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${body.collected.metadata.version})`);
+                context.packageJson.version !== body.collected.metadata.version
+            ) {
+                context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${
+                    (body && body.collected && body.collected.metadata && body.collected.metadata.version) || JSON.stringify(body)})`);
             } else {
                 context.checks.push('Version of package.json matches latest version on NPM');
             }
