@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.1.2 (2022-07-14)
 * (bluefox) Fixed some errors
 
 ### 2.1.0 (2022-05-26)
