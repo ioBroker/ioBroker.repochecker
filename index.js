@@ -157,7 +157,7 @@ function checkPackageJson(context) {
             }
 
             if (adapterName.startsWith('_')) {
-                context.errors.push(`[E023] Adapter name "${adapterName}" may not start from '_'`);
+                context.errors.push(`[E024] Adapter name "${adapterName}" may not start from '_'`);
             } else {
                 context.checks.push(`Adapter name "${adapterName}" does not start from '_'`);
             }
