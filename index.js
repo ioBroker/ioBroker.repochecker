@@ -1156,7 +1156,7 @@ function checkNpm(context) {
             // bug in NPM some modules could be accessed via normal web page, but not by API
             if (!body) {
                 try {
-                    const _response = await axios('https://www.npmjs.com/package/iobroker.' + context.adapterName);
+                    const _response = await axios(`https://www.npmjs.com/package/iobroker.${context.adapterName}`);
                     if (!_response.data) {
                         context.errors.push('[E200] Not found on npm. Please publish');
                         return context;
@@ -1174,30 +1174,28 @@ function checkNpm(context) {
                     context.errors.push('[E200] Not found on npm. Please publish');
                     return context;
                 }
-            }
-            context.checks.push('Adapter found on npm');
-
-            if (!body ||
-                !body.collected ||
-                !body.collected.metadata ||
-                !body.collected.metadata.maintainers ||
-                !body.collected.metadata.maintainers.length ||
-                !body.collected.metadata.maintainers.find(user => user.username === 'bluefox' || user.username === 'iobluefox')) {
-                context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
             } else {
-                context.checks.push('Bluefox found in collaborators on NPM');
-            }
+                context.checks.push('Adapter found on npm');
+                if (!body.collected ||
+                    !body.collected.metadata ||
+                    !body.collected.metadata.maintainers ||
+                    !body.collected.metadata.maintainers.length ||
+                    !body.collected.metadata.maintainers.find(user => user.username === 'bluefox' || user.username === 'iobluefox')) {
+                    context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
+                } else {
+                    context.checks.push('Bluefox found in collaborators on NPM');
+                }
 
-            if (!body ||
-                !body.collected ||
-                !body.collected.metadata ||
-                !body.collected.metadata.version ||
-                context.packageJson.version !== body.collected.metadata.version
-            ) {
-                context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${
-                    (body && body.collected && body.collected.metadata && body.collected.metadata.version) || JSON.stringify(body)})`);
-            } else {
-                context.checks.push('Version of package.json matches latest version on NPM');
+                if (!body.collected ||
+                    !body.collected.metadata ||
+                    !body.collected.metadata.version ||
+                    context.packageJson.version !== body.collected.metadata.version
+                ) {
+                    context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${
+                        (body && body.collected && body.collected.metadata && body.collected.metadata.version) || JSON.stringify(body)})`);
+                } else {
+                    context.checks.push('Version of package.json matches latest version on NPM');
+                }
             }
 
             return context;
