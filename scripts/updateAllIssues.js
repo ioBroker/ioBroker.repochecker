@@ -232,7 +232,6 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
 }
 
 function closeIssue(repo, issueNr) {
-
     if (issueNr) {
         const urlComment = `https://api.github.com/repos/${repo}/issues/${issueNr}/comments`;
         const issueBody = 'Thanks, that all bugs have been fixed.';
@@ -266,7 +265,6 @@ function closeIssue(repo, issueNr) {
                 state: 'closed'
             })
         });
-
     } else {
         adapterList.checkOk.push(repo);
         delete adapterList[toGet][repo];
@@ -276,7 +274,7 @@ function closeIssue(repo, issueNr) {
 async function getAdapterList() {
     const link = 'https://raw.githubusercontent.com/ioBrokerChecker/testData/master/data.json';
     try {
-        return await (await fetch(link, {cache: 'no-cache'})).json();
+        return await (await fetch(link, { cache: 'no-cache' })).json();
     } catch (e) {
         return null;
     }

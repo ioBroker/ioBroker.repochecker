@@ -20,7 +20,7 @@ const start = async function () {
         $('#donenow').text(issuesCreated.length);
         console.log(JSON.stringify(issuesCreated));
     } else {
-        $('#list').append("<li style='color: red;'>ERROR - NO ADAPTER LIST</li>");
+        $('#list').append('<li style=\'color: red;\'>ERROR - NO ADAPTER LIST</li>');
     }
 };
 
@@ -73,13 +73,13 @@ const startFunc = async function () {
 
     for (const fullName in adapterList.checkError) {
         issuesList.push(fullName);
-  	}
-  	for (const fullName in adapterList.checkError2) {
+    }
+    for (const fullName in adapterList.checkError2) {
         issuesList.push(fullName);
-  	}
+    }
     for (const fullName in adapterList.checkErrorOld) {
         issuesList.push(fullName);
-  	}
+    }
 
     if (adapterList.alreadydone) {
         adapterList.alreadydone.forEach(fullName =>
@@ -102,7 +102,6 @@ function GithubInteractor(token) {
 const interactor = new GithubInteractor(githubToken);
 
 async function filterList(array) {
-
     await asyncForEach(array, async function (fullName) {
         const link = `https://raw.githubusercontent.com/${fullName}/master/io-package.json`;
         try {
@@ -118,7 +117,6 @@ async function filterList(array) {
     });
 
     doTheIssues();
-
 }
 
 async function getAdapterList() {
@@ -131,14 +129,13 @@ async function getAdapterList() {
 }
 
 function doTheIssues() {
-	  $('#totalrepos').text(issuesListFiltered.length);
+    $('#totalrepos').text(issuesListFiltered.length);
 
     issuesListFiltered.forEach(function (fullName) {
-
-    	  const adapter = fullName.split('/')[1];
+        const adapter = fullName.split('/')[1];
 
         if (issueTitle === '') {
-        	issueTitle = `Please check ${adapter} with js-controller 2.0`;
+            issueTitle = `Please check ${adapter} with js-controller 2.0`;
         }
 
         const url = `https://api.github.com/repos/${fullName}/issues`;
@@ -160,8 +157,8 @@ function doTheIssues() {
                 })
             });
         } else {
-        	issuesCreated.push(fullName);
-        	$('#list').append(`<li>${fullName} - new TEST created</li>`);
+            issuesCreated.push(fullName);
+            $('#list').append(`<li>${fullName} - new TEST created</li>`);
         }
     });
 }
