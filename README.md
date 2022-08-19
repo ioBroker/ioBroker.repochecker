@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added check for adapter name: it may not start with '_'
+
 ### 2.1.2 (2022-07-14)
 * (bluefox) Fixed some errors
 
