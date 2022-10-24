@@ -235,24 +235,24 @@ function checkPackageJson(context) {
                 // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
                 if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
                     if (context.packageJson.repository.type !== 'git') {
-                        context.errors.push('[E018] Invalid repository type: ' + context.packageJson.repository.type + '. It should be git');
+                        context.errors.push('[E018] Invalid repository type in package.json: ' + context.packageJson.repository.type + '. It should be git');
                     } else {
-                        context.checks.push('Repository type is valid: git');
+                        context.checks.push('Repository type is valid in package.json: git');
                     }
 
                     if (!allowedRepoUrls.includes(context.packageJson.repository.url)) {
-                        context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
+                        context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                     } else {
                         context.checks.push('Repository URL is valid in package.json');
                     }
                 } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
                     if (!allowedRepoUrls.includes(context.packageJson.repository)) {
-                        context.errors.push(`[E019] Invalid repository URL: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
+                        context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                     } else {
                         context.checks.push('Repository URL is valid in package.json');
                     }
                 } else {
-                    context.errors.push('[E019] Invalid repository URL');
+                    context.errors.push('[E019] Invalid repository URL in package.json');
                 }
             }
 
@@ -284,6 +284,7 @@ const allowedLanguages = [
     'it',
     'es',
     'pl',
+    'uk',
     'zh-cn'
 ];
 
@@ -851,7 +852,7 @@ function checkIOPackageJson(context) {
                     }
 
                     if (!(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json')) {
-                        context.warnings.push('[W156] Adapter should support admin 5 UI (jsonConfig)');
+                        context.warnings.push('[W156] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI');
                     }
                 } else {
                     context.checks.push('adapter has no admin config');
@@ -1559,6 +1560,15 @@ function checkCode(context) {
                     context.errors.push('[E514] "admin/blockly.js" not found, but blockly support is declared');
                 }
 
+                if (context.ioPackageJson.common.javascriptRules) {
+                    if (!context.ioPackageJson.common.javascriptRules.url) {
+                        context.errors.push('[E515] JavaScript-Rules support is declared, but no location in property url defined');
+                    }
+                    if (!context['/' + context.ioPackageJson.common.javascriptRules.url]) {
+                        context.errors.push('[E516] "' + context.ioPackageJson.common.javascriptRules.url + '" not found, but JavaScript-Rules support is declared');
+                    }
+                }
+
                 if (context['/iob_npm.done']) {
                     context.errors.push('[E503] "iob_npm.done" found in repo! Remove that file');
                 }
@@ -1593,7 +1603,7 @@ function checkCode(context) {
                         }
                     }
                 }
-                // max E515
+                // max E517
                 resolve(context);
             })
             .catch(e => reject(e));
