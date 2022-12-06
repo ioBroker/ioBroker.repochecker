@@ -1150,7 +1150,7 @@ function checkIOPackageJson(context) {
 // E2xx
 function checkNpm(context) {
     console.log('checkNpm [E2xx]');
-    return axios('https://api.npms.io/v2/package/iobroker.' + context.adapterName)
+    return axios(`https://registry.npmjs.org/iobroker.${context.adapterName}`)
         .catch(() => ({body: null}))
         .then(async response => {
             let body = response.data;
@@ -1177,23 +1177,19 @@ function checkNpm(context) {
                 }
             } else {
                 context.checks.push('Adapter found on npm');
-                if (!body.collected ||
-                    !body.collected.metadata ||
-                    !body.collected.metadata.maintainers ||
-                    !body.collected.metadata.maintainers.length ||
-                    !body.collected.metadata.maintainers.find(user => user.username === 'bluefox' || user.username === 'iobluefox')) {
+                if (!body.maintainers ||
+                    !body.maintainers.length ||
+                    !body.maintainers.find(user => user.name === 'bluefox' || user.name === 'iobluefox')) {
                     context.errors.push(`[E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: "npm owner add bluefox iobroker.${context.adapterName}"`);
                 } else {
                     context.checks.push('Bluefox found in collaborators on NPM');
                 }
 
-                if (!body.collected ||
-                    !body.collected.metadata ||
-                    !body.collected.metadata.version ||
-                    context.packageJson.version !== body.collected.metadata.version
+                if (!body['dist-tags'] ||
+                    context.packageJson.version !== body['dist-tags'].latest
                 ) {
                     context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${
-                        (body && body.collected && body.collected.metadata && body.collected.metadata.version) || JSON.stringify(body)})`);
+                        (body['dist-tags'] && body['dist-tags'].latest) || JSON.stringify(body)})`);
                 } else {
                     context.checks.push('Version of package.json matches latest version on NPM');
                 }
@@ -1423,6 +1419,8 @@ function checkCode(context) {
             readFiles.push('admin/jsonConfig.json5');
             allowedLanguages.forEach(lang =>
                 readFiles.push(`admin/i18n/${lang}/translations.json`));
+            allowedLanguages.forEach(lang =>
+                readFiles.push(`admin/i18n/${lang}.json`));
         }
 
         if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
@@ -1534,8 +1532,14 @@ function checkCode(context) {
                                 } catch (e) {
                                     context.errors.push(`[E509] Cannot parse "admin/i18n/${lang}/translations.json": ${e}`);
                                 }
+                            } else if (context[`/admin/i18n/${lang}.json`]) {
+                                try {
+                                    JSON.parse(context[`/admin/i18n/${lang}.json`]);
+                                } catch (e) {
+                                    context.errors.push(`[E509] Cannot parse "admin/i18n/${lang}.json": ${e}`);
+                                }
                             } else {
-                                context.errors.push(`[E510] "/admin/i18n/${lang}/translations.json" not found, but admin support is declared`);
+                                context.errors.push(`[E510] "/admin/i18n/${lang}/translations.json" or "admin/i18n/${lang}.json" not found, but admin support is declared`);
                             }
                         });
                     }
@@ -1953,7 +1957,7 @@ function check(request, ctx, callback) {
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
-    let repoUrl = 'https://github.com/Dirk-Peter-md/ioBroker.sprinklecontrol';
+    let repoUrl = 'https://github.com/ioBroker/ioBroker.ekey';
     let repoBranch = null;
 
     // Get url from parameters if possible
