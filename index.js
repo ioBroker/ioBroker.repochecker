@@ -1066,11 +1066,11 @@ function checkIOPackageJson(context) {
                         }
                     } else if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.4') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.5') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.6')) {
                         if (!context.ioPackageJson.common.dependencies) {
-                            context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                            context.errors.push(`[E154] common.dependencies must contain [{"js-controller": ">=2.0.0"}] or later - recommended: [{"js-controller": ">=${recommendedJsControllerVersion}"}]`);
                         } else {
                             if (currentJsControllerVersion) {
                                 if (!compareVersions.compare(currentJsControllerVersion, '2.0.0', '>=')) {
-                                    context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                                    context.errors.push(`[E154] common.dependencies must contain [{"js-controller": ">=2.0.0"}] or later - recommended: [{"js-controller": ">=${recommendedJsControllerVersion}"}]`);
                                 } else {
                                     context.checks.push('adapter-core >=2.4 dependency matches js-controller dependency');
                                 }
@@ -1401,7 +1401,8 @@ function checkCode(context) {
         '.gitignore',
         'iob_npm.done',
         '.travis.yml',
-        'gulpfile.js'
+        'gulpfile.js',
+        '.releaseconfig.json',
     ];
 
     if (context.packageJson.main) {
@@ -1585,6 +1586,10 @@ function checkCode(context) {
                     context.warnings.push('[W513] "gulpfile.js" found in repo! Think about migrating to @iobroker/adapter-dev package');
                 }
 
+                if (context.packageJson.devDependencies && context.packageJson.devDependencies['@alcalzone/release-script'] && !context['/.releaseconfig.json']) {
+                    context.errors.push('[E518] "@alcalzone/release-script" is used, but ".releaseconfig.json" not found');
+                }
+
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
                     if (!context['/' + context.packageJson.main]) {
                         context.errors.push(`[E504] "${context.packageJson.main}" found in package.json, but not found as file`);
@@ -1607,7 +1612,7 @@ function checkCode(context) {
                         }
                     }
                 }
-                // max E517
+                // max E518
                 resolve(context);
             })
             .catch(e => reject(e));
