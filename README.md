@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) added check of `.releaseconfig.json` file
+
 ### 2.1.4 (2022-08-19)
 * (bluefox) Added check for adapter name: it may not start with '_'
 
