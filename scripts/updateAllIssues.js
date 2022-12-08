@@ -7,7 +7,7 @@ const checkOkCheck = true;
 
 const issueTitle = 'Think about to fix the issues found by adapter checker';
 
-const adapterTestLink = 'https://3jjxddo33l.execute-api.eu-west-1.amazonaws.com/default/checkAdapter?url=';
+const adapterTestLink = 'https://e7tj1cpjna.execute-api.eu-west-1.amazonaws.com/?url=';
 
 let adapterList;
 
@@ -17,7 +17,7 @@ const start = async function () {
         if (!adapterList[toSet]) {
             adapterList[toSet] = {};
         }
-        $listeSuccess = $('#listSuccess');
+        const $listeSuccess = $('#listSuccess');
         $listeSuccess.append(`<li style='color: blue;'>ignored: ${adapterList.ignore.length}/<span id='ignore'></span></li>`);
         $listeSuccess.append(`<li style='color: blue;'>noIoPackage: ${adapterList.noIoPackage.length}/<span id='noIoPackage'></span></li>`);
         $listeSuccess.append(`<li style='color: blue;'>checkErrorOld:${Object.keys(adapterList.checkErrorOld).length}/<span id='checkErrorOld'></span></li>`);
@@ -41,7 +41,7 @@ const start = async function () {
 
 (function ($) {
     $.extend({
-        // Case insensative $.inArray (http://api.jquery.com/jquery.inarray/)
+        // Case insensitive $.inArray (http://api.jquery.com/jquery.inarray/)
         // $.inArrayIn(value, array [, fromIndex])
         //  value (type: String)
         //    The value to search for
@@ -51,7 +51,7 @@ const start = async function () {
         //    The index of the array at which to begin the search.
         //    The default is 0, which will search the whole array.
         inArrayIn: function (elem, arr, i) {
-            // not looking for a string anyways, use default method
+            // not looking for a string anyway, use default method
             if (typeof elem !== 'string') {
                 return $.inArray.apply(this, arguments);
             }
@@ -76,8 +76,7 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const startFunc = async function () {
     if (adapterList) {
-
-        const result = await findAllAdapters(adapterList);
+        await findAllAdapters(adapterList);
 
         if (checkOkCheck) {
             adapterList.checkOk.forEach(fullName => {
@@ -109,7 +108,7 @@ const startFunc = async function () {
                     issueBody += `https://adapter-check.iobroker.in/?q=${testLink}\r\n\r\n`;
                     const errorList = [];
                     const warningList = [];
-                    testResult.errors.forEach(function (issue) {
+                    testResult.errors.forEach(issue => {
                         issueBody += `- [ ] ${issue}\r\n`;
                         errorList.push(issue.substring(1, 5));
                     });
@@ -122,7 +121,7 @@ const startFunc = async function () {
                     }
 
                     issueBody += '\r\nThanks,\r\nyour automatic adapter checker.';
-                    issueBody += addComminityText(fullName);
+                    issueBody += addCommunityText(fullName);
 
                     const errorNotChanged = issueNr !== null &&
                         (errorList.length === issuesList.length && errorList
@@ -151,13 +150,12 @@ const startFunc = async function () {
                 $('#list').append(`<li style='color: green;'>${fullName} fixed - checked but no error found</li>`);
             }
         }
-
     }
 };
 
 $('button').on('click', () => start());
 
-function addComminityText(fullName) {
+function addCommunityText(fullName) {
     if (!fullName.startsWith('ioBroker/') && !fullName.startsWith('iobroker-community-adapters/')) {
         return '\r\n\r\nP.S.: There is a community in Github, which supports the maintenance and further development of adapters. There you will find many experienced developers who are always ready to assist anyone. New developers are always welcome there. For more informations visit: https://github.com/iobroker-community-adapters/info';
     } else {
@@ -178,14 +176,12 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
         $.ajax({
             url: url,
             type: 'PATCH',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', `token ${interactor.token}`);
-            },
-            error: function (xhr, status, error) {
+            beforeSend: xhr => xhr.setRequestHeader('Authorization', `token ${interactor.token}`),
+            error: (xhr, status, error) => {
                 const err = JSON.parse(xhr.responseText);
-                $('#list').append(`<li style='color: red;'>${repo} - issue failed (${status}: ${error})</li>`);
+                $('#list').append(`<li style='color: red;'>${repo} - issue failed (${status}: ${error}, ${err})</li>`);
             },
-            success: function (issue) {
+            success: issue => {
                 adapterList[toSet][repo] = {};
                 adapterList[toSet][repo].errorList = errorList;
                 adapterList[toSet][repo].warningList = warningList;
@@ -205,14 +201,12 @@ function createIssue(repo, issueBody, count, issueNr, errorList, warningList) {
         $.ajax({
             url: url,
             type: 'POST',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', `token ${interactor.token}`);
-            },
-            error: function (xhr, status, error) {
+            beforeSend: xhr => xhr.setRequestHeader('Authorization', `token ${interactor.token}`),
+            error: (xhr, status, error) => {
                 const err = JSON.parse(xhr.responseText);
-                $('#list').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error})</li>`);
+                $('#list').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error}, ${err})</li>`);
             },
-            success: function (issue) {
+            success: issue => {
                 adapterList[toSet][repo] = {};
                 adapterList[toSet][repo].errorList = errorList;
                 adapterList[toSet][repo].warningList = warningList;
@@ -238,14 +232,12 @@ function closeIssue(repo, issueNr) {
         $.ajax({
             url: urlComment,
             type: 'POST',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', `token ${interactor.token}`);
-            },
-            error: function (xhr, status, error) {
+            beforeSend: xhr => xhr.setRequestHeader('Authorization', `token ${interactor.token}`),
+            error: (xhr, status, error) => {
                 const err = JSON.parse(xhr.responseText);
-                $('#list').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error})</li>`);
+                $('#list').append(`<li style="color: red;">${repo} - issue failed (${status}: ${error}, ${err})</li>`);
             },
-            success: function (issue) {
+            success: () => {
                 adapterList.checkOk.push(repo);
                 delete adapterList[toGet][repo];
             },
@@ -258,9 +250,7 @@ function closeIssue(repo, issueNr) {
         $.ajax({
             url: urlIssue,
             type: 'PATCH',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
-            },
+            beforeSend: xhr => xhr.setRequestHeader('Authorization', 'token ' + interactor.token),
             data: JSON.stringify({
                 state: 'closed'
             })
@@ -274,7 +264,8 @@ function closeIssue(repo, issueNr) {
 async function getAdapterList() {
     const link = 'https://raw.githubusercontent.com/ioBrokerChecker/testData/master/data.json';
     try {
-        return await (await fetch(link, { cache: 'no-cache' })).json();
+        const response = await fetch(link, { cache: 'no-cache' });
+        return await response.json();
     } catch (e) {
         return null;
     }
@@ -289,17 +280,17 @@ async function findAllAdapters() {
 
     let repos = await getDataV4(firstQL);
     if (repos && repos.data && repos.data.search) {
-        repos.data.search.edges.forEach(async function (repoNode) {
+        for (const repoNode of repos.data.search.edges) {
             const fullName = repoNode.node.nameWithOwner;
             if (!repoNode.node.hasIssuesEnabled || repoNode.node.isArchived || checkIgnores(fullName)) {
-                return true;
+                true;
             }
-            const check = await checkIoPackage('https://raw.githubusercontent.com/' + fullName + '/master/io-package.json', fullName);
+            const check = await checkIoPackage(`https://raw.githubusercontent.com/${fullName}/master/io-package.json`, fullName);
             if (check) {
                 adapterList[toGet][fullName] = {};
                 adapterList[toGet][fullName].issue = null;
             }
-        });
+        }
 
         let hasNext = repos.data.search.pageInfo.hasNextPage;
         let cursor = repos.data.search.pageInfo.endCursor;
@@ -307,7 +298,8 @@ async function findAllAdapters() {
             const nextQL = getQueryForRepos(cursor);
             repos = await getDataV4(nextQL);
             if (repos && repos.data && repos.data.search) {
-                repos.data.search.edges.forEach(async function (repoNode) {
+                for (let e = 0; e < repos.data.search.edges.length; e++) {
+                    const repoNode = repos.data.search.edges[e];
                     const fullName = repoNode.node.nameWithOwner;
                     if (!repoNode.node.hasIssuesEnabled || repoNode.node.isArchived || checkIgnores(fullName)) {
                         return true;
@@ -317,7 +309,7 @@ async function findAllAdapters() {
                         adapterList[toGet][fullName] = {};
                         adapterList[toGet][fullName].issue = null;
                     }
-                });
+                }
                 hasNext = repos.data.search.pageInfo.hasNextPage;
                 cursor = repos.data.search.pageInfo.endCursor;
             } else {
@@ -364,7 +356,7 @@ async function getDataV4(query) {
         method: 'POST',
         headers: new Headers({
             'Content-Type': 'application/json',
-            'Authorization': 'bearer ' + interactor.token
+            'Authorization': `bearer ${interactor.token}`
         }),
         body: JSON.stringify({query: query})
     })).json();

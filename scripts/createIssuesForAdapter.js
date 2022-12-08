@@ -1,20 +1,17 @@
 const githubToken = ''; //https://github.com/settings/tokens
-const test = true;
-
 let issueTitle = 'Verify Compact mode for your adapter';
-
 const issueBody = 'We have detected that your adapter supports the compact mode. Please use the latest js-controller 2.0 and verify that everything works.\r\n\r\nSome more information what is important to check can be found at ioBroker/ioBroker.js-controller#512 \r\n\r\nOn questions please answer to the linked issue. Please close this issue after your test and add the version number that you have tested please as a comment.\r\n\r\nThank you for your support.';
-
 const issuesCreated = [];
-
 const issuesListFiltered = [];
+let adapterList = null;
 
 const start = async function () {
     adapterList = await getAdapterList();
     if (adapterList) {
-        $('#listSuccess').append('<li style="color: blue;">Done last time: <span id="alreadydone"></span></li>');
-        $('#listSuccess').append('<li style="color: blue;">Total Repos: <span id="totalrepos"></span></li>');
-        $('#listSuccess').append('<li style="color: blue;">Done now: <span id="donenow"></span></li>');
+        const $listeSuccess = $('#listSuccess');
+        $listeSuccess.append('<li style="color: blue;">Done last time: <span id="alreadydone"></span></li>');
+        $listeSuccess.append('<li style="color: blue;">Total Repos: <span id="totalrepos"></span></li>');
+        $listeSuccess.append('<li style="color: blue;">Done now: <span id="donenow"></span></li>');
         await startFunc();
         await delay(15000);
         $('#donenow').text(issuesCreated.length);
@@ -32,7 +29,7 @@ async function asyncForEach(array, callback) {
 
 (function ($) {
     $.extend({
-        // Case insensative $.inArray (http://api.jquery.com/jquery.inarray/)
+        // Case insensitive $.inArray (http://api.jquery.com/jquery.inarray/)
         // $.inArrayIn(value, array [, fromIndex])
         //  value (type: String)
         //    The value to search for
@@ -42,7 +39,7 @@ async function asyncForEach(array, callback) {
         //    The index of the array at which to begin the search.
         //    The default is 0, which will search the whole array.
         inArrayIn: function (elem, arr, i) {
-            // not looking for a string anyways, use default method
+            // not looking for a string anyway, use default method
             if (typeof elem !== 'string') {
                 return $.inArray.apply(this, arguments);
             }
@@ -66,7 +63,6 @@ async function asyncForEach(array, callback) {
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const startFunc = async function () {
-
     let issuesList = [];
 
     adapterList.checkOk.forEach(fullName => issuesList.push(fullName));
@@ -94,7 +90,6 @@ const startFunc = async function () {
 $('button').on('click', () =>
     start());
 
-
 function GithubInteractor(token) {
     this.token = token;
 }
@@ -102,10 +97,11 @@ function GithubInteractor(token) {
 const interactor = new GithubInteractor(githubToken);
 
 async function filterList(array) {
-    await asyncForEach(array, async function (fullName) {
+    await asyncForEach(array, async fullName => {
         const link = `https://raw.githubusercontent.com/${fullName}/master/io-package.json`;
         try {
-            const ioPackage = await (await fetch(link)).json();
+            const response = await fetch(link);
+            const ioPackage = await response.json();
             const isCompact = ioPackage && ioPackage.common && ioPackage.common.compact;
             const isOnlyWWW = ioPackage && ioPackage.common && ioPackage.common.onlyWWW === true;
             if (isCompact && !isOnlyWWW) {
@@ -122,7 +118,8 @@ async function filterList(array) {
 async function getAdapterList() {
     const link = 'https://raw.githubusercontent.com/ioBrokerChecker/testData/master/data.json';
     try {
-        return await (await fetch(link, {cache: 'no-cache'})).json();
+        const result = await fetch(link, {cache: 'no-cache'});
+        return await result.json();
     } catch (e) {
         return null;
     }
@@ -131,23 +128,21 @@ async function getAdapterList() {
 function doTheIssues() {
     $('#totalrepos').text(issuesListFiltered.length);
 
-    issuesListFiltered.forEach(function (fullName) {
+    issuesListFiltered.forEach(fullName => {
         const adapter = fullName.split('/')[1];
 
-        if (issueTitle === '') {
-            issueTitle = `Please check ${adapter} with js-controller 2.0`;
-        }
+        issueTitle = issueTitle || `Please check ${adapter} with js-controller 2.0`;
 
         const url = `https://api.github.com/repos/${fullName}/issues`;
 
-        if (!test) {
+        if (interactor.token) {
             $.ajax({
-                url: url,
+                url,
                 type: 'POST',
-                beforeSend: xhr => xhr.setRequestHeader('Authorization', 'token ' + interactor.token),
+                beforeSend: xhr => xhr.setRequestHeader('Authorization', `token ${interactor.token}`),
                 error: (xhr, status, error) =>
                     $('#list').append(`<li style="color: red;">${fullName} - issue failed (${status}: ${error})</li>`),
-                success: issue => {
+                success: () => {
                     issuesCreated.push(fullName);
                     $('#list').append(`<li>${fullName} - new issue created</li>`);
                 },
