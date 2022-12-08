@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) added better error logging 
+
 ### 2.1.5 (2022-12-07)
 * (bluefox) added check of `.releaseconfig.json` file
 

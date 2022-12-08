@@ -1944,7 +1944,7 @@ function check(request, ctx, callback) {
                 }));
             })
             .catch(err => {
-                console.error('GLOBAL ERROR' + err);
+                console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
 
                 return callback(null, makeResponse(200, {
                     result: 'Errors found',
