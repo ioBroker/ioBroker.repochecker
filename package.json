@@ -6,7 +6,7 @@
     "compare-versions": "^5.0.1",
     "image-size": "^1.0.2",
     "unzipper": "^0.10.11",
-    "json5": "^2.2.1"
+    "json5": "^2.2.3"
   },
   "publishConfig": {
     "access": "public"
