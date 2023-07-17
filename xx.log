@@ -1,0 +1,31 @@
+
+> @iobroker/repochecker@2.1.6 start
+> node index.js https://github.com/iobroker-community-adapters/ioBroker.telegram
+
+Checking repository https://github.com/iobroker-community-adapters/ioBroker.telegram (branch null)
+PROCESS: {"queryStringParameters":{"url":"https://github.com/iobroker-community-adapters/ioBroker.telegram","branch":null}}
+Branch was not defined by user - checking branch: master
+Original URL: https://github.com/iobroker-community-adapters/ioBroker.telegram, raw: https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.telegram/master, api: https://api.github.com/repos/iobroker-community-adapters/ioBroker.telegram
+Download https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.telegram/master/package.json
+checkIOPackageJson [E1xx]
+Download https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.telegram/master/io-package.json
+Found current js-controller dependency ">=3.3.0"
+Download https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.telegram/master/admin/telegram.png
+Download https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.telegram/master/main.js
+checkNpm [E2xx]
+checkCommits
+Download https://github.com/iobroker-community-adapters/ioBroker.telegram/commits/master
+checkRepo [E4xx]
+checkCode [E5xx]
+Download https://github.com/iobroker-community-adapters/ioBroker.telegram/archive/master.zip
+master.zip 743679 bytes
+admin/rules/customRuleBlocks.js
+checkTests [E3xx]
+checkGithubRepo [E8xx]
+checkReadme [E6xx]
+Download https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.telegram/master/README.md
+checkLicenseFile [E7xx]
+Download https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.telegram/master/LICENSE
+checkNpmIgnore [E8xx]
+checkGitIgnore [E9xx]
+OK
