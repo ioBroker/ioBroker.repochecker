@@ -157,9 +157,9 @@ function checkPackageJson(context) {
             }
 
             if (adapterName.startsWith('_')) {
-                context.errors.push(`[E024] Adapter name "${adapterName}" may not start from '_'`);
+                context.errors.push(`[E024] Adapter name "${adapterName}" may not start with '_'`);
             } else {
-                context.checks.push(`Adapter name "${adapterName}" does not start from '_'`);
+                context.checks.push(`Adapter name "${adapterName}" does not start with '_'`);
             }
 
             const n = context.githubUrlOriginal.match(/\/([^/]+)\/iobroker\./i);
@@ -1274,13 +1274,13 @@ function checkRepo(context) {
                         if (context.latestRepo[context.adapterName].version) {
                             context.errors.push('[E403] Version set in latest repository');
                         } else {
-                            context.checks.push('Version does not set in latest repository');
+                            context.checks.push('Version not set in latest repository');
                         }
 
                         const url = `https://raw.githubusercontent.com/${context.authorName}/ioBroker.${context.adapterName}/${context.branch}/`;
 
                         if (!context.latestRepo[context.adapterName].icon) {
-                            context.errors.push('[E404] Icon does not found in latest repository');
+                            context.errors.push('[E404] Icon not found in latest repository');
                         } else {
                             context.checks.push('Icon found in latest repository');
 
@@ -1333,7 +1333,7 @@ function checkRepo(context) {
                         const url = `https://raw.githubusercontent.com/${context.authorName}/ioBroker.${context.adapterName}/${context.branch}/`;
 
                         if (!context.stableRepo[context.adapterName].icon) {
-                            context.errors.push('[E425] Icon does not found in stable repository');
+                            context.errors.push('[E425] Icon not found in stable repository');
                         } else {
                             context.checks.push('Icon found in stable repository');
 
