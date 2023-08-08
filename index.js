@@ -1569,7 +1569,7 @@ function checkCode(context) {
                     if (!context.ioPackageJson.common.javascriptRules.url) {
                         context.errors.push('[E515] JavaScript-Rules support is declared, but no location in property url defined');
                     }
-                    if (!context['/' + context.ioPackageJson.common.javascriptRules.url]) {
+                    if (!context.filesList.includes('admin/' + context.ioPackageJson.common.javascriptRules.url)) {
                         context.errors.push('[E516] "' + context.ioPackageJson.common.javascriptRules.url + '" not found, but JavaScript-Rules support is declared');
                     }
                 }
