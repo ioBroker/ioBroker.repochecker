@@ -116,7 +116,7 @@ function checkPackageJson(context) {
                 try {
                     context.packageJson = JSON.parse(context.packageJson);
                 } catch (e) {
-                    context.errors.push('[E001] Cannot parse packet.json: ' + e);
+                    context.errors.push('[E001] Cannot parse package.json: ' + e);
                     return context;
                 }
             }
