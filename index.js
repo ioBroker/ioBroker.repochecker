@@ -1592,7 +1592,7 @@ function checkCode(context) {
 
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
                     if (!context['/' + context.packageJson.main]) {
-                        context.errors.push(`[E504] "${context.packageJson.main}" found in package.json, but not found as file`);
+                        context.errors.push(`[E519] "${context.packageJson.main}" found in package.json, but not found as file`);
                     } else {
                         if (context['/' + context.packageJson.main].includes('setInterval(') && !context['/' + context.packageJson.main].includes('clearInterval(')) {
                             if (context.ioPackageJson.compact) {
@@ -1612,7 +1612,7 @@ function checkCode(context) {
                         }
                     }
                 }
-                // max E518
+                // max E519
                 resolve(context);
             })
             .catch(e => reject(e));
