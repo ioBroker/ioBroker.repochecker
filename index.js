@@ -22,13 +22,13 @@ const JSON5 = require('json5');
 const compareVersions = require('compare-versions');
 
 const version = require('./package.json').version;
-const recommendedJsControllerVersion = '3.3.22';
+const recommendedJsControllerVersion = '5.0.11';
 
 const memStore = {};
 
 /* Writable memory stream */
 function WMStrm(key, options) {
-    // allow use without new operator
+    // allow use without a new operator
     if (!(this instanceof WMStrm)) {
         return new WMStrm(key, options);
     }
@@ -51,7 +51,7 @@ WMStrm.prototype._write = function (chunk, enc, cb) {
 };
 
 function downloadFile(githubUrl, path, binary, noError) {
-    console.log('Download ' + githubUrl + (path || ''));
+    console.log(`Download ${githubUrl}${path || ''}`);
     const options = {};
     if (binary) {
         options.responseType = 'arraybuffer';
@@ -116,7 +116,7 @@ function checkPackageJson(context) {
                 try {
                     context.packageJson = JSON.parse(context.packageJson);
                 } catch (e) {
-                    context.errors.push('[E001] Cannot parse package.json: ' + e);
+                    context.errors.push(`[E001] Cannot parse package.json: ${e}`);
                     return context;
                 }
             }
@@ -136,7 +136,7 @@ function checkPackageJson(context) {
             const m = context.githubUrlOriginal.match(/\/ioBroker\.(.*)$/);
             let adapterName = '';
             if (!m || !m[1]) {
-                context.errors.push('[E004] No adapter name found in URL: ' + context.githubUrlOriginal);
+                context.errors.push(`[E004] No adapter name found in URL: ${context.githubUrlOriginal}`);
             } else {
                 context.checks.push('Adapter name found in the URL');
                 adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
@@ -235,7 +235,7 @@ function checkPackageJson(context) {
                 // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
                 if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
                     if (context.packageJson.repository.type !== 'git') {
-                        context.errors.push('[E018] Invalid repository type in package.json: ' + context.packageJson.repository.type + '. It should be git');
+                        context.errors.push(`[E018] Invalid repository type in package.json: ${context.packageJson.repository.type}. It should be git`);
                     } else {
                         context.checks.push('Repository type is valid in package.json: git');
                     }
@@ -717,7 +717,7 @@ function checkIOPackageJson(context) {
                 try {
                     context.ioPackageJson = JSON.parse(context.ioPackageJson);
                 } catch (e) {
-                    context.errors.push('[E100] Cannot parse io-package.json: ' + e);
+                    context.errors.push(`[E100] Cannot parse io-package.json: ${e}`);
                     return resolve(context);
                 }
             }
@@ -749,20 +749,20 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.titleLang" found in io-package.json');
 
                     if (typeof context.ioPackageJson.common.titleLang !== 'object') {
-                        context.errors.push('[E105] "common.titleLang" must be an object. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
+                        context.errors.push(`[E105] "common.titleLang" must be an object. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
                     } else if (!checkLanguages(context.ioPackageJson.common.titleLang)) {
                         context.warnings.push(`[W105] "common.titleLang" should be translated into all supported languages (${allowedLanguages.join(', ')})`);
                     } else {
                         Object.keys(context.ioPackageJson.common.titleLang).forEach(lang => {
                             const text = context.ioPackageJson.common.titleLang[lang];
                             if (text.match(/iobroker/i)) {
-                                context.errors.push('[W105] "common.titleLang" should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
+                                context.errors.push(`[W105] "common.titleLang" should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
                             } else {
                                 context.checks.push('"common.titleLang" has no ioBroker in it in io-package.json');
                             }
 
                             if (text.match(/\sadapter|adapter\s/i)) {
-                                context.errors.push('[E106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ' + JSON.stringify(context.ioPackageJson.common.titleLang));
+                                context.errors.push(`[E106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
                             } else {
                                 context.checks.push('"common.titleLang" has no "adapter" in it in io-package.json');
                             }
@@ -788,7 +788,7 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.desc" found in io-package.json');
 
                     if (typeof context.ioPackageJson.common.desc !== 'object') {
-                        context.errors.push('[E109] "common.desc" in io-package.json should be an object for many languages. Found only ' + context.ioPackageJson.common.desc);
+                        context.errors.push(`[E109] "common.desc" in io-package.json should be an object for many languages. Found only "${context.ioPackageJson.common.desc}"`);
                     } else if (!checkLanguages(context.ioPackageJson.common.desc)) {
                         context.warnings.push(`[W109] "common.desc" should be translated into all supported languages (${allowedLanguages.join(', ')})`);
                     } else {
@@ -878,7 +878,7 @@ function checkIOPackageJson(context) {
                         context.ioPackageJson.common.license !== context.packageJson.license) {
                         context.errors.push('[E117] Licenses in package.json and in io-package.json are different');
                     } else {
-                        context.checks.push('"common.license" is equal in pacjage.json and in io-package.json');
+                        context.checks.push('"common.license" is equal in package.json and in io-package.json');
                     }
                 }
 
@@ -983,7 +983,7 @@ function checkIOPackageJson(context) {
 
                         instanceObjects.forEach(instanceObject => {
                             if (instanceObject.type !== undefined && !allowedObjectTypes.includes(instanceObject.type)) {
-                                context.errors.push('[E147] instanceObject type has an invalid type: ' + instanceObject.type);
+                                context.errors.push(`[E147] instanceObject type has an invalid type: ${instanceObject.type}`);
                             }
 
                             if (instanceObject.common) {
@@ -993,7 +993,7 @@ function checkIOPackageJson(context) {
                                     }
 
                                     if (instanceObject.type === 'state' && !allowedStateTypes.includes(instanceObject.common.type)) {
-                                        context.errors.push('[E149] instanceObject common.type has an invalid value: ' + instanceObject.common.type);
+                                        context.errors.push(`[E149] instanceObject common.type has an invalid value: ${instanceObject.common.type}`);
                                     }
                                 }
                             }
@@ -1203,13 +1203,13 @@ function checkNpm(context) {
 // E3xx
 function checkTests(context) {
     console.log('checkTests [E3xx]');
-    // if found some file in \.github\workflows with test inside => it is OK too
+    // if found some file in `\.github\workflows` with the test inside => it is OK too
     if (context && context.filesList.find(name => name.startsWith('.github/workflows/') && name.endsWith('.yml') && name.toLowerCase().includes('test'))) {
         context.checks.push('Tests found on github actions');
         return Promise.resolve(context);
     }
 
-    const travisURL = context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org') + '.png';
+    const travisURL = `${context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org')}.png`;
 
     return axios(travisURL)
         .then(response => {
@@ -1261,14 +1261,14 @@ function checkRepo(context) {
                 } else {
                     context.latestRepo = body;
                     if (!context.latestRepo[context.adapterName]) {
-                        context.warnings.push('[W400] Cannot find "' + context.adapterName + '" in latest repository');
+                        context.warnings.push(`[W400] Cannot find "${context.adapterName}" in latest repository`);
                     } else {
                         context.checks.push('Adapter found in latest repository');
 
                         if (context.latestRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
-                            context.errors.push('[E402] Types of adapter in latest repository and in io-package.json are different "' + context.latestRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
+                            context.errors.push(`[E402] Types of adapter in latest repository and in io-package.json are different "${context.latestRepo[context.adapterName].type}" !== "${context.ioPackageJson.common.type}"`);
                         } else {
-                            context.checks.push('Types of adapter in latest repository and in io-package.json are equal: "' + context.latestRepo[context.adapterName].type + '"');
+                            context.checks.push(`Types of adapter in latest repository and in io-package.json are equal: "${context.latestRepo[context.adapterName].type}"`);
                         }
 
                         if (context.latestRepo[context.adapterName].version) {
@@ -1285,7 +1285,7 @@ function checkRepo(context) {
                             context.checks.push('Icon found in latest repository');
 
                             if (!context.latestRepo[context.adapterName].icon.startsWith(url)) {
-                                context.errors.push('[E405] Icon must be in the following path: ' + url);
+                                context.errors.push(`[E405] Icon must be in the following path: ${url}`);
                             } else {
                                 context.checks.push('Icon found in latest repository');
                             }
@@ -1295,7 +1295,7 @@ function checkRepo(context) {
                         } else {
                             context.checks.push('Meta URL(latest) found in latest repository');
 
-                            if (context.latestRepo[context.adapterName].meta !== url + 'io-package.json') {
+                            if (context.latestRepo[context.adapterName].meta !== `${url}io-package.json`) {
                                 context.errors.push(`[E407] Meta URL (latest) must be equal to ${url}io-package.json`);
                             } else {
                                 context.checks.push('Meta URL (latest) is OK in latest repository');
@@ -1313,9 +1313,9 @@ function checkRepo(context) {
                     context.stableRepo = body;
                     if (context.stableRepo[context.adapterName]) {
                         if (context.stableRepo[context.adapterName].type !== context.ioPackageJson.common.type) {
-                            context.errors.push('[E422] Types of adapter in stable repository and in io-package.json are different "' + context.stableRepo[context.adapterName].type + '" !== "' + context.ioPackageJson.common.type + '"');
+                            context.errors.push(`[E422] Types of adapter in stable repository and in io-package.json are different "${context.stableRepo[context.adapterName].type}" !== "${context.ioPackageJson.common.type}"`);
                         } else {
-                            context.checks.push('Types of adapter in stable repository and in io-package.json are equal: "' + context.stableRepo[context.adapterName].type + '"');
+                            context.checks.push(`Types of adapter in stable repository and in io-package.json are equal: "${context.stableRepo[context.adapterName].type}"`);
                         }
 
                         if (!context.latestRepo[context.adapterName]) {
@@ -1338,7 +1338,7 @@ function checkRepo(context) {
                             context.checks.push('Icon found in stable repository');
 
                             if (!context.stableRepo[context.adapterName].icon.startsWith(url)) {
-                                context.errors.push('[E426] Icon (stable) must be in the following path: ' + url);
+                                context.errors.push(`[E426] Icon (stable) must be in the following path: ${url}`);
                             } else {
                                 context.checks.push('Icon (stable) found in latest repository');
                             }
@@ -1349,7 +1349,7 @@ function checkRepo(context) {
                         } else {
                             context.checks.push('Meta URL (stable) found in latest repository');
 
-                            if (context.stableRepo[context.adapterName].meta !== url + 'io-package.json') {
+                            if (context.stableRepo[context.adapterName].meta !== `${url}io-package.json`) {
                                 context.errors.push(`[E428] Meta URL (stable) must be equal to ${url}io-package.json`);
                             } else {
                                 context.checks.push('Meta URL (stable) is OK in latest repository');
@@ -1386,7 +1386,7 @@ function extractWords(words) {
         lines[0] = lines[0].replace('systemDictionary = ', '');
         lines[lines.length - 1] = lines[lines.length - 1].trim().replace(/};$/, '}');
         words = lines.join('\n');
-        const resultFunc = new Function('return ' + words + ';');
+        const resultFunc = new Function(`return ${words};`);
 
         return resultFunc();
     } catch (e) {
@@ -1453,11 +1453,11 @@ function checkCode(context) {
                         .on('entry', entry => {
                             // console.log('Check ' + entry.path);
                             if (!found && entry.type === 'Directory' && entry.path.match(/\/node_modules\/$/)) {
-                                console.log('Found ' + entry.path);
+                                console.log(`Found ${entry.path}`);
                                 found = true;
                                 context.errors.push('[E500] node_modules found in repo. Please delete it');
                             }
-                            // Get list of all files and .npmignore + .gitignore
+                            // Get a list of all files and `.npmignore` + `.gitignore`
 
                             const name = entry.path.replace(/^[^/]+\//, '');
                             context.filesList.push(name);
@@ -1466,8 +1466,8 @@ function checkCode(context) {
                                 promises.push(new Promise(resolve => {
                                     const wstream = new WMStrm(name);
                                     wstream.on('finish', () => {
-                                        context['/' + name] = memStore[name].toString();
-                                        resolve(context['/' + name]);
+                                        context[`/${name}`] = memStore[name].toString();
+                                        resolve(context[`/${name}`]);
                                     });
                                     entry.pipe(wstream);
                                 }));
@@ -1570,7 +1570,7 @@ function checkCode(context) {
                         context.errors.push('[E515] JavaScript-Rules support is declared, but no location in property url defined');
                     }
                     if (!context.filesList.includes('admin/' + context.ioPackageJson.common.javascriptRules.url)) {
-                        context.errors.push('[E516] "' + context.ioPackageJson.common.javascriptRules.url + '" not found, but JavaScript-Rules support is declared');
+                        context.errors.push(`[E516] "${context.ioPackageJson.common.javascriptRules.url}" not found, but JavaScript-Rules support is declared`);
                     }
                 }
 
@@ -1594,7 +1594,7 @@ function checkCode(context) {
                     if (!context['/' + context.packageJson.main]) {
                         context.errors.push(`[E519] "${context.packageJson.main}" found in package.json, but not found as file`);
                     } else {
-                        if (context['/' + context.packageJson.main].includes('setInterval(') && !context['/' + context.packageJson.main].includes('clearInterval(')) {
+                        if (context['/' + context.packageJson.main].includes('setInterval(') && !context[`/${context.packageJson.main}`].includes('clearInterval(')) {
                             if (context.ioPackageJson.compact) {
                                 // if compact mode supported, it is critical
                                 context.errors.push(`[E504] setInterval found in "${context.packageJson.main}", but no clearInterval detected`);
@@ -1807,9 +1807,9 @@ function checkNpmIgnore(context) {
             }
         });
 
-        // There's no need to put node_modules in .npmignore. npm will never publish node_modules in the package, except if one of the modules is explicitly mentioned in bundledDependencies.
+        // There's no need to put node_modules in `.npmignore`. npm will never publish node_modules in the package, except if one of the modules is explicitly mentioned in bundledDependencies.
         /*if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
-            !check && context.errors.push(`[E804] node_modules not found in .npmignore`);
+            !check && context.errors.push(`[E804] node_modules not found in `.npmignore``);
         }*/
         if (!tooComplexToCheck) {
             if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
