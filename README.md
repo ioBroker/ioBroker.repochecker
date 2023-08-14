@@ -20,6 +20,10 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm57) Update index.js - fix typo in error message (packet.json)
+* (mcm57) Update index.js - renumber E504/1 to 519 - fixes #112
+ 
 ### 2.1.6 (2022-12-08)
 * (bluefox) added better error logging
 

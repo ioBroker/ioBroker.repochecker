@@ -3,7 +3,7 @@
   "name": "@iobroker/repochecker",
   "dependencies": {
     "axios": "^1.4.0",
-    "compare-versions": "^5.0.3",
+    "compare-versions": "^6.1.0",
     "image-size": "^1.0.2",
     "unzipper": "^0.10.14",
     "json5": "^2.2.3"
@@ -12,8 +12,8 @@
     "access": "public"
   },
   "devDependencies": {
-    "@alcalzone/release-script": "^3.5.9",
-    "eslint": "^8.41.0"
+    "@alcalzone/release-script": "^3.6.0",
+    "eslint": "^8.47.0"
   },
   "files": [
     "index.js"
