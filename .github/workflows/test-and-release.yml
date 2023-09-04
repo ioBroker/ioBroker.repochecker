@@ -21,18 +21,14 @@ jobs:
   tests:
     if: contains(github.event.head_commit.message, '[skip ci]') == false
 
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [14.x]
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
 
       - name: Install Dependencies
         run: npm install
@@ -55,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [18.x]
 
     steps:
       - name: Checkout code
@@ -68,7 +64,7 @@ jobs:
 
       - name: Extract the version and commit body from the tag
         id: extract_release
-        # The body may be multiline, therefore we need to escape some characters
+        # The body may be multiline, therefore, we need to escape some characters
         run: |
           VERSION="${{ github.ref }}"
           VERSION=${VERSION##*/}
