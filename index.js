@@ -1290,7 +1290,7 @@ function checkRepo(context) {
                             context.checks.push('Icon found in latest repository');
 
                             if (!context.latestRepo[context.adapterName].icon.startsWith(url)) {
-                                context.errors.push(`[E405] Icon must be in the following path: ${url}`);
+                                context.errors.push(`[E405] Icon (latest) must be in the following path: ${url}`);
                             } else {
                                 context.checks.push('Icon found in latest repository');
                             }
