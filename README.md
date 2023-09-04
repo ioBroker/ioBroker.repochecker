@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added check of iobroker.js-controller in dependencies
+
 ### 2.1.7 (2023-08-14)
 * (mcm57) Update index.js - fix typo in error message (packet.json)
 * (mcm57) Update index.js - renumber E504/1 to 519 - fixes #112
@@ -37,7 +40,7 @@ Branch (`master/main/dev`) is optional.
 * (bluefox) Fixed some errors
 
 ### 2.1.0 (2022-05-26)
-* (bluefox) Added support of jsonConfig.json5 and jsonCustom.json5
+* (bluefox) Added support for jsonConfig.json5 and jsonCustom.json5
 
 ### 2.0.5 (2022-05-22)
 * (bluefox) Made it possible to run with npx

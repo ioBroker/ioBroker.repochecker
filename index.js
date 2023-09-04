@@ -268,7 +268,12 @@ function checkPackageJson(context) {
                 context.checks.push('npm is not in dependencies');
             }
 
-            // max number is E024
+            if ((context.packageJson.dependencies && context.packageJson.dependencies['iobroker.js-controller']) || (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies['iobroker.js-controller'])) {
+                context.errors.push('[E025] Do not include "iobroker.js-controller" as dependency!');
+            } else {
+                context.checks.push('iobroker.js-controller is not in dependencies');
+            }
+            // max number is E025
 
             return context;
         });
