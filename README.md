@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### 2.1.10 (2023-09-04)
+### **WORK IN PROGRESS**
 * (bluefox) Added check of iobroker.js-controller in dependencies
 
 ### 2.1.7 (2023-08-14)
