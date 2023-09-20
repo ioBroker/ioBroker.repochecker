@@ -2,6 +2,41 @@ const fs = require('fs');
 const issues = require('./issues');
 const languages = ['en'];
 
+// try to extract error description from index.js
+function extractFromIndex() {
+    let added = false;
+    const lines = fs.readFileSync(`${__dirname}/../index.js`, {encoding: 'utf8'}).split('\n');
+    for (let i = 0; i < lines.length; i++) {
+        const m = lines[i].match(/`(\[[EW]\d\d\d] [^`]+)`/) || lines[i].match(/'(\[[EW]\d\d\d] [^`]+)'/) || lines[i].match(/"(\[[EW]\d\d\d] [^`]+)"/);
+        if (m) {
+            const parts = m[1].match(/\[([EW]\d\d\d)] (.+)/);
+            if (parts) {
+                console.log(parts[1], parts[2]);
+                if (!issues[parts[1]]) {
+                    // cut off the last part
+                    parts[2] = parts[2].replace(/"/g, '`');
+                    issues[parts[1]] = {
+                        title: parts[2],
+                    };
+                    added = true;
+                }
+            }
+        }
+    }
+    if (added) {
+        // sort issues
+        const newIssues = {};
+        const keys = Object.keys(issues).sort();
+        keys.forEach(key => newIssues[key] = issues[key]);
+
+        fs.writeFileSync(`${__dirname}/issues.json`, JSON.stringify(newIssues, null, 2));
+    }
+}
+
+extractFromIndex();
+
+
+
 const explanationTitle = {
     en: 'Explanation',
     de: 'Erklärung',

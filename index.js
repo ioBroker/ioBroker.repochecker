@@ -170,7 +170,7 @@ function checkPackageJson(context) {
                 context.authorName = n[1];
             }
 
-            if (context.packageJson.name !== 'iobroker.' + adapterName.toLowerCase()) {
+            if (context.packageJson.name !== `iobroker.${adapterName.toLowerCase()}`) {
                 context.errors.push(`[E020] Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}". Now is "${packageJson.name}"`);
             } else {
                 context.checks.push(`Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}".`);

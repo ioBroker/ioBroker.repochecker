@@ -47,5 +47,425 @@
     "explanation": "The name of the repository must start with `ioBroker.` ioBroker must be written with an capital `B`.",
     "resolving": "Correct the name of the repository by renaming it to meet standards.",
     "notes": ""
+  },
+  "E003": {
+    "title": "Repository must have name ioBroker.adaptername, but now io`b`roker is in lowercase"
+  },
+  "E004": {
+    "title": "No adapter name found in URL"
+  },
+  "E005": {
+    "title": "Adapter name must be lowercase"
+  },
+  "E006": {
+    "title": "Invalid characters found in adapter name. Only lowercase chars, digits, `-` and `_` are allowed"
+  },
+  "E007": {
+    "title": "Cannot find author repo in the URL"
+  },
+  "E009": {
+    "title": "No version found in the package.json"
+  },
+  "E010": {
+    "title": "No description found in the package.json"
+  },
+  "E013": {
+    "title": "No author found in the package.json"
+  },
+  "E014": {
+    "title": "NPM information found in package.json. Please remove all attributes starting with `_`"
+  },
+  "E015": {
+    "title": "No license found in package.json"
+  },
+  "E016": {
+    "title": "No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/"
+  },
+  "E017": {
+    "title": "No repository found in the package.json"
+  },
+  "E018": {
+    "title": "Invalid repository type in package.json. It should be git"
+  },
+  "E019": {
+    "title": "Invalid repository URL in package.json."
+  },
+  "E020": {
+    "title": "Name of adapter in package.json must be lowercase"
+  },
+  "E021": {
+    "title": "`licenses` in package.json are deprecated. Please use only `license`: `NAME` field."
+  },
+  "E022": {
+    "title": "Adapter name is reserved!"
+  },
+  "E023": {
+    "title": "Do not include `npm` as dependency!"
+  },
+  "E024": {
+    "title": "Adapter name may not start with '_'"
+  },
+  "E025": {
+    "title": "Do not include `iobroker.js-controller` as dependency!"
+  },
+  "E100": {
+    "title": "Cannot parse io-package.json"
+  },
+  "E101": {
+    "title": "io-package.json must have at least empty `native` attribute"
+  },
+  "E102": {
+    "title": "io-package.json must have common object"
+  },
+  "E103": {
+    "title": "`common.name` in io-package.json is invalid"
+  },
+  "E104": {
+    "title": "No `common.titleLang` found in io-package.json"
+  },
+  "E105": {
+    "title": "`common.titleLang` must be an object"
+  },
+  "E106": {
+    "title": "`common.titleLang` should not contain word `adapter` in the name. It is clear, that this is adapter"
+  },
+  "E107": {
+    "title": "No `common.version` found in io-package.json"
+  },
+  "E108": {
+    "title": "No `common.desc` found in io-package.json"
+  },
+  "E109": {
+    "title": "`common.desc` in io-package.json should be an object for many languages"
+  },
+  "E110": {
+    "title": "Icon not found in the io-package.json"
+  },
+  "E111": {
+    "title": "extIcon not found in the io-package.json"
+  },
+  "E112": {
+    "title": "extIcon must be the same as an icon but with github path"
+  },
+  "E114": {
+    "title": "No adapter are allowed in the repo without admin support (set `common.noConfig = true` and `common.adminUI.config = none` if adapter has no configuration)"
+  },
+  "E115": {
+    "title": "No license found in io-package.json"
+  },
+  "E116": {
+    "title": "No SPDX license found. Please use one of listed here: https://spdx.org/licenses/"
+  },
+  "E117": {
+    "title": "Licenses in package.json and in io-package.json are different"
+  },
+  "E118": {
+    "title": "Versions in package.json and in io-package.json are different"
+  },
+  "E119": {
+    "title": "No type found in io-package.json"
+  },
+  "E120": {
+    "title": "Unknown type found in io-package.json"
+  },
+  "E121": {
+    "title": "No authors found in io-package.json"
+  },
+  "E122": {
+    "title": "authors must be an Array in io-package.json"
+  },
+  "E123": {
+    "title": "Authors may not be empty in io-package.json"
+  },
+  "E124": {
+    "title": "Main file not found under URL"
+  },
+  "E125": {
+    "title": "External icon not found under URL"
+  },
+  "E130": {
+    "title": "No `common.news` found in io-package.json"
+  },
+  "E140": {
+    "title": "width and height of logo are not equal"
+  },
+  "E141": {
+    "title": "logo is too small. It must be greater or equal than 32x32"
+  },
+  "E142": {
+    "title": "logo is too big. It must be less or equal than 512x512"
+  },
+  "E143": {
+    "title": "No main found in the package.json"
+  },
+  "E144": {
+    "title": "common.installedFrom field found in io-package.json. Must be removed."
+  },
+  "E145": {
+    "title": "No `common.news` found for actual version"
+  },
+  "E146": {
+    "title": "instanceObjects must be an Array in io-package.json"
+  },
+  "E147": {
+    "title": "instanceObject type has an invalid type"
+  },
+  "E148": {
+    "title": "instanceObject common.type has an invalid type! Expected `string`"
+  },
+  "E149": {
+    "title": "instanceObject common.type has an invalid value"
+  },
+  "E150": {
+    "title": "No common.connectionType found in io-package.json"
+  },
+  "E151": {
+    "title": "common.connectionType type has an invalid value"
+  },
+  "E152": {
+    "title": "No common.dataSource found in io-package.json"
+  },
+  "E153": {
+    "title": "common.dependencies must contain {`js-controller`: `>=1.5.8`} or later"
+  },
+  "E154": {
+    "title": "common.dependencies must contain [{`js-controller`: `>=2.0.0`}] or later"
+  },
+  "E155": {
+    "title": "Invalid tier value. Only 1, 2 or 3 are allowed!"
+  },
+  "E157": {
+    "title": "common.protectedNative requires dependency {`js-controller`: `>=2.0.2`} or later"
+  },
+  "E158": {
+    "title": "common.encryptedNative requires dependency {`js-controller`: `>=3.0.3`} or later"
+  },
+  "E159": {
+    "title": "common.dependencies `js-controller` dependency should always allow future versions (>=x.x.x)"
+  },
+  "E160": {
+    "title": "`admin` is not allowed in common.dependencies"
+  },
+  "E161": {
+    "title": "`js-controller` is not allowed in common.globalDependencies"
+  },
+  "E162": {
+    "title": "onlyWWW should have common.mode `none` in io-package.json"
+  },
+  "E163": {
+    "title": "common.mode requires JavaScript file for `main` in package.json"
+  },
+  "E165": {
+    "title": "Node mode found in package.json"
+  },
+  "E166": {
+    "title": "Unknown type found in io-package.json"
+  },
+  "E167": {
+    "title": "schedule adapters must have common.schedule property in io-package.json"
+  },
+  "E168": {
+    "title": "common.notifications requires dependency {`js-controller`: `>=3.2.0`} or later"
+  },
+  "E169": {
+    "title": "`common.keywords` must be an array in the io-package.json"
+  },
+  "E200": {
+    "title": "Not found on npm. Please publish"
+  },
+  "E201": {
+    "title": "Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`"
+  },
+  "E300": {
+    "title": "Not found on travis. Please setup travis or use github actions (preferred)"
+  },
+  "E301": {
+    "title": "Tests on Travis-ci.org are broken. Please fix."
+  },
+  "E400": {
+    "title": "Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json"
+  },
+  "E402": {
+    "title": "Types of adapter in latest repository and in io-package.json are different"
+  },
+  "E403": {
+    "title": "Version set in latest repository"
+  },
+  "E404": {
+    "title": "Icon not found in latest repository"
+  },
+  "E405": {
+    "title": "Icon (latest) must be in the following path: ${url}"
+  },
+  "E406": {
+    "title": "Meta URL (latest) not found in latest repository"
+  },
+  "E407": {
+    "title": "Meta URL (latest) must be equal to ${url}io-package.json"
+  },
+  "E420": {
+    "title": "Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json"
+  },
+  "E422": {
+    "title": "Types of adapter in stable repository and in io-package.json are different"
+  },
+  "E423": {
+    "title": "Adapter was found in stable repository but not in latest repo"
+  },
+  "E424": {
+    "title": "No version set in stable repository"
+  },
+  "E425": {
+    "title": "Icon not found in stable repository"
+  },
+  "E426": {
+    "title": "Icon (stable) must be in the following path"
+  },
+  "E427": {
+    "title": "Meta URL (stable) not found in latest repository"
+  },
+  "E428": {
+    "title": "Meta URL (stable) is invalid"
+  },
+  "E500": {
+    "title": "node_modules found in repo. Please delete it"
+  },
+  "E501": {
+    "title": "Cannot get zip on GitHub"
+  },
+  "E502": {
+    "title": "`admin/img/info-big.png` not found, but selectID.js used in index_m.html "
+  },
+  "E503": {
+    "title": "`iob_npm.done` found in repo! Remove that file"
+  },
+  "E504": {
+    "title": "setInterval found in main, but no clearInterval detected"
+  },
+  "E505": {
+    "title": "setTimeout found in main, but no clearTimeout detected"
+  },
+  "E506": {
+    "title": "More non translated in german or russian words found in admin/words.js. You can use https://translator.iobroker.in/ for translations"
+  },
+  "E507": {
+    "title": "Cannot parse `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}`: ${e}"
+  },
+  "E508": {
+    "title": "`admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}` not found, but admin support is declared"
+  },
+  "E509": {
+    "title": "Cannot parse `admin/i18n/${lang}/translations.json`"
+  },
+  "E510": {
+    "title": "`/admin/i18n/${lang}/translations.json` or `admin/i18n/${lang}.json` not found, but admin support is declared"
+  },
+  "E511": {
+    "title": "Cannot parse `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}`"
+  },
+  "E512": {
+    "title": "`admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}` not found, but custom support is declared"
+  },
+  "E514": {
+    "title": "`admin/blockly.js` not found, but blockly support is declared"
+  },
+  "E515": {
+    "title": "JavaScript-Rules support is declared, but no location in property url defined"
+  },
+  "E516": {
+    "title": "`${context.ioPackageJson.common.javascriptRules.url}` not found, but JavaScript-Rules support is declared"
+  },
+  "E518": {
+    "title": "`@alcalzone/release-script` is used, but `.releaseconfig.json` not found"
+  },
+  "E519": {
+    "title": "`${context.packageJson.main}` found in package.json, but not found as file"
+  },
+  "E601": {
+    "title": "No README.md found"
+  },
+  "E603": {
+    "title": "NO `## Changelog` found in README.md"
+  },
+  "E604": {
+    "title": "No `## License` found in README.md"
+  },
+  "E605": {
+    "title": "No actual year found in copyright. Please add `Copyright (c) XXXX-YYYY Author` at the end of README.md"
+  },
+  "E606": {
+    "title": "Current adapter version ${context.packageJson.version} not found in README.md"
+  },
+  "E701": {
+    "title": "NO LICENSE file found"
+  },
+  "E801": {
+    "title": "No repository about text found. Please go to GitHub, press the settings button beside the about title and add the description."
+  },
+  "E802": {
+    "title": "No topics found in the repository. Please go to GitHub, press the settings button beside the about title and add some topics."
+  },
+  "E803": {
+    "title": "Archived repositories are not allowed."
+  },
+  "E804": {
+    "title": "node_modules not found in "
+  },
+  "E902": {
+    "title": "node_modules not found in .npmignore"
+  },
+  "E903": {
+    "title": "iob_npm.done not found in .gitignore"
+  },
+  "W105": {
+    "title": "`common.titleLang` should be translated into all supported languages"
+  },
+  "W109": {
+    "title": "`common.desc` should be translated into all supported languages"
+  },
+  "W113": {
+    "title": "Adapter should support compact mode"
+  },
+  "W145": {
+    "title": "Each `common.news` should be translated into all supported languages"
+  },
+  "W156": {
+    "title": "Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI"
+  },
+  "W164": {
+    "title": "Adapters without config `common.noConfig = true` should also set `common.adminUI.config = none`"
+  },
+  "W170": {
+    "title": "`common.keywords` should not contain `iobroker`, `adapter`, `smart home` in io-package.json"
+  },
+  "W171": {
+    "title": "`common.title` is deprecated in io-package.json"
+  },
+  "W172": {
+    "title": "`common.localLink` in io-package.json is deprecated. Please define object `common.localLinks`: { `_default`: `...` }"
+  },
+  "W302": {
+    "title": "Use github actions instead of travis-ci"
+  },
+  "W400": {
+    "title": "Cannot find adapter in latest repository"
+  },
+  "W504": {
+    "title": "setInterval found in main, but no clearInterval detected"
+  },
+  "W505": {
+    "title": "setTimeout found in main, but no clearTimeout detected"
+  },
+  "W513": {
+    "title": "`gulpfile.js` found in repo! Think about migrating to @iobroker/adapter-dev package"
+  },
+  "W515": {
+    "title": "Why you decided to disable i18n support?"
+  },
+  "W801": {
+    "title": ".npmignore not found"
+  },
+  "W901": {
+    "title": ".gitignore not found"
   }
 }
