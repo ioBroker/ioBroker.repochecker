@@ -43,13 +43,27 @@
     "notes": ""
   },
   "E002": {
-    "title": "No `ioBroker.` found in the name of the repository",
-    "explanation": "The name of the repository must start with `ioBroker.` ioBroker must be written with an capital `B`.",
-    "resolving": "Correct the name of the repository by renaming it to meet standards.",
+    "title": {
+      "en": "No `ioBroker.` found in the name of the repository",
+      "de": "Kein `ioBroker.` im Namen des Repository gefunden",
+      "ru": "В имени репозитория не найдено `ioBroker.`",
+      "pt": "Nenhum `ioBroker.` encontrado no nome do repositório",
+      "nl": "Geen `ioBroker.` gevonden in de naam van het repository",
+      "fr": "Aucun `ioBroker.` trouvé dans le nom du référentiel",
+      "it": "Nessun `ioBroker.` trovato nel nome del repository",
+      "es": "No se encontró `ioBroker.` en el nombre del repositorio",
+      "pl": "Nie znaleziono `ioBroker.` w nazwie repozytorium",
+      "uk": "В імені репозиторію не знайдено `ioBroker.`",
+      "zh-cn": "存储库名称中未找到`ioBroker.`"
+    },
+    "explanation": "The name of the repository must start with `ioBroker.` ioBroker must be written with an capital `B`",
+    "resolving": "Correct the name of the repository by renaming it to meet standards",
     "notes": ""
   },
   "E003": {
-    "title": "Repository must have name ioBroker.adaptername, but now io`b`roker is in lowercase"
+    "title": "Repository must have name ioBroker.adaptername, but now io`b`roker is in lowercase",
+    "explanation": "The name of the repository must be ioBroker.. ioBroker must be written with an capital B",
+    "resolving": "Correct the name of the repository by renaming it to meet standards"
   },
   "E004": {
     "title": "No adapter name found in URL"
