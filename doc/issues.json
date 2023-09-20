@@ -1,0 +1,51 @@
+{
+  "E001": {
+    "_comment": "all texts can be string or object with language translations",
+    "title": {
+      "en": "Cannot parse `package.json`",
+      "de": "Kann `package.json` nicht parsen",
+      "ru": "Не удается разобрать `package.json`",
+      "pt": "Não é possível analisar o `package.json`",
+      "nl": "Kan `package.json` niet parsen",
+      "fr": "Impossible d'analyser `package.json`",
+      "it": "Impossibile analizzare `package.json`",
+      "es": "No se puede analizar `package.json`",
+      "pl": "Nie można przeanalizować `package.json`",
+      "uk": "Не вдається розібрати`package.json`",
+      "zh-cn": "无法解析`package.json`"
+    },
+    "explanation": {
+      "en": "Some problem parsing the `package.json` occurred. See error messages added for details.",
+      "de": "Beim Parsen der `package.json` ist ein Fehler aufgetreten. Details sind in den Fehlermeldungen zu finden.",
+      "ru": "При разборе `package.json` произошла ошибка. См. Добавленные сообщения об ошибках для получения дополнительной информации.",
+      "pt": "Ocorreu algum problema ao analisar o `package.json`. Consulte as mensagens de erro adicionadas para obter detalhes.",
+      "nl": "Er is een probleem opgetreden bij het parsen van `package.json`. Zie foutberichten voor details.",
+      "fr": "Un problème d'analyse du `package.json` s'est produit. Voir les messages d'erreur ajoutés pour plus de détails.",
+      "it": "Si è verificato un problema durante l'analisi di `package.json`. Vedi i messaggi di errore aggiunti per i dettagli.",
+      "es": "Se produjo algún problema al analizar el `package.json`. Consulte los mensajes de error agregados para obtener detalles.",
+      "pl": "Wystąpił problem z analizą `package.json`. Zobacz dodane komunikaty o błędach, aby uzyskać szczegółowe informacje.",
+      "uk": "Під час розбору `package.json` сталася помилка. Див. Додані повідомлення про помилки для отримання додаткової інформації.",
+      "zh-cn": "解析`package.json`时出现问题。有关详细信息，请参见添加的错误消息。"
+    },
+    "resolving": {
+      "en": "Correct the file `package.json` so that it becomes a valid json file.",
+      "de": "Korrigiere die Datei `package.json`, sodass sie eine valide json-Datei wird.",
+      "ru": "Исправьте файл `package.json`, чтобы он стал допустимым файлом json.",
+      "pt": "Corrija o arquivo `package.json` para que ele se torne um arquivo json válido.",
+      "nl": "Corrigeer het bestand `package.json` zodat het een geldig json-bestand wordt.",
+      "fr": "Corrigez le fichier `package.json` pour qu'il devienne un fichier json valide.",
+      "it": "Correggi il file `package.json` in modo che diventi un file json valido.",
+      "es": "Corrija el archivo `package.json` para que se convierta en un archivo json válido.",
+      "pl": "Popraw plik `package.json`, aby stał się prawidłowym plikiem json.",
+      "uk": "Виправте файл `package.json`, щоб він став дійсним файлом json.",
+      "zh-cn": "更正`package.json`文件，使其成为有效的json文件。"
+    },
+    "notes": ""
+  },
+  "E002": {
+    "title": "No `ioBroker.` found in the name of the repository",
+    "explanation": "The name of the repository must start with `ioBroker.` ioBroker must be written with an capital `B`.",
+    "resolving": "Correct the name of the repository by renaming it to meet standards.",
+    "notes": ""
+  }
+}

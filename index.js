@@ -20,6 +20,7 @@ const sizeOf = require('image-size');
 const axios = require('axios');
 const JSON5 = require('json5');
 const compareVersions = require('compare-versions');
+const issues = require('./doc/issues');
 
 const version = require('./package.json').version;
 const recommendedJsControllerVersion = '5.0.11';
@@ -1958,6 +1959,7 @@ function check(request, ctx, callback) {
                     result: 'Errors found',
                     checks: context.checks,
                     errors: context.errors,
+                    issues,
                     warnings: context.warnings,
                     version,
                     hasTravis: context.hasTravis,
@@ -1965,6 +1967,17 @@ function check(request, ctx, callback) {
                 }));
             });
     }
+}
+
+function getText(text, lang) {
+    if (typeof text === 'object') {
+        if (text[lang]) {
+            return text[lang];
+        } else {
+            return text.en;
+        }
+    }
+    return text;
 }
 
 if (typeof module !== 'undefined' && module.parent) {
@@ -1994,10 +2007,48 @@ if (typeof module !== 'undefined' && module.parent) {
         console.log(context.result);
 
         if (context.errors.length) {
-            console.error(JSON.stringify(context.errors, null, 2));
+            console.log('\n\nErrors:');
+            context.errors.forEach(err => {
+                const issue = err.substring(1, 5);
+                if (issues[issue]) {
+                    if (issues[issue].title) {
+                        console.error(getText(issues[issue].title, 'en'));
+                    }
+                    if (issues[issue].explanation) {
+                        console.error(getText(issues[issue].explanation, 'en'));
+                    }
+                    if (issues[issue].resolving) {
+                        console.error(getText(issues[issue].resolving, 'en'));
+                    }
+                    if (issues[issue].notes) {
+                        console.error(getText(issues[issue].notes, 'en'));
+                    }
+                }
+
+                console.error(err);
+            });
         }
         if (context.warnings.length) {
-            console.warn(JSON.stringify(context.warnings, null, 2));
+            console.log('\nWarnings:');
+            context.warnings.forEach(err => {
+                const issue = err.substring(1, 5);
+                if (issues[issue]) {
+                    if (issues[issue].title) {
+                        console.warn(getText(issues[issue].title, 'en'));
+                    }
+                    if (issues[issue].explanation) {
+                        console.warn(getText(issues[issue].explanation, 'en'));
+                    }
+                    if (issues[issue].resolving) {
+                        console.warn(getText(issues[issue].resolving, 'en'));
+                    }
+                    if (issues[issue].notes) {
+                        console.warn(getText(issues[issue].notes, 'en'));
+                    }
+                }
+
+                console.warn(err);
+            });
         }
     });
 }

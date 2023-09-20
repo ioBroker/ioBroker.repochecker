@@ -16,11 +16,13 @@
     "eslint": "^8.48.0"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "doc/issues.json"
   ],
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
+    "prepublishOnly": "node doc/readme.js",
     "start": "node index.js",
     "lint": "eslint",
     "release": "release-script",
