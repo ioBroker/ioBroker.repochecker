@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added check of using '_' in adapter name
+
 ### 2.1.11 (2023-09-05)
 * (bluefox) Added check of iobroker.js-controller in dependencies
 
