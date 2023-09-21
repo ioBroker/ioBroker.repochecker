@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.1.12 (2023-09-21)
 * (bluefox) Added check of using '_' in adapter name
 
 ### 2.1.11 (2023-09-05)
