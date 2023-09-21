@@ -1271,6 +1271,12 @@ function checkRepo(context) {
                     context.latestRepo = body;
                     if (!context.latestRepo[context.adapterName]) {
                         context.warnings.push(`[W400] Cannot find "${context.adapterName}" in latest repository`);
+
+                        if (context.adapterName.includes('_')) {
+                            context.errors.push('[E429] Adapter name should use "-" instead of "_"');
+                        } else {
+                            context.checks.push('Adapter name does not have "_"');
+                        }
                     } else {
                         context.checks.push('Adapter found in latest repository');
 
@@ -1371,7 +1377,7 @@ function checkRepo(context) {
     } else {
         return Promise.resolve(context);
     }
-    // max number is E428
+    // max number is E429
 }
 
 function extractWords(words) {

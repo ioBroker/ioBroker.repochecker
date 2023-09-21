@@ -341,6 +341,9 @@
   "E428": {
     "title": "Meta URL (stable) is invalid"
   },
+  "E429": {
+    "title": "Adapter name should use `-` instead of `_`"
+  },
   "E500": {
     "title": "node_modules found in repo. Please delete it"
   },
