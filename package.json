@@ -4,7 +4,7 @@
   "dependencies": {
     "axios": "^1.6.2",
     "compare-versions": "^6.1.0",
-    "image-size": "^1.0.2",
+    "image-size": "^1.1.0",
     "unzipper": "^0.10.14",
     "json5": "^2.2.3"
   },
