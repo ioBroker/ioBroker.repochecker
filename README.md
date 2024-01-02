@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.1.13 (2024-01-02)
 * (bluefox) Corrected rule W156: adminUI.config === 'none' is allowed
 
 ### 2.1.12 (2023-09-21)
