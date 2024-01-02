@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Corrected rule W156: adminUI.config === 'none' is allowed
+
 ### 2.1.12 (2023-09-21)
 * (bluefox) Added check of using '_' in adapter name
 

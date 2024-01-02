@@ -2,9 +2,9 @@
   "version": "2.1.12",
   "name": "@iobroker/repochecker",
   "dependencies": {
-    "axios": "^1.6.2",
+    "axios": "^1.6.3",
     "compare-versions": "^6.1.0",
-    "image-size": "^1.0.2",
+    "image-size": "^1.1.0",
     "unzipper": "^0.10.14",
     "json5": "^2.2.3"
   },
@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.7.0",
-    "eslint": "^8.48.0"
+    "eslint": "^8.56.0"
   },
   "files": [
     "index.js",

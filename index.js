@@ -860,7 +860,7 @@ function checkIOPackageJson(context) {
                         context.checks.push('"common.materialize" or "common.adminUI.config" found in io-package.json');
                     }
 
-                    if (!(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json')) {
+                    if (!context.ioPackageJson.common.adminUI || (context.ioPackageJson.common.adminUI.config !== 'json' && context.ioPackageJson.common.adminUI.config !== 'none')) {
                         context.warnings.push('[W156] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI');
                     }
                 } else {
