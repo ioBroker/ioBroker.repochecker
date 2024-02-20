@@ -290,6 +290,9 @@
   "E171": {
     "title": "`common.licenseInformation.link` is required for non-free adapters"
   },
+  "E172": {
+    "title": "`common.tier` is required in io-package.json"
+  },
   "E200": {
     "title": "Not found on npm. Please publish"
   },
