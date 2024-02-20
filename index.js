@@ -871,23 +871,42 @@ function checkIOPackageJson(context) {
                     }
                 }
 
-                if (!context.ioPackageJson.common.license) {
-                    context.errors.push('[E115] No license found in io-package.json');
+                if (context.ioPackageJson.common.license) {
+                    context.warnings.push('[W114] "common.license" in io-package.json is deprecated. Please define object "common.licenseInformation"');
+                }
+
+                if (!context.ioPackageJson.common.licenseInformation) {
+                    context.errors.push('[E115] No licenseInformation found in io-package.json');
                 } else {
-                    context.checks.push('"common.license" found in io-package.json');
+                    context.checks.push('"common.licenseInformation" found in io-package.json');
 
                     // check if license valid
-                    if (!licenses.includes(context.ioPackageJson.common.license)) {
+                    if (!licenses.includes(context.ioPackageJson.common?.licenseInformation?.license)) {
                         context.errors.push('[E116] No SPDX license found. Please use one of listed here: https://spdx.org/licenses/');
                     } else {
-                        context.checks.push('"common.license" is valid in io-package.json');
+                        context.checks.push('"common.licenseInformation" is valid in io-package.json');
+                    }
+
+                    // check if type is valid
+                    if (!['free', 'paid', 'commercial', 'limited'].includes(context.ioPackageJson.common?.licenseInformation?.type)) {
+                        context.errors.push('[E170] "common.licenseInformation.type" is invalid. Select valid type (e.g. free)');
+                    } else {
+                        context.checks.push('"common.licenseInformation.type" is valid in io-package.json');
+
+                        if (['paid', 'commercial', 'limited'].includes(context.ioPackageJson.common?.licenseInformation?.type)) {
+                            if (!context.ioPackageJson.common?.licenseInformation?.link) {
+                                context.errors.push('[E171] "common.licenseInformation.link" is required for non-free adapters');
+                            } else {
+                                context.checks.push('"common.licenseInformation.link" is valid in io-package.json');
+                            }
+                        }
                     }
 
                     if (!context.packageJson ||
-                        context.ioPackageJson.common.license !== context.packageJson.license) {
+                        context.ioPackageJson.common?.licenseInformation?.license !== context.packageJson.license) {
                         context.errors.push('[E117] Licenses in package.json and in io-package.json are different');
                     } else {
-                        context.checks.push('"common.license" is equal in package.json and in io-package.json');
+                        context.checks.push('"common.licenseInformation.license" is equal in package.json and in io-package.json');
                     }
                 }
 
@@ -1989,7 +2008,7 @@ function getText(text, lang) {
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
-    let repoUrl = 'https://github.com/ioBroker/ioBroker.ekey';
+    let repoUrl = 'https://github.com/klein0r/ioBroker.luftdaten';
     let repoBranch = null;
 
     // Get url from parameters if possible

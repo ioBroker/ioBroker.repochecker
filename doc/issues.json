@@ -165,7 +165,7 @@
     "title": "No adapter are allowed in the repo without admin support (set `common.noConfig = true` and `common.adminUI.config = none` if adapter has no configuration)"
   },
   "E115": {
-    "title": "No license found in io-package.json"
+    "title": "No licenseInformation found in io-package.json"
   },
   "E116": {
     "title": "No SPDX license found. Please use one of listed here: https://spdx.org/licenses/"
@@ -283,6 +283,12 @@
   },
   "E169": {
     "title": "`common.keywords` must be an array in the io-package.json"
+  },
+  "E170": {
+    "title": "`common.licenseInformation.type` is invalid. Select valid type (e.g. free)"
+  },
+  "E171": {
+    "title": "`common.licenseInformation.link` is required for non-free adapters"
   },
   "E200": {
     "title": "Not found on npm. Please publish"
@@ -442,6 +448,9 @@
   },
   "W113": {
     "title": "Adapter should support compact mode"
+  },
+  "W114": {
+    "title": "`common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`"
   },
   "W145": {
     "title": "Each `common.news` should be translated into all supported languages"
