@@ -293,6 +293,9 @@
   "E172": {
     "title": "`common.tier` is required in io-package.json"
   },
+  "E173": {
+    "title": "Invalid `common.automaticUpgrade` value. Only `none`, `patch`, `minor`, `major` are allowed!"
+  },
   "E200": {
     "title": "Not found on npm. Please publish"
   },

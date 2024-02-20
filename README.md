@@ -23,6 +23,7 @@ Branch (`master/main/dev`) is optional.
 ### **WORK IN PROGRESS**
 * (klein0r) Added check for licenseInformation
 * (klein0r) Added check for required attribute common.tier
+* (klein0r) Added check for required attribute common.automaticUpgrade
 
 ### 2.1.13 (2024-01-02)
 * (bluefox) Corrected rule W156: adminUI.config === 'none' is allowed

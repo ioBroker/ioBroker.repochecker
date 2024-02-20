@@ -1141,6 +1141,12 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.tier" is valid in io-package.json');
                 }
 
+                if (context.ioPackageJson.common.automaticUpgrade) {
+                    if (!['none', 'patch', 'minor', 'major'].includes(context.ioPackageJson.common.automaticUpgrade)) {
+                        context.errors.push(`[E173] Invalid common.automaticUpgrade value: ${context.ioPackageJson.common.automaticUpgrade}. Only "none", "patch", "minor", "major" are allowed!`);
+                    }
+                }
+
                 if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {

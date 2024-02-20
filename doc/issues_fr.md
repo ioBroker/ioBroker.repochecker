@@ -79,6 +79,7 @@
 - [E170 `common.licenseInformation.type` is invalid. Select valid type (e.g. free)](#e170-commonlicenseinformationtype-is-invalid-select-valid-type-eg-free)
 - [E171 `common.licenseInformation.link` is required for non-free adapters](#e171-commonlicenseinformationlink-is-required-for-non-free-adapters)
 - [E172 `common.tier` is required in io-package.json](#e172-commontier-is-required-in-io-packagejson)
+- [E173 Invalid `common.automaticUpgrade` value. Only `none`, `patch`, `minor`, `major` are allowed!](#e173-invalid-commonautomaticupgrade-value-only-none-patch-minor-major-are-allowed)
 - [E200 Not found on npm. Please publish](#e200-not-found-on-npm-please-publish)
 - [E201 Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`](#e201-bluefox-was-not-found-in-the-collaborators-on-npm-please-execute-in-adapter-directory-npm-owner-add-bluefox-iobrokeradaptername)
 - [E300 Not found on travis. Please setup travis or use github actions (preferred)](#e300-not-found-on-travis-please-setup-travis-or-use-github-actions-preferred)
@@ -318,6 +319,8 @@ Correct the name of the repository by renaming it to meet standards
 ### [E171] `common.licenseInformation.link` is required for non-free adapters
 
 ### [E172] `common.tier` is required in io-package.json
+
+### [E173] Invalid `common.automaticUpgrade` value. Only `none`, `patch`, `minor`, `major` are allowed!
 
 ### [E200] Not found on npm. Please publish
 
