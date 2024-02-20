@@ -78,7 +78,6 @@
 - [E169 `common.keywords` must be an array in the io-package.json](#e169-commonkeywords-must-be-an-array-in-the-io-packagejson)
 - [E170 `common.licenseInformation.type` is invalid. Select valid type (e.g. free)](#e170-commonlicenseinformationtype-is-invalid-select-valid-type-eg-free)
 - [E171 `common.licenseInformation.link` is required for non-free adapters](#e171-commonlicenseinformationlink-is-required-for-non-free-adapters)
-- [E172 `common.tier` is required in io-package.json](#e172-commontier-is-required-in-io-packagejson)
 - [E173 Invalid `common.automaticUpgrade` value. Only `none`, `patch`, `minor`, `major` are allowed!](#e173-invalid-commonautomaticupgrade-value-only-none-patch-minor-major-are-allowed)
 - [E200 Not found on npm. Please publish](#e200-not-found-on-npm-please-publish)
 - [E201 Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`](#e201-bluefox-was-not-found-in-the-collaborators-on-npm-please-execute-in-adapter-directory-npm-owner-add-bluefox-iobrokeradaptername)
@@ -134,6 +133,7 @@
 - [W109 `common.desc` should be translated into all supported languages](#w109-commondesc-should-be-translated-into-all-supported-languages)
 - [W113 Adapter should support compact mode](#w113-adapter-should-support-compact-mode)
 - [W114 `common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`](#w114-commonlicense-in-io-packagejson-is-deprecated-please-define-object-commonlicenseinformation)
+- [W115 `common.tier` is required in io-package.json](#w115-commontier-is-required-in-io-packagejson)
 - [W145 Each `common.news` should be translated into all supported languages](#w145-each-commonnews-should-be-translated-into-all-supported-languages)
 - [W156 Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI](#w156-adapter-should-support-admin-5-ui-jsonconfig-if-you-do-not-use-a-react-based-ui)
 - [W164 Adapters without config `common.noConfig = true` should also set `common.adminUI.config = none`](#w164-adapters-without-config-commonnoconfig--true-should-also-set-commonadminuiconfig--none)
@@ -318,8 +318,6 @@ Correct the name of the repository by renaming it to meet standards
 
 ### [E171] `common.licenseInformation.link` is required for non-free adapters
 
-### [E172] `common.tier` is required in io-package.json
-
 ### [E173] Invalid `common.automaticUpgrade` value. Only `none`, `patch`, `minor`, `major` are allowed!
 
 ### [E200] Not found on npm. Please publish
@@ -429,6 +427,8 @@ Correct the name of the repository by renaming it to meet standards
 ### [W113] Adapter should support compact mode
 
 ### [W114] `common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`
+
+### [W115] `common.tier` is required in io-package.json
 
 ### [W145] Each `common.news` should be translated into all supported languages
 

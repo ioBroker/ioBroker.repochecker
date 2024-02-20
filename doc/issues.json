@@ -290,9 +290,6 @@
   "E171": {
     "title": "`common.licenseInformation.link` is required for non-free adapters"
   },
-  "E172": {
-    "title": "`common.tier` is required in io-package.json"
-  },
   "E173": {
     "title": "Invalid `common.automaticUpgrade` value. Only `none`, `patch`, `minor`, `major` are allowed!"
   },
@@ -457,6 +454,9 @@
   },
   "W114": {
     "title": "`common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`"
+  },
+  "W115": {
+    "title": "`common.tier` is required in io-package.json"
   },
   "W145": {
     "title": "Each `common.news` should be translated into all supported languages"

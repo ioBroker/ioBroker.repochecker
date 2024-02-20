@@ -1134,7 +1134,7 @@ function checkIOPackageJson(context) {
                 }
 
                 if (!context.ioPackageJson.common.tier) {
-                    context.errors.push(`[E172] common.tier is required in io-package.json`);
+                    context.warnings.push(`[W115] common.tier is required in io-package.json`);
                 } else if (![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
                     context.errors.push(`[E155] Invalid common.tier value: ${context.ioPackageJson.common.tier}. Only 1, 2 or 3 are allowed!`);
                 } else {
