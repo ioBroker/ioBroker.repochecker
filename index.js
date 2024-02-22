@@ -1142,9 +1142,7 @@ function checkIOPackageJson(context) {
                 }
 
                 if (context.ioPackageJson.common.automaticUpgrade) {
-                    if (!['none', 'patch', 'minor', 'major'].includes(context.ioPackageJson.common.automaticUpgrade)) {
-                        context.errors.push(`[E173] Invalid common.automaticUpgrade value: ${context.ioPackageJson.common.automaticUpgrade}. Only "none", "patch", "minor", "major" are allowed!`);
-                    }
+                    context.errors.push(`[E172] common.automaticUpgrade will be defined by the user. Remove the attribute from io-package.json`);
                 }
 
                 if (context.ioPackageJson.common.extIcon) {

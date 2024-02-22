@@ -290,8 +290,8 @@
   "E171": {
     "title": "`common.licenseInformation.link` is required for non-free adapters"
   },
-  "E173": {
-    "title": "Invalid `common.automaticUpgrade` value. Only `none`, `patch`, `minor`, `major` are allowed!"
+  "E172": {
+    "title": "`common.automaticUpgrade` will be defined by the user. Remove the attribute from io-package.json"
   },
   "E200": {
     "title": "Not found on npm. Please publish"
