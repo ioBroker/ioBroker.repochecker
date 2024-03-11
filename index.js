@@ -735,6 +735,52 @@ function checkIOPackageJson(context) {
                 context.errors.push('[E101] io-package.json must have at least empty "native" attribute');
             } else {
                 context.checks.push('"native" found in io-package.json');
+
+                // Generic check for potential credentials that should have a counterpart in encryptedNative/protectedNative
+                const suspiciousPhrases = [
+                    'apikey',
+                    'api_key',
+                    'credential',
+                    'passwd',
+                    'password',
+                    'passwort',
+                    'pin',
+                    'psk',
+                    'pwd',
+                    'secret',
+                    'token',
+                ];
+                const regex = new RegExp(suspiciousPhrases.join('|'), 'i');
+                const suspiciousKeys = [];
+                for (const key in context.ioPackageJson.native) {
+                    if (Object.prototype.hasOwnProperty.call(context.ioPackageJson.native, key)) {
+                        if (regex.test(key)) {
+                            suspiciousKeys.push(key);
+                        }
+                    }
+                }
+                const protectedKeys = [];
+                if (context.ioPackageJson.protectedNative) {
+                    for (const key in context.ioPackageJson.protectedNative) {
+                        protectedKeys.push(context.ioPackageJson.protectedNative[key]);
+                    }
+                }
+                const encryptedKeys = [];
+                if (context.ioPackageJson.encryptedNative) {
+                    for (const key in context.ioPackageJson.encryptedNative) {
+                        encryptedKeys.push(context.ioPackageJson.encryptedNative[key]);
+                    }
+                }
+                // Check if there are any suspicous native keys that are not protected AND not encrypted
+                // That check is not very restrictive, but should give good indication that this key might have been forgotten to protect.
+                // Later it could be XORed to be more restrictive
+                suspiciousKeys.forEach((key) => {
+                    if (!protectedKeys.includes(key) && !encryptedKeys.includes(key)) {
+                        context.warnings.push(
+                            `[W173] Potential sensitive data found in io-package.json: ${key}`
+                        );
+                    }
+                });
             }
 
             if (!context.ioPackageJson.common) {
@@ -1150,7 +1196,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E172
+                // max number is E173
             }
         });
     });
