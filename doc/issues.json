@@ -461,6 +461,9 @@
   "W172": {
     "title": "`common.localLink` in io-package.json is deprecated. Please define object `common.localLinks`: { `_default`: `...` }"
   },
+  "W173": {
+    "title": "`native` contains a key that seems to be for sensitive data but does not have an entry in `protectedNative` nor in `encryptedNative`"
+  },
   "W302": {
     "title": "Use github actions instead of travis-ci"
   },
