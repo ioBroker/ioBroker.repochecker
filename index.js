@@ -877,7 +877,7 @@ function checkIOPackageJson(context) {
 
                 if (!context.ioPackageJson.common.licenseInformation) {
                     if (!context.ioPackageJson.common.license) { 
-                        context.errors.push('[E115] No licenseInformation found in io-package.json');
+                        context.errors.push('[E115] "common.licenseInformation" not found in io-package.json');
                     }
                 } else {
                     context.checks.push('"common.licenseInformation" found in io-package.json');
