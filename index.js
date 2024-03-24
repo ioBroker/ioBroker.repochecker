@@ -23,7 +23,11 @@ const compareVersions = require('compare-versions');
 const issues = require('./doc/issues');
 
 const version = require('./package.json').version;
+
+// adapt recommended version here
 const recommendedJsControllerVersion = '5.0.11';
+const recommendedAdapterCoreVersion = '3.0.5';
+
 
 const memStore = {};
 
@@ -1109,6 +1113,16 @@ function checkIOPackageJson(context) {
                             }
                         }
                     }
+
+                    /*
+                        - adapter-core 3.0.0+ requires node 16+ (*** TODO ***)
+                        - adapter-core 3.0.5 is recommended as minimum
+                    */
+                    if (!compareVersions.compare(context.packageJson.dependencies['@iobroker/adapter-core'], `${recommendedJsControllerVersion}`, '>=')) {
+                        context.warnings.push(`[W173] "@iobroker/adapter-core" should be release ${recommendedAdapterCoreVersion} or newer - please update`);
+                    } else {
+                        context.checks.push(`adapter-core ${context.packageJson.dependencies['@iobroker/adapter-core']} matches recommendation`);
+                    }
                 }
 
                 if (context.ioPackageJson.common.protectedNative) {
@@ -1136,7 +1150,7 @@ function checkIOPackageJson(context) {
                 }
 
                 if (!context.ioPackageJson.common.tier) {
-                    context.warnings.push(`[W115] common.tier is required in io-package.json`);
+                    context.warnings.push(`[W115] common.tier is required in io-package.json. Please check https://https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
                 } else if (![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
                     context.errors.push(`[E155] Invalid common.tier value: ${context.ioPackageJson.common.tier}. Only 1, 2 or 3 are allowed!`);
                 } else {
@@ -1179,7 +1193,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E172
+                // max number is E173
             }
         });
     });
