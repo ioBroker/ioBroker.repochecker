@@ -26,7 +26,7 @@ const version = require('./package.json').version;
 
 // adapt recommended version here
 const recommendedJsControllerVersion = '5.0.11';
-const recommendedAdapterCoreVersion = '3.0.5';
+const recommendedAdapterCoreVersion = '3.0.6';
 
 
 const memStore = {};
@@ -1116,7 +1116,7 @@ function checkIOPackageJson(context) {
 
                     /*
                         - adapter-core 3.0.0+ requires node 16+ (*** TODO ***)
-                        - adapter-core 3.0.5 is recommended as minimum
+                        - adapter-core 3.0.6 is recommended as minimum
                     */
                     if (!compareVersions.compare(context.packageJson.dependencies['@iobroker/adapter-core'], `${recommendedJsControllerVersion}`, '>=')) {
                         context.warnings.push(`[W173] "@iobroker/adapter-core" should be release ${recommendedAdapterCoreVersion} or newer - please update`);
