@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.2.0 (2024-03-24)
 * (klein0r) Added check for licenseInformation
 * (klein0r) Added check for deprecated license
 * (klein0r) Added check for required attribute common.tier
