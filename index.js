@@ -2041,14 +2041,16 @@ if (typeof module !== 'undefined' && module.parent) {
         const context = JSON.parse(data.body);
         console.log(context.result);
 
+        console.log('\n\n########## SUMMARY ##########');
         if (context.errors.length) {
             console.log('\n\nErrors:');
             context.errors.forEach(err => {
                 const issue = err.substring(1, 5);
+                console.error(err);
                 if (issues[issue]) {
-                    if (issues[issue].title) {
-                        console.error(getText(issues[issue].title, 'en'));
-                    }
+                    //if (issues[issue].title) {
+                    //    console.error(getText(issues[issue].title, 'en'));
+                    //}
                     if (issues[issue].explanation) {
                         console.error(getText(issues[issue].explanation, 'en'));
                     }
@@ -2060,17 +2062,20 @@ if (typeof module !== 'undefined' && module.parent) {
                     }
                 }
 
-                console.error(err);
             });
+        } else {
+            console.log('\n\nNO errors encountered.');
         }
         if (context.warnings.length) {
             console.log('\nWarnings:');
             context.warnings.forEach(err => {
                 const issue = err.substring(1, 5);
                 if (issues[issue]) {
-                    if (issues[issue].title) {
-                        console.warn(getText(issues[issue].title, 'en'));
-                    }
+                    console.warn(err);
+
+                    //if (issues[issue].title) {
+                    //    console.warn(getText(issues[issue].title, 'en'));
+                    //}
                     if (issues[issue].explanation) {
                         console.warn(getText(issues[issue].explanation, 'en'));
                     }
@@ -2082,9 +2087,10 @@ if (typeof module !== 'undefined' && module.parent) {
                     }
                 }
 
-                console.warn(err);
             });
-        }
-    });
+        } else {
+            console.log('\n\nNO warnings encountered.');
+    }
+});
 }
 
