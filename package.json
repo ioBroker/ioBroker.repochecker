@@ -19,6 +19,9 @@
     "index.js",
     "doc/issues.json"
   ],
+  "engines": {
+    "node": ">=16"
+  },
   "main": "index.js",
   "bin": "index.js",
   "scripts": {

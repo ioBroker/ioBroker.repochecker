@@ -20,6 +20,11 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (klein0r) Added check for licenseInformation
+* (klein0r) Added check for required attribute common.tier
+* (klein0r) Added check for required attribute common.automaticUpgrade
+
 ### 2.1.13 (2024-01-02)
 * (bluefox) Corrected rule W156: adminUI.config === 'none' is allowed
 
@@ -54,7 +59,7 @@ Branch (`master/main/dev`) is optional.
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2014-2022 Denis Haev <dogafox@gmail.com>
+Copyright (c) 2014-2024 Denis Haev <dogafox@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

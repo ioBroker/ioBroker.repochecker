@@ -36,7 +36,7 @@
 - [E111 extIcon not found in the io-package.json](#e111-exticon-not-found-in-the-io-packagejson)
 - [E112 extIcon must be the same as an icon but with github path](#e112-exticon-must-be-the-same-as-an-icon-but-with-github-path)
 - [E114 No adapter are allowed in the repo without admin support (set `common.noConfig = true` and `common.adminUI.config = none` if adapter has no configuration)](#e114-no-adapter-are-allowed-in-the-repo-without-admin-support-set-commonnoconfig--true-and-commonadminuiconfig--none-if-adapter-has-no-configuration)
-- [E115 No license found in io-package.json](#e115-no-license-found-in-io-packagejson)
+- [E115 No licenseInformation found in io-package.json](#e115-no-licenseinformation-found-in-io-packagejson)
 - [E116 No SPDX license found. Please use one of listed here: https://spdx.org/licenses/](#e116-no-spdx-license-found-please-use-one-of-listed-here-httpsspdxorglicenses)
 - [E117 Licenses in package.json and in io-package.json are different](#e117-licenses-in-packagejson-and-in-io-packagejson-are-different)
 - [E118 Versions in package.json and in io-package.json are different](#e118-versions-in-packagejson-and-in-io-packagejson-are-different)
@@ -76,6 +76,9 @@
 - [E167 schedule adapters must have common.schedule property in io-package.json](#e167-schedule-adapters-must-have-commonschedule-property-in-io-packagejson)
 - [E168 common.notifications requires dependency {`js-controller`: `>=3.2.0`} or later](#e168-commonnotifications-requires-dependency-js-controller-320-or-later)
 - [E169 `common.keywords` must be an array in the io-package.json](#e169-commonkeywords-must-be-an-array-in-the-io-packagejson)
+- [E170 `common.licenseInformation.type` is invalid. Select valid type (e.g. free)](#e170-commonlicenseinformationtype-is-invalid-select-valid-type-eg-free)
+- [E171 `common.licenseInformation.link` is required for non-free adapters](#e171-commonlicenseinformationlink-is-required-for-non-free-adapters)
+- [E172 `common.automaticUpgrade` will be defined by the user. Remove the attribute from io-package.json](#e172-commonautomaticupgrade-will-be-defined-by-the-user-remove-the-attribute-from-io-packagejson)
 - [E200 Not found on npm. Please publish](#e200-not-found-on-npm-please-publish)
 - [E201 Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`](#e201-bluefox-was-not-found-in-the-collaborators-on-npm-please-execute-in-adapter-directory-npm-owner-add-bluefox-iobrokeradaptername)
 - [E300 Not found on travis. Please setup travis or use github actions (preferred)](#e300-not-found-on-travis-please-setup-travis-or-use-github-actions-preferred)
@@ -95,6 +98,7 @@
 - [E426 Icon (stable) must be in the following path](#e426-icon-stable-must-be-in-the-following-path)
 - [E427 Meta URL (stable) not found in latest repository](#e427-meta-url-stable-not-found-in-latest-repository)
 - [E428 Meta URL (stable) is invalid](#e428-meta-url-stable-is-invalid)
+- [E429 Adapter name should use `-` instead of `_`](#e429-adapter-name-should-use---instead-of-_)
 - [E500 node_modules found in repo. Please delete it](#e500-node_modules-found-in-repo-please-delete-it)
 - [E501 Cannot get zip on GitHub](#e501-cannot-get-zip-on-github)
 - [E502 `admin/img/info-big.png` not found, but selectID.js used in index_m.html ](#e502-adminimginfo-bigpng-not-found-but-selectidjs-used-in-index_mhtml-)
@@ -128,6 +132,8 @@
 - [W105 `common.titleLang` should be translated into all supported languages](#w105-commontitlelang-should-be-translated-into-all-supported-languages)
 - [W109 `common.desc` should be translated into all supported languages](#w109-commondesc-should-be-translated-into-all-supported-languages)
 - [W113 Adapter should support compact mode](#w113-adapter-should-support-compact-mode)
+- [W114 `common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`](#w114-commonlicense-in-io-packagejson-is-deprecated-please-define-object-commonlicenseinformation)
+- [W115 `common.tier` is required in io-package.json](#w115-commontier-is-required-in-io-packagejson)
 - [W145 Each `common.news` should be translated into all supported languages](#w145-each-commonnews-should-be-translated-into-all-supported-languages)
 - [W156 Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI](#w156-adapter-should-support-admin-5-ui-jsonconfig-if-you-do-not-use-a-react-based-ui)
 - [W164 Adapters without config `common.noConfig = true` should also set `common.adminUI.config = none`](#w164-adapters-without-config-commonnoconfig--true-should-also-set-commonadminuiconfig--none)
@@ -142,7 +148,6 @@
 - [W515 Why you decided to disable i18n support?](#w515-why-you-decided-to-disable-i18n-support)
 - [W801 .npmignore not found](#w801-npmignore-not-found)
 - [W901 .gitignore not found](#w901-gitignore-not-found)
-- [E429 Adapter name should use `-` instead of `_`](#e429-adapter-name-should-use---instead-of-_)
 
 ## Issues
 ### [E001] Не удается разобрать `package.json`
@@ -229,7 +234,7 @@ Correct the name of the repository by renaming it to meet standards
 
 ### [E114] No adapter are allowed in the repo without admin support (set `common.noConfig = true` and `common.adminUI.config = none` if adapter has no configuration)
 
-### [E115] No license found in io-package.json
+### [E115] No licenseInformation found in io-package.json
 
 ### [E116] No SPDX license found. Please use one of listed here: https://spdx.org/licenses/
 
@@ -309,6 +314,12 @@ Correct the name of the repository by renaming it to meet standards
 
 ### [E169] `common.keywords` must be an array in the io-package.json
 
+### [E170] `common.licenseInformation.type` is invalid. Select valid type (e.g. free)
+
+### [E171] `common.licenseInformation.link` is required for non-free adapters
+
+### [E172] `common.automaticUpgrade` will be defined by the user. Remove the attribute from io-package.json
+
 ### [E200] Not found on npm. Please publish
 
 ### [E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`
@@ -346,6 +357,8 @@ Correct the name of the repository by renaming it to meet standards
 ### [E427] Meta URL (stable) not found in latest repository
 
 ### [E428] Meta URL (stable) is invalid
+
+### [E429] Adapter name should use `-` instead of `_`
 
 ### [E500] node_modules found in repo. Please delete it
 
@@ -413,6 +426,10 @@ Correct the name of the repository by renaming it to meet standards
 
 ### [W113] Adapter should support compact mode
 
+### [W114] `common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`
+
+### [W115] `common.tier` is required in io-package.json
+
 ### [W145] Each `common.news` should be translated into all supported languages
 
 ### [W156] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI
@@ -440,6 +457,4 @@ Correct the name of the repository by renaming it to meet standards
 ### [W801] .npmignore not found
 
 ### [W901] .gitignore not found
-
-### [E429] Adapter name should use `-` instead of `_`
 
