@@ -28,7 +28,7 @@ const version = require('./package.json').version;
 const recommendedAdapterCoreVersion = '3.0.6';
 const recommendedJsControllerVersion = '5.0.11';
 const recommendedNodeVersion = '18';
-
+const requiredNodeVersion = '16';
 
 const memStore = {};
 
@@ -85,7 +85,7 @@ function checkLanguages(langObj) {
 
 function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
-        axios.get(context.githubUrlApi)
+        axios.get(context.githubUrlApi, { cache: false })
             .then(response => {
                 context.githubApiData = response.data;
                 // console.log(`API Data: ${JSON.stringify(context.githubApiData)}`);
@@ -284,9 +284,9 @@ function checkPackageJson(context) {
                 context.checks.push('iobroker.js-controller is not in dependencies');
             }
 
-            // SPECIAL NOTE: E026-E028 is used at checkIoPackage.json 
+            // SPECIAL NOTE: E026-E029 are used at checkIoPackage.json 
 
-            // max number is E028 
+            // max number is E029 
 
             return context;
         });
@@ -1210,8 +1210,10 @@ function checkIOPackageJson(context) {
                                     context.warnings.push(`[W026] "{'engines' : { 'node' >= '${recommendedNodeVersion}' } }" is required at package.json`);                                    
                                 } else {
                                     //console.log( `${match.groups.vers} - ${recommendedNodeVersion}`);
-                                    if ( ! compareVersions.compare( match.groups.vers, recommendedNodeVersion, '>=')) {
-                                        context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} required. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
+                                    if ( ! compareVersions.compare( match.groups.vers, requiredNodeVersion, '>=')) {
+                                        context.errors.push(`[E029] Node.js ${requiredNodeVersion} is required as minimum, node.js ${recommendedNodeVersion} is recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
+                                    } else if ( ! compareVersions.compare( match.groups.vers, recommendedNodeVersion, '>=')) {
+                                        context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
                                     } else {
                                         context.checks.push('Correct node.js version requested by "engines" attribute at package.json.');
                                     }
