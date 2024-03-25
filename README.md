@@ -21,6 +21,7 @@ Branch (`master/main/dev`) is optional.
 
 ## Changelog
 ### **WORK IN PROGRESS**
+* (mcm1957) Added check that own adapter is not listed at common.restartAdapters
 * (mcm1957) Added check of version strings at common.news
 * (mcm1957) Added check for recommended node version (node 18 for now)
 * (mcm1957) Disallow common.mode == subscribe

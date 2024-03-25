@@ -1224,6 +1224,20 @@ function checkIOPackageJson(context) {
                 }
                 /* end of foreign check */
 
+
+                if (context.ioPackageJson.common.restartAdapters) {
+                    const restartAdaptersArray = context.ioPackageJson.common.restartAdapters;
+
+                    // own adapter is not allowed in restart array
+                    if (restartAdaptersArray.includes(context.ioPackageJson.common.name)) {
+                        context.errors.push(`[E176] Own adapter is not allowed to be listed at "common.restartAdapters" in io-pacakge.json`);
+                    } else {
+                        context.checks.push('Own adapter not listed at "common.restartAdapters".');
+                    }
+                } else {
+                    context.checks.push('"restartAdapters" check skipped as object not present.');
+                }
+
                 if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {
@@ -1256,7 +1270,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E175
+                // max number is E176
             }
         });
     });
