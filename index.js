@@ -25,8 +25,9 @@ const issues = require('./doc/issues');
 const version = require('./package.json').version;
 
 // adapt recommended version here
-const recommendedJsControllerVersion = '5.0.11';
 const recommendedAdapterCoreVersion = '3.0.6';
+const recommendedJsControllerVersion = '5.0.11';
+const recommendedNodeVersion = '18';
 
 
 const memStore = {};
@@ -107,6 +108,7 @@ function getGithubApiData(context) {
 // E0xx
 function checkPackageJson(context) {
     return new Promise((resolve, reject) => {
+        console.log('\ncheckPackageJson [E0xx]');
         if (context.packageJson) {
             return resolve(context.packageJson);
         } else {
@@ -281,7 +283,10 @@ function checkPackageJson(context) {
             } else {
                 context.checks.push('iobroker.js-controller is not in dependencies');
             }
-            // max number is E025
+
+            // SPECIAL NOTE: E026-E028 is used at checkIoPackage.json 
+
+            // max number is E028 
 
             return context;
         });
@@ -714,7 +719,7 @@ const licenses = [
 function checkIOPackageJson(context) {
     context = context || {};
     return new Promise((resolve, reject) => {
-        console.log('checkIOPackageJson [E1xx]');
+        console.log('\ncheckIOPackageJson [E1xx]');
         if (context.ioPackageJson) {
             return resolve(context.ioPackageJson);
         } else {
@@ -980,6 +985,12 @@ function checkIOPackageJson(context) {
                         context.errors.push('[E130] Too many "common.news" found in io-package.json. Must be less than 20. Please remove old news.');
                     }
 
+                    Object.keys(context.ioPackageJson.common.news).forEach(version => {
+                        if (!compareVersions.validateStrict(version)) {
+                            context.errors.push(`[E175] Release "${version}" at "common.news" in io-package.json is malformed.`);
+                        }
+                    });
+
                     if (!context.ioPackageJson.common.news[context.ioPackageJson.common.version]) {
                         context.errors.push(`[E145] No "common.news" found for actual version ${context.ioPackageJson.common.version}`);
                     }
@@ -1148,12 +1159,16 @@ function checkIOPackageJson(context) {
                     }
                 }
 
-                if (!context.ioPackageJson.common.tier) {
-                    context.warnings.push(`[W115] common.tier is required in io-package.json. Please check https://https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
-                } else if (![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
-                    context.errors.push(`[E155] Invalid common.tier value: ${context.ioPackageJson.common.tier}. Only 1, 2 or 3 are allowed!`);
+                if (!context.ioPackageJson.common.onlyWWW) {
+                    if (!context.ioPackageJson.common.tier) {
+                        context.warnings.push(`[W115] common.tier is required in io-package.json. Please check https://https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
+                    } else if (![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
+                        context.errors.push(`[E155] Invalid common.tier value: ${context.ioPackageJson.common.tier}. Only 1, 2 or 3 are allowed!`);
+                    } else {
+                        context.checks.push('"common.tier" is valid in io-package.json');
+                    }
                 } else {
-                    context.checks.push('"common.tier" is valid in io-package.json');
+                    context.checks.push('"common.tier" check skipped for wwwOnly adapter.');
                 }
 
                 if (context.ioPackageJson.common.automaticUpgrade) {
@@ -1168,7 +1183,48 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.wakeup" does not exist in io-package.json');
                 }
 
-                if (context.ioPackageJso.common.extIcon) {
+                /* 
+                 * The following check is logical related to package.json. It is placed here as the check must be performed only
+                 * if wwwOnly attribute is not set at io-package.json. Please note that these errors use error number form package.json range.
+                 *
+                 */
+     
+                if (!context.ioPackageJson.common.onlyWWW) {
+                    if (!context.packageJson.engines) {
+                        context.warnings.push(`[W026] "{'engines' : { 'node' >= '${recommendedNodeVersion}' } }" is required at package.json`);                                    
+                    } else {
+                        if (!context.packageJson.engines.node) {
+                            context.warnings.push(`[W026] "{'engines' : { 'node' >= '${recommendedNodeVersion}' } }" is required at package.json`);                                    
+                        } else {
+                            context.checks.push('engines attribute containing node requirements exist.');
+                            // 'engines': { 'node': '>= 18' }
+                            // 'engines': { 'node': '>= 18.1.2' }
+                            // 'engines': { 'node': '>= 18.1.2 < 19' }
+                            const nodeVal = context.packageJson.engines.node;
+                            let match = nodeVal.match(/^^(?<cmp>[<>=~]+)?\s*(?<vers>\d+(\.\d+(\.\d+)?)?(\-\w+\.\d+)?)/m);
+                            if ( ! match ) {
+                                context.warnings.push(`[W027] {'engines' : { 'node' : '${nodeVal}' } }" is not parseable.`);
+                            } else {
+                                //console.log( `${JSON.stringify(match.groups)}`);
+                                if ( match.groups.cmp !== '>' && match.groups.cmp !== '>=' ) {
+                                    context.warnings.push(`[W026] "{'engines' : { 'node' >= '${recommendedNodeVersion}' } }" is required at package.json`);                                    
+                                } else {
+                                    //console.log( `${match.groups.vers} - ${recommendedNodeVersion}`);
+                                    if ( ! compareVersions.compare( match.groups.vers, recommendedNodeVersion, '>=')) {
+                                        context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} required. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
+                                    } else {
+                                        context.checks.push('Correct node.js version requested by "engines" attribute at package.json.');
+                                    }
+                                }
+                            }
+                        }
+                    }        
+                } else {
+                    context.checks.push('"engines" check skipped for wwwOnly adapter.');
+                }
+                /* end of foreign check */
+
+                if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {
                             const image = sizeOf(icon);
@@ -1200,7 +1256,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E174
+                // max number is E175
             }
         });
     });
@@ -1208,7 +1264,7 @@ function checkIOPackageJson(context) {
 
 // E2xx
 function checkNpm(context) {
-    console.log('checkNpm [E2xx]');
+    console.log('\ncheckNpm [E2xx]');
     return axios(`https://registry.npmjs.org/iobroker.${context.adapterName}`)
         .catch(() => ({body: null}))
         .then(async response => {
@@ -1261,7 +1317,7 @@ function checkNpm(context) {
 
 // E3xx
 function checkTests(context) {
-    console.log('checkTests [E3xx]');
+    console.log('\ncheckTests [E3xx]');
     // if found some file in `\.github\workflows` with the test inside => it is OK too
     if (context && context.filesList.find(name => name.startsWith('.github/workflows/') && name.endsWith('.yml') && name.toLowerCase().includes('test'))) {
         context.checks.push('Tests found on github actions');
@@ -1309,7 +1365,7 @@ function checkTests(context) {
 
 // E4xx
 function checkRepo(context) {
-    console.log('checkRepo [E4xx]');
+    console.log('\ncheckRepo [E4xx]');
     if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.type) {
         // download latest repo
         return axios('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json')
@@ -1501,7 +1557,7 @@ function checkCode(context) {
 
     // https://github.com/userName/ioBroker.adaptername/archive/${context.branch}.zip
     return new Promise((resolve, reject) => {
-        console.log('checkCode [E5xx]');
+        console.log('\ncheckCode [E5xx]');
         return downloadFile(context.githubUrlOriginal, `/archive/${context.branch}.zip`, true)
             .then(data => {
                 console.log(`${context.branch}.zip ${data.length} bytes`);
@@ -1707,7 +1763,7 @@ function checkCommits(context) {
 // E8xx
 function checkGithubRepo(context) {
     return new Promise((resolve) => {
-        console.log('checkGithubRepo [E8xx]');
+        console.log('\ncheckGithubRepo [E8xx]');
 
         if (!context.githubApiData.description) {
             context.errors.push(`[E801] No repository about text found. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add the description.`);
@@ -1734,7 +1790,7 @@ function checkGithubRepo(context) {
 function checkReadme(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/README.md
     return new Promise((resolve, reject) => {
-        console.log('checkReadme [E6xx]');
+        console.log('\ncheckReadme [E6xx]');
         downloadFile(context.githubUrl, '/README.md')
             .then(data => {
                 if (!data) {
@@ -1785,7 +1841,7 @@ function checkReadme(context) {
 function checkLicenseFile(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/LICENSE
     return new Promise((resolve, reject) => {
-        console.log('checkLicenseFile [E7xx]');
+        console.log('\ncheckLicenseFile [E7xx]');
         downloadFile(context.githubUrl, '/LICENSE')
             .then(data => {
                 if (!data) {
@@ -1848,7 +1904,7 @@ function checkNpmIgnore(context) {
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.npmignore
-    console.log('checkNpmIgnore [E8xx]');
+    console.log('\checkNpmIgnore [E8xx]');
     if (context.packageJson.files && context.packageJson.files.length) {
         return Promise.resolve(context);
     }
@@ -1910,7 +1966,7 @@ function checkGitIgnore(context) {
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.gitignore
-    console.log('checkGitIgnore [E9xx]');
+    console.log('\ncheckGitIgnore [E9xx]');
     if (!context.filesList.includes('.gitignore')) {
         context.warnings.push(`[W901] .gitignore not found`);
     } else {
@@ -2065,7 +2121,7 @@ if (typeof module !== 'undefined' && module.parent) {
         console.log('\n\n########## SUMMARY ##########');
         if (context.errors.length) {
             console.log('\n\nErrors:');
-            context.errors.forEach(err => {
+            context.errors.sort().forEach(err => {
                 const issue = err.substring(1, 5);
                 console.error(err);
                 if (issues[issue]) {
@@ -2089,11 +2145,10 @@ if (typeof module !== 'undefined' && module.parent) {
         }
         if (context.warnings.length) {
             console.log('\nWarnings:');
-            context.warnings.forEach(err => {
+            context.warnings.sort().forEach(err => {
                 const issue = err.substring(1, 5);
+                console.warn(err);
                 if (issues[issue]) {
-                    console.warn(err);
-
                     //if (issues[issue].title) {
                     //    console.warn(getText(issues[issue].title, 'en'));
                     //}
