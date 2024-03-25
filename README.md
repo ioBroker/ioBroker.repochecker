@@ -21,7 +21,9 @@ Branch (`master/main/dev`) is optional.
 
 ## Changelog
 ### **WORK IN PROGRESS**
-* (mcm1957) Added check for adapter-core version (>= 3.0.5)
+* (mcm1957) Disallow common.mode == subscribe
+* (mcm1957) Deprecate common.wakeup
+* (mcm1957) Added check for adapter-core version (>= 3.0.6)
 
 ### 2.2.0 (2024-03-24)
 * (klein0r) Added check for licenseInformation

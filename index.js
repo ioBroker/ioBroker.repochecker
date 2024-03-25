@@ -304,7 +304,6 @@ const allowedLanguages = [
 const allowedModes = {
     'none': 'this adapter will not be started',
     'daemon': 'always running process (will be restarted if process exits)',
-    'subscribe': 'is started when state system.adapter…alive changes to true. Is killed when .alive changes to false and sets .alive to false if process exits (will not be restarted when process exits)',
     'schedule': 'is started by schedule found in system.adapter…common.schedule - reacts on changes of .schedule by rescheduling with new state',
     'once': 'his adapter will be started every time the system.adapter.. object changed. It will not be restarted after termination.',
     'extension': ''
@@ -753,7 +752,7 @@ function checkIOPackageJson(context) {
                 }
 
                 if (context.ioPackageJson.common.title) {
-                    context.warnings.push('[W171] "common.title" is deprecated in io-package.json');
+                    context.warnings.push('[W171] "common.title" is deprecated in io-package.json. Please remove from io-package.json.');
                 }
 
                 if (!context.ioPackageJson.common.titleLang) {
@@ -922,7 +921,7 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.mode" found in io-package.json');
 
                     if (!allowedModes[context.ioPackageJson.common.mode]) {
-                        context.errors.push('[E166] Unknown type found in io-package.json');
+                        context.errors.push(`[E166] "common.mode" ${context.ioPackageJson.common.mode} is unknown in io-package.json.`);
                     } else {
                         context.checks.push('"common.mode" has known mode in io-package.json');
 
@@ -1158,10 +1157,18 @@ function checkIOPackageJson(context) {
                 }
 
                 if (context.ioPackageJson.common.automaticUpgrade) {
-                    context.errors.push(`[E172] common.automaticUpgrade will be defined by the user. Remove the attribute from io-package.json`);
+                    context.errors.push(`[E172] "common.automaticUpgrade" will be defined by the user. Please remove from io-package.json`);
+                } else {
+                    context.checks.push('"common.automaticUpgrade" does not exist in io-package.json');
                 }
 
-                if (context.ioPackageJson.common.extIcon) {
+                if (context.ioPackageJson.common.wakeup) {
+                    context.warnings.push(`[W174] "common.wakeup" is deprectaed. Please remove from io-package.json`);
+                } else {
+                    context.checks.push('"common.wakeup" does not exist in io-package.json');
+                }
+
+                if (context.ioPackageJso.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
                         .then(icon => {
                             const image = sizeOf(icon);
@@ -1193,7 +1200,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E173
+                // max number is E174
             }
         });
     });
