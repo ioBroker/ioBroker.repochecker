@@ -1125,7 +1125,7 @@ function checkIOPackageJson(context) {
                     }
 
                     /*
-                        - adapter-core 3.0.0+ requires node 16+ (*** TODO ***)
+                        - adapter-core 3.0.0+ requires node 16+ - solved as node 16 is global minimum
                         - adapter-core 3.0.6 is recommended as minimum
                     */
                     if (!compareVersions.compare(context.packageJson.dependencies['@iobroker/adapter-core'], `${recommendedJsControllerVersion}`, '>=')) {
@@ -1161,7 +1161,7 @@ function checkIOPackageJson(context) {
 
                 if (!context.ioPackageJson.common.onlyWWW) {
                     if (!context.ioPackageJson.common.tier) {
-                        context.warnings.push(`[W115] common.tier is required in io-package.json. Please check https://https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
+                        context.warnings.push(`[W115] common.tier is required in io-package.json. Please check https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
                     } else if (![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
                         context.errors.push(`[E155] Invalid common.tier value: ${context.ioPackageJson.common.tier}. Only 1, 2 or 3 are allowed!`);
                     } else {
