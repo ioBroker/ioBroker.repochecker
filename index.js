@@ -1540,36 +1540,50 @@ function checkCode(context) {
         '.travis.yml',
         'gulpfile.js',
         '.releaseconfig.json',
-    ];
+
+        // add all potential files anyway. If they exist they must be valid.
+        // if the are nozt needed a warning could be issued
+        'admin/index_m.html',
+        'admin/words.js',
+        'admin/jsonConfig.json',
+        'admin/jsonConfig.json5',
+        'admin/jsonCustom.json',
+        'admin/jsonCustom.json5',
+        'admin/blockly.js',
+        ];
+    allowedLanguages.forEach(lang =>
+        readFiles.push(`admin/i18n/${lang}/translations.json`));
+    allowedLanguages.forEach(lang =>
+        readFiles.push(`admin/i18n/${lang}.json`));
 
     if (context.packageJson.main) {
         readFiles.push(context.packageJson.main);
     }
 
-    if (!context.ioPackageJson.common.noConfig) {
-        if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
-            readFiles.push('admin/index_m.html');
-            readFiles.push('admin/words.js');
-        }
-
-        if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
-            readFiles.push('admin/jsonConfig.json');
-            readFiles.push('admin/jsonConfig.json5');
-            allowedLanguages.forEach(lang =>
-                readFiles.push(`admin/i18n/${lang}/translations.json`));
-            allowedLanguages.forEach(lang =>
-                readFiles.push(`admin/i18n/${lang}.json`));
-        }
-
-        if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
-            readFiles.push('admin/jsonCustom.json');
-            readFiles.push('admin/jsonCustom.json5');
-        }
-    }
-
-    if (context.ioPackageJson.common.blockly) {
-        readFiles.push('admin/blockly.js');
-    }
+//    if (!context.ioPackageJson.common.noConfig) {
+//        if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
+//            readFiles.push('admin/index_m.html');
+//            readFiles.push('admin/words.js');
+//        }
+//
+//        if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
+//            readFiles.push('admin/jsonConfig.json');
+//            readFiles.push('admin/jsonConfig.json5');
+//            allowedLanguages.forEach(lang =>
+//                readFiles.push(`admin/i18n/${lang}/translations.json`));
+//            allowedLanguages.forEach(lang =>
+//                readFiles.push(`admin/i18n/${lang}.json`));
+//        }
+//
+//        if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
+//            readFiles.push('admin/jsonCustom.json');
+//            readFiles.push('admin/jsonCustom.json5');
+//        }
+//    }
+//
+//    if (context.ioPackageJson.common.blockly) {
+//        readFiles.push('admin/blockly.js');
+//    }
 
     // https://github.com/userName/ioBroker.adaptername/archive/${context.branch}.zip
     return new Promise((resolve, reject) => {
