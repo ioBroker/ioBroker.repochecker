@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.2.1 (2024-03-26)
 * (mcm1957) Added check that own adapter is not listed at common.restartAdapters
 * (mcm1957) Added check of version strings at common.news
 * (mcm1957) Added check for recommended node version (node 18 for now)
