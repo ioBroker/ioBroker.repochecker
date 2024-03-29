@@ -24,8 +24,7 @@ Branch (`master/main/dev`) is optional.
 <!--
 * (mcm1957) Added deprecate warnings for "main', 'materialize", "materializeTab" and "noConfig"
 -->
-
-### **WORK IN PROGRESS**
+### 2.2.3 (2024-03-29)
 * (mcm1957) Checking of license has been improved
 
 ### 2.2.2 (2024-03-29)
