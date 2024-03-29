@@ -20,8 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 2.2.2 (2024-03-29)
 * (mcm1957) Checking of adapter-core has been fixed
 * (mcm1957) Load all potential interesting files, fixes [#149]
 
