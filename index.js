@@ -759,7 +759,23 @@ function checkIOPackageJson(context) {
                 if (context.ioPackageJson.common.title) {
                     context.warnings.push('[W171] "common.title" is deprecated in io-package.json. Please remove from io-package.json.');
                 }
+/*
+                if (context.ioPackageJson.common.main) {
+                    context.warnings.push('[W177] "common.main" is deprecated in io-package.json. For js-controller >= 3.3 please use package.json main and remove "common.main" from io-package.json.');
+                }
 
+                if (context.ioPackageJson.common.materialize) {
+                    context.warnings.push('[W178] "common.materialize" is deprecated in io-package.json. For admin version >= 5 please use the property "common.adminUI"');
+                }
+
+                if (context.ioPackageJson.common.materializeTab) {
+                    context.warnings.push('[W179] "common.materializeTab" is deprecated in io-package.json. For admin version >= 5 please use the property "common.adminUI".');
+                }
+                
+                if (context.ioPackageJson.common.noConfig) {
+                    context.warnings.push('[W180] "common.noConfig" is deprecated in io-package.json.  For admin version >= 5 please use "common.adminUI.config":"none".');
+                }
+*/
                 if (!context.ioPackageJson.common.titleLang) {
                     context.errors.push('[E104] No "common.titleLang" found in io-package.json');
                 } else {
@@ -1128,8 +1144,9 @@ function checkIOPackageJson(context) {
                         - adapter-core 3.0.0+ requires node 16+ - solved as node 16 is global minimum
                         - adapter-core 3.0.6 is recommended as minimum
                     */
-                    if (!compareVersions.compare(context.packageJson.dependencies['@iobroker/adapter-core'], `${recommendedJsControllerVersion}`, '>=')) {
-                        context.warnings.push(`[W173] "@iobroker/adapter-core" should be release ${recommendedAdapterCoreVersion} or newer - please update`);
+
+                    if (!compareVersions.compare(context.packageJson.dependencies['@iobroker/adapter-core'], `${recommendedAdapterCoreVersion}`, '>=')) {
+                        context.warnings.push(`[W173] "@iobroker/adapter-core" (${context.packageJson.dependencies['@iobroker/adapter-core']}) should be ${recommendedAdapterCoreVersion} or newer - please update`);
                     } else {
                         context.checks.push(`adapter-core ${context.packageJson.dependencies['@iobroker/adapter-core']} matches recommendation`);
                     }
@@ -1272,7 +1289,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E176
+                // max number is E180
             }
         });
     });

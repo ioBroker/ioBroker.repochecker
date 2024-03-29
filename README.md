@@ -20,6 +20,11 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+
+### **WORK IN PROGRESS**
+* (mcm1957) Checking of adapter-core has been fixed
+* (mcm1957) Load all potential interesting files, fixes [#149]
+
 ### 2.2.1 (2024-03-26)
 * (mcm1957) Added check that own adapter is not listed at common.restartAdapters
 * (mcm1957) Added check of version strings at common.news
