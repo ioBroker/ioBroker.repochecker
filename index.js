@@ -896,7 +896,7 @@ function checkIOPackageJson(context) {
                 }
 
                 if (context.ioPackageJson.common.license) {
-                    context.warnings.push('[W114] "common.license" in io-package.json is deprecated. Please define object "common.licenseInformation"');
+                    context.warnings.push('[W181] "common.license" in io-package.json is deprecated. Please define object "common.licenseInformation"');
                 }
 
                 if (!context.ioPackageJson.common.licenseInformation) {
@@ -906,9 +906,15 @@ function checkIOPackageJson(context) {
                 } else {
                     context.checks.push('"common.licenseInformation" found in io-package.json');
 
-                    // check if license valid
-                    if (!licenses.includes(context.ioPackageJson.common?.licenseInformation?.license)) {
-                        context.errors.push('[E116] No SPDX license found. Please use one of listed here: https://spdx.org/licenses/');
+                    if (context.ioPackageJson.common.license) {
+                        context.errors.push('[E182] Please remove "common.license" from io-package.json as "common.licenseInformation" is declared.');
+                    }
+    
+                        // check if license valid
+                    if (!context.ioPackageJson.common.licenseInformation.license) {
+                        context.errors.push('[E183] "common.licenseInformation.license" is missing');
+                    } else if (!licenses.includes(context.ioPackageJson.common?.licenseInformation?.license)) {
+                        context.errors.push('[E116] No SPDX license found at "common.licenseInformation". Please use one of listed here: https://spdx.org/licenses/');
                     } else {
                         context.checks.push('"common.licenseInformation" is valid in io-package.json');
                     }
@@ -1289,7 +1295,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E180
+                // max number is E183
             }
         });
     });
