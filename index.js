@@ -1279,7 +1279,7 @@ function checkIOPackageJson(context) {
                             }
 
                             context.checks.push('"extIcon" could be downloaded');
-                            if (!context.ioPackageJson.onlyWWW && context.packageJson.main) {
+                            if (!context.ioPackageJson.common.onlyWWW && context.packageJson.main) {
                                 return downloadFile(context.githubUrl, '/' + context.packageJson.main)
                                     .then(() => context.checks.push(context.packageJson.main + ' could be downloaded'))
                                     .catch(() => context.errors.push(`[E124] Main file not found under URL: ${context.githubUrl}/${context.packageJson.main}`))
