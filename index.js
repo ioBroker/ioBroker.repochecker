@@ -1786,7 +1786,7 @@ function checkCode(context) {
         '.releaseconfig.json',
 
         // add all potential files anyway. If they exist they must be valid.
-        // if the are nozt needed a warning could be issued
+        // if the are not needed a warning could be issued
         'admin/index_m.html',
         'admin/words.js',
         'admin/jsonConfig.json',
