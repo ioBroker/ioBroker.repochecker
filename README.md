@@ -25,8 +25,10 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) Added deprecate warnings for "main', 'materialize", "materializeTab" and "noConfig"
 -->
 ### **WORK IN PROGRESS**
+* (mcm1957) Elements marked as deprectaed added to blacklist.
+* (mcm1957) Blacklist added to block elements at package.json and io-package.json.
 * (mcm1957) Error [E000] will be raised now if repository cannot be accessed at all [#194].
-* (mcm1957) Reading of package.json and io-pacakge.json has been moved to head of tests.
+* (mcm1957) Reading of package.json and io-package.json has been moved to head of tests.
 * (mcm1957) Check minimum and recommended node version at package.json (#160)
 * (mcm1957) Raise an error if version at package.json is lower than latest release at npmjs [#192]
 

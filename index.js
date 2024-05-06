@@ -43,6 +43,49 @@ const devDependencies = {
     }
 };
 
+const blacklistPackageJson = {
+
+};
+
+const blacklistIOPackageJson = {
+    "installedFrom": {
+        "msg": "\"installedFrom\" is invalid at io-package.json. Please remove.",
+        "err": true
+    },
+    "common.installedFrom": {
+        "msg": "\"common.installedFrom\" is invalid. Please remove from io-package.json.",
+        "err": true
+    },
+    "common.title": {
+        "msg": "\"common.title\" is deprecated an replaces by \"common.titleLang\". Please remove from io-package.json.",
+        "err": false
+    },
+    "common.main": {
+        "msg": "\"common.main\" is deprecated and ignored. Please remove from io-package.json. Use \"main\" at package.json instead.",
+        "err": false
+    },
+    "common.materialize": {
+        "msg": "\"common.materialize\" is deprecated for admin >= 5 at io-package.json. Please use property \"adminUI\".",
+        "err": false
+    },
+    "common.materializeTab": {
+        "msg": "\"common.materializeTab\" is deprecated for admin >= 5 at io-package.json. Please use property \"adminUI\".",
+        "err": false
+    },
+    "common.noConfig": {
+        "msg": "\"common.noConfig\" is deprecated for admin >= 5 at io-package.json. Please use property \"adminUI.config\":\"none\".",
+        "err": false
+    },
+    "common.subscribe": {
+        "msg": "\"common.subscribe\" will be removed with js-controller >= 6. Please remove from io-package.json and adapt code if required.",
+        "err": true
+    },
+    "common.wapeup": {
+        "msg": "\"common.wakeup\" is deprecated and ignored. Please remove from io-package.json.",
+        "err": true
+    },
+};
+
 const memStore = {};
 
 /* Writable memory stream */
@@ -384,10 +427,10 @@ function checkPackageJson(context) {
 
         if (!context.ioPackageJson.common.onlyWWW) {
             if (!context.packageJson.engines) {
-                context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${requiredNodeVersion}'}}" is recommened`);                                    
+                context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${recommendedNodeVersion}'}}" is recommened`);                                    
             } else {
                 if (!context.packageJson.engines.node) {
-                    context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${requiredNodeVersion}'}}" is recommened`);                                    
+                    context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${recommendedNodeVersion}'}}" is recommened`);                                    
                 } else {
                     context.checks.push('engines attribute containing node requirements exist.');
                     // 'engines': { 'node': '>= 18' }
@@ -452,7 +495,32 @@ function checkPackageJson(context) {
         }
         context.checks.push('"devDependencies" checked.');
 
-        // max number is E035 
+        for (const blacklist in blacklistPackageJson) {
+            //console.log(`checking blacklist ${blacklist}`);
+            let tmp = context.packageJson;
+            let log = '';
+            for (const element of blacklist.split('.')){
+                log = log + '.' + element;
+                //console.log(`   check ${log}`);
+                tmp = tmp[element];
+                if ( !tmp ){
+                    //console.log(`   ${log} does not exist`);
+                    break
+                }
+            }
+            if (tmp) {
+                if (blacklistPackageJson[blacklist].err) {
+                    context.errors.push(`[E036] ${blacklistPackageJson[blacklist].msg}`);
+                } else {
+                    context.warnings.push(`[W036] ${blacklistPackageJson[blacklist].msg}`);
+                }
+            } 
+            //else {
+            //    console.log(`blacklist ${blacklist} no match`);
+            //}
+        }
+        context.checks.push('"blacklist (package)" checked.');
+// max number is E036 
 
         return context;
     });
@@ -1200,9 +1268,9 @@ function checkIOPackageJson(context) {
                     }
                 }
 
-                if (context.ioPackageJson.common.installedFrom) {
-                    context.errors.push('[E144] common.installedFrom field found in io-package.json. Must be removed.');
-                }
+                //if (context.ioPackageJson.common.installedFrom) {
+                //    context.errors.push('[E144] common.installedFrom field found in io-package.json. Must be removed.');
+                //}
 
                 if (context.ioPackageJson.instanceObjects) {
                     const instanceObjects = context.ioPackageJson.instanceObjects;
@@ -1233,15 +1301,15 @@ function checkIOPackageJson(context) {
                 }
 
                 if (!context.ioPackageJson.common.connectionType) {
-                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E150] No common.connectionType found in io-package.json');
+                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E150] No "common.connectionType" found in io-package.json');
                 } else if (!['local', 'cloud', 'none'].includes(context.ioPackageJson.common.connectionType)) {
-                    context.errors.push(`[E151] common.connectionType type has an invalid value "${context.ioPackageJson.common.connectionType}"`);
+                    context.errors.push(`[E151] "common.connectionType" type has an invalid value "${context.ioPackageJson.common.connectionType}"`);
                 }
 
                 if (!context.ioPackageJson.common.dataSource) {
-                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E152] No common.dataSource found in io-package.json');
+                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E152] No "common.dataSource" found in io-package.json');
                 } else if (!['poll', 'push', 'assumption', 'none'].includes(context.ioPackageJson.common.dataSource)) {
-                    context.errors.push(`[E152] common.dataSource type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
+                    context.errors.push(`[E153] "common.dataSource" type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
                 }
 
                 let currentJsControllerVersion = undefined;
@@ -1349,9 +1417,9 @@ function checkIOPackageJson(context) {
 
                 if (!context.ioPackageJson.common.onlyWWW) {
                     if (!context.ioPackageJson.common.tier) {
-                        context.warnings.push(`[W115] common.tier is required in io-package.json. Please check https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
+                        context.warnings.push(`[W115] \"common.tier\" is required in io-package.json. Please check https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
                     } else if (![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
-                        context.errors.push(`[E155] Invalid common.tier value: ${context.ioPackageJson.common.tier}. Only 1, 2 or 3 are allowed!`);
+                        context.errors.push(`[E155] Invalid \"common.tier\" value: ${context.ioPackageJson.common.tier} at io-package.json. Only 1, 2 or 3 are allowed!`);
                     } else {
                         context.checks.push('"common.tier" is valid in io-package.json');
                     }
@@ -1365,11 +1433,11 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.automaticUpgrade" does not exist in io-package.json');
                 }
 
-                if (context.ioPackageJson.common.wakeup) {
-                    context.warnings.push(`[W174] "common.wakeup" is deprectaed. Please remove from io-package.json`);
-                } else {
-                    context.checks.push('"common.wakeup" does not exist in io-package.json');
-                }
+                //if (context.ioPackageJson.common.wakeup) {
+                //    context.warnings.push(`[W174] "common.wakeup" is deprectaed. Please remove from io-package.json`);
+                //} else {
+                //    context.checks.push('"common.wakeup" does not exist in io-package.json');
+                //}
 
                 if (context.ioPackageJson.common.restartAdapters) {
                     const restartAdaptersArray = context.ioPackageJson.common.restartAdapters;
@@ -1383,6 +1451,32 @@ function checkIOPackageJson(context) {
                 } else {
                     context.checks.push('"restartAdapters" check skipped as object not present.');
                 }
+
+                for (const blacklist in blacklistIOPackageJson) {
+                    //console.log(`checking blacklist ${blacklist}`);
+                    let tmp = context.ioPackageJson;
+                    let log = '';
+                    for (const element of blacklist.split('.')){
+                        log = log + '.' + element;
+                        //console.log(`   check ${log}`);
+                        tmp = tmp[element];
+                        if ( !tmp ){
+                            //console.log(`   ${log} does not exist`);
+                            break
+                        }
+                    }
+                    if (tmp) {
+                        if (blacklistIOPackageJson[blacklist].err) {
+                            context.errors.push(`[E184] ${blacklistIOPackageJson[blacklist].msg}`);
+                        } else {
+                            context.warnings.push(`[W184] ${blacklistIOPackageJson[blacklist].msg}`);
+                        }
+                    } 
+                    //else {
+                    //    console.log(`blacklist ${blacklist} no match`);
+                    //}
+                }
+                context.checks.push('"blacklist (io-package)" checked.');
 
                 if (context.ioPackageJson.common.extIcon) {
                     return downloadFile(context.ioPackageJson.common.extIcon, null, true)
@@ -1416,7 +1510,8 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E183
+                // max number is E184
+                // free 144, 174
             }
         });
     });
