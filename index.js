@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 /*
 
    ___      _             _              _____ _               _
@@ -29,6 +28,20 @@ const recommendedAdapterCoreVersion = '3.0.6';
 const recommendedJsControllerVersion = '5.0.11';
 const recommendedNodeVersion = '18';
 const requiredNodeVersion = '16';
+
+const dependencies = {
+    "@iobroker/adapter-core": {
+        "required":"3.1.4",
+        "recommended":"3.1.4"
+    }
+};
+
+const devDependencies = {
+    "@iobroker/testing": {
+        "required":"4.1.3",
+        "recommended":"4.1.3"
+    }
+};
 
 const memStore = {};
 
@@ -85,6 +98,7 @@ function checkLanguages(langObj) {
 
 function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
+        console.log('\ngetGithubApiData');
         axios.get(context.githubUrlApi, { cache: false })
             .then(response => {
                 context.githubApiData = response.data;
@@ -96,14 +110,93 @@ function getGithubApiData(context) {
                 }
 
                 context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
-                console.log(`Original URL: ${context.githubUrlOriginal}, raw: ${context.githubUrl}, api: ${context.githubUrlApi}`);
+                console.log(`Original URL: ${context.githubUrlOriginal}`);
+                console.log(`raw:          ${context.githubUrl}`);
+                console.log(`api:          ${context.githubUrlApi}`);
 
                 resolve(context);
             })
-            .catch(e => reject(e.toJSON()));
+            .catch(e => {
+                context.errors.push(`[E000] FATAL: cannot access repository ${context.githubUrlApi}`);
+                reject(e.toJSON())
+            });// E0xx
     });
 }
 
+// Error ranges
+// E0xx
+//      check package.json
+// 
+// E1xx 
+//      check io-package.json
+// 
+// E2xx 
+//      check npm and npmjs.org
+// 
+// E3xx 
+//      check testing
+// 
+// E4xx 
+//      check repositories
+// 
+// E5xx 
+//      check code
+// 
+// E6xx 
+//      check README file
+// 
+// E7xx 
+//      check license file
+// 
+// E8xx 
+//      check github repository
+//
+// E9xx 
+//      check .gitignore file
+
+// ---------------------------- let's begin ----------------------------
+
+function getPackageJson(context) {
+    return new Promise((resolve, reject) => {
+        console.log('\ngetPackageJson');
+        
+        downloadFile(context.githubUrl, '/package.json')
+            .then(packageJson => {
+                context.packageJson = packageJson;
+                if (typeof context.packageJson === 'string') {
+                    try {
+                        context.packageJson = JSON.parse(context.packageJson);
+                    } catch (e) {
+                        context.errors.push(`[E001] Cannot parse package.json: ${e}`);
+                    }
+                }
+                resolve( context );
+            })
+            .catch(e => reject(e));
+    })
+};
+
+function getIOPackageJson(context) {
+    return new Promise((resolve, reject) => {
+        console.log('\ngetIOPackageJson');
+        
+        downloadFile(context.githubUrl, '/io-package.json')
+            .then(ioPackageJson => {
+                context.ioPackageJson = ioPackageJson;
+                if (typeof context.ioPackageJson === 'string') {
+                    try {
+                        context.ioPackageJson = JSON.parse(context.ioPackageJson);
+                    } catch (e) {
+                        context.errors.push(`[E100] Cannot parse ioPackage.json: ${e}`);
+                    }
+                }
+                resolve( context );
+            })
+            .catch(e => reject(e));
+    })
+};
+
+        
 // check package.json
 // E0xx
 function checkPackageJson(context) {
@@ -112,184 +205,257 @@ function checkPackageJson(context) {
         if (context.packageJson) {
             return resolve(context.packageJson);
         } else {
-            return downloadFile(context.githubUrl, '/package.json')
-                .then(packageJson => resolve(packageJson))
-                .catch(e => reject(e));
+            throw('package.json not loaded');
         }
     })
-        .then(packageJson => {
-            context.packageJson = packageJson;
-            if (typeof context.packageJson === 'string') {
-                try {
-                    context.packageJson = JSON.parse(context.packageJson);
-                } catch (e) {
-                    context.errors.push(`[E001] Cannot parse package.json: ${e}`);
-                    return context;
-                }
+    .then(packageJson => {
+        context.packageJson = packageJson;
+        if (typeof context.packageJson === 'string') {
+            try {
+                context.packageJson = JSON.parse(context.packageJson);
+            } catch (e) {
+                context.errors.push(`[E001] Cannot parse package.json: ${e}`);
+                return context;
             }
+        }
 
-            if (!context.githubUrlOriginal.match(/\/iobroker\./i)) {
-                context.errors.push('[E002] No "ioBroker." found in the name of repository');
+        if (!context.githubUrlOriginal.match(/\/iobroker\./i)) {
+            context.errors.push('[E002] No "ioBroker." found in the name of repository');
+        } else {
+            context.checks.push('"ioBroker" was found in the name of repository');
+        }
+
+        if (context.githubUrlOriginal.includes('/iobroker.')) {
+            context.errors.push('[E003] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
+        } else {
+            context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
+        }
+
+        const m = context.githubUrlOriginal.match(/\/ioBroker\.(.*)$/);
+        let adapterName = '';
+        if (!m || !m[1]) {
+            context.errors.push(`[E004] No adapter name found in URL: ${context.githubUrlOriginal}`);
+        } else {
+            context.checks.push('Adapter name found in the URL');
+            adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
+        }
+
+        context.adapterName = adapterName;
+
+        if (adapterName.match(/[A-Z]/)) {
+            context.errors.push('[E005] Adapter name must be lowercase');
+        } else {
+            context.checks.push('Adapter name is lowercase');
+        }
+
+        if (adapterName.match(/[^-_a-z\d]/)) {
+            context.errors.push(`[E006] Invalid characters found in adapter name "${adapterName}". Only lowercase chars, digits, "-" and "_" are allowed`);
+        } else {
+            context.checks.push(`No invalid characters found in "${adapterName}"`);
+        }
+
+        if (adapterName.startsWith('_')) {
+            context.errors.push(`[E024] Adapter name "${adapterName}" may not start with '_'`);
+        } else {
+            context.checks.push(`Adapter name "${adapterName}" does not start with '_'`);
+        }
+
+        const n = context.githubUrlOriginal.match(/\/([^/]+)\/iobroker\./i);
+        if (!n || !n[1]) {
+            context.errors.push('[E007] Cannot find author repo in the URL');
+        } else {
+            context.authorName = n[1];
+        }
+
+        if (context.packageJson.name !== `iobroker.${adapterName.toLowerCase()}`) {
+            context.errors.push(`[E020] Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}". Now is "${packageJson.name}"`);
+        } else {
+            context.checks.push(`Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}".`);
+        }
+
+        if (!context.packageJson.version) {
+            context.errors.push('[E009] No version found in the package.json');
+        } else {
+            context.checks.push('Version found in package.json');
+        }
+
+        if (!context.packageJson.description) {
+            context.errors.push('[E010] No description found in the package.json');
+        } else {
+            context.checks.push('Description found in package.json');
+        }
+
+        if (context.packageJson.licenses) {
+            context.errors.push('[E021] "licenses" in package.json are deprecated. Please remove and use "license": "NAME" field.');
+        } else {
+            context.checks.push('No "licenses" found in package.json');
+        }
+
+        if (!context.packageJson.author) {
+            context.errors.push('[E013] No author found in the package.json');
+        } else {
+            context.checks.push('Author found in package.json');
+        }
+
+        if (context.packageJson._args) {
+            context.errors.push('[E014] NPM information found in package.json. Please remove all attributes starting with "_"');
+        } else {
+            context.checks.push('No npm generated attributes found in package.json');
+        }
+
+        if (!context.packageJson.license) {
+            context.errors.push('[E015] No license found in package.json');
+        } else {
+            context.checks.push('"license" found in package.json');
+
+            // check if license valid
+            if (!licenses.includes(context.packageJson.license)) {
+                context.errors.push('[E016] ${context.packageJson.license} found in package.json is no valid SPDX license. Please use one of listed here: https://spdx.org/licenses/');
             } else {
-                context.checks.push('"ioBroker" was found in the name of repository');
+                context.checks.push('"license" is valid in package.json');
             }
+        }
 
-            if (context.githubUrlOriginal.includes('/iobroker.')) {
-                context.errors.push('[E003] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
-            } else {
-                context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
-            }
+        if (!context.packageJson.repository) {
+            context.errors.push('[E017] No repository found in the package.json');
+        } else {
+            context.checks.push('Repository found in package.json');
 
-            const m = context.githubUrlOriginal.match(/\/ioBroker\.(.*)$/);
-            let adapterName = '';
-            if (!m || !m[1]) {
-                context.errors.push(`[E004] No adapter name found in URL: ${context.githubUrlOriginal}`);
-            } else {
-                context.checks.push('Adapter name found in the URL');
-                adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
-            }
+            const allowedRepoUrls = [
+                context.githubApiData.html_url, // https://github.com/klein0r/ioBroker.luftdaten
+                `git+${context.githubApiData.html_url}`, // git+https://github.com/klein0r/ioBroker.luftdaten
+                context.githubApiData.git_url, // git://github.com/klein0r/ioBroker.luftdaten.git
+                context.githubApiData.ssh_url, // git@github.com:klein0r/ioBroker.luftdaten.git
+                context.githubApiData.clone_url, // https://github.com/klein0r/ioBroker.luftdaten.git
+                `git+${context.githubApiData.clone_url}` // git+https://github.com/klein0r/ioBroker.luftdaten.git
+            ];
 
-            context.adapterName = adapterName;
-
-            if (adapterName.match(/[A-Z]/)) {
-                context.errors.push('[E005] Adapter name must be lowercase');
-            } else {
-                context.checks.push('Adapter name is lowercase');
-            }
-
-            if (adapterName.match(/[^-_a-z\d]/)) {
-                context.errors.push(`[E006] Invalid characters found in adapter name "${adapterName}". Only lowercase chars, digits, "-" and "_" are allowed`);
-            } else {
-                context.checks.push(`No invalid characters found in "${adapterName}"`);
-            }
-
-            if (adapterName.startsWith('_')) {
-                context.errors.push(`[E024] Adapter name "${adapterName}" may not start with '_'`);
-            } else {
-                context.checks.push(`Adapter name "${adapterName}" does not start with '_'`);
-            }
-
-            const n = context.githubUrlOriginal.match(/\/([^/]+)\/iobroker\./i);
-            if (!n || !n[1]) {
-                context.errors.push('[E007] Cannot find author repo in the URL');
-            } else {
-                context.authorName = n[1];
-            }
-
-            if (context.packageJson.name !== `iobroker.${adapterName.toLowerCase()}`) {
-                context.errors.push(`[E020] Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}". Now is "${packageJson.name}"`);
-            } else {
-                context.checks.push(`Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}".`);
-            }
-
-            if (!context.packageJson.version) {
-                context.errors.push('[E009] No version found in the package.json');
-            } else {
-                context.checks.push('Version found in package.json');
-            }
-
-            if (!context.packageJson.description) {
-                context.errors.push('[E010] No description found in the package.json');
-            } else {
-                context.checks.push('Description found in package.json');
-            }
-
-            if (context.packageJson.licenses) {
-                context.errors.push('[E021] "licenses" in package.json are deprecated. Please use only "license": "NAME" field.');
-            } else {
-                context.checks.push('No "licenses" found in package.json');
-            }
-
-            if (!context.packageJson.author) {
-                context.errors.push('[E013] No author found in the package.json');
-            } else {
-                context.checks.push('Author found in package.json');
-            }
-
-            if (context.packageJson._args) {
-                context.errors.push('[E014] NPM information found in package.json. Please remove all attributes starting with "_"');
-            } else {
-                context.checks.push('No npm generated attributes found in package.json');
-            }
-
-            if (!context.packageJson.license) {
-                context.errors.push('[E015] No license found in package.json');
-            } else {
-                context.checks.push('"license" found in package.json');
-
-                // check if license valid
-                if (!licenses.includes(context.packageJson.license)) {
-                    context.errors.push('[E016] No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/');
+            // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
+            if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
+                if (context.packageJson.repository.type !== 'git') {
+                    context.errors.push(`[E018] Invalid repository type in package.json: ${context.packageJson.repository.type}. It should be git`);
                 } else {
-                    context.checks.push('"license" is valid in package.json');
+                    context.checks.push('Repository type is valid in package.json: git');
                 }
-            }
 
-            if (!context.packageJson.repository) {
-                context.errors.push('[E017] No repository found in the package.json');
-            } else {
-                context.checks.push('Repository found in package.json');
-
-                const allowedRepoUrls = [
-                    context.githubApiData.html_url, // https://github.com/klein0r/ioBroker.luftdaten
-                    `git+${context.githubApiData.html_url}`, // git+https://github.com/klein0r/ioBroker.luftdaten
-                    context.githubApiData.git_url, // git://github.com/klein0r/ioBroker.luftdaten.git
-                    context.githubApiData.ssh_url, // git@github.com:klein0r/ioBroker.luftdaten.git
-                    context.githubApiData.clone_url, // https://github.com/klein0r/ioBroker.luftdaten.git
-                    `git+${context.githubApiData.clone_url}` // git+https://github.com/klein0r/ioBroker.luftdaten.git
-                ];
-
-                // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
-                if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
-                    if (context.packageJson.repository.type !== 'git') {
-                        context.errors.push(`[E018] Invalid repository type in package.json: ${context.packageJson.repository.type}. It should be git`);
-                    } else {
-                        context.checks.push('Repository type is valid in package.json: git');
-                    }
-
-                    if (!allowedRepoUrls.includes(context.packageJson.repository.url)) {
-                        context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
-                    } else {
-                        context.checks.push('Repository URL is valid in package.json');
-                    }
-                } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
-                    if (!allowedRepoUrls.includes(context.packageJson.repository)) {
-                        context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
-                    } else {
-                        context.checks.push('Repository URL is valid in package.json');
-                    }
+                if (!allowedRepoUrls.includes(context.packageJson.repository.url)) {
+                    context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
                 } else {
-                    context.errors.push('[E019] Invalid repository URL in package.json');
+                    context.checks.push('Repository URL is valid in package.json');
+                }
+            } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
+                if (!allowedRepoUrls.includes(context.packageJson.repository)) {
+                    context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
+                } else {
+                    context.checks.push('Repository URL is valid in package.json');
+                }
+            } else {
+                context.errors.push('[E019] Invalid repository URL in package.json');
+            }
+        }
+
+        if (reservedAdapterNames.includes(adapterName)) {
+            context.errors.push('[E022] Adapter name is reserved. Please rename adapter.');
+        } else {
+            context.checks.push('Adapter name is not reserved');
+        }
+
+        if (!context.packageJson.dependencies) {
+            context.errors.push('[W030] No dependencies declared at package.json. Is this really correct?');
+        }
+        if (!context.packageJson.devDependencies) {
+            context.errors.push('[E031] No devDependencies declared at package.json. Plase correct package.json');
+        }
+
+        if ((context.packageJson.dependencies && context.packageJson.dependencies.npm) || (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies.npm)) {
+            context.errors.push('[E023] Do not include "npm" as dependency!');
+        } else {
+            context.checks.push('npm is not in dependencies');
+        }
+
+        if ((context.packageJson.dependencies && context.packageJson.dependencies['iobroker.js-controller']) ||
+            (context.packageJson.devDependencies && context.packageJson.devDependencies['iobroker.js-controller']) ||
+            (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies['iobroker.js-controller'])
+        ) {
+            context.errors.push('[E025] Do not include "iobroker.js-controller" as dependency!');
+        } else {
+            context.checks.push('iobroker.js-controller is not in dependencies');
+        }
+
+        if (!context.ioPackageJson.common.onlyWWW) {
+            if (!context.packageJson.engines) {
+                context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${requiredNodeVersion}'}}" is recommened`);                                    
+            } else {
+                if (!context.packageJson.engines.node) {
+                    context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${requiredNodeVersion}'}}" is recommened`);                                    
+                } else {
+                    context.checks.push('engines attribute containing node requirements exist.');
+                    // 'engines': { 'node': '>= 18' }
+                    // 'engines': { 'node': '>= 18.1.2' }
+                    // 'engines': { 'node': '>= 18.1.2 < 19' }
+                    const nodeVal = context.packageJson.engines.node;
+                    let match = nodeVal.match(/^^(?<cmp>[<>=~]+)?\s*(?<vers>\d+(\.\d+(\.\d+)?)?(\-\w+\.\d+)?)/m);
+                    if ( ! match ) {
+                        context.warnings.push(`[W027] {'engines' : { 'node' : '${nodeVal}' } }" is not parseable.`);
+                    } else {
+                        //console.log( `${JSON.stringify(match.groups)}`);
+                        if ( match.groups.cmp !== '>' && match.groups.cmp !== '>=' ) {
+                            context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
+                        } else {
+                            //console.log( `${match.groups.vers} - ${recommendedNodeVersion}`);
+                            if ( ! compareVersions.compare( match.groups.vers, requiredNodeVersion, '>=')) {
+                                context.errors.push(`[E029] Node.js ${requiredNodeVersion} is required as minimum, node.js ${recommendedNodeVersion} is recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);
+                            } else if ( ! compareVersions.compare( match.groups.vers, recommendedNodeVersion, '>=')) {
+                                context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
+                            } else {
+                                context.checks.push(`Correct node.js version ${match.groups.vers} requested by "engines" attribute at package.json.`);
+                            }
+                        }
+                    }
+                }
+            }        
+        } else {
+            context.checks.push('"engines" check skipped for wwwOnly adapter.');
+        }
+
+        if (!context.ioPackageJson.common.onlyWWW) {
+            for (const dependency in dependencies) {
+                const requiredVersion = dependencies[dependency].required;
+                const recommendedVersion = dependencies[dependency].recommended;
+                let dependencyVersion = context.packageJson.dependencies[`${dependency}`] || '';
+                dependencyVersion = dependencyVersion.replace(/[\^\~]/,'' );
+                if (!dependencyVersion) {
+                    context.errors.push(`[E032] No dependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to dependencies at package.json`);
+                } else if (! compareVersions.compare( dependencyVersion, requiredVersion, '>=' )) {
+                    context.errors.push(`[E033] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum, ${recommendedVersion} is recommended. Please update dependencies at package.json`);
+                } else {
+                    context.checks.push('dependency ${dependency} ${dependencyVersion} is ok');
                 }
             }
+            context.checks.push('"dependencies" checked.');
+        } else {
+            context.checks.push('"dependencies" check skipped for wwwOnly adapter.');
+        }
 
-            if (reservedAdapterNames.includes(adapterName)) {
-                context.errors.push('[E022] Adapter name is reserved!');
+        for (const dependency in devDependencies) {
+            const requiredVersion = devDependencies[dependency].required;
+            const recommendedVersion = devDependencies[dependency].recommended;
+            let dependencyVersion = context.packageJson.devDependencies[`${dependency}`] || '';
+            dependencyVersion = dependencyVersion.replace(/[\^\~]/,'' );
+            if (!dependencyVersion) {
+                context.errors.push(`[E034] No devDependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to devDependencies at package.json`);
+            } else if (! compareVersions.compare( dependencyVersion, requiredVersion, '>=' )) {
+                context.errors.push(`[E035] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum,  ${recommendedVersion} is recommended. Please update devDependencies at package.json`);
             } else {
-                context.checks.push('Adapter name is not reserved');
+                context.checks.push('devDependency ${dependency} ${dependencyVersion} is ok');
             }
+        }
+        context.checks.push('"devDependencies" checked.');
 
-            if ((context.packageJson.dependencies && context.packageJson.dependencies.npm) || (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies.npm)) {
-                context.errors.push('[E023] Do not include "npm" as dependency!');
-            } else {
-                context.checks.push('npm is not in dependencies');
-            }
+        // max number is E035 
 
-            if ((context.packageJson.dependencies && context.packageJson.dependencies['iobroker.js-controller']) ||
-                (context.packageJson.devDependencies && context.packageJson.devDependencies['iobroker.js-controller']) ||
-                (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies['iobroker.js-controller'])
-            ) {
-                context.errors.push('[E025] Do not include "iobroker.js-controller" as dependency!');
-            } else {
-                context.checks.push('iobroker.js-controller is not in dependencies');
-            }
-
-            // SPECIAL NOTE: E026-E029 are used at checkIoPackage.json 
-
-            // max number is E029 
-
-            return context;
-        });
+        return context;
+    });
 }
 
 const allowedLanguages = [
@@ -723,11 +889,10 @@ function checkIOPackageJson(context) {
         if (context.ioPackageJson) {
             return resolve(context.ioPackageJson);
         } else {
-            return downloadFile(context.githubUrl, '/io-package.json')
-                .then(packageJson => resolve(packageJson))
-                .catch(e => reject(e));
+            throw('io-package.json not loaded');
         }
-    }).then(ioPackageJson => {
+    })
+    .then(ioPackageJson => {
         return new Promise(resolve => {
             context.ioPackageJson = ioPackageJson;
             if (typeof context.ioPackageJson === 'string') {
@@ -1206,50 +1371,6 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.wakeup" does not exist in io-package.json');
                 }
 
-                /* 
-                 * The following check is logical related to package.json. It is placed here as the check must be performed only
-                 * if wwwOnly attribute is not set at io-package.json. Please note that these errors use error number form package.json range.
-                 *
-                 */
-     
-                if (!context.ioPackageJson.common.onlyWWW) {
-                    if (!context.packageJson.engines) {
-                        context.warnings.push(`[W026] "{'engines' : { 'node' >= '${recommendedNodeVersion}' } }" is required at package.json`);                                    
-                    } else {
-                        if (!context.packageJson.engines.node) {
-                            context.warnings.push(`[W026] "{'engines' : { 'node' >= '${recommendedNodeVersion}' } }" is required at package.json`);                                    
-                        } else {
-                            context.checks.push('engines attribute containing node requirements exist.');
-                            // 'engines': { 'node': '>= 18' }
-                            // 'engines': { 'node': '>= 18.1.2' }
-                            // 'engines': { 'node': '>= 18.1.2 < 19' }
-                            const nodeVal = context.packageJson.engines.node;
-                            let match = nodeVal.match(/^^(?<cmp>[<>=~]+)?\s*(?<vers>\d+(\.\d+(\.\d+)?)?(\-\w+\.\d+)?)/m);
-                            if ( ! match ) {
-                                context.warnings.push(`[W027] {'engines' : { 'node' : '${nodeVal}' } }" is not parseable.`);
-                            } else {
-                                //console.log( `${JSON.stringify(match.groups)}`);
-                                if ( match.groups.cmp !== '>' && match.groups.cmp !== '>=' ) {
-                                    context.warnings.push(`[W026] "{'engines' : { 'node' >= '${recommendedNodeVersion}' } }" is required at package.json`);                                    
-                                } else {
-                                    //console.log( `${match.groups.vers} - ${recommendedNodeVersion}`);
-                                    if ( ! compareVersions.compare( match.groups.vers, requiredNodeVersion, '>=')) {
-                                        context.errors.push(`[E029] Node.js ${requiredNodeVersion} is required as minimum, node.js ${recommendedNodeVersion} is recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
-                                    } else if ( ! compareVersions.compare( match.groups.vers, recommendedNodeVersion, '>=')) {
-                                        context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
-                                    } else {
-                                        context.checks.push('Correct node.js version requested by "engines" attribute at package.json.');
-                                    }
-                                }
-                            }
-                        }
-                    }        
-                } else {
-                    context.checks.push('"engines" check skipped for wwwOnly adapter.');
-                }
-                /* end of foreign check */
-
-
                 if (context.ioPackageJson.common.restartAdapters) {
                     const restartAdaptersArray = context.ioPackageJson.common.restartAdapters;
 
@@ -1342,10 +1463,15 @@ function checkNpm(context) {
                 if (!body['dist-tags'] ||
                     context.packageJson.version !== body['dist-tags'].latest
                 ) {
-                    context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${
-                        (body['dist-tags'] && body['dist-tags'].latest) || JSON.stringify(body)})`);
+                    if ( compareVersions.compare( body['dist-tags'].latest, context.packageJson.version, '>=' )) {
+                        context.errors.push(`[E203] Version of package.json (${context.packageJson.version}) lower than latest version on NPM (${
+                            (body['dist-tags'] && body['dist-tags'].latest) || JSON.stringify(body)})`);
+                    } else {
+                        context.warnings.push(`[W202] Version of package.json (${context.packageJson.version}) doesn't match latest version on NPM (${
+                            (body['dist-tags'] && body['dist-tags'].latest) || JSON.stringify(body)})`);
+                    }
                 } else {
-                    context.checks.push('Version of package.json matches latest version on NPM');
+                    context.checks.push(`Version of package.json ${context.packageJson.version} matches latest version on NPM`);
                 }
             }
 
@@ -2073,7 +2199,7 @@ function makeResponse(code, data) {
 }
 
 function check(request, ctx, callback) {
-    console.log('PROCESS: ' + JSON.stringify(request));
+//    console.log('PROCESS: ' + JSON.stringify(request));
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, {error: 'No github URL provided'}));
     } else {
@@ -2095,6 +2221,8 @@ function check(request, ctx, callback) {
         context.branch = githubBranch || null;
 
         getGithubApiData(context)
+            .then(context => getPackageJson(context))
+            .then(context => getIOPackageJson(context))
             .then(context => checkPackageJson(context))
             .then(context => checkIOPackageJson(context))
             .then(context => checkNpm(context))
