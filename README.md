@@ -20,8 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 2.3.1 (2024-05-07)
 * (mcm1957) Reduce number of missing translation warnings.
 * (mcm1957) Seperate between required and recommended translations.
 * (mcm1957) Log missing translations in detail.
