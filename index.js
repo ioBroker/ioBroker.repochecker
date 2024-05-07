@@ -133,10 +133,16 @@ function getDependencyArray(deps) {
         .reduce((acc, dep) => acc.concat(dep), []);
 }
 
+/*
 function checkLanguages(langObj) {
     if (Object.keys(langObj).length !== allowedLanguages.length) return false;
 
     return Object.keys(langObj).filter(lang => allowedLanguages.includes(lang)).length === allowedLanguages.length;
+}
+*/
+
+function checkLanguages(langObj, languages) {
+    return languages.filter( lang => !langObj[lang]);
 }
 
 function getGithubApiData(context) {
@@ -538,6 +544,12 @@ const allowedLanguages = [
     'pl',
     'uk',
     'zh-cn'
+];
+
+const requiredLanguages = [
+    'en',
+    'de',
+//    'xx' // TESTING ONLY
 ];
 
 const allowedModes = {
@@ -989,10 +1001,11 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.name" is valid in io-package.json');
                 }
 
+/*
                 if (context.ioPackageJson.common.title) {
                     context.warnings.push('[W171] "common.title" is deprecated in io-package.json. Please remove from io-package.json.');
                 }
-/*
+
                 if (context.ioPackageJson.common.main) {
                     context.warnings.push('[W177] "common.main" is deprecated in io-package.json. For js-controller >= 3.3 please use package.json main and remove "common.main" from io-package.json.');
                 }
@@ -1016,24 +1029,34 @@ function checkIOPackageJson(context) {
 
                     if (typeof context.ioPackageJson.common.titleLang !== 'object') {
                         context.errors.push(`[E105] "common.titleLang" must be an object. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
-                    } else if (!checkLanguages(context.ioPackageJson.common.titleLang)) {
-                        context.warnings.push(`[W105] "common.titleLang" should be translated into all supported languages (${allowedLanguages.join(', ')})`);
-                    } else {
-                        Object.keys(context.ioPackageJson.common.titleLang).forEach(lang => {
-                            const text = context.ioPackageJson.common.titleLang[lang];
-                            if (text.match(/iobroker/i)) {
-                                context.errors.push(`[W105] "common.titleLang" should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
-                            } else {
-                                context.checks.push('"common.titleLang" has no ioBroker in it in io-package.json');
-                            }
-
-                            if (text.match(/\sadapter|adapter\s/i)) {
-                                context.errors.push(`[E106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
-                            } else {
-                                context.checks.push('"common.titleLang" has no "adapter" in it in io-package.json');
-                            }
-                        });
+                    } else {                        
+                        let missingLang = checkLanguages(context.ioPackageJson.common.titleLang, requiredLanguages);
+                        if (missingLang.length) {
+                            context.warnings.push(`[E105] Missing mandatory translation into ${missingLang.join()} of "common.titleLang" in io-package.json.`);
+                        }
+    
+                        missingLang = checkLanguages(context.ioPackageJson.common.titleLang, allowedLanguages);
+                        missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
+                        if (missingLang.length) {
+                            missingLang = [... new Set(missingLang)];  // make unique
+                            context.warnings.push(`[W105] Missing suggested translation into ${missingLang.join()} of "common.titleLang" in io-package.json.`);
+                        }
                     }
+
+                    Object.keys(context.ioPackageJson.common.titleLang).forEach(lang => {
+                        const text = context.ioPackageJson.common.titleLang[lang];
+                        if (text.match(/iobroker/i)) {
+                            context.errors.push(`[W105] "common.titleLang" should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
+                        } else {
+                            context.checks.push('"common.titleLang" has no ioBroker in it in io-package.json');
+                        }
+
+                        if (text.match(/\sadapter|adapter\s/i)) {
+                            context.errors.push(`[E106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
+                        } else {
+                            context.checks.push('"common.titleLang" has no "adapter" in it in io-package.json');
+                        }
+                    });
                 }
 
                 if (!context.ioPackageJson.common.version) {
@@ -1055,13 +1078,22 @@ function checkIOPackageJson(context) {
 
                     if (typeof context.ioPackageJson.common.desc !== 'object') {
                         context.errors.push(`[E109] "common.desc" in io-package.json should be an object for many languages. Found only "${context.ioPackageJson.common.desc}"`);
-                    } else if (!checkLanguages(context.ioPackageJson.common.desc)) {
-                        context.warnings.push(`[W109] "common.desc" should be translated into all supported languages (${allowedLanguages.join(', ')})`);
                     } else {
-                        context.checks.push('"common.desc" is multilingual in io-package.json');
+                
+                        let missingLang = checkLanguages(context.ioPackageJson.common.desc, requiredLanguages);
+                        if (missingLang.length) {
+                            context.warnings.push(`[E109] Missing mandatory translation into ${missingLang.join()} of "common.desc" in io-package.json.`);
+                        }
+    
+                        missingLang = checkLanguages(context.ioPackageJson.common.desc, allowedLanguages);
+                        missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
+                        if (missingLang.length) {
+                            missingLang = [... new Set(missingLang)];  // make unique
+                            context.warnings.push(`[W109] Missing suggested translation into ${missingLang.join()} of "common.desc" in io-package.json.`);
+                        }
                     }
                 }
-
+                
                 if (context.ioPackageJson.common.keywords) {
                     const forbiddenKeywords = ['iobroker', 'adapter', 'smart home'];
                     if (!Array.isArray(context.ioPackageJson.common.keywords)) {
@@ -1247,14 +1279,28 @@ function checkIOPackageJson(context) {
                     });
 
                     if (!context.ioPackageJson.common.news[context.ioPackageJson.common.version]) {
-                        context.errors.push(`[E145] No "common.news" found for actual version ${context.ioPackageJson.common.version}`);
+                        context.errors.push(`[E145] No "common.news" found for actual version ${context.ioPackageJson.common.version} in io-package.json`);
                     }
 
-                    Object.keys(context.ioPackageJson.common.news).forEach(version => {
-                        if (!checkLanguages(context.ioPackageJson.common.news[version])) {
-                            context.warnings.push(`[W145] Each "common.news" should be translated into all supported languages (${allowedLanguages.join(', ')})`);
-                        }
+                    let missingLang =[];
+                    Object.keys(context.ioPackageJson.common.news).forEach(version => {               
+                        missingLang = missingLang.concat( checkLanguages(context.ioPackageJson.common.news[version], requiredLanguages) );
                     });
+                    if (missingLang.length) {
+                        missingLang = [... new Set(missingLang)]; // make unique
+                        context.warnings.push(`[E145] Missing mandatory translation into ${missingLang.join()} of some "common.news" in io-package.json.`);
+                    }
+
+                    missingLang =[];
+                    Object.keys(context.ioPackageJson.common.news).forEach(version => {               
+                        missingLang = missingLang.concat(checkLanguages(context.ioPackageJson.common.news[version], allowedLanguages));
+                    });
+                    missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
+                    if (missingLang.length) {
+                        missingLang = [... new Set(missingLang)];  // make unique
+                        context.warnings.push(`[W145] Missing suggested translation into ${missingLang.join()} of some "common.news" in io-package.json.`);
+                    }
+
                 }
 
                 // now check the package.json again, because it is valid only for onlyWWW
@@ -1378,19 +1424,8 @@ function checkIOPackageJson(context) {
                             }
                         }
                     }
-
-                    /*
-                        - adapter-core 3.0.0+ requires node 16+ - solved as node 16 is global minimum
-                        - adapter-core 3.0.6 is recommended as minimum
-                    */
-
-                    if (!compareVersions.compare(context.packageJson.dependencies['@iobroker/adapter-core'], `${recommendedAdapterCoreVersion}`, '>=')) {
-                        context.warnings.push(`[W173] "@iobroker/adapter-core" (${context.packageJson.dependencies['@iobroker/adapter-core']}) should be ${recommendedAdapterCoreVersion} or newer - please update`);
-                    } else {
-                        context.checks.push(`adapter-core ${context.packageJson.dependencies['@iobroker/adapter-core']} matches recommendation`);
-                    }
                 }
-
+                
                 if (context.ioPackageJson.common.protectedNative) {
                     if (!currentJsControllerVersion) {
                         context.errors.push(`[E157] common.protectedNative requires dependency {"js-controller": ">=2.0.2"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
@@ -1512,6 +1547,7 @@ function checkIOPackageJson(context) {
 
                 // max number is E184
                 // free 144, 174
+                // duplicates to check 145
             }
         });
     });
