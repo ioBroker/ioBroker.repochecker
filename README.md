@@ -21,9 +21,11 @@ Branch (`master/main/dev`) is optional.
 
 ## Changelog
 
-<!--
-* (mcm1957) Added deprecate warnings for "main', 'materialize", "materializeTab" and "noConfig"
--->
+### **WORK IN PROGRESS**
+* (mcm1957) Reduce number of missing translation warnings.
+* (mcm1957) Seperate between required and recommended translations.
+* (mcm1957) Log missing translations in detail.
+
 ### 2.3.0 (2024-05-07)
 * (mcm1957) Elements marked as deprectaed added to blacklist.
 * (mcm1957) Blacklist added to block elements at package.json and io-package.json.
