@@ -57,7 +57,7 @@ const blacklistIOPackageJson = {
         "err": true
     },
     "common.title": {
-        "msg": "\"common.title\" is deprecated an replaces by \"common.titleLang\". Please remove from io-package.json.",
+        "msg": "\"common.title\" is deprecated and replaced by \"common.titleLang\". Please remove from io-package.json.",
         "err": false
     },
     "common.main": {
