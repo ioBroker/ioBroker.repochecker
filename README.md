@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) Add check to protect snsitive data. [#195]
+
 ### 2.3.1 (2024-05-07)
 * (mcm1957) Reduce number of missing translation warnings.
 * (mcm1957) Seperate between required and recommended translations.

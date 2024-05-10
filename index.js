@@ -988,6 +988,44 @@ function checkIOPackageJson(context) {
                 context.errors.push('[E101] io-package.json must have at least empty "native" attribute');
             } else {
                 context.checks.push('"native" found in io-package.json');
+
+                // Generic check for potential credentials that should have a counterpart in encryptedNative/protectedNative
+                const suspiciousPhrases = [
+                    'apikey',
+                    'api_key',
+                    'credential',
+                    'passwd',
+                    'password',
+                    'passwort',
+                    'pin',
+                    'psk',
+                    'pwd',
+                    'secret',
+                    'token',
+                ];
+                //const regex = new RegExp(suspiciousPhrases.join('|'), 'i');
+
+                let suspiciousKeys = Object.keys(context.ioPackageJson.native) || [];
+                console.log(`native keys: ${suspiciousKeys.join()}`);
+                //suspiciousKeys = suspiciousKeys.filter( key => regex.test(key));
+                suspiciousKeys = suspiciousKeys.filter( key => suspiciousPhrases.includes(key.toLowerCase()));
+                console.log(`suspecious keys: ${suspiciousKeys.join()}`);
+
+                if ( suspiciousKeys.length) {
+                    if (context.ioPackageJson.protectedNative) {
+                        const missingProtected = suspiciousKeys.filter( key => !context.ioPackageJson.protectedNative.includes(key));
+                        if (missingProtected.length) context.warnings.push( `[W173] Potential sensitive data "${missingProtected.join()}" not listed at "protectedNative" in io-package.json`);
+                    } else {
+                        context.warnings.push( `[W173] Potential sensitive data "${suspiciousKeys.join()}" not listed at "protectedNative" in io-package.json`);
+                    }
+
+                    if (context.ioPackageJson.encryptedNative) {
+                        const missingProtected = suspiciousKeys.filter( key => !context.ioPackageJson.encryptedNative.includes(key));
+                        if (missingProtected.length) context.warnings.push( `[W174] Potential sensitive data "${missingProtected.join()}" not listed at "encryptedNative" in io-package.json`);
+                    } else {
+                        context.warnings.push( `[W174] Potential sensitive data "${suspiciousKeys.join()}" not listed at "encryptedNative" in io-package.json`);
+                    }
+                }
             }
 
             if (!context.ioPackageJson.common) {
@@ -1546,7 +1584,7 @@ function checkIOPackageJson(context) {
                 // do not put any code behind this line
 
                 // max number is E184
-                // free 144, 174
+                // free 144
                 // duplicates to check 145
             }
         });
