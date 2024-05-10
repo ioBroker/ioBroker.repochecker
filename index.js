@@ -23,6 +23,12 @@ const issues = require('./doc/issues');
 
 const version = require('./package.json').version;
 
+axios.defaults.headers = {
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+};
+
 // adapt recommended version here
 const recommendedAdapterCoreVersion = '3.0.6';
 const recommendedJsControllerVersion = '5.0.11';
@@ -1006,10 +1012,10 @@ function checkIOPackageJson(context) {
                 //const regex = new RegExp(suspiciousPhrases.join('|'), 'i');
 
                 let suspiciousKeys = Object.keys(context.ioPackageJson.native) || [];
-                console.log(`native keys: ${suspiciousKeys.join()}`);
+                // console.log(`native keys: ${suspiciousKeys.join()}`);
                 //suspiciousKeys = suspiciousKeys.filter( key => regex.test(key));
                 suspiciousKeys = suspiciousKeys.filter( key => suspiciousPhrases.includes(key.toLowerCase()));
-                console.log(`suspecious keys: ${suspiciousKeys.join()}`);
+                // console.log(`suspecious keys: ${suspiciousKeys.join()}`);
 
                 if ( suspiciousKeys.length) {
                     if (context.ioPackageJson.protectedNative) {
@@ -1399,31 +1405,38 @@ function checkIOPackageJson(context) {
                 let currentJsControllerVersion = undefined;
 
                 if (context.ioPackageJson.common.dependencies) {
-                    const dependencyArray = getDependencyArray(context.ioPackageJson.common.dependencies);
+                    if (!(context.ioPackageJson.common.dependencies instanceof Array)){
+                        context.errors.push(`[E185] "common.dependencies" must be an array at io-package.json`);
+                    } else {
+                        const dependencyArray = getDependencyArray(context.ioPackageJson.common.dependencies);
 
-                    // Admin is not allowed in dependencies (globalDependencies only)
-                    if (dependencyArray.includes('admin')) {
-                        context.errors.push(`[E160] "admin" is not allowed in common.dependencies`);
-                    }
+                        // Admin is not allowed in dependencies (globalDependencies only)
+                        if (dependencyArray.includes('admin')) {
+                            context.errors.push(`[E160] "admin" is not allowed in common.dependencies`);
+                        }
 
-                    const jsControllerDependency = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
-                    if (jsControllerDependency) {
-                        console.log(`Found current js-controller dependency "${jsControllerDependency['js-controller']}"`);
+                        const jsControllerDependency = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
+                        if (jsControllerDependency) {
+                            console.log(`Found current js-controller dependency "${jsControllerDependency['js-controller']}"`);
 
-                        if (!jsControllerDependency['js-controller'].startsWith('>=')) {
-                            context.errors.push(`[E159] common.dependencies "js-controller" dependency should always allow future versions (>=x.x.x) - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                        } else {
-                            currentJsControllerVersion = jsControllerDependency['js-controller'].replace(/[^\d.]/g, '');
+                            if (!jsControllerDependency['js-controller'].startsWith('>=')) {
+                                context.errors.push(`[E159] common.dependencies "js-controller" dependency should always allow future versions (>=x.x.x) - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                            } else {
+                                currentJsControllerVersion = jsControllerDependency['js-controller'].replace(/[^\d.]/g, '');
+                            }
                         }
                     }
                 }
 
                 if (context.ioPackageJson.common.globalDependencies) {
                     const dependencyArray = getDependencyArray(context.ioPackageJson.common.globalDependencies);
-
-                    // js-controller is not allowed in global dependencies (dependencies only)
-                    if (dependencyArray.includes('js-controller')) {
-                        context.errors.push(`[E161] "js-controller" is not allowed in common.globalDependencies`);
+                    if (!(context.ioPackageJson.common.globalDependencies instanceof Array)){
+                        context.errors.push(`[E186] "common.globalDependencies" must be an array at io-package.json`);
+                    } else {
+                        // js-controller is not allowed in global dependencies (dependencies only)
+                        if (dependencyArray.includes('js-controller')) {
+                            context.errors.push(`[E161] "js-controller" is not allowed in common.globalDependencies`);
+                        }
                     }
                 }
 
@@ -1583,7 +1596,7 @@ function checkIOPackageJson(context) {
                 }
                 // do not put any code behind this line
 
-                // max number is E184
+                // max number is E186
                 // free 144
                 // duplicates to check 145
             }
