@@ -19,10 +19,14 @@ const sizeOf = require('image-size');
 const axios = require('axios');
 const JSON5 = require('json5');
 const compareVersions = require('compare-versions');
+//const Languagedetect = require('languagedetect');
+//const languagedetect = new Languagedetect;
+
 const issues = require('./doc/issues');
 
 const version = require('./package.json').version;
 
+// diable axios caching
 axios.defaults.headers = {
     'Cache-Control': 'no-cache',
     'Pragma': 'no-cache',
@@ -1000,6 +1004,7 @@ function checkIOPackageJson(context) {
                     'apikey',
                     'api_key',
                     'credential',
+                    'pass',
                     'passwd',
                     'password',
                     'passwort',
@@ -2189,6 +2194,9 @@ function checkReadme(context) {
                             context.checks.push('Valid copyright year found in README.md');
                         }
                     }
+
+//                    languages = languagedetect.detect(data, 3);
+//console.log(JSON.stringify(languages));
                 }
 
                 // max E606
