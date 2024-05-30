@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) Add check ensure that dependency revisions are available at repository. [#180]
+
 ### 2.4.0 (2024-05-30)
 * (mcm1957) Add check to protect sensitive data. [#195]
 * (mcm1957) Add check to verify that dependencies and globalDepencies are of type array. [#90]

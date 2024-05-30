@@ -143,6 +143,43 @@ function getDependencyArray(deps) {
         .reduce((acc, dep) => acc.concat(dep), []);
 }
 
+// dependencies might be:
+// [ 
+//    {"js-controller":">=1.2.3"}
+// ]
+// or
+// [ 
+//    {"js-controller":">=1.2.3"},
+//    {"vis":">=1.2.3"}
+// ]
+// or
+// [ 
+//    {
+//      "js-controller":">=1.2.3",
+//      "vis":">=1.2.3"
+//    }
+// ]
+// or
+// [ 
+//    {"js-controller":">=1.2.3"},
+//    "vis"
+// ]
+function getDependencies(deps) {
+    const ret = {};
+    console.log(`deps: ${JSON.stringify(deps)}, type ${typeof deps}`)
+    for (let dep of deps ) {
+        if (typeof dep === 'object') {
+            for (let key in dep ) {
+                ret[key] = dep[key];
+            }
+        } else {
+            ret[ dep ] = '>=0';
+        }
+    }
+    console.log(`ret: ${JSON.stringify(ret)}`)
+    return ret;
+}
+
 /*
 function checkLanguages(langObj) {
     if (Object.keys(langObj).length !== allowedLanguages.length) return false;
@@ -1430,11 +1467,13 @@ function checkIOPackageJson(context) {
                                 currentJsControllerVersion = jsControllerDependency['js-controller'].replace(/[^\d.]/g, '');
                             }
                         }
+
                     }
                 }
 
                 if (context.ioPackageJson.common.globalDependencies) {
                     const dependencyArray = getDependencyArray(context.ioPackageJson.common.globalDependencies);
+
                     if (!(context.ioPackageJson.common.globalDependencies instanceof Array)){
                         context.errors.push(`[E186] "common.globalDependencies" must be an array at io-package.json`);
                     } else {
@@ -1443,7 +1482,9 @@ function checkIOPackageJson(context) {
                             context.errors.push(`[E161] "js-controller" is not allowed in common.globalDependencies`);
                         }
                     }
+
                 }
+
 
                 if (context.packageJson.dependencies && context.packageJson.dependencies['@iobroker/adapter-core']) {
                     /*
@@ -1778,7 +1819,7 @@ function checkRepo(context) {
                 }
 
                 // download stable repo
-                const _response = await axios('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json');
+                let _response = await axios('https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json');
                 body = _response.data;
                 if (!body) {
                     context.errors.push('[E420] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json');
@@ -1829,6 +1870,113 @@ function checkRepo(context) {
                             }
                         }
                     }
+                }
+
+                _response = await axios('http://repo.iobroker.live/sources-dist-latest.json');
+                body = _response.data;
+                if (!body) {
+                    context.errors.push('[E429] Cannot download http://repo.iobroker.live/sources-dist-latest.json');
+                } else {
+                    context.latestRepoLive = body;
+                }
+
+                _response = await axios('http://repo.iobroker.live/sources-dist.json');
+                body = _response.data;
+                if (!body) {
+                    context.errors.push('[E430] Cannot download http://repo.iobroker.live/sources-dist.json');
+                } else {
+                    context.stableRepoLive = body;
+                }
+
+                if (context.latestRepo && context.latestRepoLive && context.stableRepo && context.stableRepoLive) {
+                    if (context.ioPackageJson.common.dependencies) {
+                        const dependencies = getDependencies(context.ioPackageJson.common.dependencies);
+                        for ( const dependency in dependencies ) {
+
+                            if ( !context.latestRepoLive[dependency] ) {
+                                    context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);                            
+                            } else {
+                                const versDependency = dependencies[dependency];
+                                const versRepository = context.latestRepoLive[dependency].version;
+//console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+                                if (!versDependency.startsWith('>=')) {
+                                    context.warnings.push(`[W432] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
+                                } else {
+                                    if ( !compareVersions.compare( versRepository, versDependency.replace('>=',''), '>=')) {
+                                        context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);
+                                    } else {
+                                        context.checks.push(`Dependency '${dependency}':'${dependencies[dependency]}' available at latest repository`);
+                                    }
+                                }
+                            }
+
+                            if ( !context.stableRepoLive[dependency] ) {
+                                context.warnings.push(`[W433] Dependency ${dependency} not available at stable repository`);                            
+                            } else {
+                                const versDependency = dependencies[dependency];
+                                const versRepository = context.stableRepoLive[dependency].version;
+//console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+                                if (!versDependency.startsWith('>=')) {
+                                    context.warnings.push(`[W434] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
+                                } else {
+                                    if ( !compareVersions.compare( versRepository, versDependency.replace('>=',''), '>=')) {
+                                        context.errors.push(`[E433] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);
+                                    } else {
+                                        context.checks.push(`Dependency '${dependency}':'${dependencies[dependency]}' available at stable repository`);
+                                    }
+                                }
+                            }
+
+                        }
+                    } else {
+                        context.checks.push('common.dependency check skipped');
+                    }
+
+                    if (context.ioPackageJson.common.globalDependencies) {
+                        const dependencies = getDependencies(context.ioPackageJson.common.globalDependencies);
+                        for ( const dependency in dependencies ) {
+
+                            if ( !context.latestRepoLive[dependency] ) {
+                                    context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);                            
+                            } else {
+                                const versDependency = dependencies[dependency];
+                                const versRepository = context.latestRepoLive[dependency].version;
+console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+                                if (!versDependency.startsWith('>=')) {
+                                    context.warnings.push(`[W432] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
+                                } else {
+                                    if ( !compareVersions.compare( versRepository, versDependency.replace('>=',''), '>=')) {
+                                        context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);
+                                    } else {
+                                        context.checks.push(`Dependency '${dependency}':'${dependencies[dependency]}' available at latest repository`);
+                                    }
+                                }
+                            }
+
+                            if ( !context.stableRepoLive[dependency] ) {
+                                context.warnings.push(`[W433] Dependency ${dependency} not available at stable repository`);                            
+                            } else {
+                                const versDependency = dependencies[dependency];
+                                const versRepository = context.stableRepoLive[dependency].version;
+console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+                                if (!versDependency.startsWith('>=')) {
+                                    context.warnings.push(`[W434] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
+                                } else {
+                                    if ( !compareVersions.compare( versRepository, versDependency.replace('>=',''), '>=')) {
+                                        context.errors.push(`[E433] Dependency '${dependency}':'${dependencies[dependency]}' not available at stable repository`);
+                                    } else {
+                                        context.checks.push(`Dependency '${dependency}':'${dependencies[dependency]}' available at stable repository`);
+                                    }
+                                }
+                            }
+
+                        }
+                    } else {
+                        context.checks.push('common.globalDependency check skipped');
+                    }
+
+                } else {
+                    context.checks.push(`Dependency checks skipped due to repository access errors`);                            
                 }
                 return context;
             });
