@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.4.0 (2024-05-30)
 * (mcm1957) Add check to protect sensitive data. [#195]
 * (mcm1957) Add check to verify that dependencies and globalDepencies are of type array. [#90]
 
