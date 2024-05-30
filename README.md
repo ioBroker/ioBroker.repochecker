@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.5.0 (2024-05-30)
 * (mcm1957) Add check ensure that dependency revisions are available at repository. [#180]
 
 ### 2.4.0 (2024-05-30)
