@@ -1941,7 +1941,7 @@ function checkRepo(context) {
                             } else {
                                 const versDependency = dependencies[dependency];
                                 const versRepository = context.latestRepoLive[dependency].version;
-console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+//console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
                                 if (!versDependency.startsWith('>=')) {
                                     context.warnings.push(`[W432] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
                                 } else {
@@ -1958,7 +1958,7 @@ console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${ver
                             } else {
                                 const versDependency = dependencies[dependency];
                                 const versRepository = context.stableRepoLive[dependency].version;
-console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+//console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
                                 if (!versDependency.startsWith('>=')) {
                                     context.warnings.push(`[W434] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
                                 } else {
