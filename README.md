@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.5.1 (2024-06-24)
 * (mcm1957) Suggestion to update dependencies to recommended version added.
 * (mcm1957) Adapter-core recommended set to 3.1.6 [#220]
 
