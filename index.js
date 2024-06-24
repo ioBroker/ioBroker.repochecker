@@ -36,8 +36,8 @@ axios.defaults.headers = {
 // adapt recommended version here
 // outdated? // const recommendedAdapterCoreVersion = '3.0.6';
 const recommendedJsControllerVersion = '5.0.11';
-const recommendedNodeVersion = '18';
-const requiredNodeVersion = '16';
+const recommendedNodeVersion = '18'; // This is the minimum node version which should be required
+const requiredNodeVersion = '16';    // This is the minimum node version which must be required
 
 const dependencies = {
     "@iobroker/adapter-core": {
@@ -577,7 +577,24 @@ function checkPackageJson(context) {
             //}
         }
         context.checks.push('"blacklist (package)" checked.');
-// max number is E038
+
+        if (! context.packageJson.keywords) {
+            context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
+        } else {
+            const forbiddenKeywords = [];
+            if (!Array.isArray(context.packageJson.keywords)) {
+                context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
+            } else if (context.packageJson.keywords.length === 0) {
+                context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
+            } else if (forbiddenKeywords.filter(keyword => context.packageJson.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
+                context.warnings.push(`[W040] "keywords" within package.json should not contain "${forbiddenKeywords.join(', ')}"`);
+            }
+
+            context.checks.push('"keywords" found in package.json');
+        }
+
+
+        // max number is W040
 
         return context;
     });
@@ -1184,10 +1201,14 @@ function checkIOPackageJson(context) {
                     }
                 }
                 
-                if (context.ioPackageJson.common.keywords) {
+                if (! context.ioPackageJson.common.keywords) {
+                    context.errors.push('[E169] "common.keywords" must be an array within io-package.json and contain some useful keywords');
+                } else {
                     const forbiddenKeywords = ['iobroker', 'adapter', 'smart home'];
                     if (!Array.isArray(context.ioPackageJson.common.keywords)) {
-                        context.errors.push('[E169] "common.keywords" must be an array in the io-package.json');
+                        context.errors.push('[E169] "common.keywords" must be an array within io-package.json and contain some useful keywords');
+                    } else if (context.ioPackageJson.common.keywords.length === 0) {
+                        context.errors.push('[E169] "common.keywords" must be an array within io-package.json and contain some useful keywords');
                     } else if (forbiddenKeywords.filter(keyword => context.ioPackageJson.common.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
                         context.warnings.push(`[W170] "common.keywords" should not contain "${forbiddenKeywords.join(', ')}" io-package.json`);
                     }
