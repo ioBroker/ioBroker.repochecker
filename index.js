@@ -1260,9 +1260,10 @@ function checkIOPackageJson(context) {
                         context.checks.push('"common.materialize" or "common.adminUI.config" found in io-package.json');
                     }
 
-                    if (!context.ioPackageJson.common.adminUI || (context.ioPackageJson.common.adminUI.config !== 'json' && context.ioPackageJson.common.adminUI.config !== 'none')) {
-                        context.warnings.push('[W156] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI');
-                    }
+                    // check moved to W520
+                    //if (!context.ioPackageJson.common.adminUI || (context.ioPackageJson.common.adminUI.config !== 'json' && context.ioPackageJson.common.adminUI.config !== 'none')) {
+                    //    context.warnings.push('[W156] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI');
+                    //}
                 } else {
                     context.checks.push('adapter has no admin config');
 
@@ -2060,7 +2061,8 @@ function checkCode(context) {
         'admin/jsonCustom.json5',
         'admin/blockly.js',
 
-        'src-admin/package.json',   // present if react is used
+        'src-admin/package.json',   // check if react is used
+        'src/package.json',         // check if react is used
         ];
     allowedLanguages.forEach(lang =>
         readFiles.push(`admin/i18n/${lang}/translations.json`));
@@ -2155,6 +2157,32 @@ function checkCode(context) {
                         // console.log('REACT detected');
                         usesReact = true;
                     }
+                    if (packageJson.dependencies && packageJson.dependencies['@iobroker/adapter-react-v5'] ){
+                        // console.log('REACT detected');
+                        usesReact = true;
+                    }
+                }
+                if (context['/src/package.json']) {
+                    //console.log('"src/package.json" exists');
+                    let packageJson = JSON.parse(context['/src/package.json']);
+                    if (packageJson.devDependencies && packageJson.devDependencies['@iobroker/adapter-react-v5'] ){
+                        // console.log('REACT detected');
+                        usesReact = true;
+                    }
+                    if (packageJson.dependencies && packageJson.dependencies['@iobroker/adapter-react-v5'] ){
+                        // console.log('REACT detected');
+                        usesReact = true;
+                    }
+                }
+                if (context.packageJson.devDependencies && context.packageJson.devDependencies['@iobroker/adapter-react'] ){
+                    usesReact = true;
+                } 
+                
+                if (! usesReact && !context.ioPackageJson.common.noConfig && 
+                      (!context.ioPackageJson.common.adminUI || 
+                          (context.ioPackageJson.common.adminUI.config !== 'json' && context.ioPackageJson.common.adminUI.config !== 'none')
+                      )) {
+                    context.warnings.push('[W522] Please consider migrating to admin 5 UI (jsonConfig).');
                 }
 
                 if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
