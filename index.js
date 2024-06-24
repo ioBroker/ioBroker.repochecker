@@ -2059,6 +2059,8 @@ function checkCode(context) {
         'admin/jsonCustom.json',
         'admin/jsonCustom.json5',
         'admin/blockly.js',
+
+        'src-admin/package.json',   // present if react is used
         ];
     allowedLanguages.forEach(lang =>
         readFiles.push(`admin/i18n/${lang}/translations.json`));
@@ -2145,6 +2147,16 @@ function checkCode(context) {
                 });
             })
             .then(context => {
+                let usesReact = false;
+                if (context['/src-admin/package.json']) {
+                    //console.log('"src-admin/package.json" exists');
+                    let packageJson = JSON.parse(context['/src-admin/package.json']);
+                    if (packageJson.devDependencies && packageJson.devDependencies['@iobroker/adapter-react-v5'] ){
+                        // console.log('REACT detected');
+                        usesReact = true;
+                    }
+                }
+
                 if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
                     if (context['/admin/index_m.html'] && context['/admin/index_m.html'].includes('selectID.js') && !context.filesList.includes('admin/img/info-big.png')) {
                         context.errors.push('[E502] "admin/img/info-big.png" not found, but selectID.js used in index_m.html ');
@@ -2243,7 +2255,16 @@ function checkCode(context) {
                 }
 
                 if (context['/gulpfile.js']) {
-                    context.warnings.push('[W513] "gulpfile.js" found in repo! Think about migrating to @iobroker/adapter-dev package');
+                    if (!usesReact) {
+                        context.warnings.push('[W513] "gulpfile.js" found in repo! Think about migrating to @iobroker/adapter-dev package');
+                    }
+                    if (!context.packageJson.devDependencies['gulp']) {
+                        context.warnings.push('[W520] "gulpfile.js" found in repo but "gulp" not found at devDependencies at package.json. Check whether it can be removed.');
+                    }
+                } else {
+                    if (context.packageJson.devDependencies['gulp']) {
+                        context.warnings.push('[W521] "gulp" found at devDependencies at package.json but no "gulpfile.js" found. Is this dependency really required?');
+                    }
                 }
 
                 if (context.packageJson.devDependencies && context.packageJson.devDependencies['@alcalzone/release-script'] && !context['/.releaseconfig.json']) {
@@ -2272,7 +2293,7 @@ function checkCode(context) {
                         }
                     }
                 }
-                // max E519
+                // max E521
                 resolve(context);
             })
             .catch(e => reject(e));
