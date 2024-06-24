@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.6.0 (2024-06-24)
 * (mcm1957) Check has been aded to ensure keywords and common.keywords are present. [#200]
 * (mcm1957) Detection of react has been added, gulpfile.js is accepted for react based UIs now. [#223]
 
