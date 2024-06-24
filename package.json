@@ -1,5 +1,5 @@
 {
-  "version": "2.6.0",
+  "version": "2.6.1",
   "name": "@iobroker/repochecker",
   "dependencies": {
     "axios": "^1.7.2",
