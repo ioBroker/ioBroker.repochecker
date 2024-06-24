@@ -34,7 +34,7 @@ axios.defaults.headers = {
 };
 
 // adapt recommended version here
-const recommendedAdapterCoreVersion = '3.0.6';
+// outdated? // const recommendedAdapterCoreVersion = '3.0.6';
 const recommendedJsControllerVersion = '5.0.11';
 const recommendedNodeVersion = '18';
 const requiredNodeVersion = '16';
@@ -42,7 +42,7 @@ const requiredNodeVersion = '16';
 const dependencies = {
     "@iobroker/adapter-core": {
         "required":"3.1.4",
-        "recommended":"3.1.4"
+        "recommended":"3.1.6"
     }
 };
 
@@ -524,6 +524,8 @@ function checkPackageJson(context) {
                     context.errors.push(`[E032] No dependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to dependencies at package.json`);
                 } else if (! compareVersions.compare( dependencyVersion, requiredVersion, '>=' )) {
                     context.errors.push(`[E033] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum, ${recommendedVersion} is recommended. Please update dependencies at package.json`);
+                } else if (! compareVersions.compare( dependencyVersion, recommendedVersion, '>=' )) {
+                    context.warnings.push(`[W034] ${dependency} ${dependencyVersion} specified. ${recommendedVersion} is recommended. Please consider updating dependencies at package.json`);
                 } else {
                     context.checks.push('dependency ${dependency} ${dependencyVersion} is ok');
                 }
@@ -539,9 +541,11 @@ function checkPackageJson(context) {
             let dependencyVersion = context.packageJson.devDependencies[`${dependency}`] || '';
             dependencyVersion = dependencyVersion.replace(/[\^\~]/,'' );
             if (!dependencyVersion) {
-                context.errors.push(`[E034] No devDependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to devDependencies at package.json`);
+                context.errors.push(`[E035] No devDependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to devDependencies at package.json`);
             } else if (! compareVersions.compare( dependencyVersion, requiredVersion, '>=' )) {
-                context.errors.push(`[E035] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum,  ${recommendedVersion} is recommended. Please update devDependencies at package.json`);
+                context.errors.push(`[E036] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum,  ${recommendedVersion} is recommended. Please update devDependencies at package.json`);
+            } else if (! compareVersions.compare( dependencyVersion, recommendedVersion, '>=' )) {
+                context.warnings.push(`[W037] ${dependency} ${dependencyVersion} specified. ${recommendedVersion} is recommended. Please consider updating devDependencies at package.json`);
             } else {
                 context.checks.push('devDependency ${dependency} ${dependencyVersion} is ok');
             }
@@ -563,9 +567,9 @@ function checkPackageJson(context) {
             }
             if (tmp) {
                 if (blacklistPackageJson[blacklist].err) {
-                    context.errors.push(`[E036] ${blacklistPackageJson[blacklist].msg}`);
+                    context.errors.push(`[E038] ${blacklistPackageJson[blacklist].msg}`);
                 } else {
-                    context.warnings.push(`[W036] ${blacklistPackageJson[blacklist].msg}`);
+                    context.warnings.push(`[W038] ${blacklistPackageJson[blacklist].msg}`);
                 }
             } 
             //else {
@@ -573,7 +577,7 @@ function checkPackageJson(context) {
             //}
         }
         context.checks.push('"blacklist (package)" checked.');
-// max number is E036 
+// max number is E038
 
         return context;
     });
