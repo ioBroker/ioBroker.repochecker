@@ -580,26 +580,34 @@ function checkPackageJson(context) {
 
         if (! context.packageJson.keywords) {
             context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
+        } else if (!Array.isArray(context.packageJson.keywords)) {
+            context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
         } else {
             const forbiddenKeywords = [];
-            if (!Array.isArray(context.packageJson.keywords)) {
-                context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
-            } else if (context.packageJson.keywords.length === 0) {
-                context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
-            } else if (forbiddenKeywords.filter(keyword => context.packageJson.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
-                context.warnings.push(`[W040] "keywords" within package.json should not contain "${forbiddenKeywords.join(', ')}"`);
+            const ignoredKeywords = ["iobroker", "smart home", "smarthome", "home automation", "template"];
+            const recommendedKeywords = ["ioBroker"];
+            console.log(`[DEBUG] package.keywords: "${context.packageJson.keywords.join(', ')}"`);
+            console.log(`[DEBUG] filtered: "${context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase()))}"`);
+            if (context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase())).length === 0 ) {
+                context.errors.push(`[E039] "keywords" within package.json must contain some keywords besides "${context.packageJson.keywords.join(', ')}" related to adapter`);
+            }
+            if (! recommendedKeywords.filter(keyword => context.packageJson.keywords.includes(keyword)).length > 0) {
+                context.warnings.push(`[W040] "keywords" within package.json should contain "${recommendedKeywords.join(', ')}"`);
+            }
+            if (forbiddenKeywords.filter(keyword => context.packageJson.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
+                context.warnings.push(`[W041] "keywords" within package.json should not contain "${forbiddenKeywords.join(', ')}"`);
             }
 
-            context.checks.push('"keywords" found in package.json');
+            context.checks.push('"keywords" found in package.json and refers to an array');
         }
 
         if (context.packageJson.globalDependencies) {
-            context.errors.push('[E041] "globalDependencies" is misplaced at package.json. Did you mean "common.globalDependencies" at io-package.json?');
+            context.errors.push('[E042] "globalDependencies" is misplaced at package.json. Did you mean "common.globalDependencies" at io-package.json?');
         } else {
             context.checks.push('"globalDependencies" not found in package.json');
         }
 
-        // max number is W041
+        // max number is W042
 
         return context;
     });
