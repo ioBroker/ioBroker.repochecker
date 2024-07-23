@@ -593,8 +593,13 @@ function checkPackageJson(context) {
             context.checks.push('"keywords" found in package.json');
         }
 
+        if (context.packageJson.globalDependencies) {
+            context.errors.push('[E041] "globalDependencies" is misplaced at package.json. Did you mean "common.globalDependencies" at io-package.json?');
+        } else {
+            context.checks.push('"globalDependencies" not found in package.json');
+        }
 
-        // max number is W040
+        // max number is W041
 
         return context;
     });
@@ -1021,9 +1026,6 @@ const licenses = [
     'Zed',
     'Zend-2.0',
     'Zimbra-1.3',
-    'Zimbra-1.4',
-    'zlib-acknowledgement',
-    'Zlib',
     'ZPL-1.1',
     'ZPL-2.0',
     'ZPL-2.1',
@@ -1139,7 +1141,7 @@ function checkIOPackageJson(context) {
                     } else {                        
                         let missingLang = checkLanguages(context.ioPackageJson.common.titleLang, requiredLanguages);
                         if (missingLang.length) {
-                            context.warnings.push(`[E105] Missing mandatory translation into ${missingLang.join()} of "common.titleLang" in io-package.json.`);
+                            context.warnings.push(`[W105] Missing mandatory translation into ${missingLang.join()} of "common.titleLang" in io-package.json.`);
                         }
     
                         missingLang = checkLanguages(context.ioPackageJson.common.titleLang, allowedLanguages);
@@ -1153,17 +1155,17 @@ function checkIOPackageJson(context) {
                     Object.keys(context.ioPackageJson.common.titleLang).forEach(lang => {
                         const text = context.ioPackageJson.common.titleLang[lang];
                         if (text.match(/iobroker/i)) {
-                            context.errors.push(`[W105] "common.titleLang" should not have ioBroker in the name. It is clear, for what this adapter was created. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
+                            context.errors.push(`[E106] "common.titleLang" must not have ioBroker in the name. It is clear, for what this adapter was created. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
                         } else {
                             context.checks.push('"common.titleLang" has no ioBroker in it in io-package.json');
                         }
 
                         if (text.match(/\sadapter|adapter\s/i)) {
-                            context.errors.push(`[E106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
+                            context.warnings.push(`[W106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
                         } else {
                             context.checks.push('"common.titleLang" has no "adapter" in it in io-package.json');
                         }
-                    });
+                    })
                 }
 
                 if (!context.ioPackageJson.common.version) {
