@@ -586,8 +586,8 @@ function checkPackageJson(context) {
             const forbiddenKeywords = [];
             const ignoredKeywords = ["iobroker", "smart home", "smarthome", "home automation", "template"];
             const recommendedKeywords = ["ioBroker"];
-            console.log(`[DEBUG] package.keywords: "${context.packageJson.keywords.join(', ')}"`);
-            console.log(`[DEBUG] filtered: "${context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase()))}"`);
+            //console.log(`[DEBUG] package.keywords: "${context.packageJson.keywords.join(', ')}"`);
+            //console.log(`[DEBUG] filtered: "${context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase()))}"`);
             if (context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase())).length === 0 ) {
                 context.errors.push(`[E039] "keywords" within package.json must contain some keywords besides "${context.packageJson.keywords.join(', ')}" related to adapter`);
             }
