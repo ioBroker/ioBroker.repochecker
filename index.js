@@ -1392,6 +1392,8 @@ function checkIOPackageJson(context) {
 
                     if (Object.keys(context.ioPackageJson.common.news).length > 20) {
                         context.errors.push('[E130] Too many "common.news" found in io-package.json. Must be less than 20. Please remove old news.');
+                    } else if (Object.keys(context.ioPackageJson.common.news).length > 7) {
+                        context.warnings.push('[W130] Many "common.news" found in io-package.json. Repositorybuilder will truncate at 7 news. Please remove old news.');
                     }
 
                     Object.keys(context.ioPackageJson.common.news).forEach(version => {
