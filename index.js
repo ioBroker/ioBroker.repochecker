@@ -2072,6 +2072,7 @@ function checkCode(context) {
         'admin/blockly.js',
 
         'src-admin/package.json',   // check if react is used
+        'src-widgets/package.json',   // check if react is used
         'src/package.json',         // check if react is used
         ];
     allowedLanguages.forEach(lang =>
@@ -2160,19 +2161,39 @@ function checkCode(context) {
             })
             .then(context => {
                 let usesReact = false;
-                if (context.package.devDependencies.adapter-react-v5 || context.package.devDendencies.react ||
-                    context.package.dependencies.adapter-react-v5 || context.package.dependencies.react ) {
+                if (context.packageJson.devDependencies && 
+                        (context.packageJson.devDependencies['@iobroker/adapter-react-v5'] || context.packageJson.devDependencies['react'])) {
+                        console.log('REACT detected at package devDependencies');
+                        usesReact = true;
+                };
+                if (context.packageJson.dependencies && 
+                        (context.packageJson.dependencies['@iobroker/adapter-react-v5'] || context.packageJson.dependencies['react'])) {
+                    console.log('REACT detected at package dependencies');
                     usesReact = true;
                 }
                 if (context['/src-admin/package.json']) {
                     //console.log('"src-admin/package.json" exists');
                     let packageJson = JSON.parse(context['/src-admin/package.json']);
                     if (packageJson.devDependencies && packageJson.devDependencies['@iobroker/adapter-react-v5'] ){
-                        // console.log('REACT detected');
+                        console.log('REACT detected at src-admin/package devDependencies');
                         usesReact = true;
                     }
                     if (packageJson.dependencies && packageJson.dependencies['@iobroker/adapter-react-v5'] ){
-                        // console.log('REACT detected');
+                        console.log('REACT detected at src-admin/package dependencies');
+                        usesReact = true;
+                    }
+                }
+                if (context['/src-widgets/package.json']) {
+                    //console.log('"src-widgets/package.json" exists');
+                    let packageJson = JSON.parse(context['/src-widgets/package.json']);
+                    if (packageJson.devDependencies && (
+                            packageJson.devDependencies['@iobroker/adapter-react-v5'] || packageJson.devDependencies['react'])) {
+                        console.log('REACT detected at src-widgets/package devDependencies');
+                        usesReact = true;
+                    }
+                    if (packageJson.dependencies && (
+                        packageJson.dependencies['@iobroker/adapter-react-v5'] || packageJson.dependencies['react'])) {
+                        console.log('REACT detected at src-widgets/package dependencies');
                         usesReact = true;
                     }
                 }
@@ -2188,9 +2209,6 @@ function checkCode(context) {
                         usesReact = true;
                     }
                 }
-                if (context.packageJson.devDependencies && context.packageJson.devDependencies['@iobroker/adapter-react'] ){
-                    usesReact = true;
-                } 
                 
                 if (! usesReact && !context.ioPackageJson.common.noConfig && 
                       (!context.ioPackageJson.common.adminUI || 
@@ -2364,32 +2382,6 @@ function checkCommits(context) {
         });
 }
 
-// E8xx
-function checkGithubRepo(context) {
-    return new Promise((resolve) => {
-        console.log('\ncheckGithubRepo [E8xx]');
-
-        if (!context.githubApiData.description) {
-            context.errors.push(`[E801] No repository about text found. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add the description.`);
-        } else {
-            context.checks.push('Github repository about found.');
-        }
-
-        if (!context.githubApiData.topics || context.githubApiData.topics.length === 0) {
-            context.errors.push(`[E802] No topics found in the repository. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add some topics.`);
-        } else {
-            context.checks.push('Github repository about found.');
-        }
-
-        if (context.githubApiData.archived) {
-            context.errors.push(`[E803] Archived repositories are not allowed.`);
-        }
-
-        // max E803
-        resolve(context);
-    });
-}
-
 // E6xx
 function checkReadme(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/README.md
@@ -2476,12 +2468,38 @@ function checkLicenseFile(context) {
     });
 }
 
+// E80x
+function checkGithubRepo(context) {
+    return new Promise((resolve) => {
+        console.log('\ncheckGithubRepo [E8xx]');
+
+        if (!context.githubApiData.description) {
+            context.errors.push(`[E801] No repository about text found. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add the description.`);
+        } else {
+            context.checks.push('Github repository about found.');
+        }
+
+        if (!context.githubApiData.topics || context.githubApiData.topics.length === 0) {
+            context.errors.push(`[E802] No topics found in the repository. Please go to "${context.githubUrlOriginal}", press the settings button beside the about title and add some topics.`);
+        } else {
+            context.checks.push('Github repository about found.');
+        }
+
+        if (context.githubApiData.archived) {
+            context.errors.push(`[E803] Archived repositories are not allowed.`);
+        }
+
+        // max E803 - limited to 849
+        resolve(context);
+    });
+}
+
 function paddingNum(num) {
     if (num >= 10) return num;
     return '0' + num;
 }
 
-// E8xx
+// E85x
 function checkNpmIgnore(context) {
     const checkFiles = [
         'node_modules/',
@@ -2511,14 +2529,22 @@ function checkNpmIgnore(context) {
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.npmignore
-    console.log('\checkNpmIgnore [E8xx]');
+    console.log('\checkNpmIgnore [E85x]');
     if (context.packageJson.files && context.packageJson.files.length) {
+        if (context.filesList.includes('.npmignore')) {
+            context.warnings.push(`[E851] .npmignore found but "files" is used at package.json. Please remove .npmignore.`);
+        } else {
+            context.checks.push('package.json "files" already used.');
+        }
         return Promise.resolve(context);
     }
 
+    // package.json files section is NOT used
     if (!context.filesList.includes('.npmignore')) {
-        context.warnings.push(`[W801] .npmignore not found`);
+        context.warnings.push(`[E852] .npmignore not found`);
     } else {
+        context.warnings.push(`[W853] .npmignore found - consider using package.json object "files" instead.`);
+    
         const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
         let tooComplexToCheck = false;
         rules.forEach((name, i) => {
@@ -2537,11 +2563,11 @@ function checkNpmIgnore(context) {
 
         // There's no need to put node_modules in `.npmignore`. npm will never publish node_modules in the package, except if one of the modules is explicitly mentioned in bundledDependencies.
         /*if (!rules.includes('node_modules') && !rules.includes('/node_modules') && !rules.includes('/node_modules/*') && !rules.includes('node_modules/*')) {
-            !check && context.errors.push(`[E804] node_modules not found in `.npmignore``);
+            !check && context.errors.push(`[E854] node_modules not found in `.npmignore``);
         }*/
         if (!tooComplexToCheck) {
             if (!rules.includes('iob_npm.done') && !rules.includes('/iob_npm.done')) {
-                !check && context.errors.push(`[E803] iob_npm.done not found in .npmignore`);
+                !check && context.errors.push(`[E853] iob_npm.done not found in .npmignore`);
             }
 
             checkFiles.forEach((file, i) => {
@@ -2555,7 +2581,7 @@ function checkNpmIgnore(context) {
                         }
                     });
 
-                    !check && context.errors.push(`[E8${paddingNum(i + 11)}] file ${file} found in repository, but not found in .npmignore`);
+                    !check && context.errors.push(`[E8${paddingNum(i + 61)}] file ${file} found in repository, but not found in .npmignore`);
                 }
             });
         }
@@ -2675,6 +2701,7 @@ function check(request, ctx, callback) {
             })
             .catch(err => {
                 console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+                context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
 
                 return callback(null, makeResponse(200, {
                     result: 'Errors found',
