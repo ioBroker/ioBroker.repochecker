@@ -1077,6 +1077,7 @@ function checkIOPackageJson(context) {
                     'password',
                     'passwort',
                     'pin',
+                    'private_pw',
                     'psk',
                     'pwd',
                     'secret',
