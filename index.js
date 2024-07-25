@@ -456,11 +456,11 @@ function checkPackageJson(context) {
             context.checks.push('Adapter name is not reserved');
         }
 
-        if (!context.packageJson.dependencies) {
+        if (!context.ioPackageJson.common.onlyWWW && !context.packageJson.dependencies) {
             context.errors.push('[W030] No dependencies declared at package.json. Is this really correct?');
         }
         if (!context.packageJson.devDependencies) {
-            context.errors.push('[E031] No devDependencies declared at package.json. Plase correct package.json');
+            context.errors.push('[E031] No devDependencies declared at package.json. Please correct package.json');
         }
 
         if ((context.packageJson.dependencies && context.packageJson.dependencies.npm) || (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies.npm)) {
@@ -2160,6 +2160,10 @@ function checkCode(context) {
             })
             .then(context => {
                 let usesReact = false;
+                if (context.package.devDependencies.adapter-react-v5 || context.package.devDendencies.react ||
+                    context.package.dependencies.adapter-react-v5 || context.package.dependencies.react ) {
+                    usesReact = true;
+                }
                 if (context['/src-admin/package.json']) {
                     //console.log('"src-admin/package.json" exists');
                     let packageJson = JSON.parse(context['/src-admin/package.json']);
@@ -2311,10 +2315,12 @@ function checkCode(context) {
 
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
                     if (!context['/' + context.packageJson.main]) {
-                        context.errors.push(`[E519] "${context.packageJson.main}" found in package.json, but not found as file`);
+                        if (!context.ioPackageJson.common.nogit) {
+                            context.errors.push(`[E519] "${context.packageJson.main}" found in package.json, but not found as file`);
+                        }
                     } else {
                         if (context['/' + context.packageJson.main].includes('setInterval(') && !context[`/${context.packageJson.main}`].includes('clearInterval(')) {
-                            if (context.ioPackageJson.compact) {
+                            if (context.ioPackageJson.common.compact) {
                                 // if compact mode supported, it is critical
                                 context.errors.push(`[E504] setInterval found in "${context.packageJson.main}", but no clearInterval detected`);
                             } else {
@@ -2322,7 +2328,7 @@ function checkCode(context) {
                             }
                         }
                         if (context['/' + context.packageJson.main].includes('setTimeout(') && !context['/' + context.packageJson.main].includes('clearTimeout(')) {
-                            if (context.ioPackageJson.compact) {
+                            if (context.ioPackageJson.common.compact) {
                                 // if compact mode supported, it is critical
                                 context.errors.push(`[E505] setTimeout found in "${context.packageJson.main}", but no clearTimeout detected`);
                             } else {
