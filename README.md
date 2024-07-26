@@ -24,7 +24,7 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) Some non trivial keywords related to adapter are enforced now [#234].
 * (mcm1957) Severity if [E105] / [W105] has been corrected [#204].
 * (mcm1957) Disallow 'globalDependencies' at package.json [#204].
-* (mcm1957) Several false positives for wwwOnly widgetadapters have been fixed [#230].
+* (mcm1957) Several false positives for wwwOnly widgetadapters have been fixed [#230, #222].
 * (mcm1957) Missing .npmignore is now considered an error [#229].
 * (mcm1957) Usage of package.json 'files' section is now recommended.
 * (mcm1957) If more than 7 common.news entries are present a warning is issued now [#232].

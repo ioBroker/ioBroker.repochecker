@@ -49,7 +49,8 @@ const dependencies = {
 const devDependencies = {
     "@iobroker/testing": {
         "required":"4.1.3",
-        "recommended":"4.1.3"
+        "recommended":"4.1.3",
+        "onlyWWW":false
     }
 };
 
@@ -536,6 +537,7 @@ function checkPackageJson(context) {
         }
 
         for (const dependency in devDependencies) {
+            if ((devDependencies[dependency].onlyWWW === false) && context.ioPackageJson.common.onlyWWW) continue;
             const requiredVersion = devDependencies[dependency].required;
             const recommendedVersion = devDependencies[dependency].recommended;
             let dependencyVersion = context.packageJson.devDependencies[`${dependency}`] || '';
