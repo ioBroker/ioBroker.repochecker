@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) Reduce setTimeout/setInterval error to warning temporary.
+
 ### 2.7.0 (2024-07-26)
 * (mcm1957) Some non trivial keywords related to adapter are enforced now [#234].
 * (mcm1957) Severity if [E105] / [W105] has been corrected [#204].

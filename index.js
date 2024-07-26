@@ -2373,7 +2373,8 @@ function checkCode(context) {
                         if (context['/' + context.packageJson.main].includes('setTimeout(') && !context['/' + context.packageJson.main].includes('clearTimeout(')) {
                             if (context.ioPackageJson.common.compact) {
                                 // if compact mode supported, it is critical
-                                context.errors.push(`[E505] setTimeout found in "${context.packageJson.main}", but no clearTimeout detected`);
+                                // context.errors.push(`[E505] setTimeout found in "${context.packageJson.main}", but no clearTimeout detected`);
+                                context.warnings.push(`[W505] setTimeout found in "${context.packageJson.main}", but no clearTimeout detected`);
                             } else {
                                 context.warnings.push(`[W505] setTimeout found in "${context.packageJson.main}", but no clearTimeout detected`);
                             }
