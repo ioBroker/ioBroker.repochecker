@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.7.0 (2024-07-26)
 * (mcm1957) Some non trivial keywords related to adapter are enforced now [#234].
 * (mcm1957) Severity if [E105] / [W105] has been corrected [#204].
 * (mcm1957) Disallow 'globalDependencies' at package.json [#204].
@@ -32,7 +32,6 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) 'package-lock.json' is checked to exist at GitHub now [#188].
 * (mcm1957) travis checks have been removed [#237].
 * (mcm1957) Copyright year now honors commit year and npm publish year too [#237].
-
 
 ### 2.6.1 (2024-06-24)
 * (mcm1957) Check "[W156] Adapter should support admin 5 UI (jsonConfig)" checks for reactUi now.
