@@ -21,6 +21,7 @@ const JSON5 = require('json5');
 const compareVersions = require('compare-versions');
 //const Languagedetect = require('languagedetect');
 //const languagedetect = new Languagedetect;
+const execSync = require('node:child_process').execSync;
 
 const issues = require('./doc/issues');
 
@@ -1772,43 +1773,44 @@ function checkTests(context) {
         return Promise.resolve(context);
     }
 
-    const travisURL = `${context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org')}.png`;
-
-    return axios(travisURL)
-        .then(response => {
-            if (!response.data) {
-                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-                return context;
-            }
-            if (!response.headers || !response.headers['content-disposition']) {
-                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-                return context;
-            }
-            // inline; filename="passing.png"
-            const m = response.headers['content-disposition'].match(/filename="(.+)"$/);
-            if (!m) {
-                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-                return context;
-            }
-
-            if (m[1] === 'unknown.png') {
-                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-                return context;
-            }
-
-            context.checks.push('Found on travis-ci');
-
-            context.warnings.push('[W302] Use github actions instead of travis-ci');
-
-            if (m[1] !== 'passing.png') {
-                context.errors.push('[E301] Tests on Travis-ci.org are broken. Please fix.');
-            } else {
-                context.checks.push('Tests are OK on travis-ci');
-            }
-
-            return context;
-            // max number is E302
-        });
+//    const travisURL = `${context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org')}.png`;
+//
+//    return axios(travisURL)
+//        .then(response => {
+//            if (!response.data) {
+//                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
+//                return context;
+//            }
+//            if (!response.headers || !response.headers['content-disposition']) {
+//                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
+//                return context;
+//            }
+//            // inline; filename="passing.png"
+//            const m = response.headers['content-disposition'].match(/filename="(.+)"$/);
+//            if (!m) {
+//                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
+//                return context;
+//            }
+//
+//            if (m[1] === 'unknown.png') {
+//                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
+//                return context;
+//            }
+//
+//            context.checks.push('Found on travis-ci');
+//
+//            context.warnings.push('[W302] Use github actions instead of travis-ci');
+//
+//            if (m[1] !== 'passing.png') {
+//                context.errors.push('[E301] Tests on Travis-ci.org are broken. Please fix.');
+//            } else {
+//                context.checks.push('Tests are OK on travis-ci');
+//            }
+//
+//            return context;
+//            // max number is E302
+//        });
+    return Promise.resolve(context);
 }
 
 // E4xx
@@ -2399,7 +2401,7 @@ function checkCommits(context) {
         .then(data => {
             const m = data.match(/Commits on [\w\s\d]+, (\d\d\d\d)/);
             if (m) {
-                context.lastCommitYear = m[1];
+                context.lastCommitYear = Number(m[1]);
             }
             return context;
         });
@@ -2429,15 +2431,48 @@ function checkReadme(context) {
                         }
                     }
 
+                    let npmYear = 0;
+                    try {
+                        const result = execSync(`npm view iobroker.${context.adapterName} --json`, { encoding: 'utf-8' });
+                        const npmJson = JSON.parse(result);
+                        //console.log(`[DEBUG] ${JSON.stringify(npmJson)}`);
+                        if (npmJson['dist-tags'] && npmJson['dist-tags'].latest) {
+                            const latest = npmJson['dist-tags'].latest;
+                            const timeStr = npmJson.time[latest];
+                            npmYear = new Date(timeStr).getFullYear(); 
+                            console.log(`[DEBUG] ${latest} - ${timeStr} - ${npmYear}`);
+                        }
+                    } catch (e) {
+                        context.Warnings.push('[W606] Could not retrieve timestamp of LATEST revision at npm.');
+                        console.log(`Error executing "npm view" - ${e}`);
+                    }
+
                     const pos = data.indexOf('## License');
                     if (pos === -1) {
                         context.errors.push('[E604] No "## License" found in README.md');
                     } else {
                         context.checks.push('## License found in README.md');
                         const text = data.substring(pos);
-                        const year = new Date().getFullYear().toString();
-                        if (!text.includes(context.lastCommitYear || year)) {
-                            const m = text.match(/(\d\d\d\d)-\d\d\d\d/);
+                        const year = new Date().getFullYear();
+                        const commitYear = context.lastCommitYear || 0;
+                        let readmeYear = 0;
+                        let m = text.match(/\d\d\d\d-(\d\d\d\d)/);
+                        if (m) {
+                            readmeYear = Number(m[1]);
+                        } else {
+                            m = text.match(/(\d\d\d\d)/);
+                            if (m) {
+                                readmeYear = Number(m[1]);
+                            }
+                        }
+                        console.log(`README year ${readmeYear}`);
+                        console.log(`Current year ${year}`);
+                        console.log(`Commit year ${commitYear}`);
+                        console.log(`NPM year ${npmYear}`);
+
+                        let valid = (readmeYear === year || readmeYear >= commitYear || readmeYear >=npmYear);
+                        if (!valid) {
+                            const m = text.match(/(\d\d\commitd\d)-\d\d\d\d/);
                             if (m) {
                                 context.errors.push(`[E605] No actual year found in copyright. Please add "Copyright (c) ${m[1]}-${year} ${getAuthor(context.packageJson.author)}" at the end of README.md`);
                             } else {
@@ -2471,10 +2506,42 @@ function checkLicenseFile(context) {
                 } else {
                     context.checks.push('LICENSE file found');
 
+                    let npmYear = 0;
+                    try {
+                        const result = execSync(`npm view iobroker.${context.adapterName} --json`, { encoding: 'utf-8' });
+                        const npmJson = JSON.parse(result);
+                        //console.log(`[DEBUG] ${JSON.stringify(npmJson)}`);
+                        if (npmJson['dist-tags'] && npmJson['dist-tags'].latest) {
+                            const latest = npmJson['dist-tags'].latest;
+                            const timeStr = npmJson.time[latest];
+                            npmYear = new Date(timeStr).getFullYear(); 
+                        }
+                    } catch (e) {
+                        console.log(`Error executing "npm view" - ${e}`);
+                    }
+
                     if (context.packageJson.license === 'MIT') {
-                        const year = new Date().getFullYear().toString();
-                        if (!data.includes(context.lastCommitYear || year)) {
-                            const m = data.match(/(\d\d\d\d)-\d\d\d\d/);
+                        const text = data;
+                        const year = new Date().getFullYear();
+                        const commitYear = context.lastCommitYear || 0;
+                        let licenseYear = 0;
+                        let m = text.match(/\d\d\d\d-(\d\d\d\d)/);
+                        if (m) {
+                            licenseYear = Number(m[1]);
+                        } else {
+                            m = text.match(/(\d\d\d\d)/);
+                            if (m) {
+                                licenseYear = Number(m[1]);
+                            }
+                        }
+                        console.log(`License year ${licenseYear}`);
+                        console.log(`Current year ${year}`);
+                        console.log(`Commit year ${commitYear}`);
+                        console.log(`NPM year ${npmYear}`);
+
+                        let valid = (licenseYear === year || licenseYear >= commitYear || licenseYear >=npmYear);
+                        if (!valid) {
+                            const m = text.match(/(\d\d\d\d)-\d\d\d\d/);
                             if (m) {
                                 context.errors.push(`[E701] No actual year found in LICENSE. Please add "Copyright (c) ${m[1]}-${year} ${getAuthor(context.packageJson.author)}" at the start of LICENSE`);
                             } else {
