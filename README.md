@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) package-lock.json check fixed.
+
 ### 2.7.1 (2024-07-26)
 * (mcm1957) Reduce setTimeout/setInterval error to warning temporary.
 
