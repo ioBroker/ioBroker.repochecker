@@ -29,6 +29,7 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) Usage of package.json 'files' section is now recommended.
 * (mcm1957) If more than 7 common.news entries are present a warning is issued now [#232].
 * (mcm1957) Versions listed at common.news are checked to exist at npm now [#226].
+* (mcm1957) 'package-lock.json' is checked to exist at GitHub now [#188].
 
 ### 2.6.1 (2024-06-24)
 * (mcm1957) Check "[W156] Adapter should support admin 5 UI (jsonConfig)" checks for reactUi now.

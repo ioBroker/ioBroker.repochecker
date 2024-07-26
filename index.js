@@ -2329,6 +2329,10 @@ function checkCode(context) {
                     context.errors.push('[E503] "iob_npm.done" found in repo! Remove that file');
                 }
 
+                if (!context['/package-lock.json']) {
+                    context.warnings.push('[W522] "package-lock.json" not found in repo! Please remove from .gitignore!');
+                }
+
                 if (context['/.travis.yml']) {
                     context.hasTravis = true;
                 }
