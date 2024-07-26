@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.7.2 (2024-07-26)
 * (mcm1957) package-lock.json check fixed.
 
 ### 2.7.1 (2024-07-26)
