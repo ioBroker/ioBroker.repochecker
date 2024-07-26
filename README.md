@@ -27,7 +27,8 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) Several false positives for wwwOnly widgetadapters have been fixed [#230].
 * (mcm1957) Missing .npmignore is now considered an error [#229].
 * (mcm1957) Usage of package.json 'files' section is now recommended.
-* (mcm1957) If more than 7 comon.news entries are present a warning is issued now [#232].
+* (mcm1957) If more than 7 common.news entries are present a warning is issued now [#232].
+* (mcm1957) Versions listed at common.news are checked to exist at npm now [#226].
 
 ### 2.6.1 (2024-06-24)
 * (mcm1957) Check "[W156] Adapter should support admin 5 UI (jsonConfig)" checks for reactUi now.

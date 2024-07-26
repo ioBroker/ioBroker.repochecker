@@ -1742,6 +1742,20 @@ function checkNpm(context) {
                 }
             }
 
+            if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.news) {
+                let missingVersions = [];
+                for (const vers in context.ioPackageJson.common.news) {
+                    //console.log(`[DEBUG] news for ${vers}`);
+                    if (!body.versions[vers]) {
+                        missingVersions.push(vers);
+                    }
+                }
+                if (missingVersions.length) {
+                    context.errors.push(`[E204] Version(s) "${missingVersions.join(", ")}" listed at common.news at io-package.json do not exist at NPM. Please remove from news.`);
+                } else {
+                    context.checks.push(`All versions listed at news exist at npm`);
+                }
+            }
             return context;
             // max number is E202
         });
