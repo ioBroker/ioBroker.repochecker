@@ -36,7 +36,8 @@ axios.defaults.headers = {
 
 // adapt recommended version here
 // outdated? // const recommendedAdapterCoreVersion = '3.0.6';
-const recommendedJsControllerVersion = '5.0.11';
+const recommendedJsControllerVersion = '5.0.19';
+let requiredJsControllerVersion = '4.0.0';
 const recommendedNodeVersion = '18'; // This is the minimum node version which should be required
 const requiredNodeVersion = '16';    // This is the minimum node version which must be required
 
@@ -180,6 +181,13 @@ function getDependencies(deps) {
     }
     console.log(`ret: ${JSON.stringify(ret)}`)
     return ret;
+}
+
+/*
+    return the greater of two semver versions
+*/
+function maxVersion (v1, v1){
+    if ( compareVersions.compareversion( v1, v2 ) > 0) return v1; else return v2;
 }
 
 /*
@@ -1508,9 +1516,23 @@ function checkIOPackageJson(context) {
                             } else {
                                 currentJsControllerVersion = jsControllerDependency['js-controller'].replace(/[^\d.]/g, '');
                             }
+                        } else {
+                            context.errors.push(`[E162] js-controller dependency missing. js-controller ${requiredJsControllerVersion} is required as minimum, ${recommendedJsControllerVersion} is recommended. Please add to dependencies at io-package.json.`);
                         }
-
                     }
+                }
+
+                /* 
+                  increase dependency as required by addition software
+                */
+                //if (context.packageJson.dependencies && context.packageJson.dependencies['....']) {
+                //    requiredJsControllerVersion = maxVersion( requiredJsControllerVersion, 'x.x.x')
+                //}
+                
+                if ( currentJsControllerVersion && compareVersions.compare( requiredJsControllerVersion, currentJsControllerVersion, '>=' )) {
+                        context.errors.push(`[E162] js-controller ${currentJsControllerVersion} listed as dependency but ${requiredJsControllerVersion} is required as minimum, ${recommendedJsControllerVersion} is recommended. Please update dependency at io-package.json.`);
+                } else if ( currentJsControllerVersion && compareVersions.compare( recommendedJsControllerVersion, currentJsControllerVersion, '>=' )) {
+                    context.warnings.push(`[W162] js-controller ${currentJsControllerVersion} listed as dependency but ${recommendedJsControllerVersion} is recommended. Please consider updating dependency at io-package.json.`);
                 }
 
                 if (context.ioPackageJson.common.globalDependencies) {
@@ -1527,67 +1549,6 @@ function checkIOPackageJson(context) {
 
                 }
 
-
-                if (context.packageJson.dependencies && context.packageJson.dependencies['@iobroker/adapter-core']) {
-                    /*
-                        - adapter-core <2.3 has no special dep requirements
-                        - adapter-core 2.3.x requires js-controller 1.5.8+ as dep
-                        - adapter-core 2.4.0+ required js-controller 2.0.0+ as dep
-                    */
-                    if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.3')) {
-                        if (!context.ioPackageJson.common.dependencies) {
-                            context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                        } else {
-                            if (currentJsControllerVersion) {
-                                if (!compareVersions.compare(currentJsControllerVersion, '1.5.8', '>=')) {
-                                    context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                                } else {
-                                    context.checks.push('adapter-core 2.3 dependency matches js-controller dependency');
-                                }
-                            } else {
-                                context.errors.push(`[E153] common.dependencies must contain {"js-controller": ">=1.5.8"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                            }
-                        }
-                    } else if (context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.4') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.5') || context.packageJson.dependencies['@iobroker/adapter-core'].includes('2.6')) {
-                        if (!context.ioPackageJson.common.dependencies) {
-                            context.errors.push(`[E154] common.dependencies must contain [{"js-controller": ">=2.0.0"}] or later - recommended: [{"js-controller": ">=${recommendedJsControllerVersion}"}]`);
-                        } else {
-                            if (currentJsControllerVersion) {
-                                if (!compareVersions.compare(currentJsControllerVersion, '2.0.0', '>=')) {
-                                    context.errors.push(`[E154] common.dependencies must contain [{"js-controller": ">=2.0.0"}] or later - recommended: [{"js-controller": ">=${recommendedJsControllerVersion}"}]`);
-                                } else {
-                                    context.checks.push('adapter-core >=2.4 dependency matches js-controller dependency');
-                                }
-                            } else {
-                                context.errors.push(`[E154] common.dependencies must contain {"js-controller": ">=2.0.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                            }
-                        }
-                    }
-                }
-                
-                if (context.ioPackageJson.common.protectedNative) {
-                    if (!currentJsControllerVersion) {
-                        context.errors.push(`[E157] common.protectedNative requires dependency {"js-controller": ">=2.0.2"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                    } else if (!compareVersions.compare(currentJsControllerVersion, '2.0.2', '>=')) {
-                        context.errors.push(`[E157] common.protectedNative requires dependency {"js-controller": ">=2.0.2"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                    }
-                }
-
-                if (context.ioPackageJson.common.encryptedNative) {
-                    if (!currentJsControllerVersion) {
-                        context.errors.push(`[E158] common.encryptedNative requires dependency {"js-controller": ">=3.0.3"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                    } else if (!compareVersions.compare(currentJsControllerVersion, '3.0.3', '>=')) {
-                        context.errors.push(`[E158] common.encryptedNative requires dependency {"js-controller": ">=3.0.3"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                    }
-                }
-
-                if (context.ioPackageJson.common.notifications) {
-                    if (!currentJsControllerVersion) {
-                        context.errors.push(`[E168] common.notifications requires dependency {"js-controller": ">=3.2.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                    } else if (!compareVersions.compare(currentJsControllerVersion, '3.2.0', '>=')) {
-                        context.errors.push(`[E168] common.notifications requires dependency {"js-controller": ">=3.2.0"} or later - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                    }
-                }
 
                 if (!context.ioPackageJson.common.onlyWWW) {
                     if (!context.ioPackageJson.common.tier) {
@@ -2460,12 +2421,14 @@ function checkReadme(context) {
                         let m = text.match(/\d\d\d\d-(\d\d\d\d)/);
                         if (m) {
                             readmeYear = Number(m[1]);
-                        } else {
-                            m = text.match(/(\d\d\d\d)/);
-                            if (m) {
+                        }
+                        m = text.match(/(\d\d\d\d)/); /* both variants could be present */
+                        if (m) {
+                            if (Number(m[1]) > readmeYear) {
                                 readmeYear = Number(m[1]);
                             }
                         }
+                        
                         console.log(`README year ${readmeYear}`);
                         console.log(`Current year ${year}`);
                         console.log(`Commit year ${commitYear}`);
@@ -2529,12 +2492,14 @@ function checkLicenseFile(context) {
                         let m = text.match(/\d\d\d\d-(\d\d\d\d)/);
                         if (m) {
                             licenseYear = Number(m[1]);
-                        } else {
-                            m = text.match(/(\d\d\d\d)/);
-                            if (m) {
+                        }
+                        m = text.match(/(\d\d\d\d)/);
+                        if (m) {
+                            if (Number(m[1])>licenseYear) {
                                 licenseYear = Number(m[1]);
                             }
                         }
+                    
                         console.log(`License year ${licenseYear}`);
                         console.log(`Current year ${year}`);
                         console.log(`Commit year ${commitYear}`);
