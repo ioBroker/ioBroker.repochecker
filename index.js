@@ -37,7 +37,7 @@ axios.defaults.headers = {
 // adapt recommended version here
 // outdated? // const recommendedAdapterCoreVersion = '3.0.6';
 const recommendedJsControllerVersion = '5.0.19';
-let requiredJsControllerVersion = '4.0.0';
+let requiredJsControllerVersion = '4.0.24';
 const recommendedNodeVersion = '18'; // This is the minimum node version which should be required
 const requiredNodeVersion = '16';    // This is the minimum node version which must be required
 
@@ -1523,11 +1523,15 @@ function checkIOPackageJson(context) {
                 }
 
                 /* 
-                  increase dependency as required by addition software
+                  increase dependency as required by addition features
                 */
-                //if (context.packageJson.dependencies && context.packageJson.dependencies['....']) {
-                //    requiredJsControllerVersion = maxVersion( requiredJsControllerVersion, 'x.x.x')
-                //}
+                if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.supportedMessges) {
+                    requiredJsControllerVersion = maxVersion( requiredJsControllerVersion, '5.0.18');
+                }
+                if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.nodeProcessParams) {
+                    requiredJsControllerVersion = maxVersion( requiredJsControllerVersion, '5.0.18');
+                }
+                
                 
                 if ( currentJsControllerVersion && compareVersions.compare( requiredJsControllerVersion, currentJsControllerVersion, '>=' )) {
                         context.errors.push(`[E162] js-controller ${currentJsControllerVersion} listed as dependency but ${requiredJsControllerVersion} is required as minimum, ${recommendedJsControllerVersion} is recommended. Please update dependency at io-package.json.`);
