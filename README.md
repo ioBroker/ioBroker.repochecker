@@ -25,6 +25,7 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) js-controller version check added [#233].
 * (mcm1957) Check for fixed version dependencies and for github dependencies [#233].
 * (mcm1957) Missing language files reduced to warning [#203].
+* (mcm1957) Missing .gitignore is considered an error now.
 
 ### 2.7.2 (2024-07-26)
 * (mcm1957) package-lock.json check fixed.
