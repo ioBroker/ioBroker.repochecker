@@ -41,14 +41,14 @@ let requiredJsControllerVersion = '4.0.24';
 const recommendedNodeVersion = '18'; // This is the minimum node version which should be required
 const requiredNodeVersion = '16';    // This is the minimum node version which must be required
 
-const dependencies = {
+const dependenciesPackageJson = {
     "@iobroker/adapter-core": {
         "required":"3.1.4",
         "recommended":"3.1.6"
     }
 };
 
-const devDependencies = {
+const devDependenciesPackageJson = {
     "@iobroker/testing": {
         "required":"4.1.3",
         "recommended":"4.1.3",
@@ -525,9 +525,9 @@ function checkPackageJson(context) {
         }
 
         if (!context.ioPackageJson.common.onlyWWW) {
-            for (const dependency in dependencies) {
-                const requiredVersion = dependencies[dependency].required;
-                const recommendedVersion = dependencies[dependency].recommended;
+            for (const dependency in dependenciesPackageJson) {
+                const requiredVersion = dependenciesPackageJson[dependency].required;
+                const recommendedVersion = dependenciesPackageJson[dependency].recommended;
                 let dependencyVersion = context.packageJson.dependencies[`${dependency}`] || '';
                 dependencyVersion = dependencyVersion.replace(/[\^\~]/,'' );
                 if (!dependencyVersion) {
@@ -540,15 +540,15 @@ function checkPackageJson(context) {
                     context.checks.push('dependency ${dependency} ${dependencyVersion} is ok');
                 }
             }
-            context.checks.push('"dependencies" checked.');
+            context.checks.push('"dependenciesPackageJson" checked.');
         } else {
-            context.checks.push('"dependencies" check skipped for wwwOnly adapter.');
+            context.checks.push('"dependenciesPackageJson" check skipped for wwwOnly adapter.');
         }
 
-        for (const dependency in devDependencies) {
-            if ((devDependencies[dependency].onlyWWW === false) && context.ioPackageJson.common.onlyWWW) continue;
-            const requiredVersion = devDependencies[dependency].required;
-            const recommendedVersion = devDependencies[dependency].recommended;
+        for (const dependency in devDependenciesPackageJson) {
+            if ((devDependenciesPackageJson[dependency].onlyWWW === false) && context.ioPackageJson.common.onlyWWW) continue;
+            const requiredVersion = devDependenciesPackageJson[dependency].required;
+            const recommendedVersion = devDependenciesPackageJson[dependency].recommended;
             let dependencyVersion = context.packageJson.devDependencies[`${dependency}`] || '';
             dependencyVersion = dependencyVersion.replace(/[\^\~]/,'' );
             if (!dependencyVersion) {
@@ -561,7 +561,40 @@ function checkPackageJson(context) {
                 context.checks.push('devDependency ${dependency} ${dependencyVersion} is ok');
             }
         }
-        context.checks.push('"devDependencies" checked.');
+        context.checks.push('"devDependenciesPackageJson" checked.');
+
+        const enforcedDependencies = [
+            "@iobroker/adapter-core",
+            "@alcalzone/release-script",
+            "@alcalzone/release-script-plugin-iobroker",
+            "@alcalzone/release-script-plugin-license",
+            "@alcalzone/release-script-manual-review",
+            "@iobroker/adapter-dev",
+            "@iobroker/testing"            
+        ]
+        for (const dependency in context.packageJson.dependencies) {
+            if (!context.packageJson.dependencies[dependency].startsWith('^') && !context.packageJson.dependencies[dependency].startsWith('~') ) {
+                if (context.packageJson.dependencies[dependency].toLowerCase().includes('github.com')) {
+                    context.warnings.push(`[W043] dependency should not require a github version. Please change "${dependency}:${context.packageJson.dependencies[dependency]}"`);
+                } else if (enforcedDependencies.includes(dependency)){
+                    context.errors.push(`[E044] dependency must not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.dependencies[dependency]}"`);
+                } else {
+                    context.warnings.push(`[W044] dependency should not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.dependencies[dependency]}"`);
+                }
+           }
+        }
+
+        for (const dependency in context.packageJson.devDependencies) {
+            if (!context.packageJson.devDependencies[dependency].startsWith('^') && !context.packageJson.devDependencies[dependency].startsWith('~') ) {
+                if (context.packageJson.devDependencies[dependency].toLowerCase().includes('github.com')) {
+                    context.warnings.push(`[W045] devDependency should not require github versions. Please change "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
+                } else if (enforcedDependencies.includes(dependency)){
+                    context.errors.push(`[W046] devDependency must not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
+                } else {
+                    context.warnings.push(`[W046] devDependency should not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
+                }
+           }
+        }
 
         for (const blacklist in blacklistPackageJson) {
             //console.log(`checking blacklist ${blacklist}`);
@@ -618,7 +651,7 @@ function checkPackageJson(context) {
             context.checks.push('"globalDependencies" not found in package.json');
         }
 
-        // max number is W042
+        // max number is W046
 
         return context;
     });
@@ -2258,12 +2291,12 @@ function checkCode(context) {
                                     context.errors.push(`[E509] Cannot parse "admin/i18n/${lang}.json": ${e}`);
                                 }
                             } else {
-                                context.errors.push(`[E510] "/admin/i18n/${lang}/translations.json" or "admin/i18n/${lang}.json" not found, but admin support is declared`);
+                                context.warnings.push(`[W510] "/admin/i18n/${lang}/translations.json" or "admin/i18n/${lang}.json" not found, but admin support is declared. Please add.`);
                             }
                         });
                     }
                     if (jsonConfig && jsonConfig.i18n === false) {
-                        context.warnings.push(`[W515] Why you decided to disable i18n support?`);
+                        context.warnings.push(`[W515] Why did you decide to disable i18n support?`);
                     }
                 }
 
