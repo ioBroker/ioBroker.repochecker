@@ -2694,7 +2694,7 @@ function checkGitIgnore(context) {
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.gitignore
     console.log('\ncheckGitIgnore [E9xx]');
     if (!context.filesList.includes('.gitignore')) {
-        context.warnings.push(`[W901] .gitignore not found`);
+        context.errors.push(`[E901] .gitignore not found`);
     } else {
         const rules = (context['/.gitignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
         rules.forEach((name, i) => {
@@ -2726,7 +2726,7 @@ function checkGitIgnore(context) {
                     }
                 });
 
-                !check && context.errors.push(`[E9${paddingNum(i + 11)}] file ${file} found in repository, but not found in .gitignore`);
+                !check && context.errors.push(`[E904] file ${file} found in repository, but not found in .gitignore`);
             }
         });
     }
