@@ -1305,26 +1305,15 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.compact" found in io-package.json');
                 }
 
-                if (!context.ioPackageJson.common.noConfig) {
-                    if (!context.ioPackageJson.common.materialize &&
-                        !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') &&
-                        !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')
-                    ) {
-                        context.errors.push('[E114] No adapter are allowed in the repo without admin support (set "common.noConfig = true" and "common.adminUI.config = none" if adapter has no configuration)');
-                    } else {
-                        context.checks.push('"common.materialize" or "common.adminUI.config" found in io-package.json');
-                    }
-
-                    // check moved to W520
-                    //if (!context.ioPackageJson.common.adminUI || (context.ioPackageJson.common.adminUI.config !== 'json' && context.ioPackageJson.common.adminUI.config !== 'none')) {
-                    //    context.warnings.push('[W156] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI');
-                    //}
+                if (!context.ioPackageJson.common.materialize &&
+                    !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') &&
+                    !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize') &&
+                    !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'html') &&
+                    !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'none')
+                ) {
+                    context.errors.push('[E114] No adapter are allowed in the repo without admin support (set "common.adminUI.config = none" if adapter has no configuration)');
                 } else {
-                    context.checks.push('adapter has no admin config');
-
-                    if (!context.ioPackageJson.common.adminUI || context.ioPackageJson.common.adminUI.config !== 'none') {
-                        context.warnings.push('[W164] Adapters without config "common.noConfig = true" should also set "common.adminUI.config = none"');
-                    }
+                    context.checks.push('"common.materialize" or valid "common.adminUI.config:xxx" found in io-package.json');
                 }
 
                 if (context.ioPackageJson.common.license) {
