@@ -24,6 +24,8 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) Adapt text if sources-dist(-stable).json need a correction [#97].
 * (mcm1957) Missing "common.mode" error text corrected [#249].
 * (mcm1957) Files "iob" and "iobroker" are disallowed now [#248].
+* (mcm1957) Checks related to @alcalzone/releasescript modified [#71].
+
 
 ### 2.8.1 (2024-07-28)
 * (mcm1957) Check of js-controller version has been corrected [#247].
