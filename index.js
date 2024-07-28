@@ -2329,9 +2329,21 @@ function checkCode(context) {
                     }
                 }
 
-                if (context['/iob_npm.done']) {
-                    context.errors.push('[E503] "iob_npm.done" found in repo! Remove that file');
-                }
+                const forbiddenFiles = [
+                    'iob_npm.done',
+                    'iob',
+                    'iobroker'
+                ];
+
+                forbiddenFiles.forEach( file => {
+                    if (context.filesList.includes(file)){
+                        context.errors.push(`[E503] File "${file}" found in repo! Please remove file.`);
+                    }
+                });
+
+                //if (context['/iob_npm.done']) {
+                //    context.errors.push('[E503] File "iob_npm.done" found in repo! Remove that file');
+                //}
 
                 if (!context.filesList.includes('package-lock.json')) {
                     context.warnings.push('[W523] "package-lock.json" not found in repo! Please remove from .gitignore!');
