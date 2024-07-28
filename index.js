@@ -1858,18 +1858,18 @@ function checkRepo(context) {
                             context.checks.push('Icon found in latest repository');
 
                             if (!context.latestRepo[context.adapterName].icon.startsWith(url)) {
-                                context.errors.push(`[E405] Icon (latest) must be in the following path: ${url}`);
+                                context.errors.push(`[E405] Icon must be in the following path: ${url}; correct sources-dist.json`);
                             } else {
                                 context.checks.push('Icon found in latest repository');
                             }
                         }
                         if (!context.latestRepo[context.adapterName].meta) {
-                            context.errors.push('[E406] Meta URL (latest) not found in latest repository');
+                            context.errors.push('[E406] Meta URL not found in latest repository; correct sources-dist.json');
                         } else {
                             context.checks.push('Meta URL(latest) found in latest repository');
 
                             if (context.latestRepo[context.adapterName].meta !== `${url}io-package.json`) {
-                                context.errors.push(`[E407] Meta URL (latest) must be equal to ${url}io-package.json`);
+                                context.errors.push(`[E407] Meta URL must be equal to ${url}io-package.json; correct sources-dist.json`);
                             } else {
                                 context.checks.push('Meta URL (latest) is OK in latest repository');
                             }
@@ -1911,19 +1911,19 @@ function checkRepo(context) {
                             context.checks.push('Icon found in stable repository');
 
                             if (!context.stableRepo[context.adapterName].icon.startsWith(url)) {
-                                context.errors.push(`[E426] Icon (stable) must be in the following path: ${url}`);
+                                context.errors.push(`[E426] Icon must be in the following path: ${url}; correct sources-dist-stable.json`);
                             } else {
                                 context.checks.push('Icon (stable) found in latest repository');
                             }
                         }
 
                         if (!context.stableRepo[context.adapterName].meta) {
-                            context.errors.push('[E427] Meta URL (stable) not found in latest repository');
+                            context.errors.push('[E427] Meta URL not found in latest repository; correct sources-dist.json');
                         } else {
                             context.checks.push('Meta URL (stable) found in latest repository');
 
                             if (context.stableRepo[context.adapterName].meta !== `${url}io-package.json`) {
-                                context.errors.push(`[E428] Meta URL (stable) must be equal to ${url}io-package.json`);
+                                context.errors.push(`[E428] Meta URL must be equal to ${url}io-package.json; correct sources-dist-stable.json`);
                             } else {
                                 context.checks.push('Meta URL (stable) is OK in latest repository');
                             }

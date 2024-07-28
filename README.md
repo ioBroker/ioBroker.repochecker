@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) Adapt text if sources-dist(-stable).json need a correction [#97].
+
 ### 2.8.1 (2024-07-28)
 * (mcm1957) Check of js-controller version has been corrected [#247].
 * (mcm1957) Honor '>' at dependency checks too [#246].
