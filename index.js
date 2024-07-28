@@ -1305,6 +1305,11 @@ function checkIOPackageJson(context) {
                     context.checks.push('"common.compact" found in io-package.json');
                 }
 
+                if (context.ioPackageJson.common.noConfig && 
+                    (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config !== 'none')
+                ) {
+                    context.errors.push('[E114] "common.noConfig=true" requires "common.adminUI.config" to be set to "none"' );
+                }
                 if (!context.ioPackageJson.common.materialize &&
                     !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') &&
                     !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize') &&
