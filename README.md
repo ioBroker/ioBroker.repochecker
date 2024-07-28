@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.8.0 (2024-07-28)
 * (mcm1957) Copyright year check has been fixed for single year entries.
 * (mcm1957) js-controller version check added [#233].
 * (mcm1957) Check for fixed version dependencies and for github dependencies [#233].
