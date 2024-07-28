@@ -1375,12 +1375,12 @@ function checkIOPackageJson(context) {
                 }
 
                 if (!context.ioPackageJson.common.mode) {
-                    context.errors.push('[E165] Node mode found in package.json');
+                    context.errors.push('[E165] "common.mode" not found in io-package.json');
                 } else {
                     context.checks.push('"common.mode" found in io-package.json');
 
                     if (!allowedModes[context.ioPackageJson.common.mode]) {
-                        context.errors.push(`[E166] "common.mode" ${context.ioPackageJson.common.mode} is unknown in io-package.json.`);
+                        context.errors.push(`[E166] "common.mode: ${context.ioPackageJson.common.mode}" is unknown in io-package.json.`);
                     } else {
                         context.checks.push('"common.mode" has known mode in io-package.json');
 
@@ -1389,7 +1389,7 @@ function checkIOPackageJson(context) {
                         }
 
                         if (context.ioPackageJson.common.mode === 'schedule' && !context.ioPackageJson.common.schedule) {
-                            context.errors.push('[E167] schedule adapters must have common.schedule property in io-package.json');
+                            context.errors.push('[E167] scheduled adapters must have "common.schedule" property in io-package.json');
                         }
                     }
                 }
