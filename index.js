@@ -2436,8 +2436,8 @@ function checkReadme(context) {
                             console.log(`[DEBUG] ${latest} - ${timeStr} - ${npmYear}`);
                         }
                     } catch (e) {
-                        context.Warnings.push('[W606] Could not retrieve timestamp of LATEST revision at npm.');
-                        console.log(`Error executing "npm view" - ${e}`);
+                        context.warnings.push('[W606] Could not retrieve timestamp of LATEST revision at npm.');
+                        console.log(`Error executing "npm view"`);
                     }
 
                     const pos = data.indexOf('## License');
