@@ -573,7 +573,10 @@ function checkPackageJson(context) {
             "@iobroker/testing"            
         ]
         for (const dependency in context.packageJson.dependencies) {
-            if (!context.packageJson.dependencies[dependency].startsWith('^') && !context.packageJson.dependencies[dependency].startsWith('~') ) {
+            if (!context.packageJson.dependencies[dependency].startsWith('^') && 
+                !context.packageJson.dependencies[dependency].startsWith('~') &&
+                !context.packageJson.dependencies[dependency].startsWith('>')
+            ) {
                 if (context.packageJson.dependencies[dependency].toLowerCase().includes('github.com')) {
                     context.warnings.push(`[W043] dependency should not require a github version. Please change "${dependency}:${context.packageJson.dependencies[dependency]}"`);
                 } else if (enforcedDependencies.includes(dependency)){
@@ -585,11 +588,14 @@ function checkPackageJson(context) {
         }
 
         for (const dependency in context.packageJson.devDependencies) {
-            if (!context.packageJson.devDependencies[dependency].startsWith('^') && !context.packageJson.devDependencies[dependency].startsWith('~') ) {
+            if (!context.packageJson.devDependencies[dependency].startsWith('^') && 
+                !context.packageJson.devDependencies[dependency].startsWith('~')  &&
+                !context.packageJson.devDependencies[dependency].startsWith('>')
+            ) {
                 if (context.packageJson.devDependencies[dependency].toLowerCase().includes('github.com')) {
                     context.warnings.push(`[W045] devDependency should not require github versions. Please change "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
                 } else if (enforcedDependencies.includes(dependency)){
-                    context.errors.push(`[W046] devDependency must not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
+                    context.errors.push(`[E046] devDependency must not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
                 } else {
                     context.warnings.push(`[W046] devDependency should not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
                 }
@@ -1562,7 +1568,7 @@ function checkIOPackageJson(context) {
                 
                 if ( currentJsControllerVersion && compareVersions.compare( requiredJsControllerVersion, currentJsControllerVersion, '>=' )) {
                         context.errors.push(`[E162] js-controller ${currentJsControllerVersion} listed as dependency but ${requiredJsControllerVersion} is required as minimum, ${recommendedJsControllerVersion} is recommended. Please update dependency at io-package.json.`);
-                } else if ( currentJsControllerVersion && compareVersions.compare( recommendedJsControllerVersion, currentJsControllerVersion, '>=' )) {
+                } else if ( currentJsControllerVersion && compareVersions.compare( recommendedJsControllerVersion, currentJsControllerVersion, '>' )) {
                     context.warnings.push(`[W162] js-controller ${currentJsControllerVersion} listed as dependency but ${recommendedJsControllerVersion} is recommended. Please consider updating dependency at io-package.json.`);
                 }
 
@@ -1746,7 +1752,11 @@ function checkNpm(context) {
                     }
                 }
                 if (missingVersions.length) {
-                    context.errors.push(`[E204] Version(s) "${missingVersions.join(", ")}" listed at common.news at io-package.json do not exist at NPM. Please remove from news.`);
+                    if (missingVersions.length == 1) {
+                        context.errors.push(`[E204] Version "${missingVersions.join(", ")}" listed at common.news at io-package.json does not exist at NPM. Please remove from news.`);
+                    } else {
+                        context.errors.push(`[E204] Versions "${missingVersions.join(", ")}" listed at common.news at io-package.json do not exist at NPM. Please remove from news.`);
+                    }
                 } else {
                     context.checks.push(`All versions listed at news exist at npm`);
                 }
