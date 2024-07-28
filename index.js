@@ -187,7 +187,7 @@ function getDependencies(deps) {
     return the greater of two semver versions
 */
 function maxVersion (v1, v1){
-    if ( compareVersions.compareversion( v1, v2 ) > 0) return v1; else return v2;
+    if ( compareVersions.compareVersions( v1, v2 ) > 0) return v1; else return v2;
 }
 
 /*
@@ -1753,9 +1753,9 @@ function checkNpm(context) {
                 }
                 if (missingVersions.length) {
                     if (missingVersions.length == 1) {
-                        context.errors.push(`[E204] Version "${missingVersions.join(", ")}" listed at common.news at io-package.json does not exist at NPM. Please remove from news.`);
+                        context.errors.push(`[E204] Version "${missingVersions.join(", ")}" listed at common.news at io-package.json does not exist at NPM. Please remove from news section.`);
                     } else {
-                        context.errors.push(`[E204] Versions "${missingVersions.join(", ")}" listed at common.news at io-package.json do not exist at NPM. Please remove from news.`);
+                        context.errors.push(`[E204] Versions "${missingVersions.join(", ")}" listed at common.news at io-package.json do not exist at NPM. Please remove from news section.`);
                     }
                 } else {
                     context.checks.push(`All versions listed at news exist at npm`);
@@ -2366,8 +2366,40 @@ function checkCode(context) {
                     }
                 }
 
-                if (context.packageJson.devDependencies && context.packageJson.devDependencies['@alcalzone/release-script'] && !context['/.releaseconfig.json']) {
-                    context.errors.push('[E518] "@alcalzone/release-script" is used, but ".releaseconfig.json" not found');
+                if (context.packageJson.devDependencies && context.packageJson.devDependencies['@alcalzone/release-script'] ) {
+                    const version = context.packageJson.devDependencies['@alcalzone/release-script'];
+                    if ( compareVersions.compareVersions( version, '3.0.0' ) >= 0)  {
+                        if (!context['/.releaseconfig.json']) {
+                            context.errors.push('[E518] "@alcalzone/release-script" (>=3.0.0) is used, but ".releaseconfig.json" not found. Please create.');
+                        } else {
+console.log('context[/.releaseconfig.json: '+ context['/.releaseconfig.json']);
+                            const releaseConfigJson = JSON.parse(context['/.releaseconfig.json']);
+console.log(`releaseConfigJson: ${releaseConfigJson}`);
+                            const plugins = releaseConfigJson.plugins;
+console.log(`plugins: ${plugins}`);
+                            if (!context.packageJson.devDependencies['@alcalzone/release-script-plugin-iobroker']) {
+                                    context.errors.push('[E519] "@alcalzone/release-script" requires plugin "@alcalzone/release-script-plugin-iobroker". Please add.');
+                            } else {
+                                if (!plugins.includes('iobroker')) {
+                                    context.errors.push('[E520] Plugin "iobroker" missing at .releaseconfig.json. Please add.'); 
+                                }
+                            }
+                            if (!context.packageJson.devDependencies['@alcalzone/release-script-plugin-license']) {
+                                    context.errors.push('[E519] "@alcalzone/release-script" requires plugin "@alcalzone/release-script-plugin-license". Please add.');
+                            } else {
+                                if (!plugins.includes('license')) {
+                                    context.errors.push('[E520] Plugin "license" missing at .releaseconfig.json. Please add.'); 
+                                }
+                            }
+                            if (!context.packageJson.devDependencies['@alcalzone/release-script-plugin-manual-review']) {
+                                context.warnings.push('[W519] Consider adding plugin "@alcalzone/release-script-plugin-manual-review".');
+                            } else {
+                                if (!plugins.includes('manual-review')) {
+                                    context.warnings.push('[W520] Plugin "manual-review" missing at .releaseconfig.json. Please add.'); 
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
