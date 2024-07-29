@@ -25,6 +25,7 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) Missing "common.mode" error text corrected [#249].
 * (mcm1957) Files "iob" and "iobroker" are disallowed now [#248].
 * (mcm1957) Checks related to @alcalzone/releasescript modified [#71].
+* (mcm1957) Text of E114 (missing adminUI) adapted.
 
 
 ### 2.8.1 (2024-07-28)
