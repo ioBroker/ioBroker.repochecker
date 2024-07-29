@@ -20,13 +20,12 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.9.0 (2024-07-29)
 * (mcm1957) Adapt text if sources-dist(-stable).json need a correction [#97].
 * (mcm1957) Missing "common.mode" error text corrected [#249].
 * (mcm1957) Files "iob" and "iobroker" are disallowed now [#248].
 * (mcm1957) Checks related to @alcalzone/releasescript modified [#71].
 * (mcm1957) Text of E114 (missing adminUI) adapted.
-
 
 ### 2.8.1 (2024-07-28)
 * (mcm1957) Check of js-controller version has been corrected [#247].
