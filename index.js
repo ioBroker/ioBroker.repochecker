@@ -1322,7 +1322,7 @@ function checkIOPackageJson(context) {
                     !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'html') &&
                     !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'none')
                 ) {
-                    context.errors.push('[E114] No adapter are allowed in the repo without admin support (set "common.adminUI.config = none" if adapter has no configuration)');
+                    context.errors.push('[E114] Admin support not specified. Please add "common.adminUI.config = json|materialize<|html|none"');
                 } else {
                     context.checks.push('"common.materialize" or valid "common.adminUI.config:xxx" found in io-package.json');
                 }
