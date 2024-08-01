@@ -5,7 +5,7 @@
     "axios": "^1.7.2",
     "compare-versions": "^6.1.0",
     "image-size": "^1.1.1",
-    "unzipper": "^0.12.1",
+    "unzipper": "^0.12.3",
     "json5": "^2.2.3"
   },
   "publishConfig": {
