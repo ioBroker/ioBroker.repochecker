@@ -3,7 +3,7 @@
   "name": "@iobroker/repochecker",
   "dependencies": {
     "axios": "^1.7.2",
-    "compare-versions": "^6.1.0",
+    "compare-versions": "^6.1.1",
     "image-size": "^1.1.1",
     "unzipper": "^0.12.3",
     "json5": "^2.2.3"
