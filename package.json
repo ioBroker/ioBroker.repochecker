@@ -12,7 +12,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@alcalzone/release-script": "^3.7.0",
+    "@alcalzone/release-script": "^3.8.0",
     "eslint": "^8.57.0"
   },
   "files": [
