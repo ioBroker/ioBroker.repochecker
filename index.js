@@ -2503,7 +2503,7 @@ function checkReadme(context) {
                         const year = new Date().getFullYear();
                         const commitYear = context.lastCommitYear || 0;
                         let readmeYear = 0;
-                        let m = text.match(/\d\d\d\d-(\d\d\d\d)/);
+                        let m = text.match(/\d\d\d\d\s*-\s*(\d\d\d\d)/);
                         if (m) {
                             readmeYear = Number(m[1]);
                         }
@@ -2574,7 +2574,7 @@ function checkLicenseFile(context) {
                         const year = new Date().getFullYear();
                         const commitYear = context.lastCommitYear || 0;
                         let licenseYear = 0;
-                        let m = text.match(/\d\d\d\d-(\d\d\d\d)/);
+                        let m = text.match(/\d\d\d\d\s*-\s*(\d\d\d\d)/);
                         if (m) {
                             licenseYear = Number(m[1]);
                         }
