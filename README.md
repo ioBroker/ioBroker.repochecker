@@ -21,7 +21,8 @@ Branch (`master/main/dev`) is optional.
 
 ## Changelog
 ### **WORK IN PROGRESS**
-* (mcm1957) E114 typo at error message has been fixed [#261].
+* (mcm1957) E016 - missing vaiableexpansion has been added. [#263].
+* (mcm1957) E114 - typo at error message has been fixed [#261].
 
 ### 2.9.0 (2024-07-29)
 * (mcm1957) Adapt text if sources-dist(-stable).json need a correction [#97].

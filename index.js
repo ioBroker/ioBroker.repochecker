@@ -416,7 +416,7 @@ function checkPackageJson(context) {
 
             // check if license valid
             if (!licenses.includes(context.packageJson.license)) {
-                context.errors.push('[E016] ${context.packageJson.license} found in package.json is no valid SPDX license. Please use one of listed here: https://spdx.org/licenses/');
+                context.errors.push(`[E016] ${context.packageJson.license} found in package.json is no valid SPDX license. Please use one of listed here: https://spdx.org/licenses/`);
             } else {
                 context.checks.push('"license" is valid in package.json');
             }
