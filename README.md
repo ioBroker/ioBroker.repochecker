@@ -21,7 +21,8 @@ Branch (`master/main/dev`) is optional.
 
 ## Changelog
 ### **WORK IN PROGRESS**
-* (mcm1957) E605 - copyright year range including whitespaces is now accepted. [#605].
+* (mcm1957) E162 - correct dependency check for js-controller. [#267].
+* (mcm1957) E605 - copyright year range including whitespaces is now accepted. [#269].
 * (mcm1957) E016 - missing vaiableexpansion has been added. [#263].
 * (mcm1957) E114 - typo at error message has been fixed [#261].
 

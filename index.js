@@ -1566,7 +1566,7 @@ function checkIOPackageJson(context) {
                 }
                 
                 
-                if ( currentJsControllerVersion && compareVersions.compare( requiredJsControllerVersion, currentJsControllerVersion, '>=' )) {
+                if ( currentJsControllerVersion && compareVersions.compare( requiredJsControllerVersion, currentJsControllerVersion, '>' )) {
                         context.errors.push(`[E162] js-controller ${currentJsControllerVersion} listed as dependency but ${requiredJsControllerVersion} is required as minimum, ${recommendedJsControllerVersion} is recommended. Please update dependency at io-package.json.`);
                 } else if ( currentJsControllerVersion && compareVersions.compare( recommendedJsControllerVersion, currentJsControllerVersion, '>' )) {
                     context.warnings.push(`[W162] js-controller ${currentJsControllerVersion} listed as dependency but ${recommendedJsControllerVersion} is recommended. Please consider updating dependency at io-package.json.`);
