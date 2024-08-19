@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.10.0 (2024-08-19)
 * (mcm1957) Suggestions ([Sxxx] have been added).
 
 ### 2.9.1 (2024-08-12)
