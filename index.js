@@ -2237,7 +2237,7 @@ function checkCode(context) {
                       (!context.ioPackageJson.common.adminUI || 
                           (context.ioPackageJson.common.adminUI.config !== 'json' && context.ioPackageJson.common.adminUI.config !== 'none')
                       )) {
-                    context.warnings.push('[W522] Please consider migrating to admin 5 UI (jsonConfig).');
+                    context.warnings.push('[S522] Please consider migrating to admin 5 UI (jsonConfig).');
                 }
 
                 if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
@@ -2392,7 +2392,7 @@ console.log(`plugins: ${plugins}`);
                                 }
                             }
                             if (!context.packageJson.devDependencies['@alcalzone/release-script-plugin-manual-review']) {
-                                context.warnings.push('[W519] Consider adding plugin "@alcalzone/release-script-plugin-manual-review".');
+                                context.warnings.push('[S519] Consider adding plugin "@alcalzone/release-script-plugin-manual-review".');
                             } else {
                                 if (!plugins.includes('manual-review')) {
                                     context.warnings.push('[W520] Plugin "manual-review" missing at .releaseconfig.json. Please add.'); 
