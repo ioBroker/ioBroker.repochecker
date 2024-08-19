@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) Suggestions ([Sxxx] have been added).
+
 ### 2.9.1 (2024-08-12)
 * (mcm1957) E162 - correct dependency check for js-controller. [#267].
 * (mcm1957) E605 - copyright year range including whitespaces is now accepted. [#269].
