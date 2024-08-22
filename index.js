@@ -12,48 +12,48 @@
 
  */
 const unzipper = require('unzipper');
-const util = require('util');
-const stream = require('stream');
+const util = require('node:util');
+const stream = require('node:stream');
 const Writable = stream.Writable;
 const sizeOf = require('image-size');
 const axios = require('axios');
 const JSON5 = require('json5');
 const compareVersions = require('compare-versions');
-//const Languagedetect = require('languagedetect');
-//const languagedetect = new Languagedetect;
+// const Languagedetect = require('languagedetect');
+// const languagedetect = new Languagedetect;
 const execSync = require('node:child_process').execSync;
 
 const issues = require('./doc/issues');
 
 const version = require('./package.json').version;
 
-// diable axios caching
+// disable axios caching
 axios.defaults.headers = {
     'Cache-Control': 'no-cache',
     'Pragma': 'no-cache',
     'Expires': '0',
 };
 
-// adapt recommended version here
+// adapt a recommended version here
 // outdated? // const recommendedAdapterCoreVersion = '3.0.6';
 const recommendedJsControllerVersion = '5.0.19';
 let requiredJsControllerVersion = '4.0.24';
-const recommendedNodeVersion = '18'; // This is the minimum node version which should be required
-const requiredNodeVersion = '16';    // This is the minimum node version which must be required
+const recommendedNodeVersion = '18'; // This is the minimum node version that should be required
+const requiredNodeVersion = '16';    // This is the minimum node version that must be required
 
 const dependenciesPackageJson = {
-    "@iobroker/adapter-core": {
-        "required":"3.1.4",
-        "recommended":"3.1.6"
-    }
+    '@iobroker/adapter-core': {
+        required: '3.1.4',
+        recommended: '3.1.6',
+    },
 };
 
 const devDependenciesPackageJson = {
-    "@iobroker/testing": {
-        "required":"4.1.3",
-        "recommended":"4.1.3",
-        "onlyWWW":false
-    }
+    '@iobroker/testing': {
+        required: '4.1.3',
+        recommended: '4.1.3',
+        onlyWWW: false,
+    },
 };
 
 const blacklistPackageJson = {
@@ -61,41 +61,41 @@ const blacklistPackageJson = {
 };
 
 const blacklistIOPackageJson = {
-    "installedFrom": {
-        "msg": "\"installedFrom\" is invalid at io-package.json. Please remove.",
-        "err": true
+    installedFrom: {
+        msg: '"installedFrom" is invalid at io-package.json. Please remove.',
+        err:true
     },
-    "common.installedFrom": {
-        "msg": "\"common.installedFrom\" is invalid. Please remove from io-package.json.",
-        "err": true
+    'common.installedFrom': {
+        msg: '"common.installedFrom" is invalid. Please remove from io-package.json.',
+        err:true
     },
-    "common.title": {
-        "msg": "\"common.title\" is deprecated and replaced by \"common.titleLang\". Please remove from io-package.json.",
-        "err": false
+    'common.title': {
+        msg: '"common.title" is deprecated and replaced by "common.titleLang". Please remove from io-package.json.',
+        err:false
     },
-    "common.main": {
-        "msg": "\"common.main\" is deprecated and ignored. Please remove from io-package.json. Use \"main\" at package.json instead.",
-        "err": false
+    'common.main': {
+        msg: '"common.main" is deprecated and ignored. Please remove from io-package.json. Use "main" at package.json instead.',
+        err:false
     },
-    "common.materialize": {
-        "msg": "\"common.materialize\" is deprecated for admin >= 5 at io-package.json. Please use property \"adminUI\".",
-        "err": false
+    'common.materialize': {
+        msg: '"common.materialize" is deprecated for admin >= 5 at io-package.json. Please use property "adminUI".',
+        err:false
     },
-    "common.materializeTab": {
-        "msg": "\"common.materializeTab\" is deprecated for admin >= 5 at io-package.json. Please use property \"adminUI\".",
-        "err": false
+    'common.materializeTab': {
+        msg: '"common.materializeTab" is deprecated for admin >= 5 at io-package.json. Please use property "adminUI".',
+        err:false
     },
-    "common.noConfig": {
-        "msg": "\"common.noConfig\" is deprecated for admin >= 5 at io-package.json. Please use property \"adminUI.config\":\"none\".",
-        "err": false
+    'common.noConfig': {
+        msg: '"common.noConfig" is deprecated for admin >= 5 at io-package.json. Please use property "adminUI.config":"none".',
+        err:false
     },
-    "common.subscribe": {
-        "msg": "\"common.subscribe\" will be removed with js-controller >= 6. Please remove from io-package.json and adapt code if required.",
-        "err": true
+    'common.subscribe': {
+        msg: '"common.subscribe" will be removed with js-controller >= 6. Please remove from io-package.json and adapt code if required.',
+        err:true
     },
-    "common.wapeup": {
-        "msg": "\"common.wakeup\" is deprecated and ignored. Please remove from io-package.json.",
-        "err": true
+    'common.wapeup': {
+        msg: '"common.wakeup" is deprecated and ignored. Please remove from io-package.json.',
+        err:true
     },
 };
 
@@ -147,47 +147,50 @@ function getDependencyArray(deps) {
 }
 
 // dependencies might be:
-// [ 
+// [
 //    {"js-controller":">=1.2.3"}
 // ]
 // or
-// [ 
+// [
 //    {"js-controller":">=1.2.3"},
 //    {"vis":">=1.2.3"}
 // ]
 // or
-// [ 
+// [
 //    {
 //      "js-controller":">=1.2.3",
 //      "vis":">=1.2.3"
 //    }
 // ]
 // or
-// [ 
+// [
 //    {"js-controller":">=1.2.3"},
 //    "vis"
 // ]
 function getDependencies(deps) {
     const ret = {};
-    console.log(`deps: ${JSON.stringify(deps)}, type ${typeof deps}`)
-    for (let dep of deps ) {
+    console.log(`deps: ${JSON.stringify(deps)}, type ${typeof deps}`);
+    for (const dep of deps ) {
         if (typeof dep === 'object') {
-            for (let key in dep ) {
+            for (const key in dep ) {
                 ret[key] = dep[key];
             }
         } else {
             ret[ dep ] = '>=0';
         }
     }
-    console.log(`ret: ${JSON.stringify(ret)}`)
+    console.log(`ret: ${JSON.stringify(ret)}`);
     return ret;
 }
 
 /*
     return the greater of two semver versions
 */
-function maxVersion (v1, v1){
-    if ( compareVersions.compareVersions( v1, v2 ) > 0) return v1; else return v2;
+function maxVersion(v1, v2) {
+    if (compareVersions.compareVersions(v1, v2) > 0) {
+        return v1;
+    }
+    return v2;
 }
 
 /*
@@ -199,7 +202,7 @@ function checkLanguages(langObj) {
 */
 
 function checkLanguages(langObj, languages) {
-    return languages.filter( lang => !langObj[lang]);
+    return languages.filter(lang => !langObj[lang]);
 }
 
 function getGithubApiData(context) {
@@ -224,7 +227,7 @@ function getGithubApiData(context) {
             })
             .catch(e => {
                 context.errors.push(`[E000] FATAL: cannot access repository ${context.githubUrlApi}`);
-                reject(e.toJSON())
+                reject(e.toJSON());
             });// E0xx
     });
 }
@@ -232,32 +235,32 @@ function getGithubApiData(context) {
 // Error ranges
 // E0xx
 //      check package.json
-// 
-// E1xx 
+//
+// E1xx
 //      check io-package.json
-// 
-// E2xx 
+//
+// E2xx
 //      check npm and npmjs.org
-// 
-// E3xx 
+//
+// E3xx
 //      check testing
-// 
-// E4xx 
+//
+// E4xx
 //      check repositories
-// 
-// E5xx 
+//
+// E5xx
 //      check code
-// 
-// E6xx 
+//
+// E6xx
 //      check README file
-// 
-// E7xx 
+//
+// E7xx
 //      check license file
-// 
-// E8xx 
+//
+// E8xx
 //      check github repository
 //
-// E9xx 
+// E9xx
 //      check .gitignore file
 
 // ---------------------------- let's begin ----------------------------
@@ -265,7 +268,7 @@ function getGithubApiData(context) {
 function getPackageJson(context) {
     return new Promise((resolve, reject) => {
         console.log('\ngetPackageJson');
-        
+
         downloadFile(context.githubUrl, '/package.json')
             .then(packageJson => {
                 context.packageJson = packageJson;
@@ -279,13 +282,13 @@ function getPackageJson(context) {
                 resolve( context );
             })
             .catch(e => reject(e));
-    })
-};
+    });
+}
 
 function getIOPackageJson(context) {
     return new Promise((resolve, reject) => {
         console.log('\ngetIOPackageJson');
-        
+
         downloadFile(context.githubUrl, '/io-package.json')
             .then(ioPackageJson => {
                 context.ioPackageJson = ioPackageJson;
@@ -299,368 +302,368 @@ function getIOPackageJson(context) {
                 resolve( context );
             })
             .catch(e => reject(e));
-    })
-};
+    });
+}
 
-        
+
 // check package.json
 // E0xx
 function checkPackageJson(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         console.log('\ncheckPackageJson [E0xx]');
         if (context.packageJson) {
             return resolve(context.packageJson);
         } else {
-            throw('package.json not loaded');
+            throw ('package.json not loaded');
         }
     })
-    .then(packageJson => {
-        context.packageJson = packageJson;
-        if (typeof context.packageJson === 'string') {
-            try {
-                context.packageJson = JSON.parse(context.packageJson);
-            } catch (e) {
-                context.errors.push(`[E001] Cannot parse package.json: ${e}`);
-                return context;
+        .then(packageJson => {
+            context.packageJson = packageJson;
+            if (typeof context.packageJson === 'string') {
+                try {
+                    context.packageJson = JSON.parse(context.packageJson);
+                } catch (e) {
+                    context.errors.push(`[E001] Cannot parse package.json: ${e}`);
+                    return context;
+                }
             }
-        }
 
-        if (!context.githubUrlOriginal.match(/\/iobroker\./i)) {
-            context.errors.push('[E002] No "ioBroker." found in the name of repository');
-        } else {
-            context.checks.push('"ioBroker" was found in the name of repository');
-        }
-
-        if (context.githubUrlOriginal.includes('/iobroker.')) {
-            context.errors.push('[E003] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
-        } else {
-            context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
-        }
-
-        const m = context.githubUrlOriginal.match(/\/ioBroker\.(.*)$/);
-        let adapterName = '';
-        if (!m || !m[1]) {
-            context.errors.push(`[E004] No adapter name found in URL: ${context.githubUrlOriginal}`);
-        } else {
-            context.checks.push('Adapter name found in the URL');
-            adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
-        }
-
-        context.adapterName = adapterName;
-
-        if (adapterName.match(/[A-Z]/)) {
-            context.errors.push('[E005] Adapter name must be lowercase');
-        } else {
-            context.checks.push('Adapter name is lowercase');
-        }
-
-        if (adapterName.match(/[^-_a-z\d]/)) {
-            context.errors.push(`[E006] Invalid characters found in adapter name "${adapterName}". Only lowercase chars, digits, "-" and "_" are allowed`);
-        } else {
-            context.checks.push(`No invalid characters found in "${adapterName}"`);
-        }
-
-        if (adapterName.startsWith('_')) {
-            context.errors.push(`[E024] Adapter name "${adapterName}" may not start with '_'`);
-        } else {
-            context.checks.push(`Adapter name "${adapterName}" does not start with '_'`);
-        }
-
-        const n = context.githubUrlOriginal.match(/\/([^/]+)\/iobroker\./i);
-        if (!n || !n[1]) {
-            context.errors.push('[E007] Cannot find author repo in the URL');
-        } else {
-            context.authorName = n[1];
-        }
-
-        if (context.packageJson.name !== `iobroker.${adapterName.toLowerCase()}`) {
-            context.errors.push(`[E020] Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}". Now is "${packageJson.name}"`);
-        } else {
-            context.checks.push(`Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}".`);
-        }
-
-        if (!context.packageJson.version) {
-            context.errors.push('[E009] No version found in the package.json');
-        } else {
-            context.checks.push('Version found in package.json');
-        }
-
-        if (!context.packageJson.description) {
-            context.errors.push('[E010] No description found in the package.json');
-        } else {
-            context.checks.push('Description found in package.json');
-        }
-
-        if (context.packageJson.licenses) {
-            context.errors.push('[E021] "licenses" in package.json are deprecated. Please remove and use "license": "NAME" field.');
-        } else {
-            context.checks.push('No "licenses" found in package.json');
-        }
-
-        if (!context.packageJson.author) {
-            context.errors.push('[E013] No author found in the package.json');
-        } else {
-            context.checks.push('Author found in package.json');
-        }
-
-        if (context.packageJson._args) {
-            context.errors.push('[E014] NPM information found in package.json. Please remove all attributes starting with "_"');
-        } else {
-            context.checks.push('No npm generated attributes found in package.json');
-        }
-
-        if (!context.packageJson.license) {
-            context.errors.push('[E015] No license found in package.json');
-        } else {
-            context.checks.push('"license" found in package.json');
-
-            // check if license valid
-            if (!licenses.includes(context.packageJson.license)) {
-                context.errors.push(`[E016] ${context.packageJson.license} found in package.json is no valid SPDX license. Please use one of listed here: https://spdx.org/licenses/`);
+            if (!context.githubUrlOriginal.match(/\/iobroker\./i)) {
+                context.errors.push('[E002] No "ioBroker." found in the name of repository');
             } else {
-                context.checks.push('"license" is valid in package.json');
+                context.checks.push('"ioBroker" was found in the name of repository');
             }
-        }
 
-        if (!context.packageJson.repository) {
-            context.errors.push('[E017] No repository found in the package.json');
-        } else {
-            context.checks.push('Repository found in package.json');
-
-            const allowedRepoUrls = [
-                context.githubApiData.html_url, // https://github.com/klein0r/ioBroker.luftdaten
-                `git+${context.githubApiData.html_url}`, // git+https://github.com/klein0r/ioBroker.luftdaten
-                context.githubApiData.git_url, // git://github.com/klein0r/ioBroker.luftdaten.git
-                context.githubApiData.ssh_url, // git@github.com:klein0r/ioBroker.luftdaten.git
-                context.githubApiData.clone_url, // https://github.com/klein0r/ioBroker.luftdaten.git
-                `git+${context.githubApiData.clone_url}` // git+https://github.com/klein0r/ioBroker.luftdaten.git
-            ];
-
-            // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
-            if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
-                if (context.packageJson.repository.type !== 'git') {
-                    context.errors.push(`[E018] Invalid repository type in package.json: ${context.packageJson.repository.type}. It should be git`);
-                } else {
-                    context.checks.push('Repository type is valid in package.json: git');
-                }
-
-                if (!allowedRepoUrls.includes(context.packageJson.repository.url)) {
-                    context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
-                } else {
-                    context.checks.push('Repository URL is valid in package.json');
-                }
-            } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
-                if (!allowedRepoUrls.includes(context.packageJson.repository)) {
-                    context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
-                } else {
-                    context.checks.push('Repository URL is valid in package.json');
-                }
+            if (context.githubUrlOriginal.includes('/iobroker.')) {
+                context.errors.push('[E003] Repository must have name ioBroker.adaptername, but now io"b"roker is in lowercase');
             } else {
-                context.errors.push('[E019] Invalid repository URL in package.json');
+                context.checks.push('Repository has name ioBroker.adaptername (not iobroker.adaptername)');
             }
-        }
 
-        if (reservedAdapterNames.includes(adapterName)) {
-            context.errors.push('[E022] Adapter name is reserved. Please rename adapter.');
-        } else {
-            context.checks.push('Adapter name is not reserved');
-        }
+            const m = context.githubUrlOriginal.match(/\/ioBroker\.(.*)$/);
+            let adapterName = '';
+            if (!m || !m[1]) {
+                context.errors.push(`[E004] No adapter name found in URL: ${context.githubUrlOriginal}`);
+            } else {
+                context.checks.push('Adapter name found in the URL');
+                adapterName = m[1].replace(/\/master$/, '').replace(/\/main$/, '');
+            }
 
-        if (!context.ioPackageJson.common.onlyWWW && !context.packageJson.dependencies) {
-            context.errors.push('[W030] No dependencies declared at package.json. Is this really correct?');
-        }
-        if (!context.packageJson.devDependencies) {
-            context.errors.push('[E031] No devDependencies declared at package.json. Please correct package.json');
-        }
+            context.adapterName = adapterName;
 
-        if ((context.packageJson.dependencies && context.packageJson.dependencies.npm) || (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies.npm)) {
-            context.errors.push('[E023] Do not include "npm" as dependency!');
-        } else {
-            context.checks.push('npm is not in dependencies');
-        }
+            if (adapterName.match(/[A-Z]/)) {
+                context.errors.push('[E005] Adapter name must be lowercase');
+            } else {
+                context.checks.push('Adapter name is lowercase');
+            }
 
-        if ((context.packageJson.dependencies && context.packageJson.dependencies['iobroker.js-controller']) ||
+            if (adapterName.match(/[^-_a-z\d]/)) {
+                context.errors.push(`[E006] Invalid characters found in adapter name "${adapterName}". Only lowercase chars, digits, "-" and "_" are allowed`);
+            } else {
+                context.checks.push(`No invalid characters found in "${adapterName}"`);
+            }
+
+            if (adapterName.startsWith('_')) {
+                context.errors.push(`[E024] Adapter name "${adapterName}" may not start with '_'`);
+            } else {
+                context.checks.push(`Adapter name "${adapterName}" does not start with '_'`);
+            }
+
+            const n = context.githubUrlOriginal.match(/\/([^/]+)\/iobroker\./i);
+            if (!n || !n[1]) {
+                context.errors.push('[E007] Cannot find author repo in the URL');
+            } else {
+                context.authorName = n[1];
+            }
+
+            if (context.packageJson.name !== `iobroker.${adapterName.toLowerCase()}`) {
+                context.errors.push(`[E020] Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}". Now is "${packageJson.name}"`);
+            } else {
+                context.checks.push(`Name of adapter in package.json must be lowercase and be equal to "iobroker.${adapterName.toLowerCase()}".`);
+            }
+
+            if (!context.packageJson.version) {
+                context.errors.push('[E009] No version found in the package.json');
+            } else {
+                context.checks.push('Version found in package.json');
+            }
+
+            if (!context.packageJson.description) {
+                context.errors.push('[E010] No description found in the package.json');
+            } else {
+                context.checks.push('Description found in package.json');
+            }
+
+            if (context.packageJson.licenses) {
+                context.errors.push('[E021] "licenses" in package.json are deprecated. Please remove and use "license": "NAME" field.');
+            } else {
+                context.checks.push('No "licenses" found in package.json');
+            }
+
+            if (!context.packageJson.author) {
+                context.errors.push('[E013] No author found in the package.json');
+            } else {
+                context.checks.push('Author found in package.json');
+            }
+
+            if (context.packageJson._args) {
+                context.errors.push('[E014] NPM information found in package.json. Please remove all attributes starting with "_"');
+            } else {
+                context.checks.push('No npm generated attributes found in package.json');
+            }
+
+            if (!context.packageJson.license) {
+                context.errors.push('[E015] No license found in package.json');
+            } else {
+                context.checks.push('"license" found in package.json');
+
+                // check if license valid
+                if (!licenses.includes(context.packageJson.license)) {
+                    context.errors.push(`[E016] ${context.packageJson.license} found in package.json is no valid SPDX license. Please use one of listed here: https://spdx.org/licenses/`);
+                } else {
+                    context.checks.push('"license" is valid in package.json');
+                }
+            }
+
+            if (!context.packageJson.repository) {
+                context.errors.push('[E017] No repository found in the package.json');
+            } else {
+                context.checks.push('Repository found in package.json');
+
+                const allowedRepoUrls = [
+                    context.githubApiData.html_url, // https://github.com/klein0r/ioBroker.luftdaten
+                    `git+${context.githubApiData.html_url}`, // git+https://github.com/klein0r/ioBroker.luftdaten
+                    context.githubApiData.git_url, // git://github.com/klein0r/ioBroker.luftdaten.git
+                    context.githubApiData.ssh_url, // git@github.com:klein0r/ioBroker.luftdaten.git
+                    context.githubApiData.clone_url, // https://github.com/klein0r/ioBroker.luftdaten.git
+                    `git+${context.githubApiData.clone_url}` // git+https://github.com/klein0r/ioBroker.luftdaten.git
+                ];
+
+                // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#repository
+                if (context.packageJson.repository && typeof context.packageJson.repository === 'object') {
+                    if (context.packageJson.repository.type !== 'git') {
+                        context.errors.push(`[E018] Invalid repository type in package.json: ${context.packageJson.repository.type}. It should be git`);
+                    } else {
+                        context.checks.push('Repository type is valid in package.json: git');
+                    }
+
+                    if (!allowedRepoUrls.includes(context.packageJson.repository.url)) {
+                        context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository.url}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
+                    } else {
+                        context.checks.push('Repository URL is valid in package.json');
+                    }
+                } else if (context.packageJson.repository && typeof context.packageJson.repository === 'string') {
+                    if (!allowedRepoUrls.includes(context.packageJson.repository)) {
+                        context.errors.push(`[E019] Invalid repository URL in package.json: ${context.packageJson.repository}. Expected: ${context.githubApiData.ssh_url} or ${context.githubApiData.clone_url}`);
+                    } else {
+                        context.checks.push('Repository URL is valid in package.json');
+                    }
+                } else {
+                    context.errors.push('[E019] Invalid repository URL in package.json');
+                }
+            }
+
+            if (reservedAdapterNames.includes(adapterName)) {
+                context.errors.push('[E022] Adapter name is reserved. Please rename adapter.');
+            } else {
+                context.checks.push('Adapter name is not reserved');
+            }
+
+            if (!context.ioPackageJson.common.onlyWWW && !context.packageJson.dependencies) {
+                context.errors.push('[W030] No dependencies declared at package.json. Is this really correct?');
+            }
+            if (!context.packageJson.devDependencies) {
+                context.errors.push('[E031] No devDependencies declared at package.json. Please correct package.json');
+            }
+
+            if ((context.packageJson.dependencies && context.packageJson.dependencies.npm) || (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies.npm)) {
+                context.errors.push('[E023] Do not include "npm" as dependency!');
+            } else {
+                context.checks.push('npm is not in dependencies');
+            }
+
+            if ((context.packageJson.dependencies && context.packageJson.dependencies['iobroker.js-controller']) ||
             (context.packageJson.devDependencies && context.packageJson.devDependencies['iobroker.js-controller']) ||
             (context.packageJson.optionalDependencies && context.packageJson.optionalDependencies['iobroker.js-controller'])
-        ) {
-            context.errors.push('[E025] Do not include "iobroker.js-controller" as dependency!');
-        } else {
-            context.checks.push('iobroker.js-controller is not in dependencies');
-        }
-
-        if (!context.ioPackageJson.common.onlyWWW) {
-            if (!context.packageJson.engines) {
-                context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${recommendedNodeVersion}'}}" is recommened`);                                    
+            ) {
+                context.errors.push('[E025] Do not include "iobroker.js-controller" as dependency!');
             } else {
-                if (!context.packageJson.engines.node) {
-                    context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${recommendedNodeVersion}'}}" is recommened`);                                    
+                context.checks.push('iobroker.js-controller is not in dependencies');
+            }
+
+            if (!context.ioPackageJson.common.onlyWWW) {
+                if (!context.packageJson.engines) {
+                    context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${recommendedNodeVersion}'}}" is recommended`);
                 } else {
-                    context.checks.push('engines attribute containing node requirements exist.');
-                    // 'engines': { 'node': '>= 18' }
-                    // 'engines': { 'node': '>= 18.1.2' }
-                    // 'engines': { 'node': '>= 18.1.2 < 19' }
-                    const nodeVal = context.packageJson.engines.node;
-                    let match = nodeVal.match(/^^(?<cmp>[<>=~]+)?\s*(?<vers>\d+(\.\d+(\.\d+)?)?(\-\w+\.\d+)?)/m);
-                    if ( ! match ) {
-                        context.warnings.push(`[W027] {'engines' : { 'node' : '${nodeVal}' } }" is not parseable.`);
+                    if (!context.packageJson.engines.node) {
+                        context.errors.push(`[E026] "{'engines': {'node'>='${requiredNodeVersion}'}}" is required at package.json, "{'engines':{'node'>='${recommendedNodeVersion}'}}" is recommended`);
                     } else {
-                        //console.log( `${JSON.stringify(match.groups)}`);
-                        if ( match.groups.cmp !== '>' && match.groups.cmp !== '>=' ) {
-                            context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
+                        context.checks.push('engines attribute containing node requirements exist.');
+                        // 'engines': { 'node': '>= 18' }
+                        // 'engines': { 'node': '>= 18.1.2' }
+                        // 'engines': { 'node': '>= 18.1.2 < 19' }
+                        const nodeVal = context.packageJson.engines.node;
+                        const match = nodeVal.match(/^\^(?<cmp>[<>=~]+)?\s*(?<vers>\d+(\.\d+(\.\d+)?)?(-\w+\.\d+)?)/m);
+                        if ( ! match ) {
+                            context.warnings.push(`[W027] {'engines' : { 'node' : '${nodeVal}' } }" is not parseable.`);
                         } else {
-                            //console.log( `${match.groups.vers} - ${recommendedNodeVersion}`);
-                            if ( ! compareVersions.compare( match.groups.vers, requiredNodeVersion, '>=')) {
-                                context.errors.push(`[E029] Node.js ${requiredNodeVersion} is required as minimum, node.js ${recommendedNodeVersion} is recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);
-                            } else if ( ! compareVersions.compare( match.groups.vers, recommendedNodeVersion, '>=')) {
-                                context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);                                        
+                        //console.log( `${JSON.stringify(match.groups)}`);
+                            if ( match.groups.cmp !== '>' && match.groups.cmp !== '>=' ) {
+                                context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);
                             } else {
-                                context.checks.push(`Correct node.js version ${match.groups.vers} requested by "engines" attribute at package.json.`);
+                            //console.log( `${match.groups.vers} - ${recommendedNodeVersion}`);
+                                if ( ! compareVersions.compare( match.groups.vers, requiredNodeVersion, '>=')) {
+                                    context.errors.push(`[E029] Node.js ${requiredNodeVersion} is required as minimum, node.js ${recommendedNodeVersion} is recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);
+                                } else if ( ! compareVersions.compare( match.groups.vers, recommendedNodeVersion, '>=')) {
+                                    context.warnings.push(`[W028] Minimum node.js version ${recommendedNodeVersion} recommended. Please adapt "{'engines' : { 'node' >= '${match.groups.vers}' } }" at package.json.`);
+                                } else {
+                                    context.checks.push(`Correct node.js version ${match.groups.vers} requested by "engines" attribute at package.json.`);
+                                }
                             }
                         }
                     }
                 }
-            }        
-        } else {
-            context.checks.push('"engines" check skipped for wwwOnly adapter.');
-        }
+            } else {
+                context.checks.push('"engines" check skipped for wwwOnly adapter.');
+            }
 
-        if (!context.ioPackageJson.common.onlyWWW) {
-            for (const dependency in dependenciesPackageJson) {
-                const requiredVersion = dependenciesPackageJson[dependency].required;
-                const recommendedVersion = dependenciesPackageJson[dependency].recommended;
-                let dependencyVersion = context.packageJson.dependencies[`${dependency}`] || '';
-                dependencyVersion = dependencyVersion.replace(/[\^\~]/,'' );
+            if (!context.ioPackageJson.common.onlyWWW) {
+                for (const dependency in dependenciesPackageJson) {
+                    const requiredVersion = dependenciesPackageJson[dependency].required;
+                    const recommendedVersion = dependenciesPackageJson[dependency].recommended;
+                    let dependencyVersion = context.packageJson.dependencies[`${dependency}`] || '';
+                    dependencyVersion = dependencyVersion.replace(/[\^~]/,'' );
+                    if (!dependencyVersion) {
+                        context.errors.push(`[E032] No dependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to dependencies at package.json`);
+                    } else if (! compareVersions.compare( dependencyVersion, requiredVersion, '>=' )) {
+                        context.errors.push(`[E033] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum, ${recommendedVersion} is recommended. Please update dependencies at package.json`);
+                    } else if (! compareVersions.compare( dependencyVersion, recommendedVersion, '>=' )) {
+                        context.warnings.push(`[W034] ${dependency} ${dependencyVersion} specified. ${recommendedVersion} is recommended. Please consider updating dependencies at package.json`);
+                    } else {
+                        context.checks.push('dependency ${dependency} ${dependencyVersion} is ok');
+                    }
+                }
+                context.checks.push('"dependenciesPackageJson" checked.');
+            } else {
+                context.checks.push('"dependenciesPackageJson" check skipped for wwwOnly adapter.');
+            }
+
+            for (const dependency in devDependenciesPackageJson) {
+                if ((devDependenciesPackageJson[dependency].onlyWWW === false) && context.ioPackageJson.common.onlyWWW) continue;
+                const requiredVersion = devDependenciesPackageJson[dependency].required;
+                const recommendedVersion = devDependenciesPackageJson[dependency].recommended;
+                let dependencyVersion = context.packageJson.devDependencies[`${dependency}`] || '';
+                dependencyVersion = dependencyVersion.replace(/[\^~]/,'' );
                 if (!dependencyVersion) {
-                    context.errors.push(`[E032] No dependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to dependencies at package.json`);
+                    context.errors.push(`[E035] No devDependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to devDependencies at package.json`);
                 } else if (! compareVersions.compare( dependencyVersion, requiredVersion, '>=' )) {
-                    context.errors.push(`[E033] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum, ${recommendedVersion} is recommended. Please update dependencies at package.json`);
+                    context.errors.push(`[E036] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum,  ${recommendedVersion} is recommended. Please update devDependencies at package.json`);
                 } else if (! compareVersions.compare( dependencyVersion, recommendedVersion, '>=' )) {
-                    context.warnings.push(`[W034] ${dependency} ${dependencyVersion} specified. ${recommendedVersion} is recommended. Please consider updating dependencies at package.json`);
+                    context.warnings.push(`[W037] ${dependency} ${dependencyVersion} specified. ${recommendedVersion} is recommended. Please consider updating devDependencies at package.json`);
                 } else {
-                    context.checks.push('dependency ${dependency} ${dependencyVersion} is ok');
+                    context.checks.push('devDependency ${dependency} ${dependencyVersion} is ok');
                 }
             }
-            context.checks.push('"dependenciesPackageJson" checked.');
-        } else {
-            context.checks.push('"dependenciesPackageJson" check skipped for wwwOnly adapter.');
-        }
+            context.checks.push('"devDependenciesPackageJson" checked.');
 
-        for (const dependency in devDependenciesPackageJson) {
-            if ((devDependenciesPackageJson[dependency].onlyWWW === false) && context.ioPackageJson.common.onlyWWW) continue;
-            const requiredVersion = devDependenciesPackageJson[dependency].required;
-            const recommendedVersion = devDependenciesPackageJson[dependency].recommended;
-            let dependencyVersion = context.packageJson.devDependencies[`${dependency}`] || '';
-            dependencyVersion = dependencyVersion.replace(/[\^\~]/,'' );
-            if (!dependencyVersion) {
-                context.errors.push(`[E035] No devDependency declared for ${dependency}. Please add "${dependency}":"${recommendedVersion}" to devDependencies at package.json`);
-            } else if (! compareVersions.compare( dependencyVersion, requiredVersion, '>=' )) {
-                context.errors.push(`[E036] ${dependency} ${dependencyVersion} specified. ${requiredVersion} is required as minimum,  ${recommendedVersion} is recommended. Please update devDependencies at package.json`);
-            } else if (! compareVersions.compare( dependencyVersion, recommendedVersion, '>=' )) {
-                context.warnings.push(`[W037] ${dependency} ${dependencyVersion} specified. ${recommendedVersion} is recommended. Please consider updating devDependencies at package.json`);
-            } else {
-                context.checks.push('devDependency ${dependency} ${dependencyVersion} is ok');
-            }
-        }
-        context.checks.push('"devDependenciesPackageJson" checked.');
-
-        const enforcedDependencies = [
-            "@iobroker/adapter-core",
-            "@alcalzone/release-script",
-            "@alcalzone/release-script-plugin-iobroker",
-            "@alcalzone/release-script-plugin-license",
-            "@alcalzone/release-script-manual-review",
-            "@iobroker/adapter-dev",
-            "@iobroker/testing"            
-        ]
-        for (const dependency in context.packageJson.dependencies) {
-            if (!context.packageJson.dependencies[dependency].startsWith('^') && 
+            const enforcedDependencies = [
+                '@iobroker/adapter-core',
+                '@alcalzone/release-script',
+                '@alcalzone/release-script-plugin-iobroker',
+                '@alcalzone/release-script-plugin-license',
+                '@alcalzone/release-script-manual-review',
+                '@iobroker/adapter-dev',
+                '@iobroker/testing'
+            ];
+            for (const dependency in context.packageJson.dependencies) {
+                if (!context.packageJson.dependencies[dependency].startsWith('^') &&
                 !context.packageJson.dependencies[dependency].startsWith('~') &&
                 !context.packageJson.dependencies[dependency].startsWith('>')
-            ) {
-                if (context.packageJson.dependencies[dependency].toLowerCase().includes('github.com')) {
-                    context.warnings.push(`[W043] dependency should not require a github version. Please change "${dependency}:${context.packageJson.dependencies[dependency]}"`);
-                } else if (enforcedDependencies.includes(dependency)){
-                    context.errors.push(`[E044] dependency must not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.dependencies[dependency]}"`);
-                } else {
-                    context.warnings.push(`[W044] dependency should not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.dependencies[dependency]}"`);
+                ) {
+                    if (context.packageJson.dependencies[dependency].toLowerCase().includes('github.com')) {
+                        context.warnings.push(`[W043] dependency should not require a github version. Please change "${dependency}:${context.packageJson.dependencies[dependency]}"`);
+                    } else if (enforcedDependencies.includes(dependency)) {
+                        context.errors.push(`[E044] dependency must not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.dependencies[dependency]}"`);
+                    } else {
+                        context.warnings.push(`[W044] dependency should not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.dependencies[dependency]}"`);
+                    }
                 }
-           }
-        }
+            }
 
-        for (const dependency in context.packageJson.devDependencies) {
-            if (!context.packageJson.devDependencies[dependency].startsWith('^') && 
+            for (const dependency in context.packageJson.devDependencies) {
+                if (!context.packageJson.devDependencies[dependency].startsWith('^') &&
                 !context.packageJson.devDependencies[dependency].startsWith('~')  &&
                 !context.packageJson.devDependencies[dependency].startsWith('>')
-            ) {
-                if (context.packageJson.devDependencies[dependency].toLowerCase().includes('github.com')) {
-                    context.warnings.push(`[W045] devDependency should not require github versions. Please change "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
-                } else if (enforcedDependencies.includes(dependency)){
-                    context.errors.push(`[E046] devDependency must not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
-                } else {
-                    context.warnings.push(`[W046] devDependency should not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
+                ) {
+                    if (context.packageJson.devDependencies[dependency].toLowerCase().includes('github.com')) {
+                        context.warnings.push(`[W045] devDependency should not require github versions. Please change "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
+                    } else if (enforcedDependencies.includes(dependency)) {
+                        context.errors.push(`[E046] devDependency must not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
+                    } else {
+                        context.warnings.push(`[W046] devDependency should not require a specific version. Use "~1.2.3" or "^1.2.3" syntax. Please update "${dependency}:${context.packageJson.devDependencies[dependency]}"`);
+                    }
                 }
-           }
-        }
+            }
 
-        for (const blacklist in blacklistPackageJson) {
-            //console.log(`checking blacklist ${blacklist}`);
-            let tmp = context.packageJson;
-            let log = '';
-            for (const element of blacklist.split('.')){
-                log = log + '.' + element;
-                //console.log(`   check ${log}`);
-                tmp = tmp[element];
-                if ( !tmp ){
+            for (const blacklist in blacklistPackageJson) {
+                // console.log(`checking blacklist ${blacklist}`);
+                let tmp = context.packageJson;
+                let log = '';
+                for (const element of blacklist.split('.')) {
+                    log = `${log}.${element}`;
+                    //console.log(`   check ${log}`);
+                    tmp = tmp[element];
+                    if (!tmp) {
                     //console.log(`   ${log} does not exist`);
-                    break
+                        break;
+                    }
                 }
-            }
-            if (tmp) {
-                if (blacklistPackageJson[blacklist].err) {
-                    context.errors.push(`[E038] ${blacklistPackageJson[blacklist].msg}`);
-                } else {
-                    context.warnings.push(`[W038] ${blacklistPackageJson[blacklist].msg}`);
+                if (tmp) {
+                    if (blacklistPackageJson[blacklist].err) {
+                        context.errors.push(`[E038] ${blacklistPackageJson[blacklist].msg}`);
+                    } else {
+                        context.warnings.push(`[W038] ${blacklistPackageJson[blacklist].msg}`);
+                    }
                 }
-            } 
-            //else {
+            // else {
             //    console.log(`blacklist ${blacklist} no match`);
-            //}
-        }
-        context.checks.push('"blacklist (package)" checked.');
-
-        if (! context.packageJson.keywords) {
-            context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
-        } else if (!Array.isArray(context.packageJson.keywords)) {
-            context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
-        } else {
-            const forbiddenKeywords = [];
-            const ignoredKeywords = ["iobroker", "smart home", "smarthome", "home automation", "template"];
-            const recommendedKeywords = ["ioBroker"];
-            //console.log(`[DEBUG] package.keywords: "${context.packageJson.keywords.join(', ')}"`);
-            //console.log(`[DEBUG] filtered: "${context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase()))}"`);
-            if (context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase())).length === 0 ) {
-                context.errors.push(`[E039] "keywords" within package.json must contain some keywords besides "${context.packageJson.keywords.join(', ')}" related to adapter`);
+            // }
             }
-            if (! recommendedKeywords.filter(keyword => context.packageJson.keywords.includes(keyword)).length > 0) {
-                context.warnings.push(`[W040] "keywords" within package.json should contain "${recommendedKeywords.join(', ')}"`);
+            context.checks.push('"blacklist (package)" checked.');
+
+            if (! context.packageJson.keywords) {
+                context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
+            } else if (!Array.isArray(context.packageJson.keywords)) {
+                context.errors.push('[E039] "keywords" must be an array within package.json and contain some useful keywords');
+            } else {
+                const forbiddenKeywords = [];
+                const ignoredKeywords = ['iobroker', 'smart home', 'smarthome', 'home automation', 'template'];
+                const recommendedKeywords = ['ioBroker'];
+                //console.log(`[DEBUG] package.keywords: "${context.packageJson.keywords.join(', ')}"`);
+                //console.log(`[DEBUG] filtered: "${context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase()))}"`);
+                if (context.packageJson.keywords.filter(keyword => !ignoredKeywords.includes(keyword.toLowerCase())).length === 0 ) {
+                    context.errors.push(`[E039] "keywords" within package.json must contain some keywords besides "${context.packageJson.keywords.join(', ')}" related to adapter`);
+                }
+                if (! recommendedKeywords.filter(keyword => context.packageJson.keywords.includes(keyword)).length > 0) {
+                    context.warnings.push(`[W040] "keywords" within package.json should contain "${recommendedKeywords.join(', ')}"`);
+                }
+                if (forbiddenKeywords.filter(keyword => context.packageJson.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
+                    context.warnings.push(`[W041] "keywords" within package.json should not contain "${forbiddenKeywords.join(', ')}"`);
+                }
+
+                context.checks.push('"keywords" found in package.json and refers to an array');
             }
-            if (forbiddenKeywords.filter(keyword => context.packageJson.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
-                context.warnings.push(`[W041] "keywords" within package.json should not contain "${forbiddenKeywords.join(', ')}"`);
+
+            if (context.packageJson.globalDependencies) {
+                context.errors.push('[E042] "globalDependencies" is misplaced at package.json. Did you mean "common.globalDependencies" at io-package.json?');
+            } else {
+                context.checks.push('"globalDependencies" not found in package.json');
             }
 
-            context.checks.push('"keywords" found in package.json and refers to an array');
-        }
+            // max number is W046
 
-        if (context.packageJson.globalDependencies) {
-            context.errors.push('[E042] "globalDependencies" is misplaced at package.json. Did you mean "common.globalDependencies" at io-package.json?');
-        } else {
-            context.checks.push('"globalDependencies" not found in package.json');
-        }
-
-        // max number is W046
-
-        return context;
-    });
+            return context;
+        });
 }
 
 const allowedLanguages = [
@@ -700,7 +703,7 @@ const allowedTypes = {
     'metering': 'other, but energy metering (water, gas, oil, ...)',
     'garden': 'mower, springs, ...',
     'general': 'general purpose adapters, like admin, web, discovery, ...',
-    'geoposition': 'geo-positioning. These adapters delivers or accepst the position of other objects or persons.',
+    'geoposition': 'geo-positioning. These adapters deliver or accept the position of other objects or persons.',
     'hardware': 'different multi-purpose hardware, arduino, esp, bluetooth, ...',
     'household': 'vacuum-cleaner, kitchen devices, ...',
     'health': 'Fitness sensors, scales, blood pressure, ...',
@@ -1092,84 +1095,84 @@ const licenses = [
 // E1xx
 function checkIOPackageJson(context) {
     context = context || {};
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         console.log('\ncheckIOPackageJson [E1xx]');
         if (context.ioPackageJson) {
             return resolve(context.ioPackageJson);
         } else {
-            throw('io-package.json not loaded');
+            throw ('io-package.json not loaded');
         }
     })
-    .then(ioPackageJson => {
-        return new Promise(resolve => {
-            context.ioPackageJson = ioPackageJson;
-            if (typeof context.ioPackageJson === 'string') {
-                try {
-                    context.ioPackageJson = JSON.parse(context.ioPackageJson);
-                } catch (e) {
-                    context.errors.push(`[E100] Cannot parse io-package.json: ${e}`);
-                    return resolve(context);
-                }
-            }
-
-            if (!context.ioPackageJson.native) {
-                context.errors.push('[E101] io-package.json must have at least empty "native" attribute');
-            } else {
-                context.checks.push('"native" found in io-package.json');
-
-                // Generic check for potential credentials that should have a counterpart in encryptedNative/protectedNative
-                const suspiciousPhrases = [
-                    'apikey',
-                    'api_key',
-                    'credential',
-                    'pass',
-                    'passwd',
-                    'password',
-                    'passwort',
-                    'pin',
-                    'private_pw',
-                    'psk',
-                    'pwd',
-                    'secret',
-                    'token',
-                ];
-                //const regex = new RegExp(suspiciousPhrases.join('|'), 'i');
-
-                let suspiciousKeys = Object.keys(context.ioPackageJson.native) || [];
-                // console.log(`native keys: ${suspiciousKeys.join()}`);
-                //suspiciousKeys = suspiciousKeys.filter( key => regex.test(key));
-                suspiciousKeys = suspiciousKeys.filter( key => suspiciousPhrases.includes(key.toLowerCase()));
-                // console.log(`suspecious keys: ${suspiciousKeys.join()}`);
-
-                if ( suspiciousKeys.length) {
-                    if (context.ioPackageJson.protectedNative) {
-                        const missingProtected = suspiciousKeys.filter( key => !context.ioPackageJson.protectedNative.includes(key));
-                        if (missingProtected.length) context.warnings.push( `[W173] Potential sensitive data "${missingProtected.join()}" not listed at "protectedNative" in io-package.json`);
-                    } else {
-                        context.warnings.push( `[W173] Potential sensitive data "${suspiciousKeys.join()}" not listed at "protectedNative" in io-package.json`);
-                    }
-
-                    if (context.ioPackageJson.encryptedNative) {
-                        const missingProtected = suspiciousKeys.filter( key => !context.ioPackageJson.encryptedNative.includes(key));
-                        if (missingProtected.length) context.warnings.push( `[W174] Potential sensitive data "${missingProtected.join()}" not listed at "encryptedNative" in io-package.json`);
-                    } else {
-                        context.warnings.push( `[W174] Potential sensitive data "${suspiciousKeys.join()}" not listed at "encryptedNative" in io-package.json`);
+        .then(ioPackageJson => {
+            return new Promise(resolve => {
+                context.ioPackageJson = ioPackageJson;
+                if (typeof context.ioPackageJson === 'string') {
+                    try {
+                        context.ioPackageJson = JSON.parse(context.ioPackageJson);
+                    } catch (e) {
+                        context.errors.push(`[E100] Cannot parse io-package.json: ${e}`);
+                        return resolve(context);
                     }
                 }
-            }
 
-            if (!context.ioPackageJson.common) {
-                context.errors.push('[E102] io-package.json must have common object');
-                return resolve(context);
-            } else {
-                context.checks.push('"common" found in io-package.json');
-                if (!context.ioPackageJson.common.name || context.ioPackageJson.common.name !== context.adapterName.toLowerCase()) {
-                    context.errors.push(`[E103] "common.name" in io-package.json must be equal to "${context.adapterName.toLowerCase()}'". Now is ${context.ioPackageJson.common.name}`);
+                if (!context.ioPackageJson.native) {
+                    context.errors.push('[E101] io-package.json must have at least empty "native" attribute');
                 } else {
-                    context.checks.push('"common.name" is valid in io-package.json');
+                    context.checks.push('"native" found in io-package.json');
+
+                    // Generic check for potential credentials that should have a counterpart in encryptedNative/protectedNative
+                    const suspiciousPhrases = [
+                        'apikey',
+                        'api_key',
+                        'credential',
+                        'pass',
+                        'passwd',
+                        'password',
+                        'passwort',
+                        'pin',
+                        'private_pw',
+                        'psk',
+                        'pwd',
+                        'secret',
+                        'token',
+                    ];
+                    //const regex = new RegExp(suspiciousPhrases.join('|'), 'i');
+
+                    let suspiciousKeys = Object.keys(context.ioPackageJson.native) || [];
+                    // console.log(`native keys: ${suspiciousKeys.join()}`);
+                    //suspiciousKeys = suspiciousKeys.filter( key => regex.test(key));
+                    suspiciousKeys = suspiciousKeys.filter( key => suspiciousPhrases.includes(key.toLowerCase()));
+                    // console.log(`suspicious keys: ${suspiciousKeys.join()}`);
+
+                    if ( suspiciousKeys.length) {
+                        if (context.ioPackageJson.protectedNative) {
+                            const missingProtected = suspiciousKeys.filter( key => !context.ioPackageJson.protectedNative.includes(key));
+                            if (missingProtected.length) context.warnings.push( `[W173] Potential sensitive data "${missingProtected.join()}" not listed at "protectedNative" in io-package.json`);
+                        } else {
+                            context.warnings.push( `[W173] Potential sensitive data "${suspiciousKeys.join()}" not listed at "protectedNative" in io-package.json`);
+                        }
+
+                        if (context.ioPackageJson.encryptedNative) {
+                            const missingProtected = suspiciousKeys.filter( key => !context.ioPackageJson.encryptedNative.includes(key));
+                            if (missingProtected.length) context.warnings.push( `[W174] Potential sensitive data "${missingProtected.join()}" not listed at "encryptedNative" in io-package.json`);
+                        } else {
+                            context.warnings.push( `[W174] Potential sensitive data "${suspiciousKeys.join()}" not listed at "encryptedNative" in io-package.json`);
+                        }
+                    }
                 }
 
-/*
+                if (!context.ioPackageJson.common) {
+                    context.errors.push('[E102] io-package.json must have common object');
+                    return resolve(context);
+                } else {
+                    context.checks.push('"common" found in io-package.json');
+                    if (!context.ioPackageJson.common.name || context.ioPackageJson.common.name !== context.adapterName.toLowerCase()) {
+                        context.errors.push(`[E103] "common.name" in io-package.json must be equal to "${context.adapterName.toLowerCase()}'". Now is ${context.ioPackageJson.common.name}`);
+                    } else {
+                        context.checks.push('"common.name" is valid in io-package.json');
+                    }
+
+                    /*
                 if (context.ioPackageJson.common.title) {
                     context.warnings.push('[W171] "common.title" is deprecated in io-package.json. Please remove from io-package.json.');
                 }
@@ -1185,509 +1188,509 @@ function checkIOPackageJson(context) {
                 if (context.ioPackageJson.common.materializeTab) {
                     context.warnings.push('[W179] "common.materializeTab" is deprecated in io-package.json. For admin version >= 5 please use the property "common.adminUI".');
                 }
-                
+
                 if (context.ioPackageJson.common.noConfig) {
                     context.warnings.push('[W180] "common.noConfig" is deprecated in io-package.json.  For admin version >= 5 please use "common.adminUI.config":"none".');
                 }
 */
-                if (!context.ioPackageJson.common.titleLang) {
-                    context.errors.push('[E104] No "common.titleLang" found in io-package.json');
-                } else {
-                    context.checks.push('"common.titleLang" found in io-package.json');
+                    if (!context.ioPackageJson.common.titleLang) {
+                        context.errors.push('[E104] No "common.titleLang" found in io-package.json');
+                    } else {
+                        context.checks.push('"common.titleLang" found in io-package.json');
 
-                    if (typeof context.ioPackageJson.common.titleLang !== 'object') {
-                        context.errors.push(`[E105] "common.titleLang" must be an object. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
-                    } else {                        
-                        let missingLang = checkLanguages(context.ioPackageJson.common.titleLang, requiredLanguages);
-                        if (missingLang.length) {
-                            context.warnings.push(`[W105] Missing mandatory translation into ${missingLang.join()} of "common.titleLang" in io-package.json.`);
-                        }
-    
-                        missingLang = checkLanguages(context.ioPackageJson.common.titleLang, allowedLanguages);
-                        missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
-                        if (missingLang.length) {
-                            missingLang = [... new Set(missingLang)];  // make unique
-                            context.warnings.push(`[W105] Missing suggested translation into ${missingLang.join()} of "common.titleLang" in io-package.json.`);
-                        }
-                    }
-
-                    Object.keys(context.ioPackageJson.common.titleLang).forEach(lang => {
-                        const text = context.ioPackageJson.common.titleLang[lang];
-                        if (text.match(/iobroker/i)) {
-                            context.errors.push(`[E106] "common.titleLang" must not have ioBroker in the name. It is clear, for what this adapter was created. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
+                        if (typeof context.ioPackageJson.common.titleLang !== 'object') {
+                            context.errors.push(`[E105] "common.titleLang" must be an object. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
                         } else {
-                            context.checks.push('"common.titleLang" has no ioBroker in it in io-package.json');
+                            let missingLang = checkLanguages(context.ioPackageJson.common.titleLang, requiredLanguages);
+                            if (missingLang.length) {
+                                context.warnings.push(`[W105] Missing mandatory translation into ${missingLang.join()} of "common.titleLang" in io-package.json.`);
+                            }
+
+                            missingLang = checkLanguages(context.ioPackageJson.common.titleLang, allowedLanguages);
+                            missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
+                            if (missingLang.length) {
+                                missingLang = [... new Set(missingLang)];  // make unique
+                                context.warnings.push(`[W105] Missing suggested translation into ${missingLang.join()} of "common.titleLang" in io-package.json.`);
+                            }
                         }
 
-                        if (text.match(/\sadapter|adapter\s/i)) {
-                            context.warnings.push(`[W106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
+                        Object.keys(context.ioPackageJson.common.titleLang).forEach(lang => {
+                            const text = context.ioPackageJson.common.titleLang[lang];
+                            if (text.match(/iobroker/i)) {
+                                context.errors.push(`[E106] "common.titleLang" must not have ioBroker in the name. It is clear, for what this adapter was created. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
+                            } else {
+                                context.checks.push('"common.titleLang" has no ioBroker in it in io-package.json');
+                            }
+
+                            if (text.match(/\sadapter|adapter\s/i)) {
+                                context.warnings.push(`[W106] "common.titleLang" should not contain word "adapter" in the name. It is clear, that this is adapter. Now: ${JSON.stringify(context.ioPackageJson.common.titleLang)}`);
+                            } else {
+                                context.checks.push('"common.titleLang" has no "adapter" in it in io-package.json');
+                            }
+                        });
+                    }
+
+                    if (!context.ioPackageJson.common.version) {
+                        context.errors.push('[E107] No "common.version" found in io-package.json');
+                    } else {
+                        context.checks.push('"common.version" found in io-package.json');
+
+                        if (!context.packageJson || context.ioPackageJson.common.version !== context.packageJson.version) {
+                            context.errors.push('[E118] Versions in package.json and in io-package.json are different');
                         } else {
-                            context.checks.push('"common.titleLang" has no "adapter" in it in io-package.json');
-                        }
-                    })
-                }
-
-                if (!context.ioPackageJson.common.version) {
-                    context.errors.push('[E107] No "common.version" found in io-package.json');
-                } else {
-                    context.checks.push('"common.version" found in io-package.json');
-
-                    if (!context.packageJson || context.ioPackageJson.common.version !== context.packageJson.version) {
-                        context.errors.push('[E118] Versions in package.json and in io-package.json are different');
-                    } else {
-                        context.checks.push('"common.version" is equal in package.json adn in io-package.json');
-                    }
-                }
-
-                if (!context.ioPackageJson.common.desc) {
-                    context.errors.push('[E108] No "common.desc" found in io-package.json');
-                } else {
-                    context.checks.push('"common.desc" found in io-package.json');
-
-                    if (typeof context.ioPackageJson.common.desc !== 'object') {
-                        context.errors.push(`[E109] "common.desc" in io-package.json should be an object for many languages. Found only "${context.ioPackageJson.common.desc}"`);
-                    } else {
-                
-                        let missingLang = checkLanguages(context.ioPackageJson.common.desc, requiredLanguages);
-                        if (missingLang.length) {
-                            context.warnings.push(`[E109] Missing mandatory translation into ${missingLang.join()} of "common.desc" in io-package.json.`);
-                        }
-    
-                        missingLang = checkLanguages(context.ioPackageJson.common.desc, allowedLanguages);
-                        missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
-                        if (missingLang.length) {
-                            missingLang = [... new Set(missingLang)];  // make unique
-                            context.warnings.push(`[W109] Missing suggested translation into ${missingLang.join()} of "common.desc" in io-package.json.`);
+                            context.checks.push('"common.version" is equal in package.json adn in io-package.json');
                         }
                     }
-                }
-                
-                if (! context.ioPackageJson.common.keywords) {
-                    context.errors.push('[E169] "common.keywords" must be an array within io-package.json and contain some useful keywords');
-                } else {
-                    const forbiddenKeywords = ['iobroker', 'adapter', 'smart home'];
-                    if (!Array.isArray(context.ioPackageJson.common.keywords)) {
+
+                    if (!context.ioPackageJson.common.desc) {
+                        context.errors.push('[E108] No "common.desc" found in io-package.json');
+                    } else {
+                        context.checks.push('"common.desc" found in io-package.json');
+
+                        if (typeof context.ioPackageJson.common.desc !== 'object') {
+                            context.errors.push(`[E109] "common.desc" in io-package.json should be an object for many languages. Found only "${context.ioPackageJson.common.desc}"`);
+                        } else {
+
+                            let missingLang = checkLanguages(context.ioPackageJson.common.desc, requiredLanguages);
+                            if (missingLang.length) {
+                                context.warnings.push(`[E109] Missing mandatory translation into ${missingLang.join()} of "common.desc" in io-package.json.`);
+                            }
+
+                            missingLang = checkLanguages(context.ioPackageJson.common.desc, allowedLanguages);
+                            missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
+                            if (missingLang.length) {
+                                missingLang = [... new Set(missingLang)];  // make unique
+                                context.warnings.push(`[W109] Missing suggested translation into ${missingLang.join()} of "common.desc" in io-package.json.`);
+                            }
+                        }
+                    }
+
+                    if (! context.ioPackageJson.common.keywords) {
                         context.errors.push('[E169] "common.keywords" must be an array within io-package.json and contain some useful keywords');
-                    } else if (context.ioPackageJson.common.keywords.length === 0) {
-                        context.errors.push('[E169] "common.keywords" must be an array within io-package.json and contain some useful keywords');
-                    } else if (forbiddenKeywords.filter(keyword => context.ioPackageJson.common.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
-                        context.warnings.push(`[W170] "common.keywords" should not contain "${forbiddenKeywords.join(', ')}" io-package.json`);
-                    }
-
-                    context.checks.push('"common.keywords" found in io-package.json');
-                }
-
-                if (!context.ioPackageJson.common.icon) {
-                    context.errors.push('[E110] Icon not found in the io-package.json');
-                } else {
-                    context.checks.push('"common.icon" found in io-package.json');
-                }
-
-                if (!context.ioPackageJson.common.extIcon) {
-                    context.errors.push('[E111] extIcon not found in the io-package.json');
-                } else {
-                    context.checks.push('"common.extIcon" found in io-package.json');
-
-                    // extract icon name
-                    let fileName = context.ioPackageJson.common.extIcon;
-                    let pos = fileName.indexOf('?');
-
-                    if (pos !== -1) {
-                        fileName = fileName.substring(0, pos);
-                    }
-                    pos = fileName.lastIndexOf('/');
-                    fileName = fileName.substring(pos + 1, fileName.length);
-
-                    if (fileName !== context.ioPackageJson.common.icon) {
-                        context.errors.push('[E112] extIcon must be the same as an icon but with github path');
                     } else {
-                        context.checks.push('"common.extIcon" has same path as repo in io-package.json');
+                        const forbiddenKeywords = ['iobroker', 'adapter', 'smart home'];
+                        if (!Array.isArray(context.ioPackageJson.common.keywords)) {
+                            context.errors.push('[E169] "common.keywords" must be an array within io-package.json and contain some useful keywords');
+                        } else if (context.ioPackageJson.common.keywords.length === 0) {
+                            context.errors.push('[E169] "common.keywords" must be an array within io-package.json and contain some useful keywords');
+                        } else if (forbiddenKeywords.filter(keyword => context.ioPackageJson.common.keywords.map(k => k.toLowerCase()).includes(keyword)).length > 0) {
+                            context.warnings.push(`[W170] "common.keywords" should not contain "${forbiddenKeywords.join(', ')}" io-package.json`);
+                        }
+
+                        context.checks.push('"common.keywords" found in io-package.json');
                     }
-                }
 
-                if (!context.ioPackageJson.common.compact && !context.ioPackageJson.common.onlyWWW) {
-                    context.warnings.push('[W113] Adapter should support compact mode');
-                } else if (!context.ioPackageJson.common.onlyWWW) {
-                    context.checks.push('"common.compact" found in io-package.json');
-                }
+                    if (!context.ioPackageJson.common.icon) {
+                        context.errors.push('[E110] Icon not found in the io-package.json');
+                    } else {
+                        context.checks.push('"common.icon" found in io-package.json');
+                    }
 
-                if (context.ioPackageJson.common.noConfig && 
+                    if (!context.ioPackageJson.common.extIcon) {
+                        context.errors.push('[E111] extIcon not found in the io-package.json');
+                    } else {
+                        context.checks.push('"common.extIcon" found in io-package.json');
+
+                        // extract icon name
+                        let fileName = context.ioPackageJson.common.extIcon;
+                        let pos = fileName.indexOf('?');
+
+                        if (pos !== -1) {
+                            fileName = fileName.substring(0, pos);
+                        }
+                        pos = fileName.lastIndexOf('/');
+                        fileName = fileName.substring(pos + 1, fileName.length);
+
+                        if (fileName !== context.ioPackageJson.common.icon) {
+                            context.errors.push('[E112] extIcon must be the same as an icon but with github path');
+                        } else {
+                            context.checks.push('"common.extIcon" has same path as repo in io-package.json');
+                        }
+                    }
+
+                    if (!context.ioPackageJson.common.compact && !context.ioPackageJson.common.onlyWWW) {
+                        context.warnings.push('[W113] Adapter should support compact mode');
+                    } else if (!context.ioPackageJson.common.onlyWWW) {
+                        context.checks.push('"common.compact" found in io-package.json');
+                    }
+
+                    if (context.ioPackageJson.common.noConfig &&
                     (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config !== 'none')
-                ) {
-                    context.errors.push('[E114] "common.noConfig=true" requires "common.adminUI.config" to be set to "none"' );
-                }
-                if (!context.ioPackageJson.common.materialize &&
+                    ) {
+                        context.errors.push('[E114] "common.noConfig=true" requires "common.adminUI.config" to be set to "none"' );
+                    }
+                    if (!context.ioPackageJson.common.materialize &&
                     !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') &&
                     !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize') &&
                     !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'html') &&
                     !(context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'none')
-                ) {
-                    context.errors.push('[E114] Admin support not specified. Please add "common.adminUI.config = json|materialize|html|none"');
-                } else {
-                    context.checks.push('"common.materialize" or valid "common.adminUI.config:xxx" found in io-package.json');
-                }
-
-                if (context.ioPackageJson.common.license) {
-                    context.warnings.push('[W181] "common.license" in io-package.json is deprecated. Please define object "common.licenseInformation"');
-                }
-
-                if (!context.ioPackageJson.common.licenseInformation) {
-                    if (!context.ioPackageJson.common.license) { 
-                        context.errors.push('[E115] "common.licenseInformation" not found in io-package.json');
+                    ) {
+                        context.errors.push('[E114] Admin support not specified. Please add "common.adminUI.config = json|materialize|html|none"');
+                    } else {
+                        context.checks.push('"common.materialize" or valid "common.adminUI.config:xxx" found in io-package.json');
                     }
-                } else {
-                    context.checks.push('"common.licenseInformation" found in io-package.json');
 
                     if (context.ioPackageJson.common.license) {
-                        context.errors.push('[E182] Please remove "common.license" from io-package.json as "common.licenseInformation" is declared.');
+                        context.warnings.push('[W181] "common.license" in io-package.json is deprecated. Please define object "common.licenseInformation"');
                     }
-    
+
+                    if (!context.ioPackageJson.common.licenseInformation) {
+                        if (!context.ioPackageJson.common.license) {
+                            context.errors.push('[E115] "common.licenseInformation" not found in io-package.json');
+                        }
+                    } else {
+                        context.checks.push('"common.licenseInformation" found in io-package.json');
+
+                        if (context.ioPackageJson.common.license) {
+                            context.errors.push('[E182] Please remove "common.license" from io-package.json as "common.licenseInformation" is declared.');
+                        }
+
                         // check if license valid
-                    if (!context.ioPackageJson.common.licenseInformation.license) {
-                        context.errors.push('[E183] "common.licenseInformation.license" is missing');
-                    } else if (!licenses.includes(context.ioPackageJson.common?.licenseInformation?.license)) {
-                        context.errors.push('[E116] No SPDX license found at "common.licenseInformation". Please use one of listed here: https://spdx.org/licenses/');
-                    } else {
-                        context.checks.push('"common.licenseInformation" is valid in io-package.json');
-                    }
-
-                    // check if type is valid
-                    if (!['free', 'paid', 'commercial', 'limited'].includes(context.ioPackageJson.common?.licenseInformation?.type)) {
-                        context.errors.push('[E170] "common.licenseInformation.type" is invalid. Select valid type (e.g. free)');
-                    } else {
-                        context.checks.push('"common.licenseInformation.type" is valid in io-package.json');
-
-                        if (['paid', 'commercial', 'limited'].includes(context.ioPackageJson.common?.licenseInformation?.type)) {
-                            if (!context.ioPackageJson.common?.licenseInformation?.link) {
-                                context.errors.push('[E171] "common.licenseInformation.link" is required for non-free adapters');
-                            } else {
-                                context.checks.push('"common.licenseInformation.link" is valid in io-package.json');
-                            }
-                        }
-                    }
-
-                    if (!context.packageJson ||
-                        context.ioPackageJson.common?.licenseInformation?.license !== context.packageJson.license) {
-                        context.errors.push('[E117] Licenses in package.json and in io-package.json are different');
-                    } else {
-                        context.checks.push('"common.licenseInformation.license" is equal in package.json and in io-package.json');
-                    }
-                }
-
-                if (!context.ioPackageJson.common.mode) {
-                    context.errors.push('[E165] "common.mode" not found in io-package.json');
-                } else {
-                    context.checks.push('"common.mode" found in io-package.json');
-
-                    if (!allowedModes[context.ioPackageJson.common.mode]) {
-                        context.errors.push(`[E166] "common.mode: ${context.ioPackageJson.common.mode}" is unknown in io-package.json.`);
-                    } else {
-                        context.checks.push('"common.mode" has known mode in io-package.json');
-
-                        if (context.ioPackageJson.common.onlyWWW && context.ioPackageJson.common.mode !== 'none') {
-                            context.errors.push('[E162] onlyWWW should have common.mode "none" in io-package.json');
+                        if (!context.ioPackageJson.common.licenseInformation.license) {
+                            context.errors.push('[E183] "common.licenseInformation.license" is missing');
+                        } else if (!licenses.includes(context.ioPackageJson.common?.licenseInformation?.license)) {
+                            context.errors.push('[E116] No SPDX license found at "common.licenseInformation". Please use one of listed here: https://spdx.org/licenses/');
+                        } else {
+                            context.checks.push('"common.licenseInformation" is valid in io-package.json');
                         }
 
-                        if (context.ioPackageJson.common.mode === 'schedule' && !context.ioPackageJson.common.schedule) {
-                            context.errors.push('[E167] scheduled adapters must have "common.schedule" property in io-package.json');
-                        }
-                    }
-                }
+                        // check if type is valid
+                        if (!['free', 'paid', 'commercial', 'limited'].includes(context.ioPackageJson.common?.licenseInformation?.type)) {
+                            context.errors.push('[E170] "common.licenseInformation.type" is invalid. Select valid type (e.g. free)');
+                        } else {
+                            context.checks.push('"common.licenseInformation.type" is valid in io-package.json');
 
-                if (!context.ioPackageJson.common.type) {
-                    context.errors.push('[E119] No type found in io-package.json');
-                } else {
-                    context.checks.push('"common.type" found in io-package.json');
-
-                    if (!allowedTypes[context.ioPackageJson.common.type]) {
-                        context.errors.push('[E120] Unknown type found in io-package.json');
-                    } else {
-                        context.checks.push('"common.type" has known type in io-package.json');
-                    }
-                }
-
-                if (!context.ioPackageJson.common.authors) {
-                    context.errors.push('[E121] No authors found in io-package.json');
-                } else {
-                    context.checks.push('"common.authors" found in io-package.json');
-
-                    if (!(context.ioPackageJson.common.authors instanceof Array)) {
-                        context.errors.push('[E122] authors must be an Array in io-package.json');
-                    } else {
-                        context.checks.push('"common.authors" is array in io-package.json');
-                    }
-
-                    if (!context.ioPackageJson.common.authors.length) {
-                        context.errors.push('[E123] Authors may not be empty in io-package.json');
-                    } else {
-                        context.checks.push('"common.authors" is not empty in io-package.json');
-                    }
-                }
-
-                if (context.ioPackageJson.common.localLink) {
-                    context.warnings.push('[W172] "common.localLink" in io-package.json is deprecated. Please define object "common.localLinks": { "_default": "..." }');
-                } else {
-                    context.checks.push('No "common.localLink" found in io-package.json');
-                }
-
-                if (!context.ioPackageJson.common.news) {
-                    context.errors.push('[E130] No "common.news" found in io-package.json');
-                } else {
-                    context.checks.push('"common.news" found in io-package.json');
-
-                    if (Object.keys(context.ioPackageJson.common.news).length > 20) {
-                        context.errors.push('[E130] Too many "common.news" found in io-package.json. Must be less than 20. Please remove old news.');
-                    } else if (Object.keys(context.ioPackageJson.common.news).length > 7) {
-                        context.warnings.push('[W130] Many "common.news" found in io-package.json. Repositorybuilder will truncate at 7 news. Please remove old news.');
-                    }
-
-                    Object.keys(context.ioPackageJson.common.news).forEach(version => {
-                        if (!compareVersions.validateStrict(version)) {
-                            context.errors.push(`[E175] Release "${version}" at "common.news" in io-package.json is malformed.`);
-                        }
-                    });
-
-                    if (!context.ioPackageJson.common.news[context.ioPackageJson.common.version]) {
-                        context.errors.push(`[E145] No "common.news" found for actual version ${context.ioPackageJson.common.version} in io-package.json`);
-                    }
-
-                    let missingLang =[];
-                    Object.keys(context.ioPackageJson.common.news).forEach(version => {               
-                        missingLang = missingLang.concat( checkLanguages(context.ioPackageJson.common.news[version], requiredLanguages) );
-                    });
-                    if (missingLang.length) {
-                        missingLang = [... new Set(missingLang)]; // make unique
-                        context.warnings.push(`[E145] Missing mandatory translation into ${missingLang.join()} of some "common.news" in io-package.json.`);
-                    }
-
-                    missingLang =[];
-                    Object.keys(context.ioPackageJson.common.news).forEach(version => {               
-                        missingLang = missingLang.concat(checkLanguages(context.ioPackageJson.common.news[version], allowedLanguages));
-                    });
-                    missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
-                    if (missingLang.length) {
-                        missingLang = [... new Set(missingLang)];  // make unique
-                        context.warnings.push(`[W145] Missing suggested translation into ${missingLang.join()} of some "common.news" in io-package.json.`);
-                    }
-
-                }
-
-                // now check the package.json again, because it is valid only for onlyWWW
-                if (!context.packageJson.main) {
-                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E143] No main found in the package.json');
-                } else {
-                    context.checks.push('"main" found in package.json');
-
-                    if (context.ioPackageJson.common.mode !== 'none' && !context.packageJson.main.endsWith('.js')) {
-                        !context.ioPackageJson.common.onlyWWW && context.errors.push(`[E163] common.mode "${context.ioPackageJson.common.mode}" requires JavaScript file for "main" in package.json`);
-                    }
-                }
-
-                //if (context.ioPackageJson.common.installedFrom) {
-                //    context.errors.push('[E144] common.installedFrom field found in io-package.json. Must be removed.');
-                //}
-
-                if (context.ioPackageJson.instanceObjects) {
-                    const instanceObjects = context.ioPackageJson.instanceObjects;
-                    if (!(instanceObjects instanceof Array)) {
-                        context.errors.push('[E146] instanceObjects must be an Array in io-package.json');
-                    } else {
-                        const allowedObjectTypes = ['state', 'channel', 'device', 'enum', 'host', 'adapter', 'instance', 'meta', 'config', 'script', 'user', 'group', 'chart', 'folder'];
-                        const allowedStateTypes = ['number', 'string', 'boolean', 'array', 'object', 'mixed', 'file', 'json'];
-
-                        instanceObjects.forEach(instanceObject => {
-                            if (instanceObject.type !== undefined && !allowedObjectTypes.includes(instanceObject.type)) {
-                                context.errors.push(`[E147] instanceObject type has an invalid type: ${instanceObject.type}`);
-                            }
-
-                            if (instanceObject.common) {
-                                if (instanceObject.common.type !== undefined) {
-                                    if (typeof instanceObject.common.type !== 'string') {
-                                        context.errors.push(`[E148] instanceObject common.type has an invalid type! Expected "string", received  "${typeof instanceObject.common.type}"`);
-                                    }
-
-                                    if (instanceObject.type === 'state' && !allowedStateTypes.includes(instanceObject.common.type)) {
-                                        context.errors.push(`[E149] instanceObject common.type has an invalid value: ${instanceObject.common.type}`);
-                                    }
+                            if (['paid', 'commercial', 'limited'].includes(context.ioPackageJson.common?.licenseInformation?.type)) {
+                                if (!context.ioPackageJson.common?.licenseInformation?.link) {
+                                    context.errors.push('[E171] "common.licenseInformation.link" is required for non-free adapters');
+                                } else {
+                                    context.checks.push('"common.licenseInformation.link" is valid in io-package.json');
                                 }
                             }
-                        });
-                    }
-                }
-
-                if (!context.ioPackageJson.common.connectionType) {
-                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E150] No "common.connectionType" found in io-package.json');
-                } else if (!['local', 'cloud', 'none'].includes(context.ioPackageJson.common.connectionType)) {
-                    context.errors.push(`[E151] "common.connectionType" type has an invalid value "${context.ioPackageJson.common.connectionType}"`);
-                }
-
-                if (!context.ioPackageJson.common.dataSource) {
-                    !context.ioPackageJson.common.onlyWWW && context.errors.push('[E152] No "common.dataSource" found in io-package.json');
-                } else if (!['poll', 'push', 'assumption', 'none'].includes(context.ioPackageJson.common.dataSource)) {
-                    context.errors.push(`[E153] "common.dataSource" type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
-                }
-
-                let currentJsControllerVersion = undefined;
-
-                if (context.ioPackageJson.common.dependencies) {
-                    if (!(context.ioPackageJson.common.dependencies instanceof Array)){
-                        context.errors.push(`[E185] "common.dependencies" must be an array at io-package.json`);
-                    } else {
-                        const dependencyArray = getDependencyArray(context.ioPackageJson.common.dependencies);
-
-                        // Admin is not allowed in dependencies (globalDependencies only)
-                        if (dependencyArray.includes('admin')) {
-                            context.errors.push(`[E160] "admin" is not allowed in common.dependencies`);
                         }
 
-                        const jsControllerDependency = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
-                        if (jsControllerDependency) {
-                            console.log(`Found current js-controller dependency "${jsControllerDependency['js-controller']}"`);
-
-                            if (!jsControllerDependency['js-controller'].startsWith('>=')) {
-                                context.errors.push(`[E159] common.dependencies "js-controller" dependency should always allow future versions (>=x.x.x) - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
-                            } else {
-                                currentJsControllerVersion = jsControllerDependency['js-controller'].replace(/[^\d.]/g, '');
-                            }
+                        if (!context.packageJson ||
+                        context.ioPackageJson.common?.licenseInformation?.license !== context.packageJson.license) {
+                            context.errors.push('[E117] Licenses in package.json and in io-package.json are different');
                         } else {
-                            context.errors.push(`[E162] js-controller dependency missing. js-controller ${requiredJsControllerVersion} is required as minimum, ${recommendedJsControllerVersion} is recommended. Please add to dependencies at io-package.json.`);
+                            context.checks.push('"common.licenseInformation.license" is equal in package.json and in io-package.json');
                         }
                     }
-                }
 
-                /* 
+                    if (!context.ioPackageJson.common.mode) {
+                        context.errors.push('[E165] "common.mode" not found in io-package.json');
+                    } else {
+                        context.checks.push('"common.mode" found in io-package.json');
+
+                        if (!allowedModes[context.ioPackageJson.common.mode]) {
+                            context.errors.push(`[E166] "common.mode: ${context.ioPackageJson.common.mode}" is unknown in io-package.json.`);
+                        } else {
+                            context.checks.push('"common.mode" has known mode in io-package.json');
+
+                            if (context.ioPackageJson.common.onlyWWW && context.ioPackageJson.common.mode !== 'none') {
+                                context.errors.push('[E162] onlyWWW should have common.mode "none" in io-package.json');
+                            }
+
+                            if (context.ioPackageJson.common.mode === 'schedule' && !context.ioPackageJson.common.schedule) {
+                                context.errors.push('[E167] scheduled adapters must have "common.schedule" property in io-package.json');
+                            }
+                        }
+                    }
+
+                    if (!context.ioPackageJson.common.type) {
+                        context.errors.push('[E119] No type found in io-package.json');
+                    } else {
+                        context.checks.push('"common.type" found in io-package.json');
+
+                        if (!allowedTypes[context.ioPackageJson.common.type]) {
+                            context.errors.push('[E120] Unknown type found in io-package.json');
+                        } else {
+                            context.checks.push('"common.type" has known type in io-package.json');
+                        }
+                    }
+
+                    if (!context.ioPackageJson.common.authors) {
+                        context.errors.push('[E121] No authors found in io-package.json');
+                    } else {
+                        context.checks.push('"common.authors" found in io-package.json');
+
+                        if (!(context.ioPackageJson.common.authors instanceof Array)) {
+                            context.errors.push('[E122] authors must be an Array in io-package.json');
+                        } else {
+                            context.checks.push('"common.authors" is array in io-package.json');
+                        }
+
+                        if (!context.ioPackageJson.common.authors.length) {
+                            context.errors.push('[E123] Authors may not be empty in io-package.json');
+                        } else {
+                            context.checks.push('"common.authors" is not empty in io-package.json');
+                        }
+                    }
+
+                    if (context.ioPackageJson.common.localLink) {
+                        context.warnings.push('[W172] "common.localLink" in io-package.json is deprecated. Please define object "common.localLinks": { "_default": "..." }');
+                    } else {
+                        context.checks.push('No "common.localLink" found in io-package.json');
+                    }
+
+                    if (!context.ioPackageJson.common.news) {
+                        context.errors.push('[E130] No "common.news" found in io-package.json');
+                    } else {
+                        context.checks.push('"common.news" found in io-package.json');
+
+                        if (Object.keys(context.ioPackageJson.common.news).length > 20) {
+                            context.errors.push('[E130] Too many "common.news" found in io-package.json. Must be less than 20. Please remove old news.');
+                        } else if (Object.keys(context.ioPackageJson.common.news).length > 7) {
+                            context.warnings.push('[W130] Many "common.news" found in io-package.json. Repository builder will truncate at 7 news. Please remove old news.');
+                        }
+
+                        Object.keys(context.ioPackageJson.common.news).forEach(version => {
+                            if (!compareVersions.validateStrict(version)) {
+                                context.errors.push(`[E175] Release "${version}" at "common.news" in io-package.json is malformed.`);
+                            }
+                        });
+
+                        if (!context.ioPackageJson.common.news[context.ioPackageJson.common.version]) {
+                            context.errors.push(`[E145] No "common.news" found for actual version ${context.ioPackageJson.common.version} in io-package.json`);
+                        }
+
+                        let missingLang =[];
+                        Object.keys(context.ioPackageJson.common.news).forEach(version => {
+                            missingLang = missingLang.concat( checkLanguages(context.ioPackageJson.common.news[version], requiredLanguages) );
+                        });
+                        if (missingLang.length) {
+                            missingLang = [... new Set(missingLang)]; // make unique
+                            context.warnings.push(`[E145] Missing mandatory translation into ${missingLang.join()} of some "common.news" in io-package.json.`);
+                        }
+
+                        missingLang =[];
+                        Object.keys(context.ioPackageJson.common.news).forEach(version => {
+                            missingLang = missingLang.concat(checkLanguages(context.ioPackageJson.common.news[version], allowedLanguages));
+                        });
+                        missingLang = missingLang.filter( lang => !requiredLanguages.includes(lang));
+                        if (missingLang.length) {
+                            missingLang = [... new Set(missingLang)];  // make unique
+                            context.warnings.push(`[W145] Missing suggested translation into ${missingLang.join()} of some "common.news" in io-package.json.`);
+                        }
+
+                    }
+
+                    // now check the package.json again, because it is valid only for onlyWWW
+                    if (!context.packageJson.main) {
+                        !context.ioPackageJson.common.onlyWWW && context.errors.push('[E143] No main found in the package.json');
+                    } else {
+                        context.checks.push('"main" found in package.json');
+
+                        if (context.ioPackageJson.common.mode !== 'none' && !context.packageJson.main.endsWith('.js')) {
+                            !context.ioPackageJson.common.onlyWWW && context.errors.push(`[E163] common.mode "${context.ioPackageJson.common.mode}" requires JavaScript file for "main" in package.json`);
+                        }
+                    }
+
+                    //if (context.ioPackageJson.common.installedFrom) {
+                    //    context.errors.push('[E144] common.installedFrom field found in io-package.json. Must be removed.');
+                    //}
+
+                    if (context.ioPackageJson.instanceObjects) {
+                        const instanceObjects = context.ioPackageJson.instanceObjects;
+                        if (!(instanceObjects instanceof Array)) {
+                            context.errors.push('[E146] instanceObjects must be an Array in io-package.json');
+                        } else {
+                            const allowedObjectTypes = ['state', 'channel', 'device', 'enum', 'host', 'adapter', 'instance', 'meta', 'config', 'script', 'user', 'group', 'chart', 'folder'];
+                            const allowedStateTypes = ['number', 'string', 'boolean', 'array', 'object', 'mixed', 'file', 'json'];
+
+                            instanceObjects.forEach(instanceObject => {
+                                if (instanceObject.type !== undefined && !allowedObjectTypes.includes(instanceObject.type)) {
+                                    context.errors.push(`[E147] instanceObject type has an invalid type: ${instanceObject.type}`);
+                                }
+
+                                if (instanceObject.common) {
+                                    if (instanceObject.common.type !== undefined) {
+                                        if (typeof instanceObject.common.type !== 'string') {
+                                            context.errors.push(`[E148] instanceObject common.type has an invalid type! Expected "string", received  "${typeof instanceObject.common.type}"`);
+                                        }
+
+                                        if (instanceObject.type === 'state' && !allowedStateTypes.includes(instanceObject.common.type)) {
+                                            context.errors.push(`[E149] instanceObject common.type has an invalid value: ${instanceObject.common.type}`);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    if (!context.ioPackageJson.common.connectionType) {
+                        !context.ioPackageJson.common.onlyWWW && context.errors.push('[E150] No "common.connectionType" found in io-package.json');
+                    } else if (!['local', 'cloud', 'none'].includes(context.ioPackageJson.common.connectionType)) {
+                        context.errors.push(`[E151] "common.connectionType" type has an invalid value "${context.ioPackageJson.common.connectionType}"`);
+                    }
+
+                    if (!context.ioPackageJson.common.dataSource) {
+                        !context.ioPackageJson.common.onlyWWW && context.errors.push('[E152] No "common.dataSource" found in io-package.json');
+                    } else if (!['poll', 'push', 'assumption', 'none'].includes(context.ioPackageJson.common.dataSource)) {
+                        context.errors.push(`[E153] "common.dataSource" type has an invalid value "${context.ioPackageJson.common.dataSource}"`);
+                    }
+
+                    let currentJsControllerVersion = undefined;
+
+                    if (context.ioPackageJson.common.dependencies) {
+                        if (!(context.ioPackageJson.common.dependencies instanceof Array)) {
+                            context.errors.push(`[E185] "common.dependencies" must be an array at io-package.json`);
+                        } else {
+                            const dependencyArray = getDependencyArray(context.ioPackageJson.common.dependencies);
+
+                            // Admin is not allowed in dependencies (globalDependencies only)
+                            if (dependencyArray.includes('admin')) {
+                                context.errors.push(`[E160] "admin" is not allowed in common.dependencies`);
+                            }
+
+                            const jsControllerDependency = context.ioPackageJson.common.dependencies.find(dep => Object.keys(dep).find(attr => attr === 'js-controller'));
+                            if (jsControllerDependency) {
+                                console.log(`Found current js-controller dependency "${jsControllerDependency['js-controller']}"`);
+
+                                if (!jsControllerDependency['js-controller'].startsWith('>=')) {
+                                    context.errors.push(`[E159] common.dependencies "js-controller" dependency should always allow future versions (>=x.x.x) - recommended: {"js-controller": ">=${recommendedJsControllerVersion}"}`);
+                                } else {
+                                    currentJsControllerVersion = jsControllerDependency['js-controller'].replace(/[^\d.]/g, '');
+                                }
+                            } else {
+                                context.errors.push(`[E162] js-controller dependency missing. js-controller ${requiredJsControllerVersion} is required as minimum, ${recommendedJsControllerVersion} is recommended. Please add to dependencies at io-package.json.`);
+                            }
+                        }
+                    }
+
+                    /*
                   increase dependency as required by addition features
                 */
-                if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.supportedMessges) {
-                    requiredJsControllerVersion = maxVersion( requiredJsControllerVersion, '5.0.18');
-                }
-                if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.nodeProcessParams) {
-                    requiredJsControllerVersion = maxVersion( requiredJsControllerVersion, '5.0.18');
-                }
-                
-                
-                if ( currentJsControllerVersion && compareVersions.compare( requiredJsControllerVersion, currentJsControllerVersion, '>' )) {
+                    if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.supportedMessges) {
+                        requiredJsControllerVersion = maxVersion( requiredJsControllerVersion, '5.0.18');
+                    }
+                    if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.nodeProcessParams) {
+                        requiredJsControllerVersion = maxVersion( requiredJsControllerVersion, '5.0.18');
+                    }
+
+
+                    if ( currentJsControllerVersion && compareVersions.compare( requiredJsControllerVersion, currentJsControllerVersion, '>' )) {
                         context.errors.push(`[E162] js-controller ${currentJsControllerVersion} listed as dependency but ${requiredJsControllerVersion} is required as minimum, ${recommendedJsControllerVersion} is recommended. Please update dependency at io-package.json.`);
-                } else if ( currentJsControllerVersion && compareVersions.compare( recommendedJsControllerVersion, currentJsControllerVersion, '>' )) {
-                    context.warnings.push(`[W162] js-controller ${currentJsControllerVersion} listed as dependency but ${recommendedJsControllerVersion} is recommended. Please consider updating dependency at io-package.json.`);
-                }
-
-                if (context.ioPackageJson.common.globalDependencies) {
-                    const dependencyArray = getDependencyArray(context.ioPackageJson.common.globalDependencies);
-
-                    if (!(context.ioPackageJson.common.globalDependencies instanceof Array)){
-                        context.errors.push(`[E186] "common.globalDependencies" must be an array at io-package.json`);
-                    } else {
-                        // js-controller is not allowed in global dependencies (dependencies only)
-                        if (dependencyArray.includes('js-controller')) {
-                            context.errors.push(`[E161] "js-controller" is not allowed in common.globalDependencies`);
-                        }
+                    } else if ( currentJsControllerVersion && compareVersions.compare( recommendedJsControllerVersion, currentJsControllerVersion, '>' )) {
+                        context.warnings.push(`[W162] js-controller ${currentJsControllerVersion} listed as dependency but ${recommendedJsControllerVersion} is recommended. Please consider updating dependency at io-package.json.`);
                     }
 
-                }
+                    if (context.ioPackageJson.common.globalDependencies) {
+                        const dependencyArray = getDependencyArray(context.ioPackageJson.common.globalDependencies);
 
-
-                if (!context.ioPackageJson.common.onlyWWW) {
-                    if (!context.ioPackageJson.common.tier) {
-                        context.warnings.push(`[W115] \"common.tier\" is required in io-package.json. Please check https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
-                    } else if (![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
-                        context.errors.push(`[E155] Invalid \"common.tier\" value: ${context.ioPackageJson.common.tier} at io-package.json. Only 1, 2 or 3 are allowed!`);
-                    } else {
-                        context.checks.push('"common.tier" is valid in io-package.json');
-                    }
-                } else {
-                    context.checks.push('"common.tier" check skipped for wwwOnly adapter.');
-                }
-
-                if (context.ioPackageJson.common.automaticUpgrade) {
-                    context.errors.push(`[E172] "common.automaticUpgrade" will be defined by the user. Please remove from io-package.json`);
-                } else {
-                    context.checks.push('"common.automaticUpgrade" does not exist in io-package.json');
-                }
-
-                //if (context.ioPackageJson.common.wakeup) {
-                //    context.warnings.push(`[W174] "common.wakeup" is deprectaed. Please remove from io-package.json`);
-                //} else {
-                //    context.checks.push('"common.wakeup" does not exist in io-package.json');
-                //}
-
-                if (context.ioPackageJson.common.restartAdapters) {
-                    const restartAdaptersArray = context.ioPackageJson.common.restartAdapters;
-
-                    // own adapter is not allowed in restart array
-                    if (restartAdaptersArray.includes(context.ioPackageJson.common.name)) {
-                        context.errors.push(`[E176] Own adapter is not allowed to be listed at "common.restartAdapters" in io-pacakge.json`);
-                    } else {
-                        context.checks.push('Own adapter not listed at "common.restartAdapters".');
-                    }
-                } else {
-                    context.checks.push('"restartAdapters" check skipped as object not present.');
-                }
-
-                for (const blacklist in blacklistIOPackageJson) {
-                    //console.log(`checking blacklist ${blacklist}`);
-                    let tmp = context.ioPackageJson;
-                    let log = '';
-                    for (const element of blacklist.split('.')){
-                        log = log + '.' + element;
-                        //console.log(`   check ${log}`);
-                        tmp = tmp[element];
-                        if ( !tmp ){
-                            //console.log(`   ${log} does not exist`);
-                            break
-                        }
-                    }
-                    if (tmp) {
-                        if (blacklistIOPackageJson[blacklist].err) {
-                            context.errors.push(`[E184] ${blacklistIOPackageJson[blacklist].msg}`);
+                        if (!(context.ioPackageJson.common.globalDependencies instanceof Array)) {
+                            context.errors.push(`[E186] "common.globalDependencies" must be an array at io-package.json`);
                         } else {
-                            context.warnings.push(`[W184] ${blacklistIOPackageJson[blacklist].msg}`);
+                        // js-controller is not allowed in global dependencies (dependencies only)
+                            if (dependencyArray.includes('js-controller')) {
+                                context.errors.push(`[E161] "js-controller" is not allowed in common.globalDependencies`);
+                            }
                         }
-                    } 
+
+                    }
+
+
+                    if (!context.ioPackageJson.common.onlyWWW) {
+                        if (!context.ioPackageJson.common.tier) {
+                            context.warnings.push(`[W115] "common.tier" is required in io-package.json. Please check https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/objectsschema.md#adapter.`);
+                        } else if (![1, 2, 3].includes(context.ioPackageJson.common.tier)) {
+                            context.errors.push(`[E155] Invalid "common.tier" value: ${context.ioPackageJson.common.tier} at io-package.json. Only 1, 2 or 3 are allowed!`);
+                        } else {
+                            context.checks.push('"common.tier" is valid in io-package.json');
+                        }
+                    } else {
+                        context.checks.push('"common.tier" check skipped for wwwOnly adapter.');
+                    }
+
+                    if (context.ioPackageJson.common.automaticUpgrade) {
+                        context.errors.push(`[E172] "common.automaticUpgrade" will be defined by the user. Please remove from io-package.json`);
+                    } else {
+                        context.checks.push('"common.automaticUpgrade" does not exist in io-package.json');
+                    }
+
+                    //if (context.ioPackageJson.common.wakeup) {
+                    //    context.warnings.push(`[W174] "common.wakeup" is deprecated. Please remove from io-package.json`);
+                    //} else {
+                    //    context.checks.push('"common.wakeup" does not exist in io-package.json');
+                    //}
+
+                    if (context.ioPackageJson.common.restartAdapters) {
+                        const restartAdaptersArray = context.ioPackageJson.common.restartAdapters;
+
+                        // own adapter is not allowed in a restart array
+                        if (restartAdaptersArray.includes(context.ioPackageJson.common.name)) {
+                            context.errors.push(`[E176] Own adapter is not allowed to be listed at "common.restartAdapters" in io-package.json`);
+                        } else {
+                            context.checks.push('Own adapter not listed at "common.restartAdapters".');
+                        }
+                    } else {
+                        context.checks.push('"restartAdapters" check skipped as object not present.');
+                    }
+
+                    for (const blacklist in blacklistIOPackageJson) {
+                    //console.log(`checking blacklist ${blacklist}`);
+                        let tmp = context.ioPackageJson;
+                        let log = '';
+                        for (const element of blacklist.split('.')) {
+                            log = `${log}.${element}`;
+                            //console.log(`   check ${log}`);
+                            tmp = tmp[element];
+                            if ( !tmp ) {
+                            //console.log(`   ${log} does not exist`);
+                                break;
+                            }
+                        }
+                        if (tmp) {
+                            if (blacklistIOPackageJson[blacklist].err) {
+                                context.errors.push(`[E184] ${blacklistIOPackageJson[blacklist].msg}`);
+                            } else {
+                                context.warnings.push(`[W184] ${blacklistIOPackageJson[blacklist].msg}`);
+                            }
+                        }
                     //else {
                     //    console.log(`blacklist ${blacklist} no match`);
                     //}
-                }
-                context.checks.push('"blacklist (io-package)" checked.');
+                    }
+                    context.checks.push('"blacklist (io-package)" checked.');
 
-                if (context.ioPackageJson.common.extIcon) {
-                    return downloadFile(context.ioPackageJson.common.extIcon, null, true)
-                        .then(icon => {
-                            const image = sizeOf(icon);
-                            if (image.width !== image.height) {
-                                context.errors.push('[E140] width and height of logo are not equal');
-                            } else {
-                                context.checks.push('Width and height of logo are equal');
-                                if (image.width < 32) {
-                                    context.errors.push('[E141] logo is too small. It must be greater or equal than 32x32');
-                                } else if (image.width > 512) {
-                                    context.errors.push('[E142] logo is too big. It must be less or equal than 512x512');
+                    if (context.ioPackageJson.common.extIcon) {
+                        return downloadFile(context.ioPackageJson.common.extIcon, null, true)
+                            .then(icon => {
+                                const image = sizeOf(icon);
+                                if (image.width !== image.height) {
+                                    context.errors.push('[E140] width and height of logo are not equal');
+                                } else {
+                                    context.checks.push('Width and height of logo are equal');
+                                    if (image.width < 32) {
+                                        context.errors.push('[E141] logo is too small. It must be greater or equal than 32x32');
+                                    } else if (image.width > 512) {
+                                        context.errors.push('[E142] logo is too big. It must be less or equal than 512x512');
+                                    }
                                 }
-                            }
 
-                            context.checks.push('"extIcon" could be downloaded');
-                            if (!context.ioPackageJson.common.onlyWWW && context.packageJson.main) {
-                                return downloadFile(context.githubUrl, '/' + context.packageJson.main)
-                                    .then(() => context.checks.push(context.packageJson.main + ' could be downloaded'))
-                                    .catch(() => context.errors.push(`[E124] Main file not found under URL: ${context.githubUrl}/${context.packageJson.main}`))
-                                    .then(() => Promise.resolve(context));
-                            } else {
-                                return Promise.resolve(context);
-                            }
-                        })
-                        .catch(() => context.errors.push(`[E125] External icon not found under URL: ${context.ioPackageJson.common.extIcon}`))
-                        .then(() => resolve(context));
-                } else {
-                    resolve(context);
-                }
-                // do not put any code behind this line
+                                context.checks.push('"extIcon" could be downloaded');
+                                if (!context.ioPackageJson.common.onlyWWW && context.packageJson.main) {
+                                    return downloadFile(context.githubUrl, `/${context.packageJson.main}`)
+                                        .then(() => context.checks.push(`${context.packageJson.main} could be downloaded`))
+                                        .catch(() => context.errors.push(`[E124] Main file not found under URL: ${context.githubUrl}/${context.packageJson.main}`))
+                                        .then(() => Promise.resolve(context));
+                                } else {
+                                    return Promise.resolve(context);
+                                }
+                            })
+                            .catch(() => context.errors.push(`[E125] External icon not found under URL: ${context.ioPackageJson.common.extIcon}`))
+                            .then(() => resolve(context));
+                    } else {
+                        resolve(context);
+                    }
+                    // do not put any code behind this line
 
                 // max number is E186
                 // free 144
                 // duplicates to check 145
-            }
+                }
+            });
         });
-    });
 }
 
 // E2xx
@@ -1744,7 +1747,7 @@ function checkNpm(context) {
             }
 
             if (context.ioPackageJson && context.ioPackageJson.common && context.ioPackageJson.common.news) {
-                let missingVersions = [];
+                const missingVersions = [];
                 for (const vers in context.ioPackageJson.common.news) {
                     //console.log(`[DEBUG] news for ${vers}`);
                     if (!body.versions[vers]) {
@@ -1752,10 +1755,10 @@ function checkNpm(context) {
                     }
                 }
                 if (missingVersions.length) {
-                    if (missingVersions.length == 1) {
-                        context.errors.push(`[E204] Version "${missingVersions.join(", ")}" listed at common.news at io-package.json does not exist at NPM. Please remove from news section.`);
+                    if (missingVersions.length === 1) {
+                        context.errors.push(`[E204] Version "${missingVersions.join(', ')}" listed at common.news at io-package.json does not exist at NPM. Please remove from news section.`);
                     } else {
-                        context.errors.push(`[E204] Versions "${missingVersions.join(", ")}" listed at common.news at io-package.json do not exist at NPM. Please remove from news section.`);
+                        context.errors.push(`[E204] Versions "${missingVersions.join(', ')}" listed at common.news at io-package.json do not exist at NPM. Please remove from news section.`);
                     }
                 } else {
                     context.checks.push(`All versions listed at news exist at npm`);
@@ -1775,43 +1778,43 @@ function checkTests(context) {
         return Promise.resolve(context);
     }
 
-//    const travisURL = `${context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org')}.png`;
-//
-//    return axios(travisURL)
-//        .then(response => {
-//            if (!response.data) {
-//                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-//                return context;
-//            }
-//            if (!response.headers || !response.headers['content-disposition']) {
-//                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-//                return context;
-//            }
-//            // inline; filename="passing.png"
-//            const m = response.headers['content-disposition'].match(/filename="(.+)"$/);
-//            if (!m) {
-//                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-//                return context;
-//            }
-//
-//            if (m[1] === 'unknown.png') {
-//                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
-//                return context;
-//            }
-//
-//            context.checks.push('Found on travis-ci');
-//
-//            context.warnings.push('[W302] Use github actions instead of travis-ci');
-//
-//            if (m[1] !== 'passing.png') {
-//                context.errors.push('[E301] Tests on Travis-ci.org are broken. Please fix.');
-//            } else {
-//                context.checks.push('Tests are OK on travis-ci');
-//            }
-//
-//            return context;
-//            // max number is E302
-//        });
+    //    const travisURL = `${context.githubUrlOriginal.replace('github.com', 'api.travis-ci.org')}.png`;
+    //
+    //    return axios(travisURL)
+    //        .then(response => {
+    //            if (!response.data) {
+    //                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
+    //                return context;
+    //            }
+    //            if (!response.headers || !response.headers['content-disposition']) {
+    //                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
+    //                return context;
+    //            }
+    //            // inline; filename="passing.png"
+    //            const m = response.headers['content-disposition'].match(/filename="(.+)"$/);
+    //            if (!m) {
+    //                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
+    //                return context;
+    //            }
+    //
+    //            if (m[1] === 'unknown.png') {
+    //                context.errors.push('[E300] Not found on travis. Please setup travis or use github actions (preferred)');
+    //                return context;
+    //            }
+    //
+    //            context.checks.push('Found on travis-ci');
+    //
+    //            context.warnings.push('[W302] Use github actions instead of travis-ci');
+    //
+    //            if (m[1] !== 'passing.png') {
+    //                context.errors.push('[E301] Tests on Travis-ci.org are broken. Please fix.');
+    //            } else {
+    //                context.checks.push('Tests are OK on travis-ci');
+    //            }
+    //
+    //            return context;
+    //            // max number is E302
+    //        });
     return Promise.resolve(context);
 }
 
@@ -1953,13 +1956,13 @@ function checkRepo(context) {
                         for ( const dependency in dependencies ) {
 
                             if ( !context.latestRepoLive[dependency] ) {
-                                    context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);                            
+                                context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);
                             } else {
                                 const versDependency = dependencies[dependency];
                                 const versRepository = context.latestRepoLive[dependency].version;
-//console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+                                //console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
                                 if (!versDependency.startsWith('>=')) {
-                                    context.warnings.push(`[W432] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
+                                    context.warnings.push(`[W432] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);
                                 } else {
                                     if ( !compareVersions.compare( versRepository, versDependency.replace('>=',''), '>=')) {
                                         context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);
@@ -1970,13 +1973,13 @@ function checkRepo(context) {
                             }
 
                             if ( !context.stableRepoLive[dependency] ) {
-                                context.warnings.push(`[W433] Dependency ${dependency} not available at stable repository`);                            
+                                context.warnings.push(`[W433] Dependency ${dependency} not available at stable repository`);
                             } else {
                                 const versDependency = dependencies[dependency];
                                 const versRepository = context.stableRepoLive[dependency].version;
-//console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+                                //console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
                                 if (!versDependency.startsWith('>=')) {
-                                    context.warnings.push(`[W434] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
+                                    context.warnings.push(`[W434] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);
                                 } else {
                                     if ( !compareVersions.compare( versRepository, versDependency.replace('>=',''), '>=')) {
                                         context.errors.push(`[E433] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);
@@ -1996,13 +1999,13 @@ function checkRepo(context) {
                         for ( const dependency in dependencies ) {
 
                             if ( !context.latestRepoLive[dependency] ) {
-                                    context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);                            
+                                context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);
                             } else {
                                 const versDependency = dependencies[dependency];
                                 const versRepository = context.latestRepoLive[dependency].version;
-//console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+                                //console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
                                 if (!versDependency.startsWith('>=')) {
-                                    context.warnings.push(`[W432] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
+                                    context.warnings.push(`[W432] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);
                                 } else {
                                     if ( !compareVersions.compare( versRepository, versDependency.replace('>=',''), '>=')) {
                                         context.errors.push(`[E431] Dependency '${dependency}':'${dependencies[dependency]}' not available at latest repository`);
@@ -2013,13 +2016,13 @@ function checkRepo(context) {
                             }
 
                             if ( !context.stableRepoLive[dependency] ) {
-                                context.warnings.push(`[W433] Dependency ${dependency} not available at stable repository`);                            
+                                context.warnings.push(`[W433] Dependency ${dependency} not available at stable repository`);
                             } else {
                                 const versDependency = dependencies[dependency];
                                 const versRepository = context.stableRepoLive[dependency].version;
-//console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
+                                //console.log( `DEBUG: dependency ${dependency} - ${versDependency} - latest ${versRepository}`);
                                 if (!versDependency.startsWith('>=')) {
-                                    context.warnings.push(`[W434] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);                            
+                                    context.warnings.push(`[W434] Dependency '${dependency}':'${dependencies[dependency]}' should specify '>='`);
                                 } else {
                                     if ( !compareVersions.compare( versRepository, versDependency.replace('>=',''), '>=')) {
                                         context.errors.push(`[E433] Dependency '${dependency}':'${dependencies[dependency]}' not available at stable repository`);
@@ -2035,7 +2038,7 @@ function checkRepo(context) {
                     }
 
                 } else {
-                    context.checks.push(`Dependency checks skipped due to repository access errors`);                            
+                    context.checks.push(`Dependency checks skipped due to repository access errors`);
                 }
                 return context;
             });
@@ -2084,8 +2087,8 @@ function checkCode(context) {
         'gulpfile.js',
         '.releaseconfig.json',
 
-        // add all potential files anyway. If they exist they must be valid.
-        // if the are not needed a warning could be issued
+        // Add all potential files anyway. If they exist, they must be valid.
+        // If they are unnecessary, a warning could be issued
         'admin/index_m.html',
         'admin/words.js',
         'admin/jsonConfig.json',
@@ -2097,7 +2100,7 @@ function checkCode(context) {
         'src-admin/package.json',   // check if react is used
         'src-widgets/package.json',   // check if react is used
         'src/package.json',         // check if react is used
-        ];
+    ];
     allowedLanguages.forEach(lang =>
         readFiles.push(`admin/i18n/${lang}/translations.json`));
     allowedLanguages.forEach(lang =>
@@ -2107,30 +2110,30 @@ function checkCode(context) {
         readFiles.push(context.packageJson.main);
     }
 
-//    if (!context.ioPackageJson.common.noConfig) {
-//        if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
-//            readFiles.push('admin/index_m.html');
-//            readFiles.push('admin/words.js');
-//        }
-//
-//        if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
-//            readFiles.push('admin/jsonConfig.json');
-//            readFiles.push('admin/jsonConfig.json5');
-//            allowedLanguages.forEach(lang =>
-//                readFiles.push(`admin/i18n/${lang}/translations.json`));
-//            allowedLanguages.forEach(lang =>
-//                readFiles.push(`admin/i18n/${lang}.json`));
-//        }
-//
-//        if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
-//            readFiles.push('admin/jsonCustom.json');
-//            readFiles.push('admin/jsonCustom.json5');
-//        }
-//    }
-//
-//    if (context.ioPackageJson.common.blockly) {
-//        readFiles.push('admin/blockly.js');
-//    }
+    //    if (!context.ioPackageJson.common.noConfig) {
+    //        if (context.ioPackageJson.common.materialize || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'materialize')) {
+    //            readFiles.push('admin/index_m.html');
+    //            readFiles.push('admin/words.js');
+    //        }
+    //
+    //        if (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.config === 'json') {
+    //            readFiles.push('admin/jsonConfig.json');
+    //            readFiles.push('admin/jsonConfig.json5');
+    //            allowedLanguages.forEach(lang =>
+    //                readFiles.push(`admin/i18n/${lang}/translations.json`));
+    //            allowedLanguages.forEach(lang =>
+    //                readFiles.push(`admin/i18n/${lang}.json`));
+    //        }
+    //
+    //        if (context.ioPackageJson.common.supportCustoms || context.ioPackageJson.common.jsonCustom || (context.ioPackageJson.common.adminUI && context.ioPackageJson.common.adminUI.custom === 'json')) {
+    //            readFiles.push('admin/jsonCustom.json');
+    //            readFiles.push('admin/jsonCustom.json5');
+    //        }
+    //    }
+    //
+    //    if (context.ioPackageJson.common.blockly) {
+    //        readFiles.push('admin/blockly.js');
+    //    }
 
     // https://github.com/userName/ioBroker.adaptername/archive/${context.branch}.zip
     return new Promise((resolve, reject) => {
@@ -2184,33 +2187,33 @@ function checkCode(context) {
             })
             .then(context => {
                 let usesReact = false;
-                if (context.packageJson.devDependencies && 
+                if (context.packageJson.devDependencies &&
                         (context.packageJson.devDependencies['@iobroker/adapter-react-v5'] || context.packageJson.devDependencies['react'])) {
-                        console.log('REACT detected at package devDependencies');
-                        usesReact = true;
-                };
-                if (context.packageJson.dependencies && 
+                    console.log('REACT detected at package devDependencies');
+                    usesReact = true;
+                }
+                if (context.packageJson.dependencies &&
                         (context.packageJson.dependencies['@iobroker/adapter-react-v5'] || context.packageJson.dependencies['react'])) {
                     console.log('REACT detected at package dependencies');
                     usesReact = true;
                 }
                 if (context['/src-admin/package.json']) {
                     //console.log('"src-admin/package.json" exists');
-                    let packageJson = JSON.parse(context['/src-admin/package.json']);
-                    if (packageJson.devDependencies && packageJson.devDependencies['@iobroker/adapter-react-v5'] ){
+                    const packageJson = JSON.parse(context['/src-admin/package.json']);
+                    if (packageJson.devDependencies && packageJson.devDependencies['@iobroker/adapter-react-v5'] ) {
                         console.log('REACT detected at src-admin/package devDependencies');
                         usesReact = true;
                     }
-                    if (packageJson.dependencies && packageJson.dependencies['@iobroker/adapter-react-v5'] ){
+                    if (packageJson.dependencies && packageJson.dependencies['@iobroker/adapter-react-v5'] ) {
                         console.log('REACT detected at src-admin/package dependencies');
                         usesReact = true;
                     }
                 }
                 if (context['/src-widgets/package.json']) {
                     //console.log('"src-widgets/package.json" exists');
-                    let packageJson = JSON.parse(context['/src-widgets/package.json']);
+                    const packageJson = JSON.parse(context['/src-widgets/package.json']);
                     if (packageJson.devDependencies && (
-                            packageJson.devDependencies['@iobroker/adapter-react-v5'] || packageJson.devDependencies['react'])) {
+                        packageJson.devDependencies['@iobroker/adapter-react-v5'] || packageJson.devDependencies['react'])) {
                         console.log('REACT detected at src-widgets/package devDependencies');
                         usesReact = true;
                     }
@@ -2222,19 +2225,19 @@ function checkCode(context) {
                 }
                 if (context['/src/package.json']) {
                     //console.log('"src/package.json" exists');
-                    let packageJson = JSON.parse(context['/src/package.json']);
-                    if (packageJson.devDependencies && packageJson.devDependencies['@iobroker/adapter-react-v5'] ){
+                    const packageJson = JSON.parse(context['/src/package.json']);
+                    if (packageJson.devDependencies && packageJson.devDependencies['@iobroker/adapter-react-v5'] ) {
                         // console.log('REACT detected');
                         usesReact = true;
                     }
-                    if (packageJson.dependencies && packageJson.dependencies['@iobroker/adapter-react-v5'] ){
+                    if (packageJson.dependencies && packageJson.dependencies['@iobroker/adapter-react-v5'] ) {
                         // console.log('REACT detected');
                         usesReact = true;
                     }
                 }
-                
-                if (! usesReact && !context.ioPackageJson.common.noConfig && 
-                      (!context.ioPackageJson.common.adminUI || 
+
+                if (! usesReact && !context.ioPackageJson.common.noConfig &&
+                      (!context.ioPackageJson.common.adminUI ||
                           (context.ioPackageJson.common.adminUI.config !== 'json' && context.ioPackageJson.common.adminUI.config !== 'none')
                       )) {
                     context.warnings.push('[S522] Please consider migrating to admin 5 UI (jsonConfig).');
@@ -2336,7 +2339,7 @@ function checkCode(context) {
                 ];
 
                 forbiddenFiles.forEach( file => {
-                    if (context.filesList.includes(file)){
+                    if (context.filesList.includes(file)) {
                         context.errors.push(`[E503] File "${file}" found in repo! Please remove file.`);
                     }
                 });
@@ -2372,30 +2375,30 @@ function checkCode(context) {
                         if (!context['/.releaseconfig.json']) {
                             context.errors.push('[E518] "@alcalzone/release-script" (>=3.0.0) is used, but ".releaseconfig.json" not found. Please create.');
                         } else {
-console.log('context[/.releaseconfig.json: '+ context['/.releaseconfig.json']);
+                            console.log('context[/.releaseconfig.json: '+ context['/.releaseconfig.json']);
                             const releaseConfigJson = JSON.parse(context['/.releaseconfig.json']);
-console.log(`releaseConfigJson: ${releaseConfigJson}`);
+                            console.log(`releaseConfigJson: ${releaseConfigJson}`);
                             const plugins = releaseConfigJson.plugins;
-console.log(`plugins: ${plugins}`);
+                            console.log(`plugins: ${plugins}`);
                             if (!context.packageJson.devDependencies['@alcalzone/release-script-plugin-iobroker']) {
-                                    context.errors.push('[E519] "@alcalzone/release-script" requires plugin "@alcalzone/release-script-plugin-iobroker". Please add.');
+                                context.errors.push('[E519] "@alcalzone/release-script" requires plugin "@alcalzone/release-script-plugin-iobroker". Please add.');
                             } else {
                                 if (!plugins.includes('iobroker')) {
-                                    context.errors.push('[E520] Plugin "iobroker" missing at .releaseconfig.json. Please add.'); 
+                                    context.errors.push('[E520] Plugin "iobroker" missing at .releaseconfig.json. Please add.');
                                 }
                             }
                             if (!context.packageJson.devDependencies['@alcalzone/release-script-plugin-license']) {
-                                    context.errors.push('[E519] "@alcalzone/release-script" requires plugin "@alcalzone/release-script-plugin-license". Please add.');
+                                context.errors.push('[E519] "@alcalzone/release-script" requires plugin "@alcalzone/release-script-plugin-license". Please add.');
                             } else {
                                 if (!plugins.includes('license')) {
-                                    context.errors.push('[E520] Plugin "license" missing at .releaseconfig.json. Please add.'); 
+                                    context.errors.push('[E520] Plugin "license" missing at .releaseconfig.json. Please add.');
                                 }
                             }
                             if (!context.packageJson.devDependencies['@alcalzone/release-script-plugin-manual-review']) {
                                 context.warnings.push('[S519] Consider adding plugin "@alcalzone/release-script-plugin-manual-review".');
                             } else {
                                 if (!plugins.includes('manual-review')) {
-                                    context.warnings.push('[W520] Plugin "manual-review" missing at .releaseconfig.json. Please add.'); 
+                                    context.warnings.push('[W520] Plugin "manual-review" missing at .releaseconfig.json. Please add.');
                                 }
                             }
                         }
@@ -2403,12 +2406,12 @@ console.log(`plugins: ${plugins}`);
                 }
 
                 if (context.packageJson.main && context.packageJson.main.endsWith('.js')) {
-                    if (!context['/' + context.packageJson.main]) {
+                    if (!context[`/${context.packageJson.main}`]) {
                         if (!context.ioPackageJson.common.nogit) {
                             context.errors.push(`[E519] "${context.packageJson.main}" found in package.json, but not found as file`);
                         }
                     } else {
-                        if (context['/' + context.packageJson.main].includes('setInterval(') && !context[`/${context.packageJson.main}`].includes('clearInterval(')) {
+                        if (context[`/${context.packageJson.main}`].includes('setInterval(') && !context[`/${context.packageJson.main}`].includes('clearInterval(')) {
                             if (context.ioPackageJson.common.compact) {
                                 // if compact mode supported, it is critical
                                 context.errors.push(`[E504] setInterval found in "${context.packageJson.main}", but no clearInterval detected`);
@@ -2486,7 +2489,7 @@ function checkReadme(context) {
                         if (npmJson['dist-tags'] && npmJson['dist-tags'].latest) {
                             const latest = npmJson['dist-tags'].latest;
                             const timeStr = npmJson.time[latest];
-                            npmYear = new Date(timeStr).getFullYear(); 
+                            npmYear = new Date(timeStr).getFullYear();
                             console.log(`[DEBUG] ${latest} - ${timeStr} - ${npmYear}`);
                         }
                     } catch (e) {
@@ -2513,13 +2516,13 @@ function checkReadme(context) {
                                 readmeYear = Number(m[1]);
                             }
                         }
-                        
+
                         console.log(`README year ${readmeYear}`);
                         console.log(`Current year ${year}`);
                         console.log(`Commit year ${commitYear}`);
                         console.log(`NPM year ${npmYear}`);
 
-                        let valid = (readmeYear === year || readmeYear >= commitYear || readmeYear >=npmYear);
+                        const valid = (readmeYear === year || readmeYear >= commitYear || readmeYear >=npmYear);
                         if (!valid) {
                             const m = text.match(/(\d\d\commitd\d)-\d\d\d\d/);
                             if (m) {
@@ -2532,8 +2535,8 @@ function checkReadme(context) {
                         }
                     }
 
-//                    languages = languagedetect.detect(data, 3);
-//console.log(JSON.stringify(languages));
+                    //                    languages = languagedetect.detect(data, 3);
+                    //console.log(JSON.stringify(languages));
                 }
 
                 // max E606
@@ -2563,7 +2566,7 @@ function checkLicenseFile(context) {
                         if (npmJson['dist-tags'] && npmJson['dist-tags'].latest) {
                             const latest = npmJson['dist-tags'].latest;
                             const timeStr = npmJson.time[latest];
-                            npmYear = new Date(timeStr).getFullYear(); 
+                            npmYear = new Date(timeStr).getFullYear();
                         }
                     } catch (e) {
                         console.log(`Error executing "npm view" - ${e}`);
@@ -2584,13 +2587,13 @@ function checkLicenseFile(context) {
                                 licenseYear = Number(m[1]);
                             }
                         }
-                    
+
                         console.log(`License year ${licenseYear}`);
                         console.log(`Current year ${year}`);
                         console.log(`Commit year ${commitYear}`);
                         console.log(`NPM year ${npmYear}`);
 
-                        let valid = (licenseYear === year || licenseYear >= commitYear || licenseYear >=npmYear);
+                        const valid = (licenseYear === year || licenseYear >= commitYear || licenseYear >=npmYear);
                         if (!valid) {
                             const m = text.match(/(\d\d\d\d)-\d\d\d\d/);
                             if (m) {
@@ -2670,7 +2673,7 @@ function checkNpmIgnore(context) {
     ];
 
     // https://raw.githubusercontent.com/userName/ioBroker.adaptername/${context.branch}/.npmignore
-    console.log('\checkNpmIgnore [E85x]');
+    console.log('checkNpmIgnore [E85x]');
     if (context.packageJson.files && context.packageJson.files.length) {
         if (context.filesList.includes('.npmignore')) {
             context.warnings.push(`[E851] .npmignore found but "files" is used at package.json. Please remove .npmignore.`);
@@ -2685,7 +2688,7 @@ function checkNpmIgnore(context) {
         context.warnings.push(`[E852] .npmignore not found`);
     } else {
         context.warnings.push(`[W853] .npmignore found - consider using package.json object "files" instead.`);
-    
+
         const rules = (context['/.npmignore'] || '').split('\n').map(line => line.trim().replace('\r', '')).filter(line => line);
         let tooComplexToCheck = false;
         rules.forEach((name, i) => {
@@ -2763,7 +2766,7 @@ function checkGitIgnore(context) {
             !check && context.errors.push(`[E903] iob_npm.done not found in .gitignore`);
         }
 
-        checkFiles.forEach((file, i) => {
+        checkFiles.forEach(file => {
             if (context.filesList.includes(file)) {
                 // maybe it is with regex
                 const check = rules.some(rule => {
@@ -2889,7 +2892,7 @@ if (typeof module !== 'undefined' && module.parent) {
     check({
         queryStringParameters: {
             url: repoUrl,
-            branch: repoBranch
+            branch: repoBranch,
         }
     }, null, (err, data) => {
         const context = JSON.parse(data.body);
@@ -2943,7 +2946,7 @@ if (typeof module !== 'undefined' && module.parent) {
             });
         } else {
             console.log('\n\nNO warnings encountered.');
-    }
-});
+        }
+    });
 }
 
