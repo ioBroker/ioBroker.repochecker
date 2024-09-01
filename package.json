@@ -2,7 +2,7 @@
   "version": "2.10.0",
   "name": "@iobroker/repochecker",
   "dependencies": {
-    "axios": "^1.7.2",
+    "axios": "^1.7.7",
     "compare-versions": "^6.1.1",
     "image-size": "^1.1.1",
     "unzipper": "^0.12.3",
