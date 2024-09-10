@@ -22,7 +22,7 @@ const common = require('./lib/common.js');
 const config = require('./lib/config.js');
 const M000_PackageJson = require('./lib/M000_PackageJson.js');
 const M100_IOPackageJson = require('./lib/M100_IOPackageJson.js');
-const M200_Npm = require('./lib/M200_Npm.js');
+const M250_Npm = require('./lib/M250_Npm.js');
 const M300_Testing = require('./lib/M300_Testing.js');
 const M400_Repository = require('./lib/M400_Repository.js');
 const M500_Code = require('./lib/M500_Code.js');
@@ -44,10 +44,10 @@ axios.defaults.headers = {
 // E0xx
 //      check package.json
 //
-// E1xx
+// E100 - 249
 //      check io-package.json
 //
-// E2xx
+// E250 - 299
 //      check npm and npmjs.org
 //
 // E3xx
@@ -140,7 +140,7 @@ function check(request, ctx, callback) {
             .then(context => M100_IOPackageJson.getIOPackageJson(context))
             .then(context => M000_PackageJson.checkPackageJson(context))
             .then(context => M100_IOPackageJson.checkIOPackageJson(context))
-            .then(context => M200_Npm.checkNpm(context))
+            .then(context => M250_Npm.checkNpm(context))
             .then(context => M400_Repository.checkRepository(context))
             .then(context => M500_Code.checkCode(context))
             .then(context => M300_Testing.checkTests(context))
