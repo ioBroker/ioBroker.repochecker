@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.0.0 (2024-09-10)
 * (mcm1957) Error and warning numbering has been reviewed and duplicates removed.
 * (mcm1957) index.js has been split into seperated modules.
 
