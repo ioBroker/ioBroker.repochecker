@@ -128,6 +128,7 @@ function check(request, ctx, callback) {
             githubUrl = githubUrl.substring(0, githubUrl.length - 1);
         }
 
+        context.version = version;
         config.initConfig(context);
 
         context.githubUrlOriginal = githubUrl;
@@ -265,6 +266,7 @@ if (typeof module !== 'undefined' && module.parent) {
         } else {
             console.log('\n\nNO warnings encountered.');
         }
+        console.log(`\ncreated by repochecker ${context.version}`);
     });
 }
 

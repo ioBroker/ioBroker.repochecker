@@ -23,6 +23,8 @@ Branch (`master/main/dev`) is optional.
 ### **WORK IN PROGRESS**
 * (mcm1957) Handling of missing LICENSE file corrected. [#282]
 * (mcm1957) [W126] Missing mandatory translation is error now. [#293]
+* (mcm1957) Record repochcker version used for tests.
+* (mcm1957) Record github commit-sha of last commit used for tests.
 
 ### 3.0.0 (2024-09-10)
 * (mcm1957) Error and warning numbering has been reviewed and duplicates removed.
