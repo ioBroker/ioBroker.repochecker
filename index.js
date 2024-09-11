@@ -157,7 +157,8 @@ function check(request, ctx, callback) {
                     errors: context.errors,
                     warnings: context.warnings,
                     version,
-                    hasTravis: context.hasTravis
+                    hasTravis: context.hasTravis,
+                    lastCommitSha: context.lastCommitSha,
                 }));
             })
             .catch(err => {
@@ -172,6 +173,7 @@ function check(request, ctx, callback) {
                     warnings: context.warnings,
                     version,
                     hasTravis: context.hasTravis,
+                    lastCommitSha: context.lastCommitSha,
                     error: `${err.request ? err.request.path : ''} ${err.message}`,
                 }));
             });
@@ -266,7 +268,7 @@ if (typeof module !== 'undefined' && module.parent) {
         } else {
             console.log('\n\nNO warnings encountered.');
         }
-        console.log(`\ncreated by repochecker ${context.version}`);
+        console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
     });
 }
 
