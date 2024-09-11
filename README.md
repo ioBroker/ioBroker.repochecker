@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### 3.0.1 (2024-09-11)
+### **WORK IN PROGRESS**
 * (mcm1957) Handling of missing LICENSE file corrected. [#282]
 * (mcm1957) [W126] Missing mandatory translation is error now. [#293]
 * (mcm1957) Record repochcker version used for tests.
