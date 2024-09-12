@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.0.3 (2024-09-12)
 * (mcm1957) Check for iob_npm.done at .npmignore has been removed [#294]
 
 ### 3.0.2 (2024-09-11)
