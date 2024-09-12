@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.0.4 (2024-09-12)
 * (mcm1957) Abort with incorrect dependency definition fixed [#287]
 * (mcm1957) Improve handling of malformed dependency definitions [#284]
 * (mcm1957) Improve handling of malformed .releaseconfig.json files [#283]
@@ -28,7 +28,6 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) '.npmignore found but "files" is used' is a warning now. [#274]
 * (mcm1957) '@iobroker/dev-server' has been blacklisted as any dependency. [#260]
 * (mcm1957) Do no longer require a js-controller dependecy for wwwOnly adapters. [#250]
-
 
 ### 3.0.3 (2024-09-12)
 * (mcm1957) Check for iob_npm.done at .npmignore has been removed [#294]
