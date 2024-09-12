@@ -26,6 +26,7 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) Improve handling of malformed .releaseconfig.json files [#283]
 * (mcm1957) Missing mandatory translations are considered an error now. [#277, #278]
 * (mcm1957) '.npmignore found but "files" is used' is a warning now. [#274]
+* (mcm1957) '@iobroker/dev-server' has been blacklisted as any dependency. [#260]
 
 ### 3.0.3 (2024-09-12)
 * (mcm1957) Check for iob_npm.done at .npmignore has been removed [#294]
