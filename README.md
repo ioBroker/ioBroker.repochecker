@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) Check for iob_npm.done at .npmignore has been removed [#294]
+
 ### 3.0.2 (2024-09-11)
 * (mcm1957) Handling of missing LICENSE file corrected. [#282]
 * (mcm1957) [W126] Missing mandatory translation is error now. [#293]
