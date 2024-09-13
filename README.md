@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) '@iobroker/dev-server' is valid as dev-dependency. [#260]
+
 ### 3.0.4 (2024-09-12)
 * (mcm1957) Abort with incorrect dependency definition fixed [#287]
 * (mcm1957) Improve handling of malformed dependency definitions [#284]
