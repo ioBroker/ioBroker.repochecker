@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.0.6 (2024-09-13)
 * (mcm1957) "[E124] Main file not found" no longer raised if common.nogit is set
 * (mcm1957) 'Text of "common.main" is deprecated' has been adapted. [#266]
 * (mcm1957) Ignore errors caused by complex .gitignor/.npmignore. [#288]
