@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) "[E124] Main file not found" no longer raised if common.nogit is set
+
 ### 3.0.5 (2024-09-13)
 * (mcm1957) '@iobroker/dev-server' is valid as dev-dependency. [#260]
 
