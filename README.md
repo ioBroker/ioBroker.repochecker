@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.0.5 (2024-09-13)
 * (mcm1957) '@iobroker/dev-server' is valid as dev-dependency. [#260]
 
 ### 3.0.4 (2024-09-12)
