@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.0.7 (2024-09-19)
 * (mcm1957) "[W523] 'package-lock.json"'not found in repo!" reduced to suggestion. [#298]
 
 ### 3.0.6 (2024-09-13)
