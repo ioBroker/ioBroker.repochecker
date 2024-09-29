@@ -94,7 +94,7 @@ function getGithubApiData(context) {
             })
             .catch(e => {
                 context.errors.push(`[E000] FATAL: cannot access repository ${context.githubUrlApi}`);
-                reject(e.toJSON());
+                reject(e);
             });// E0xx
     });
 }
