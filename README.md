@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.1.0 (2024-09-29)
 * (mcm1957) "@iobroker/plugin-sentry" blacklisted as dependency [#301]
 * (mcm1957) Accept .ts files as main file too. [#303]
 * (mcm1957) [E405] and [E426] incorrect path has been corrected. [#299]
