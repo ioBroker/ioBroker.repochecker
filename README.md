@@ -20,6 +20,11 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) "@iobroker/plugin-sentry" blacklisted as dependency [#301]
+* (mcm1957) Accept .ts files as main file too. [#303]
+* (mcm1957) [E405] and [E426] incorrect path has been corrected. [#299]
+
 ### 3.0.7 (2024-09-19)
 * (mcm1957) "[W523] 'package-lock.json"'not found in repo!" reduced to suggestion. [#298]
 
