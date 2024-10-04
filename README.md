@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) Require node 18 minimum as engines clause. 
+
 ### 3.1.1 (2024-10-04)
 * (mcm1957) "[E166] 'common.mode: extension' is unknown" has been fixed [#308]
 * (mcm1957) "[E904] file iob_npm.done found in repository, but not found in .gitignore" removed as covered by [E503]. [#309]
