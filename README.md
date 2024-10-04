@@ -22,6 +22,7 @@ Branch (`master/main/dev`) is optional.
 ## Changelog
 ### **WORK IN PROGRESS**
 * (mcm1957) "[E166] 'common.mode: extension' is unknown" has been fixed [#308]
+* (mcm1957) "[E904] file iob_npm.done found in repository, but not found in .gitignore" removed as covered by [E503]. [#309]
 
 ### 3.1.0 (2024-09-29)
 * (mcm1957) "@iobroker/plugin-sentry" blacklisted as dependency [#301]
