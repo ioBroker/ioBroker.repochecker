@@ -20,6 +20,9 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (mcm1957) "[E166] 'common.mode: extension' is unknown" has been fixed [#308]
+
 ### 3.1.0 (2024-09-29)
 * (mcm1957) "@iobroker/plugin-sentry" blacklisted as dependency [#301]
 * (mcm1957) Accept .ts files as main file too. [#303]
