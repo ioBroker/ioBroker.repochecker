@@ -20,8 +20,8 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
-* (mcm1957) Require node 18 minimum as engines clause. 
+### 3.1.2 (2024-10-04)
+* (mcm1957) Require node 18 minimum as engines clause.
 
 ### 3.1.1 (2024-10-04)
 * (mcm1957) "[E166] 'common.mode: extension' is unknown" has been fixed [#308]
