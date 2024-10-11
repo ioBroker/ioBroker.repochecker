@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.1.3 (2024-10-11)
 * (mcm1957) Checker no longer crash id no npm package exists.
 
 ### 3.1.2 (2024-10-04)
