@@ -25,6 +25,7 @@ Branch (`master/main/dev`) is optional.
 * (mcm1957) Blacklist for package/dependencies has been extended.
 * (mcm1957) Recommend adapter-core 3.2.2 now.
 * (mcm1957) Clearify test for "[E952] .npmignore not found". [#320]
+* (mcm1957) Abort processing if iobroker.live not reachable. [#321]
 
 ### 3.1.3 (2024-10-11)
 * (mcm1957) Checker no longer crash id no npm package exists.
