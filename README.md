@@ -20,7 +20,7 @@ Branch (`master/main/dev`) is optional.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.1.4 (2024-10-26)
 * (mcm1957) linter has been activated and issues reported have been fixed.
 * (mcm1957) Blacklist for package/dependencies has been extended.
 * (mcm1957) Recommend adapter-core 3.2.2 now.
