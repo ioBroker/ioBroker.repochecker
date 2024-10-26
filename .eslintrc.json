@@ -1,10 +1,14 @@
 {
+    "root": true,
     "env": {
         "es6": true,
         "node": true,
         "mocha": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended"
+    ],
+    "plugins": [],
     "rules": {
         "indent": [
             "error",
@@ -13,17 +17,17 @@
                 "SwitchCase": 1
             }
         ],
-        "keyword-spacing": "error",
-        "space-before-function-paren": ["error", {
-            "anonymous": "always",
-            "named": "never",
-            "asyncArrow": "never"
-        }],
         "no-console": "off",
-        "space-before-blocks": ["error", "always"],
+        "no-unused-vars": [
+            "error",
+            {
+                "ignoreRestSiblings": true,
+                "argsIgnorePattern": "^_"
+            }
+        ],
         "no-var": "error",
-        "prefer-const": "error",
         "no-trailing-spaces": "error",
+        "prefer-const": "error",
         "quotes": [
             "error",
             "single",
@@ -38,6 +42,6 @@
         ]
     },
     "parserOptions": {
-        "ecmaVersion": 2021
+        "ecmaVersion": "latest"
     }
 }
