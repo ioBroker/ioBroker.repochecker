@@ -14,6 +14,14 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript master
 
 Branch (`master/main/dev`) is optional.
 
+For a local test you can pass the `--local` parameter. Most of the files are read localy.
+The link to the github repository is still necessary because data from the project settings on github is also checked.
+
+Example:
+```
+npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript master
+```
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
