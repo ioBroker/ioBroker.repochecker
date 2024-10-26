@@ -41,4 +41,3 @@ Best is that the directory is on the same level than your adapter repository.
 ```bash
 node ..\ioBroker.repochecker\index.js https://github.com/klein0r/ioBroker.luftdaten --local
 ```
-
