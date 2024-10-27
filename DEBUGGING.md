@@ -5,7 +5,7 @@
 To test the repochecker and debug into the script under vscode:
 
 1. Clone the repository to your local machine.\
-Best is that the directory is on the same level than your adapter repository.
+   Best is that the directory is on the same level than your adapter repository.
 
 2. run npm install in the repochecker directory.
 
@@ -13,10 +13,10 @@ Best is that the directory is on the same level than your adapter repository.
 
 ```json5
     {
-        "name": "Launch Program", 
+        "name": "Launch Program",
         "program": "../iobroker.repochecker/index.js", // path to the repochecker repo
         // args as entered on the commandline, arguments as a array
-        "args": ["https://github.com/klein0r/ioBroker.luftdaten","--local"], 
+        "args": ["https://github.com/klein0r/ioBroker.luftdaten","--local"],
         "request": "launch",
         "stopOnEntry": true,
         "runtimeExecutable": "<path to node/node.exe>", //optional if needed
@@ -32,7 +32,7 @@ Best is that the directory is on the same level than your adapter repository.
 To test the repochecker under vscode:
 
 1. Clone the repository to your local machine.\
-Best is that the directory is on the same level than your adapter repository.
+   Best is that the directory is on the same level than your adapter repository.
 
 2. run npm install in the repochecker directory.
 
@@ -40,4 +40,12 @@ Best is that the directory is on the same level than your adapter repository.
 
 ```bash
 node ..\ioBroker.repochecker\index.js https://github.com/klein0r/ioBroker.luftdaten --local
+```
+
+## Testing without installing
+
+The following command should be entered in the root of your repository:
+
+```bash
+npx github:oweitman/iobroker.repochecker https://github.com/oweitman/ioBroker.luftdaten --local
 ```
