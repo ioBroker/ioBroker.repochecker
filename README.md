@@ -31,8 +31,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 3.2.0 (2024-10-27)
 
 - (oweitman) extension that the script also uses the local data for checking.
 
