@@ -191,8 +191,6 @@ function getText(text, lang) {
     return text;
 }
 
-common.setDebug(true); /* DEBUG*/
-
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
@@ -205,6 +203,10 @@ if (typeof module !== 'undefined' && module.parent) {
         common.setLocal(true);
     }
 
+    if (process.argv.includes('--debug')) {
+        process.argv.splice(process.argv.indexOf('--debug'), 1);
+        common.setDebug(true);
+    }
     // Get url from parameters if possible
     if (process.argv.length > 2) {
         repoUrl = process.argv[2];
