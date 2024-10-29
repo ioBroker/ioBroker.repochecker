@@ -31,14 +31,12 @@ const M700_License = require('./lib/M700_License.js');
 const M800_Github = require('./lib/M800_Github.js');
 const M900_GitNpmIgnore = require('./lib/M900_GitNpmIgnore.js');
 
-
 // disable axios caching
 axios.defaults.headers = {
     'Cache-Control': 'no-cache',
     'Pragma': 'no-cache',
     'Expires': '0',
 };
-
 
 // Error ranges
 // E0xx
@@ -71,12 +69,12 @@ axios.defaults.headers = {
 // E9xx
 //      check .gitignore file
 
-
 function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
         console.log('\ngetGithubApiData');
-        axios.get(context.githubUrlApi, { cache: false })
-            .then(response => {
+        axios
+            .get(context.githubUrlApi, { cache: false })
+            .then((response) => {
                 context.githubApiData = response.data;
                 // console.log(`API Data: ${JSON.stringify(context.githubApiData)}`);
 
@@ -92,10 +90,10 @@ function getGithubApiData(context) {
 
                 resolve(context);
             })
-            .catch(e => {
+            .catch((e) => {
                 context.errors.push(`[E000] FATAL: cannot access repository ${context.githubUrlApi}`);
                 reject(e);
-            });// E0xx
+            }); // E0xx
     });
 }
 
@@ -104,9 +102,9 @@ function makeResponse(code, data) {
         statusCode: code || 200,
         headers: {
             'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-            'Access-Control-Allow-Credentials': true // Required for cookies, authorization headers with HTTPS
+            'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
         },
-        body: typeof data === 'string' ? data : JSON.stringify(data)
+        body: typeof data === 'string' ? data : JSON.stringify(data),
     };
 }
 
@@ -136,46 +134,52 @@ function check(request, ctx, callback) {
         context.branch = githubBranch || null;
 
         getGithubApiData(context)
-            .then(context => M800_Github.getCommitInfos(context))
-            .then(context => M000_PackageJson.getPackageJson(context))
-            .then(context => M100_IOPackageJson.getIOPackageJson(context))
-            .then(context => M000_PackageJson.checkPackageJson(context))
-            .then(context => M100_IOPackageJson.checkIOPackageJson(context))
-            .then(context => M250_Npm.checkNpm(context))
-            .then(context => M400_Repository.checkRepository(context))
-            .then(context => M500_Code.checkCode(context))
-            .then(context => M300_Testing.checkTests(context))
-            .then(context => M800_Github.checkGithubRepo(context))
-            .then(context => M600_Readme.checkReadme(context))
-            .then(context => M700_License.checkLicenseFile(context))
-            .then(context => M900_GitNpmIgnore.checkNpmIgnore(context))
-            .then(context => M900_GitNpmIgnore.checkGitIgnore(context))
-            .then(context => {
-                return callback(null, makeResponse(200, {
-                    result: 'OK',
-                    checks: context.checks,
-                    errors: context.errors,
-                    warnings: context.warnings,
-                    version,
-                    hasTravis: context.hasTravis,
-                    lastCommitSha: context.lastCommitSha,
-                }));
+            .then((context) => M800_Github.getCommitInfos(context))
+            .then((context) => M000_PackageJson.getPackageJson(context))
+            .then((context) => M100_IOPackageJson.getIOPackageJson(context))
+            .then((context) => M000_PackageJson.checkPackageJson(context))
+            .then((context) => M100_IOPackageJson.checkIOPackageJson(context))
+            .then((context) => M250_Npm.checkNpm(context))
+            .then((context) => M400_Repository.checkRepository(context))
+            .then((context) => M500_Code.checkCode(context))
+            .then((context) => M300_Testing.checkTests(context))
+            .then((context) => M800_Github.checkGithubRepo(context))
+            .then((context) => M600_Readme.checkReadme(context))
+            .then((context) => M700_License.checkLicenseFile(context))
+            .then((context) => M900_GitNpmIgnore.checkNpmIgnore(context))
+            .then((context) => M900_GitNpmIgnore.checkGitIgnore(context))
+            .then((context) => {
+                return callback(
+                    null,
+                    makeResponse(200, {
+                        result: 'OK',
+                        checks: context.checks,
+                        errors: context.errors,
+                        warnings: context.warnings,
+                        version,
+                        hasTravis: context.hasTravis,
+                        lastCommitSha: context.lastCommitSha,
+                    }),
+                );
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
                 context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
 
-                return callback(null, makeResponse(200, {
-                    result: 'Errors found',
-                    checks: context.checks,
-                    errors: context.errors,
-                    issues,
-                    warnings: context.warnings,
-                    version,
-                    hasTravis: context.hasTravis,
-                    lastCommitSha: context.lastCommitSha,
-                    error: `${err.request ? err.request.path : ''} ${err.message}`,
-                }));
+                return callback(
+                    null,
+                    makeResponse(200, {
+                        result: 'Errors found',
+                        checks: context.checks,
+                        errors: context.errors,
+                        issues,
+                        warnings: context.warnings,
+                        version,
+                        hasTravis: context.hasTravis,
+                        lastCommitSha: context.lastCommitSha,
+                        error: `${err.request ? err.request.path : ''} ${err.message}`,
+                    }),
+                );
             });
     }
 }
@@ -194,22 +198,35 @@ function getText(text, lang) {
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
-    let repoUrl = 'https://github.com/klein0r/ioBroker.luftdaten';
+    let repoUrl = null;
     let repoBranch = null;
 
-    // check for local check
-    if (process.argv.includes('--local')) {
-        process.argv.splice(process.argv.indexOf('--local'), 1);
-        common.setLocal(true);
+    // check options
+    if (process.argv.includes('-d')) {
+        process.argv.splice(process.argv.indexOf('-d'), 1);
+        common.setDebug(true);
     }
 
     if (process.argv.includes('--debug')) {
         process.argv.splice(process.argv.indexOf('--debug'), 1);
         common.setDebug(true);
     }
+
+    if (process.argv.includes('--local')) {
+        process.argv.splice(process.argv.indexOf('--local'), 1);
+        common.setLocal(true);
+    }
+
     // Get url from parameters if possible
     if (process.argv.length > 2) {
         repoUrl = process.argv[2];
+
+        if (!repoUrl.toLowerCase().includes('github.com')) {
+            repoUrl = `https://github.com/${repoUrl}`;
+        }
+    } else {
+        console.log('ERROR: No repository specified');
+        process.exit(1);
     }
 
     // Get branch from parameters if possible
@@ -218,65 +235,66 @@ if (typeof module !== 'undefined' && module.parent) {
     }
 
     console.log(`Checking repository ${repoUrl} (branch ${repoBranch})`);
-    check({
-        queryStringParameters: {
-            url: repoUrl,
-            branch: repoBranch,
-        }
-    }, null, (err, data) => {
-        const context = JSON.parse(data.body);
-        console.log(context.result);
+    check(
+        {
+            queryStringParameters: {
+                url: repoUrl,
+                branch: repoBranch,
+            },
+        },
+        null,
+        (err, data) => {
+            const context = JSON.parse(data.body);
+            console.log(context.result);
 
-        console.log('\n\n########## SUMMARY ##########');
-        if (context.errors.length) {
-            console.log('\n\nErrors:');
-            context.errors.sort().forEach(err => {
-                const issue = err.substring(1, 5);
-                console.error(err);
-                if (issues[issue]) {
-                    //if (issues[issue].title) {
-                    //    console.error(getText(issues[issue].title, 'en'));
-                    //}
-                    if (issues[issue].explanation) {
-                        console.error(getText(issues[issue].explanation, 'en'));
+            console.log('\n\n########## SUMMARY ##########');
+            if (context.errors.length) {
+                console.log('\n\nErrors:');
+                context.errors.sort().forEach((err) => {
+                    const issue = err.substring(1, 5);
+                    console.error(err);
+                    if (issues[issue]) {
+                        //if (issues[issue].title) {
+                        //    console.error(getText(issues[issue].title, 'en'));
+                        //}
+                        if (issues[issue].explanation) {
+                            console.error(getText(issues[issue].explanation, 'en'));
+                        }
+                        if (issues[issue].resolving) {
+                            console.error(getText(issues[issue].resolving, 'en'));
+                        }
+                        if (issues[issue].notes) {
+                            console.error(getText(issues[issue].notes, 'en'));
+                        }
                     }
-                    if (issues[issue].resolving) {
-                        console.error(getText(issues[issue].resolving, 'en'));
+                });
+            } else {
+                console.log('\n\nNO errors encountered.');
+            }
+            if (context.warnings.length) {
+                console.log('\nWarnings:');
+                context.warnings.sort().forEach((err) => {
+                    const issue = err.substring(1, 5);
+                    console.warn(err);
+                    if (issues[issue]) {
+                        //if (issues[issue].title) {
+                        //    console.warn(getText(issues[issue].title, 'en'));
+                        //}
+                        if (issues[issue].explanation) {
+                            console.warn(getText(issues[issue].explanation, 'en'));
+                        }
+                        if (issues[issue].resolving) {
+                            console.warn(getText(issues[issue].resolving, 'en'));
+                        }
+                        if (issues[issue].notes) {
+                            console.warn(getText(issues[issue].notes, 'en'));
+                        }
                     }
-                    if (issues[issue].notes) {
-                        console.error(getText(issues[issue].notes, 'en'));
-                    }
-                }
-
-            });
-        } else {
-            console.log('\n\nNO errors encountered.');
-        }
-        if (context.warnings.length) {
-            console.log('\nWarnings:');
-            context.warnings.sort().forEach(err => {
-                const issue = err.substring(1, 5);
-                console.warn(err);
-                if (issues[issue]) {
-                    //if (issues[issue].title) {
-                    //    console.warn(getText(issues[issue].title, 'en'));
-                    //}
-                    if (issues[issue].explanation) {
-                        console.warn(getText(issues[issue].explanation, 'en'));
-                    }
-                    if (issues[issue].resolving) {
-                        console.warn(getText(issues[issue].resolving, 'en'));
-                    }
-                    if (issues[issue].notes) {
-                        console.warn(getText(issues[issue].notes, 'en'));
-                    }
-                }
-
-            });
-        } else {
-            console.log('\n\nNO warnings encountered.');
-        }
-        console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
-    });
+                });
+            } else {
+                console.log('\n\nNO warnings encountered.');
+            }
+            console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
+        },
+    );
 }
-
