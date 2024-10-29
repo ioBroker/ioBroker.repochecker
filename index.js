@@ -111,11 +111,11 @@ function makeResponse(code, data) {
 }
 
 function check(request, ctx, callback) {
-//    console.log('PROCESS: ' + JSON.stringify(request));
+    //    console.log('PROCESS: ' + JSON.stringify(request));
     if (!request.queryStringParameters.url) {
-        return callback(null, makeResponse(500, {error: 'No github URL provided'}));
+        return callback(null, makeResponse(500, { error: 'No github URL provided' }));
     } else {
-        const context = {checks: [], errors: [], warnings: []};
+        const context = { checks: [], errors: [], warnings: [] };
         let githubUrl = request.queryStringParameters.url;
         const githubBranch = request.queryStringParameters.branch;
 
@@ -191,14 +191,22 @@ function getText(text, lang) {
     return text;
 }
 
-common.setDebug(true); /* DEBUG*/
-
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     let repoUrl = 'https://github.com/klein0r/ioBroker.luftdaten';
     let repoBranch = null;
 
+    // check for local check
+    if (process.argv.includes('--local')) {
+        process.argv.splice(process.argv.indexOf('--local'), 1);
+        common.setLocal(true);
+    }
+
+    if (process.argv.includes('--debug')) {
+        process.argv.splice(process.argv.indexOf('--debug'), 1);
+        common.setDebug(true);
+    }
     // Get url from parameters if possible
     if (process.argv.length > 2) {
         repoUrl = process.argv[2];

@@ -1,40 +1,41 @@
-const githubToken = ""; // https://github.com/settings/tokens
+/* global $,jQuery */
+const githubToken = ''; // https://github.com/settings/tokens
 const test = false;
 
-const toGet = "checkError2";
-const toSet = "checkError";
+const toGet = 'checkError2';
+const toSet = 'checkError';
 const checkOkCheck = true;
 
-const issueTitle = "Think about to fix the issues found by adapter checker";
+const issueTitle = 'Think about to fix the issues found by adapter checker';
 
-const adapterTestLink = "https://e7tj1cpjna.execute-api.eu-west-1.amazonaws.com/?url=";
+const adapterTestLink = 'https://e7tj1cpjna.execute-api.eu-west-1.amazonaws.com/?url=';
 
-let adapterList, dicoveryList;
+let adapterList/* , dicoveryList */;
 
 const start = async function () {
-    console.log("Adapter Liste wird geladen...");
+    console.log('Adapter Liste wird geladen...');
     adapterList = await getAdapterList();
-    console.log("Adapter Liste geladen!")
+    console.log('Adapter Liste geladen!');
     if (adapterList) {
-        if(!adapterList[toSet]) adapterList[toSet] = {};
-        if(!adapterList.dependVISwwwOnly) adapterList.dependVISwwwOnly = [];
-        if(!adapterList.dependVIS) adapterList.dependVIS = [];
-        if(!adapterList.noRestartVIS2) adapterList.noRestartVIS2 = [];
+        if (!adapterList[toSet]) adapterList[toSet] = {};
+        if (!adapterList.dependVISwwwOnly) adapterList.dependVISwwwOnly = [];
+        if (!adapterList.dependVIS) adapterList.dependVIS = [];
+        if (!adapterList.noRestartVIS2) adapterList.noRestartVIS2 = [];
 
-        $('#listeSuccess').append("<li style='color: blue;'>ignored: " + adapterList["ignore"].length + "/<span id='ignore'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>noIoPackage: " + adapterList["noIoPackage"].length + "/<span id='noIoPackage'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>checkErrorOld: " + Object.keys(adapterList["checkErrorOld"]).length + "/<span id='checkErrorOld'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>" + toGet + ": " + Object.keys(adapterList[toGet]).length + "/<span id='" + toGet + "'></span></li>");
-        $('#listeSuccess').append("<li style='color: blue;'>" + toSet + ": " + Object.keys(adapterList[toSet]).length + "/<span id='" + toSet + "'></span></li>");
+        $('#listeSuccess').append("<li style='color: blue;'>ignored: " + adapterList['ignore'].length + "/<span id='ignore'></span></li>");
+        $('#listeSuccess').append("<li style='color: blue;'>noIoPackage: " + adapterList['noIoPackage'].length + "/<span id='noIoPackage'></span></li>");
+        $('#listeSuccess').append("<li style='color: blue;'>checkErrorOld: " + Object.keys(adapterList['checkErrorOld']).length + "/<span id='checkErrorOld'></span></li>");
+        $('#listeSuccess').append("<li style='color: blue;'>" + toGet + ': ' + Object.keys(adapterList[toGet]).length + "/<span id='" + toGet + "'></span></li>");
+        $('#listeSuccess').append("<li style='color: blue;'>" + toSet + ': ' + Object.keys(adapterList[toSet]).length + "/<span id='" + toSet + "'></span></li>");
         $('#listeSuccess').append("<li style='color: blue;'>checkOk: " + adapterList.checkOk.length + "/<span id='checkOk'></span></li>");
         $('#listeSuccess').append("<li style='color: blue;'>dependVISwwwOnly: " + adapterList.dependVISwwwOnly.length + "/<span id='dependVISwwwOnly'></span></li>");
         $('#listeSuccess').append("<li style='color: blue;'>dependVIS: " + adapterList.dependVIS.length + "/<span id='dependVIS'></span></li>");
         $('#listeSuccess').append("<li style='color: blue;'>noRestartVIS2: " + adapterList.noRestartVIS2.length + "/<span id='noRestartVIS2'></span></li>");
 
-        console.log("Die Arbeit beginnt");
+        console.log('Die Arbeit beginnt');
         await startFunc();
         await delay(10000);
-        console.log("Die Arbeit ist fertig!!");
+        console.log('Die Arbeit ist fertig!!');
 
         console.log(JSON.stringify(adapterList));
         $('#ignore').text(adapterList.ignore.length);
@@ -48,7 +49,7 @@ const start = async function () {
         $('#' + toGet).text(Object.keys(adapterList[toGet]).length);
         $('#result').text(JSON.stringify(adapterList));
     } else {
-        $('#liste').append("<li style='color: red;'>ERROR " + Object.keys(adapterList[toGet]).length + " " + Object.keys(adapterList[toSet]).length + "</li>");
+        $('#liste').append("<li style='color: red;'>ERROR " + Object.keys(adapterList[toGet]).length + ' ' + Object.keys(adapterList[toSet]).length + '</li>');
     }
 };
 
@@ -70,7 +71,7 @@ const start = async function () {
             }
             // confirm array is populated
             if (arr) {
-                var len = arr.length;
+                const len = arr.length;
                 i = i ? (i < 0 ? Math.max(0, len + i) : i) : 0;
                 elem = elem.toLowerCase();
                 for (; i < len; i++) {
@@ -91,13 +92,13 @@ const startFunc = async function () {
 
     if (adapterList) {
 
-        console.log("Suche neue Adapter");
+        console.log('Suche neue Adapter');
         const oldGet = Object.keys(adapterList[toGet]).length;
-        await findAllAdapters("asc");
-        await findAllAdapters("desc");
-        console.log("Suche neuer Adapter beendet - " + (Object.keys(adapterList[toGet]).length - oldGet) + " Adapter gefunden");
+        await findAllAdapters('asc');
+        await findAllAdapters('desc');
+        console.log('Suche neuer Adapter beendet - ' + (Object.keys(adapterList[toGet]).length - oldGet) + ' Adapter gefunden');
 
-        if(checkOkCheck){
+        if (checkOkCheck) {
             adapterList.checkOk.forEach(function (full_name) {
                 adapterList[toGet][full_name] = {};
                 adapterList[toGet][full_name].issue = null;
@@ -111,18 +112,18 @@ const startFunc = async function () {
 
         for (const origfullname in adapterList[toGet]) {
             const full_name = await getFullname(origfullname);
-            if(full_name) {
-                console.log("Teste " + full_name + " ...");
-                const testLink = "https://raw.githubusercontent.com/" + full_name;
+            if (full_name) {
+                console.log('Teste ' + full_name + ' ...');
+                const testLink = 'https://raw.githubusercontent.com/' + full_name;
                 const testResult = await doTheTest(testLink);
 
-                console.log("Teste io-Package vis" + full_name + " ...");
-                let check = await checkVis("https://raw.githubusercontent.com/" + full_name + "/master/io-package.json", full_name);
-                if(!check){
-                    await checkVis("https://raw.githubusercontent.com/" + full_name + "/main/io-package.json", full_name);
+                console.log('Teste io-Package vis' + full_name + ' ...');
+                const check = await checkVis('https://raw.githubusercontent.com/' + full_name + '/master/io-package.json', full_name);
+                if (!check) {
+                    await checkVis('https://raw.githubusercontent.com/' + full_name + '/main/io-package.json', full_name);
                 }
 
-                let issueNr = adapterList[toGet][origfullname].issue;
+                const issueNr = adapterList[toGet][origfullname].issue;
                 let issuesList = [];
                 if (issueNr) {
                     issuesList = adapterList[toGet][origfullname].errorList;
@@ -130,38 +131,38 @@ const startFunc = async function () {
 
                 if ((testResult && testResult.errors && testResult.errors.length > 0) || adapterList.noRestartVIS2.includes(full_name) || adapterList.dependVIS.includes(full_name) || adapterList.dependVISwwwOnly.includes(full_name)) {
                     try {
-                        console.log("Issue wird angelegt " + full_name + " ...");
-                        let issueBody = "I am an automatic service that looks for possible errors in ioBroker and creates an issue for it. The link below leads directly to the test:\r\n\r\n";
-                        issueBody += "https://adapter-check.iobroker.in/?q=" + testLink + "\r\n\r\n";
+                        console.log('Issue wird angelegt ' + full_name + ' ...');
+                        let issueBody = 'I am an automatic service that looks for possible errors in ioBroker and creates an issue for it. The link below leads directly to the test:\r\n\r\n';
+                        issueBody += 'https://adapter-check.iobroker.in/?q=' + testLink + '\r\n\r\n';
                         const errorList = [];
                         const warningList = [];
 
-                        if(testResult) {
+                        if (testResult) {
                             testResult.errors.forEach(function (issue) {
-                                issueBody += "- [ ] " + issue + "\r\n";
+                                issueBody += '- [ ] ' + issue + '\r\n';
                                 errorList.push(issue.substring(1, 5));
                             });
                             if (testResult.warnings && testResult.warnings.length > 0) {
-                                issueBody += "\r\nI have also found warnings that may be fixed if possible.\r\n\r\n";
+                                issueBody += '\r\nI have also found warnings that may be fixed if possible.\r\n\r\n';
                                 testResult.warnings.forEach(function (issue) {
-                                    issueBody += "- [ ] " + issue + "\r\n";
+                                    issueBody += '- [ ] ' + issue + '\r\n';
                                     warningList.push(issue.substring(1, 5));
                                 });
                             }
                         }
 
-                        if(adapterList.noRestartVIS2.includes(full_name)){
-                            issueBody += "\r\nI noticed that in the io-package under “restartAdapters” only vis is available. If your widget also runs with vis-2, you might want to add “vis-2” to the list too.\r\n\r\n";
+                        if (adapterList.noRestartVIS2.includes(full_name)) {
+                            issueBody += '\r\nI noticed that in the io-package under “restartAdapters” only vis is available. If your widget also runs with vis-2, you might want to add “vis-2” to the list too.\r\n\r\n';
                         }
 
-                        if(adapterList.dependVIS.includes(full_name)){
-                            issueBody += "\r\nI found vis as “dependencies” in the io package. Please remove this dependency.\r\n\r\n";
+                        if (adapterList.dependVIS.includes(full_name)) {
+                            issueBody += '\r\nI found vis as “dependencies” in the io package. Please remove this dependency.\r\n\r\n';
                         }
-                        if(adapterList.dependVISwwwOnly.includes(full_name)){
-                            issueBody += "\r\nI found vis as “dependencies” in the io package. If your widget also runs with vis-2, then remove that.\r\n\r\n";
+                        if (adapterList.dependVISwwwOnly.includes(full_name)) {
+                            issueBody += '\r\nI found vis as “dependencies” in the io package. If your widget also runs with vis-2, then remove that.\r\n\r\n';
                         }
 
-                        issueBody += "\r\nThanks,\r\nyour automatic adapter checker.";
+                        issueBody += '\r\nThanks,\r\nyour automatic adapter checker.';
                         issueBody += addComminityText(full_name);
 
                         const errorNotChanged = issueNr !== null && (errorList.length === issuesList.length && errorList.sort().every(function (value, index) {
@@ -175,7 +176,7 @@ const startFunc = async function () {
                         } else if (githubToken && errorNotChanged) {
                             let dateIssue = adapterList[toGet][origfullname].createdDate;
                             if (!dateIssue) {
-                                dateIssue = "2019-02-01T15:08:12Z";
+                                dateIssue = '2019-02-01T15:08:12Z';
                                 adapterList[toGet][origfullname].createdDate = dateIssue;
                             }
 
@@ -185,18 +186,18 @@ const startFunc = async function () {
                                 adapterList[toSet][full_name] = adapterList[toGet][origfullname];
                                 delete adapterList[toGet][origfullname];
                             }
-                            $('#liste').append("<li style='color: blue;'>" + (full_name === origfullname ? full_name : origfullname + " => " + full_name) + " no error changes</li>");
+                            $('#liste').append("<li style='color: blue;'>" + (full_name === origfullname ? full_name : origfullname + ' => ' + full_name) + ' no error changes</li>');
                         } else {
-                            testIssueCreation("NO TOKEN - " + full_name, "NO TOKEN - " + full_name, testResult.errors.length);
+                            testIssueCreation('NO TOKEN - ' + full_name, 'NO TOKEN - ' + full_name, testResult.errors.length);
                         }
                     } catch (e) {
-                        console.error(full_name + " - " + e);
+                        console.error(full_name + ' - ' + e);
                     }
                 } else if (testResult && testResult.errors && testResult.errors.length === 0) {
                     if (!test && githubToken) {
                         closeIssue(origfullname, full_name, issueNr);
                     }
-                    $('#liste').append("<li style='color: green;'>" + (full_name === origfullname ? full_name : origfullname + " => " + full_name) + " fixed - checked but no error found</li>");
+                    $('#liste').append("<li style='color: green;'>" + (full_name === origfullname ? full_name : origfullname + ' => ' + full_name) + ' fixed - checked but no error found</li>');
                 }
             }
         }
@@ -204,15 +205,15 @@ const startFunc = async function () {
     }
 };
 
-$("button").on("click", function () {
+$('button').on('click', function () {
     start();
 });
 
 function addComminityText(full_name) {
-    if (!full_name.startsWith("ioBroker/") && !full_name.startsWith("iobroker-community-adapters/")) {
-        return "\r\n\r\nP.S.: There is a community in Github, which supports the maintenance and further development of adapters. There you will find many experienced developers who are always ready to assist anyone. New developers are always welcome there. For more informations visit: https://github.com/iobroker-community-adapters/info";
+    if (!full_name.startsWith('ioBroker/') && !full_name.startsWith('iobroker-community-adapters/')) {
+        return '\r\n\r\nP.S.: There is a community in Github, which supports the maintenance and further development of adapters. There you will find many experienced developers who are always ready to assist anyone. New developers are always welcome there. For more informations visit: https://github.com/iobroker-community-adapters/info';
     } else {
-        return "";
+        return '';
     }
 }
 
@@ -225,14 +226,14 @@ const interactor = new GithubInteractor(githubToken);
 function createIssue(orgRepo, repo, issueBody, count, issueNr, errorList, warningList) {
 
     if (issueNr) {
-        const url = "https://api.github.com/repos/" + repo + "/issues/" + issueNr;
+        const url = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr;
         $.ajax({
             url: url,
-            type: "PATCH",
+            type: 'PATCH',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "token " + interactor.token);
+                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
-            error: function (xhr, status, error) {
+            error: function (/* xhr, status, error */) {
                 createIssue(orgRepo, repo, issueBody, count, null, errorList, warningList);
             },
             success: function (issue) {
@@ -245,24 +246,24 @@ function createIssue(orgRepo, repo, issueBody, count, issueNr, errorList, warnin
                 adapterList[toSet][repo].createdDate = (adapterList[toGet][orgRepo].createdDate ? adapterList[toGet][orgRepo].createdDate : issue.created_at);
                 adapterList[toSet][repo].help = adapterList[toGet][orgRepo].help === true;
                 delete adapterList[toGet][orgRepo];
-                $('#listeSuccess').append("<li>" + (repo === orgRepo ? repo : orgRepo + " => " + repo) + " (" + count + " errors) - issue updated</li>");
+                $('#listeSuccess').append('<li>' + (repo === orgRepo ? repo : orgRepo + ' => ' + repo) + ' (' + count + ' errors) - issue updated</li>');
             },
             data: JSON.stringify({
                 body: issueBody,
-                state: "open"
+                state: 'open'
             })
         });
     } else {
-        const url = "https://api.github.com/repos/" + repo + "/issues";
+        const url = 'https://api.github.com/repos/' + repo + '/issues';
         $.ajax({
             url: url,
-            type: "POST",
+            type: 'POST',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "token " + interactor.token);
+                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
             error: function (xhr, status, error) {
                 const err = JSON.parse(xhr.responseText);
-                $('#liste').append("<li style='color: red;'>" + (repo === orgRepo ? repo : orgRepo + " => " + repo) + " - issue failed (" + status + ": " + error + ") " + err + "</li>");
+                $('#liste').append("<li style='color: red;'>" + (repo === orgRepo ? repo : orgRepo + ' => ' + repo) + ' - issue failed (' + status + ': ' + error + ') ' + err + '</li>');
             },
             success: function (issue) {
                 adapterList[toSet][repo] = {};
@@ -274,7 +275,7 @@ function createIssue(orgRepo, repo, issueBody, count, issueNr, errorList, warnin
                 adapterList[toSet][repo].createdDate = issue.created_at;
                 adapterList[toSet][repo].help = false;
                 delete adapterList[toGet][orgRepo];
-                $('#listeSuccess').append("<li>" + (repo === orgRepo ? repo : orgRepo + " => " + repo) + " (" + count + " errors) - new issue created</li>");
+                $('#listeSuccess').append('<li>' + (repo === orgRepo ? repo : orgRepo + ' => ' + repo) + ' (' + count + ' errors) - new issue created</li>');
             },
             data: JSON.stringify({
                 title: issueTitle,
@@ -287,19 +288,19 @@ function createIssue(orgRepo, repo, issueBody, count, issueNr, errorList, warnin
 function closeIssue(orgRepo, repo, issueNr) {
 
     if (issueNr) {
-        const urlComment = "https://api.github.com/repos/" + repo + "/issues/" + issueNr + "/comments";
-        const issueBody = "Thanks, that all bugs have been fixed.";
+        const urlComment = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr + '/comments';
+        const issueBody = 'Thanks, that all bugs have been fixed.';
         $.ajax({
             url: urlComment,
-            type: "POST",
+            type: 'POST',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "token " + interactor.token);
+                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
             error: function (xhr, status, error) {
                 const err = JSON.parse(xhr.responseText);
-                $('#liste').append("<li style='color: red;'>" + (repo === orgRepo ? repo : orgRepo + " => " + repo) + " - issue failed (" + status + ": " + error + ") " + err + "</li>");
+                $('#liste').append("<li style='color: red;'>" + (repo === orgRepo ? repo : orgRepo + ' => ' + repo) + ' - issue failed (' + status + ': ' + error + ') ' + err + '</li>');
             },
-            success: function (issue) {
+            success: function (/* issue */) {
                 adapterList.checkOk.push(repo);
                 delete adapterList[toGet][orgRepo];
             },
@@ -308,15 +309,15 @@ function closeIssue(orgRepo, repo, issueNr) {
             })
         });
 
-        var urlIssue = "https://api.github.com/repos/" + repo + "/issues/" + issueNr;
+        const urlIssue = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr;
         $.ajax({
             url: urlIssue,
-            type: "PATCH",
+            type: 'PATCH',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "token " + interactor.token);
+                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
             data: JSON.stringify({
-                state: "closed"
+                state: 'closed'
             })
         });
 
@@ -329,21 +330,21 @@ function closeIssue(orgRepo, repo, issueNr) {
 function createHelpComment(orgRepo, repo, issueNr) {
 
     if (issueNr && !adapterList[toGet][repo].help) {
-        var urlComment = "https://api.github.com/repos/" + repo + "/issues/" + issueNr + "/comments";
-        const issueBody = "Do you need help fixing the bugs?";
+        const urlComment = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr + '/comments';
+        const issueBody = 'Do you need help fixing the bugs?';
         $.ajax({
             url: urlComment,
-            type: "POST",
+            type: 'POST',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "token " + interactor.token);
+                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
             error: function (xhr, status, error) {
                 const err = JSON.parse(xhr.responseText);
-                $('#liste').append("<li style='color: red;'>" + (repo === orgRepo ? repo : orgRepo + " => " + repo) + " - issue failed (" + status + ": " + error + ") - " + err + "</li>");
+                $('#liste').append("<li style='color: red;'>" + (repo === orgRepo ? repo : orgRepo + ' => ' + repo) + ' - issue failed (' + status + ': ' + error + ') - ' + err + '</li>');
             },
-            success: function (issue) {
+            success: function (/* issue */) {
                 adapterList[toSet][repo] = adapterList[toGet][orgRepo];
-                adapterList[toSet][repo].status = "open";
+                adapterList[toSet][repo].status = 'open';
                 adapterList[toSet][repo].createdDate = new Date().toISOString();
                 adapterList[toSet][repo].help = true;
                 delete adapterList[toGet][orgRepo];
@@ -353,24 +354,24 @@ function createHelpComment(orgRepo, repo, issueNr) {
             })
         });
 
-        const urlIssue = "https://api.github.com/repos/" + repo + "/issues/" + issueNr;
+        const urlIssue = 'https://api.github.com/repos/' + repo + '/issues/' + issueNr;
         $.ajax({
             url: urlIssue,
-            type: "PATCH",
+            type: 'PATCH',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "token " + interactor.token);
+                xhr.setRequestHeader('Authorization', 'token ' + interactor.token);
             },
             data: JSON.stringify({
-                state: "open"
+                state: 'open'
             })
         });
     }
 }
 
 async function getAdapterList() {
-    const link = "https://raw.githubusercontent.com/ioBrokerChecker/testData/master/data.json";
+    const link = 'https://raw.githubusercontent.com/ioBrokerChecker/testData/master/data.json';
     try {
-        return await (await fetch(link, {cache: "no-cache"})).json();
+        return await (await fetch(link, { cache: 'no-cache' })).json();
     } catch (e) {
         console.log(e);
         return null;
@@ -391,18 +392,18 @@ async function findAllAdapters(sort) {
             if (!repoNode.node.hasIssuesEnabled || repoNode.node.isArchived || checkIgnores(full_name)) {
                 return true;
             }
-            console.log("Check " + full_name);
-            let check = await checkIoPackage("https://raw.githubusercontent.com/" + full_name + "/master/io-package.json", full_name);
-            if(!check){
-                check = await checkIoPackage("https://raw.githubusercontent.com/" + full_name + "/main/io-package.json", full_name);
+            console.log('Check ' + full_name);
+            let check = await checkIoPackage('https://raw.githubusercontent.com/' + full_name + '/master/io-package.json', full_name);
+            if (!check) {
+                check = await checkIoPackage('https://raw.githubusercontent.com/' + full_name + '/main/io-package.json', full_name);
             }
 
             if (check) {
-                console.log(full_name + " als Adapter erkannt");
+                console.log(full_name + ' als Adapter erkannt');
                 adapterList[toGet][full_name] = {};
                 adapterList[toGet][full_name].issue = null;
-            }else{
-                console.log(full_name + " ist kein Adapter");
+            } else {
+                console.log(full_name + ' ist kein Adapter');
                 adapterList.noIoPackage.push(full_name);
             }
         });
@@ -418,16 +419,16 @@ async function findAllAdapters(sort) {
                     if (!repoNode.node.hasIssuesEnabled || repoNode.node.isArchived || checkIgnores(full_name)) {
                         return true;
                     }
-                    let check = await checkIoPackage("https://raw.githubusercontent.com/" + full_name + "/master/io-package.json", full_name);
-                    if(!check){
-                        check = await checkIoPackage("https://raw.githubusercontent.com/" + full_name + "/main/io-package.json", full_name);
+                    let check = await checkIoPackage('https://raw.githubusercontent.com/' + full_name + '/master/io-package.json', full_name);
+                    if (!check) {
+                        check = await checkIoPackage('https://raw.githubusercontent.com/' + full_name + '/main/io-package.json', full_name);
                     }
                     if (check) {
-                        console.log(full_name + " als Adapter erkannt");
+                        console.log(full_name + ' als Adapter erkannt');
                         adapterList[toGet][full_name] = {};
                         adapterList[toGet][full_name].issue = null;
-                    }else{
-                        console.log(full_name + " ist kein Adapter");
+                    } else {
+                        console.log(full_name + ' ist kein Adapter');
                         adapterList.noIoPackage.push(full_name);
                     }
                 });
@@ -435,13 +436,13 @@ async function findAllAdapters(sort) {
                 cursor = repos.data.search.pageInfo.endCursor;
             } else {
                 hasNext = false;
-                cursor = "";
+                cursor = '';
             }
         }
     }
 }
 
-async function checkIoPackage(ioPackageLink, adapter) {
+async function checkIoPackage(ioPackageLink/* , adapter */) {
     try {
         const ioPackage = await (await fetch(ioPackageLink)).json();
         const isAdapter = ioPackage && ioPackage.common;
@@ -461,20 +462,20 @@ async function checkVis(ioPackageLink, adapter) {
         if (!isAdapter) {
             return false;
         }
-        if (ioPackage.common.restartAdapters && ioPackage.common.restartAdapters.includes("vis") && !ioPackage.common.restartAdapters.includes("vis-2")) {
+        if (ioPackage.common.restartAdapters && ioPackage.common.restartAdapters.includes('vis') && !ioPackage.common.restartAdapters.includes('vis-2')) {
             adapterList.noRestartVIS2.push(adapter);
         }
-        if (ioPackage.common.dependencies && ioPackage.common.dependencies.includes("vis")){
-            if(ioPackage.common.onlyWWW){
+        if (ioPackage.common.dependencies && ioPackage.common.dependencies.includes('vis')) {
+            if (ioPackage.common.onlyWWW) {
                 adapterList.dependVISwwwOnly.push(adapter);
-            }else {
+            } else {
                 adapterList.dependVIS.push(adapter);
             }
         }
-        if (ioPackage.common.globalDependencies && ioPackage.common.globalDependencies.includes("vis")){
-            if(ioPackage.common.onlyWWW){
+        if (ioPackage.common.globalDependencies && ioPackage.common.globalDependencies.includes('vis')) {
+            if (ioPackage.common.onlyWWW) {
                 adapterList.dependVISwwwOnly.push(adapter);
-            }else {
+            } else {
                 adapterList.dependVIS.push(adapter);
             }
         }
@@ -486,7 +487,7 @@ async function checkVis(ioPackageLink, adapter) {
 
 async function doTheTest(testLink) {
     try {
-        return await (await fetch(adapterTestLink + testLink, {mode: 'cors'})).json();
+        return await (await fetch(adapterTestLink + testLink, { mode: 'cors' })).json();
     } catch (e) {
         return {};
     }
@@ -497,7 +498,7 @@ function testIssueCreation(orgRepo, repo, count, notChanged, warnings) {
     if (warnings) {
         countW = warnings.length;
     }
-    $('#liste').append("<li style='color: " + (notChanged ? "red" : "blue") + "'>" + (repo === orgRepo?repo: orgRepo + " => " + repo) + " (" + count + " err & " + countW + " war) - issue " + (notChanged ? "is the same" : "has been changed (UPDATE)") + " </li>");
+    $('#liste').append("<li style='color: " + (notChanged ? 'red' : 'blue') + "'>" + (repo === orgRepo ? repo : orgRepo + ' => ' + repo) + ' (' + count + ' err & ' + countW + ' war) - issue ' + (notChanged ? 'is the same' : 'has been changed (UPDATE)') + ' </li>');
 }
 
 async function getDataV4(query) {
@@ -507,7 +508,7 @@ async function getDataV4(query) {
             'Content-Type': 'application/json',
             'Authorization': 'bearer ' + interactor.token
         }),
-        body: JSON.stringify({query: query})
+        body: JSON.stringify({ query: query })
     })).json();
 }
 
@@ -515,21 +516,21 @@ function getQueryForRepos(sort, cursor) {
     let query = getRepoSearchQL;
 
     if (cursor) {
-        query = query.replace("$cursor", ', after: "' + cursor + '"');
+        query = query.replace('$cursor', ', after: "' + cursor + '"');
     } else {
-        query = query.replace("$cursor", "");
+        query = query.replace('$cursor', '');
     }
-    query = query.replace("$dings", sort);
+    query = query.replace('$dings', sort);
     return query;
 }
 
-async function getFullname(fullname){
+async function getFullname(fullname) {
     let query = checkRepoNameQL;
-    const names = fullname.split("/");
-    query = query.replace("$name", names[1]).replace("$owner", names[0]);
+    const names = fullname.split('/');
+    query = query.replace('$name', names[1]).replace('$owner', names[0]);
     const repo = await getDataV4(query);
-    if(repo && repo["data"] && repo["data"]["repository"]){
-        return repo["data"]["repository"]["nameWithOwner"];
+    if (repo && repo['data'] && repo['data']['repository']) {
+        return repo['data']['repository']['nameWithOwner'];
     }
 
     return null;
