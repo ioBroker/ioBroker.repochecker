@@ -1,4 +1,3 @@
-/* global $,jQuery */
 const githubToken = ''; //https://github.com/settings/tokens
 let issueTitle = 'Verify Compact mode for your adapter';
 const issueBody = 'We have detected that your adapter supports the compact mode. Please use the latest js-controller 2.0 and verify that everything works.\r\n\r\nSome more information what is important to check can be found at ioBroker/ioBroker.js-controller#512 \r\n\r\nOn questions please answer to the linked issue. Please close this issue after your test and add the version number that you have tested please as a comment.\r\n\r\nThank you for your support.';
@@ -24,7 +23,7 @@ const start = async function () {
 
 async function asyncForEach(array, callback) {
     for (let index = 0; index < array.length; index++) {
-        await callback(array[index], index, array);
+        await callback(array [index], index, array);
     }
 }
 
@@ -119,7 +118,7 @@ async function filterList(array) {
 async function getAdapterList() {
     const link = 'https://raw.githubusercontent.com/ioBrokerChecker/testData/master/data.json';
     try {
-        const result = await fetch(link, { cache: 'no-cache' });
+        const result = await fetch(link, {cache: 'no-cache'});
         return await result.json();
     } catch (e) {
         return null;
