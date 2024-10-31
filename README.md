@@ -38,6 +38,8 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 -   (oweitman) Script has been extended to use optionally local data for checking.
 -   (mcm1957) Warning if i18n is not used has been fixed [#324].
+-   (mcm1957) Check for importent issues has been added.
+-   (mcm1957) Checking of jsonConfig (initially) added.
 
 ### 3.1.4 (2024-10-26)
 
