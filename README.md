@@ -33,8 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 3.2.0 (2024-11-01)
 
 -   (oweitman) Script has been extended to use optionally local data for checking.
 -   (mcm1957) Warning if i18n is not used has been fixed [#324].
