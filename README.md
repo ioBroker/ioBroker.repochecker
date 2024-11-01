@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.2.1 (2024-11-01)
 
 -   (mcm1957) Size checking for "divider" and "staticImage" supended.
 
