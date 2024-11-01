@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.2.2 (2024-11-01)
 
 -   (mcm1957) Link to open issues has been corrected.
 -   (mcm1957) Component name added to resonsive check issues.
