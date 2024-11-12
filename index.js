@@ -249,7 +249,7 @@ if (typeof module !== 'undefined' && module.parent) {
 
             common.log('\n########## SUMMARY ##########');
             if (context.errors.length) {
-                common.log('\n\nErrors:');
+                common.log('Errors:');
                 context.errors.sort().forEach((err) => {
                     const issue = err.substring(1, 5);
                     common.error(err);
