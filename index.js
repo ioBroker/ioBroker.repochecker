@@ -71,22 +71,22 @@ axios.defaults.headers = {
 
 function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
-        console.log('\ngetGithubApiData');
+        common.debug('\ngetGithubApiData');
         axios
             .get(context.githubUrlApi, { cache: false })
             .then((response) => {
                 context.githubApiData = response.data;
-                // console.log(`API Data: ${JSON.stringify(context.githubApiData)}`);
+                // common.log(`API Data: ${JSON.stringify(context.githubApiData)}`);
 
                 if (!context.branch) {
                     context.branch = context.githubApiData.default_branch; // main vs. master
-                    console.log(`Branch was not defined by user - checking branch: ${context.branch}`);
+                    common.log(`Branch was not defined by user - checking branch: ${context.branch}`);
                 }
 
                 context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
-                console.log(`Original URL: ${context.githubUrlOriginal}`);
-                console.log(`raw:          ${context.githubUrl}`);
-                console.log(`api:          ${context.githubUrlApi}`);
+                common.debug(`Original URL: ${context.githubUrlOriginal}`);
+                common.debug(`raw:          ${context.githubUrl}`);
+                common.debug(`api:          ${context.githubUrlApi}`);
 
                 resolve(context);
             })
@@ -109,7 +109,7 @@ function makeResponse(code, data) {
 }
 
 function check(request, ctx, callback) {
-    //    console.log('PROCESS: ' + JSON.stringify(request));
+    //    common.log('PROCESS: ' + JSON.stringify(request));
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, { error: 'No github URL provided' }));
     } else {
@@ -163,7 +163,7 @@ function check(request, ctx, callback) {
                 );
             })
             .catch((err) => {
-                console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+                common.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
                 context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
 
                 return callback(
@@ -225,7 +225,7 @@ if (typeof module !== 'undefined' && module.parent) {
             repoUrl = `https://github.com/${repoUrl}`;
         }
     } else {
-        console.log('ERROR: No repository specified');
+        common.log('ERROR: No repository specified');
         process.exit(1);
     }
 
@@ -234,7 +234,7 @@ if (typeof module !== 'undefined' && module.parent) {
         repoBranch = process.argv[3];
     }
 
-    console.log(`Checking repository ${repoUrl} (branch ${repoBranch})`);
+    common.log(`Checking repository ${repoUrl} (branch ${repoBranch})`);
     check(
         {
             queryStringParameters: {
@@ -245,34 +245,34 @@ if (typeof module !== 'undefined' && module.parent) {
         null,
         (err, data) => {
             const context = JSON.parse(data.body);
-            console.log(context.result);
+            common.debug(context.result);
 
-            console.log('\n\n########## SUMMARY ##########');
+            common.log('\n########## SUMMARY ##########');
             if (context.errors.length) {
-                console.log('\n\nErrors:');
+                common.log('\n\nErrors:');
                 context.errors.sort().forEach((err) => {
                     const issue = err.substring(1, 5);
-                    console.error(err);
+                    common.error(err);
                     if (issues[issue]) {
                         //if (issues[issue].title) {
-                        //    console.error(getText(issues[issue].title, 'en'));
+                        //    common.error(getText(issues[issue].title, 'en'));
                         //}
                         if (issues[issue].explanation) {
-                            console.error(getText(issues[issue].explanation, 'en'));
+                            common.error(getText(issues[issue].explanation, 'en'));
                         }
                         if (issues[issue].resolving) {
-                            console.error(getText(issues[issue].resolving, 'en'));
+                            common.error(getText(issues[issue].resolving, 'en'));
                         }
                         if (issues[issue].notes) {
-                            console.error(getText(issues[issue].notes, 'en'));
+                            common.error(getText(issues[issue].notes, 'en'));
                         }
                     }
                 });
             } else {
-                console.log('\n\nNO errors encountered.');
+                common.log('NO errors encountered.');
             }
             if (context.warnings.length) {
-                console.log('\nWarnings:');
+                common.log('Warnings:');
                 context.warnings.sort().forEach((err) => {
                     const issue = err.substring(1, 5);
                     console.warn(err);
@@ -292,9 +292,9 @@ if (typeof module !== 'undefined' && module.parent) {
                     }
                 });
             } else {
-                console.log('\n\nNO warnings encountered.');
+                common.log('\n\nNO warnings encountered.');
             }
-            console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
+            common.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
         },
     );
 }
