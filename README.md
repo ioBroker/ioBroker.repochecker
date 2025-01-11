@@ -33,11 +33,10 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.2.3 (2025-01-11)
 -   (mcm1957) An error is issued if js-controller dependency is missing.
 -   (mcm1957) Required js-controller has been increased to 5.0.19.
 -   (mcm1957) Recommended js-controller version is omitted if identical to required one.
-
 
 ### 3.2.2 (2024-11-01)
 -   (mcm1957) Link to open issues has been corrected.
