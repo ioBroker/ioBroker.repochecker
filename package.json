@@ -1,38 +1,38 @@
 {
-  "version": "3.2.3",
-  "name": "@iobroker/repochecker",
-  "dependencies": {
-    "axios": "^1.7.9",
-    "compare-versions": "^6.1.1",
-    "image-size": "^1.2.0",
-    "unzipper": "^0.12.3",
-    "json5": "^2.2.3"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "devDependencies": {
-    "@alcalzone/release-script": "^3.8.0",
-    "eslint": "^8.57.0"
-  },
-  "files": [
-    "lib/",
-    "LICENSE",
-    "index.js",
-    "doc/issues.json"
-  ],
-  "engines": {
-    "node": ">=16"
-  },
-  "main": "index.js",
-  "bin": "index.js",
-  "scripts": {
-    "prepublishOnly": "node doc/readme.js",
-    "start": "node index.js",
-    "lint": "eslint",
-    "release": "release-script",
-    "release-patch": "release-script patch --yes --no-update-lockfile",
-    "release-minor": "release-script minor --yes --no-update-lockfile",
-    "release-major": "release-script major --yes --no-update-lockfile"
-  }
+    "version": "3.2.3",
+    "name": "@iobroker/repochecker",
+    "dependencies": {
+        "axios": "^1.7.9",
+        "compare-versions": "^6.1.1",
+        "image-size": "^1.2.0",
+        "unzipper": "^0.12.3",
+        "json5": "^2.2.3"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@alcalzone/release-script": "^3.8.0",
+        "@iobroker/eslint-config": "^1.0.0"
+    },
+    "files": [
+        "lib/",
+        "LICENSE",
+        "index.js",
+        "doc/issues.json"
+    ],
+    "engines": {
+        "node": ">=16"
+    },
+    "main": "index.js",
+    "bin": "index.js",
+    "scripts": {
+        "prepublishOnly": "node doc/readme.js",
+        "start": "node index.js",
+        "lint": "eslint",
+        "release": "release-script",
+        "release-patch": "release-script patch --yes --no-update-lockfile",
+        "release-minor": "release-script minor --yes --no-update-lockfile",
+        "release-major": "release-script major --yes --no-update-lockfile"
+    }
 }
