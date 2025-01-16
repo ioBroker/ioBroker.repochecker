@@ -22,6 +22,15 @@ export default [
         },
     },
     {
-        ignores: ['build-backend/**/*', 'lib/**/*'],
+        ignores: [
+            'build-backend/**/*', 
+            'frontend/**/*',        // TODO - changes must be confirmed / reviewed by BF
+            'doc/**/*',             // TODO - doc scripts must be reviewed anyway
+            'scripts/**/*',         // TODO - do not change older scripts for now
+
+            // exclude config files as they cause an error from parser
+            'eslint.config.mjs',
+            'prettier.config.mjs',
+        ],
     },
 ];
