@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.2.4 (2025-01-16)
 -   (mcm1957) Suggested release of testing and adapter-core increased.
 
 ### 3.2.3 (2025-01-11)
