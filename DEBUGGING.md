@@ -2,19 +2,19 @@
 
 ## Local Debugging
 
-To test the repochecker and debug into the script under vscode:
+To test the adapter-checker and debug into the script under vscode:
 
 1. Clone the repository to your local machine.\
-   Best is that the directory is on the same level than your adapter repository.
+   Best is that the directory is on the same level as your adapter repository.
 
-2. run npm install in the repochecker directory.
+2. run npm install in the adapter-checker directory.
 
 3. switch to your adapter repository and create a new launch configuration:
 
 ```json5
     {
         "name": "Launch Program",
-        "program": "../iobroker.repochecker/index.js", // path to the repochecker repo
+        "program": "../iobroker.repochecker/index.js", // path to the adapter checker repo
         // args as entered on the commandline, arguments as a array
         "args": ["https://github.com/klein0r/ioBroker.luftdaten","--local"],
         "request": "launch",
@@ -29,12 +29,12 @@ To test the repochecker and debug into the script under vscode:
 
 ## Local Testing without debugging
 
-To test the repochecker under vscode:
+To test the adapter checker under vscode:
 
 1. Clone the repository to your local machine.\
-   Best is that the directory is on the same level than your adapter repository.
+   Best is that the directory is on the same level as your adapter repository.
 
-2. run npm install in the repochecker directory.
+2. run npm install in the adapter checker directory.
 
 3. switch to your adapter repository and enter the following commandline in a new terminal
 

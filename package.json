@@ -1,6 +1,12 @@
 {
-  "version": "3.2.3",
+  "version": "3.2.4",
   "name": "@iobroker/repochecker",
+  "devDependencies": {
+    "@alcalzone/release-script": "^3.8.0",
+    "@iobroker/eslint-config": "^1.0.0",
+    "@types/node": "^20.16.5",
+    "@tsconfig/node20": "^20.1.4"
+  },
   "dependencies": {
     "axios": "^1.7.9",
     "compare-versions": "^6.1.1",
@@ -10,10 +16,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "devDependencies": {
-    "@alcalzone/release-script": "^3.8.0",
-    "eslint": "^8.57.0"
   },
   "files": [
     "lib/",
@@ -29,7 +31,7 @@
   "scripts": {
     "prepublishOnly": "node doc/readme.js",
     "start": "node index.js",
-    "lint": "eslint",
+    "lint": "eslint -c eslint.config.mjs .",
     "release": "release-script",
     "release-patch": "release-script patch --yes --no-update-lockfile",
     "release-minor": "release-script minor --yes --no-update-lockfile",
