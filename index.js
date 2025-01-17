@@ -34,8 +34,8 @@ const M900_GitNpmIgnore = require('./lib/M900_GitNpmIgnore.js');
 // disable axios caching
 axios.defaults.headers = {
     'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-    'Expires': '0',
+    Pragma: 'no-cache',
+    Expires: '0',
 };
 
 // Error ranges
@@ -74,7 +74,7 @@ function getGithubApiData(context) {
         common.debug('\ngetGithubApiData');
         axios
             .get(context.githubUrlApi, { cache: false })
-            .then((response) => {
+            .then(response => {
                 context.githubApiData = response.data;
                 // common.log(`API Data: ${JSON.stringify(context.githubApiData)}`);
 
@@ -90,7 +90,7 @@ function getGithubApiData(context) {
 
                 resolve(context);
             })
-            .catch((e) => {
+            .catch(e => {
                 context.errors.push(`[E000] FATAL: cannot access repository ${context.githubUrlApi}`);
                 reject(e);
             }); // E0xx
@@ -112,85 +112,83 @@ function check(request, ctx, callback) {
     //    common.log('PROCESS: ' + JSON.stringify(request));
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, { error: 'No github URL provided' }));
-    } else {
-        const context = { checks: [], errors: [], warnings: [] };
-        let githubUrl = request.queryStringParameters.url;
-        const githubBranch = request.queryStringParameters.branch;
-
-        githubUrl = githubUrl
-            .replace('http://', 'https://')
-            .replace('https://www.github.com', 'https://github.com')
-            .replace('https://raw.githubusercontent.com/', 'https://github.com/');
-
-        if (githubUrl.match(/\/$/)) {
-            githubUrl = githubUrl.substring(0, githubUrl.length - 1);
-        }
-
-        context.version = version;
-        config.initConfig(context);
-
-        context.githubUrlOriginal = githubUrl;
-        context.githubUrlApi = githubUrl.replace('https://github.com/', 'https://api.github.com/repos/');
-        context.branch = githubBranch || null;
-
-        getGithubApiData(context)
-            .then((context) => M800_Github.getCommitInfos(context))
-            .then((context) => M000_PackageJson.getPackageJson(context))
-            .then((context) => M100_IOPackageJson.getIOPackageJson(context))
-            .then((context) => M000_PackageJson.checkPackageJson(context))
-            .then((context) => M100_IOPackageJson.checkIOPackageJson(context))
-            .then((context) => M250_Npm.checkNpm(context))
-            .then((context) => M400_Repository.checkRepository(context))
-            .then((context) => M500_Code.checkCode(context))
-            .then((context) => M300_Testing.checkTests(context))
-            .then((context) => M800_Github.checkGithubRepo(context))
-            .then((context) => M600_Readme.checkReadme(context))
-            .then((context) => M700_License.checkLicenseFile(context))
-            .then((context) => M900_GitNpmIgnore.checkNpmIgnore(context))
-            .then((context) => M900_GitNpmIgnore.checkGitIgnore(context))
-            .then((context) => {
-                return callback(
-                    null,
-                    makeResponse(200, {
-                        result: 'OK',
-                        checks: context.checks,
-                        errors: context.errors,
-                        warnings: context.warnings,
-                        version,
-                        hasTravis: context.hasTravis,
-                        lastCommitSha: context.lastCommitSha,
-                    }),
-                );
-            })
-            .catch((err) => {
-                common.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
-                context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
-
-                return callback(
-                    null,
-                    makeResponse(200, {
-                        result: 'Errors found',
-                        checks: context.checks,
-                        errors: context.errors,
-                        issues,
-                        warnings: context.warnings,
-                        version,
-                        hasTravis: context.hasTravis,
-                        lastCommitSha: context.lastCommitSha,
-                        error: `${err.request ? err.request.path : ''} ${err.message}`,
-                    }),
-                );
-            });
     }
+    const context = { checks: [], errors: [], warnings: [] };
+    let githubUrl = request.queryStringParameters.url;
+    const githubBranch = request.queryStringParameters.branch;
+
+    githubUrl = githubUrl
+        .replace('http://', 'https://')
+        .replace('https://www.github.com', 'https://github.com')
+        .replace('https://raw.githubusercontent.com/', 'https://github.com/');
+
+    if (githubUrl.match(/\/$/)) {
+        githubUrl = githubUrl.substring(0, githubUrl.length - 1);
+    }
+
+    context.version = version;
+    config.initConfig(context);
+
+    context.githubUrlOriginal = githubUrl;
+    context.githubUrlApi = githubUrl.replace('https://github.com/', 'https://api.github.com/repos/');
+    context.branch = githubBranch || null;
+
+    getGithubApiData(context)
+        .then((context) => M800_Github.getCommitInfos(context))
+        .then((context) => M000_PackageJson.getPackageJson(context))
+        .then((context) => M100_IOPackageJson.getIOPackageJson(context))
+        .then((context) => M000_PackageJson.checkPackageJson(context))
+        .then((context) => M100_IOPackageJson.checkIOPackageJson(context))
+        .then((context) => M250_Npm.checkNpm(context))
+        .then((context) => M400_Repository.checkRepository(context))
+        .then((context) => M500_Code.checkCode(context))
+        .then((context) => M300_Testing.checkTests(context))
+        .then((context) => M800_Github.checkGithubRepo(context))
+        .then((context) => M600_Readme.checkReadme(context))
+        .then((context) => M700_License.checkLicenseFile(context))
+        .then((context) => M900_GitNpmIgnore.checkNpmIgnore(context))
+        .then((context) => M900_GitNpmIgnore.checkGitIgnore(context))
+        .then((context) => {
+            return callback(
+                null,
+                makeResponse(200, {
+                    result: 'OK',
+                    checks: context.checks,
+                    errors: context.errors,
+                    warnings: context.warnings,
+                    version,
+                    hasTravis: context.hasTravis,
+                    lastCommitSha: context.lastCommitSha,
+                }),
+            );
+        })
+        .catch((err) => {
+            console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+            context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+
+            return callback(
+                null,
+                makeResponse(200, {
+                    result: 'Errors found',
+                    checks: context.checks,
+                    errors: context.errors,
+                    issues,
+                    warnings: context.warnings,
+                    version,
+                    hasTravis: context.hasTravis,
+                    lastCommitSha: context.lastCommitSha,
+                    error: `${err.request ? err.request.path : ''} ${err.message}`,
+                }),
+            );
+        });
 }
 
 function getText(text, lang) {
     if (typeof text === 'object') {
         if (text[lang]) {
             return text[lang];
-        } else {
-            return text.en;
         }
+        return text.en;
     }
     return text;
 }
@@ -249,7 +247,7 @@ if (typeof module !== 'undefined' && module.parent) {
 
             common.log('\n########## SUMMARY ##########');
             if (context.errors.length) {
-                common.log('Errors:');
+                console.log('\n\nErrors:');
                 context.errors.sort().forEach((err) => {
                     const issue = err.substring(1, 5);
                     common.error(err);
@@ -272,7 +270,7 @@ if (typeof module !== 'undefined' && module.parent) {
                 common.log('NO errors encountered.');
             }
             if (context.warnings.length) {
-                common.log('Warnings:');
+                console.log('\nWarnings:');
                 context.warnings.sort().forEach((err) => {
                     const issue = err.substring(1, 5);
                     console.warn(err);
