@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+-   (mcm1957) Report request as deprecated package.
 -   (mcm1957) Report malformed semver specifications.
 -   (mcm1957) Check of copyright-year complains about future dates now.
 -   (mcm1957) Checking for responsive design issues has been added.
