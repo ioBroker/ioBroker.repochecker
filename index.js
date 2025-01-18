@@ -128,6 +128,7 @@ function check(request, ctx, callback) {
 
     context.version = version;
     config.initConfig(context);
+    context.checks.push(`Starting checker ioBroker.repochecker ${version}`);
 
     context.githubUrlOriginal = githubUrl;
     context.githubUrlApi = githubUrl.replace('https://github.com/', 'https://api.github.com/repos/');
@@ -245,7 +246,14 @@ if (typeof module !== 'undefined' && module.parent) {
             const context = JSON.parse(data.body);
             console.log(context.result);
 
-            console.log('\n\n########## SUMMARY ##########');
+            console.log('\n\n########## SUMMARY ##########\n');
+            if (context.checks.length) {
+                context.checks.forEach(msg => {
+                    console.log(msg);
+                });
+            }
+
+            console.log('\n\n########## SUMMARY of ISSUES ##########');
             if (context.errors.length) {
                 console.log('\n\nErrors:');
                 context.errors.sort().forEach(err => {

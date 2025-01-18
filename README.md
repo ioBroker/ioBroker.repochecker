@@ -33,6 +33,11 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+
+-   (mcm1957) Checking for responsive design issues has been added.
+-   (mcm1957) Releaseinfo has been added to "checks" log.
+
 ### 3.2.4 (2025-01-16)
 -   (mcm1957) Suggested release of testing and adapter-core increased.
 
