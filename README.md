@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+-   (mcm1957) "common.singleton" causes a warning now for non-onlyWWW Adapters.
 -   (mcm1957) "$schema" has been blacklisted at io-package.json.
 -   (mcm1957) Warn if 'common.nondeletable' flag is detected.
 -   (mcm1957) Report request as deprecated package.
