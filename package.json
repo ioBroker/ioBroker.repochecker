@@ -4,15 +4,17 @@
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",
     "@iobroker/eslint-config": "^1.0.0",
+    "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.16.5",
-    "@tsconfig/node20": "^20.1.4"
+    "@types/semver": "^7.5.8"
   },
   "dependencies": {
     "axios": "^1.7.9",
     "compare-versions": "^6.1.1",
     "image-size": "^1.2.0",
-    "unzipper": "^0.12.3",
-    "json5": "^2.2.3"
+    "json5": "^2.2.3",
+    "semver": "^7.6.3",
+    "unzipper": "^0.12.3"
   },
   "publishConfig": {
     "access": "public"

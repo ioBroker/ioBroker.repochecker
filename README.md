@@ -33,6 +33,10 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+
+-   (mcm1957) Report malformed semver specifications has been fixed.
+
 ### 3.3.0 (2025-01-19)
 
 -   (mcm1957) "common.singleton" causes a warning now for non-onlyWWW Adapters.
