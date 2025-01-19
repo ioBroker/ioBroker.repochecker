@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.3.1 (2025-01-19)
 
 -   (mcm1957) Report malformed semver specifications has been fixed.
 
