@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.3.2 (2025-01-20)
 
 - (mcm1957) Avoid crash if some file cannot be downloaded.
 
