@@ -5,10 +5,10 @@ export default [
     {
         languageOptions: {
             parserOptions: {
-                allowDefaultProject: {
+/*                 allowDefaultProject: {
                     allow: ['*.js', '*.mjs'],
                 },
-                tsconfigRootDir: import.meta.dirname,
+ */                tsconfigRootDir: import.meta.dirname,
                 project: './tsconfig.json',
                 // projectService: true,
             },
@@ -23,7 +23,7 @@ export default [
     },
     {
         ignores: [
-            'build-backend/**/*', 
+            'build-backend/**/*',
             'frontend/**/*',        // TODO - changes must be confirmed / reviewed by BF
             'doc/**/*',             // TODO - doc scripts must be reviewed anyway
             'scripts/**/*',         // TODO - do not change older scripts for now

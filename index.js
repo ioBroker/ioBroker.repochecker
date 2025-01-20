@@ -14,7 +14,7 @@
  */
 const axios = require('axios');
 
-const issues = require('./doc/issues');
+const issues = require('./doc/issues.json');
 const version = require('./package.json').version;
 
 // include submodules
@@ -80,7 +80,7 @@ function getGithubApiData(context) {
 
                 if (!context.branch) {
                     context.branch = context.githubApiData.default_branch; // main vs. master
-                    common.log(`Branch was not defined by user - checking branch: ${context.branch}`);
+                    common.debug(`Branch was not defined by user - checking branch: ${context.branch}`);
                 }
 
                 context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
@@ -164,7 +164,7 @@ function check(request, ctx, callback) {
             );
         })
         .catch(err => {
-            console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+            common.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
             context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
 
             return callback(
@@ -233,7 +233,7 @@ if (typeof module !== 'undefined' && module.parent) {
         repoBranch = process.argv[3];
     }
 
-    common.log(`Checking repository ${repoUrl} (branch ${repoBranch})`);
+    common.debug(`Checking repository ${repoUrl} (branch ${repoBranch})`);
     check(
         {
             queryStringParameters: {
@@ -246,16 +246,16 @@ if (typeof module !== 'undefined' && module.parent) {
             const context = JSON.parse(data.body);
             common.debug(context.result);
 
-            console.log('\n\n########## SUMMARY ##########\n');
+            common.debug('\n\n########## SUMMARY ##########\n');
             if (context.checks.length) {
                 context.checks.forEach(msg => {
-                    console.log(msg);
+                    common.debug(msg);
                 });
             }
 
-            console.log('\n\n########## SUMMARY of ISSUES ##########');
+            common.log('\n\n########## SUMMARY of ISSUES ##########');
             if (context.errors.length) {
-                console.log('\n\nErrors:');
+                common.log('\n\nErrors:');
                 context.errors.sort().forEach(err => {
                     const issue = err.substring(1, 5);
                     common.error(err);
@@ -278,22 +278,22 @@ if (typeof module !== 'undefined' && module.parent) {
                 common.log('NO errors encountered.');
             }
             if (context.warnings.length) {
-                console.log('\nWarnings:');
+                common.log('\nWarnings:');
                 context.warnings.sort().forEach(err => {
                     const issue = err.substring(1, 5);
-                    console.warn(err);
+                    common.warn(err);
                     if (issues[issue]) {
                         //if (issues[issue].title) {
-                        //    console.warn(getText(issues[issue].title, 'en'));
+                        //    common.warn(getText(issues[issue].title, 'en'));
                         //}
                         if (issues[issue].explanation) {
-                            console.warn(getText(issues[issue].explanation, 'en'));
+                            common.warn(getText(issues[issue].explanation, 'en'));
                         }
                         if (issues[issue].resolving) {
-                            console.warn(getText(issues[issue].resolving, 'en'));
+                            common.warn(getText(issues[issue].resolving, 'en'));
                         }
                         if (issues[issue].notes) {
-                            console.warn(getText(issues[issue].notes, 'en'));
+                            common.warn(getText(issues[issue].notes, 'en'));
                         }
                     }
                 });
