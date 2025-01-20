@@ -14,7 +14,7 @@
  */
 const axios = require('axios');
 
-const issues = require('./doc/issues');
+const issues = require('./doc/issues.json');
 const version = require('./package.json').version;
 
 // include submodules
@@ -80,7 +80,7 @@ function getGithubApiData(context) {
 
                 if (!context.branch) {
                     context.branch = context.githubApiData.default_branch; // main vs. master
-                    common.log(`Branch was not defined by user - checking branch: ${context.branch}`);
+                    common.debug(`Branch was not defined by user - checking branch: ${context.branch}`);
                 }
 
                 context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
@@ -128,27 +128,28 @@ function check(request, ctx, callback) {
 
     context.version = version;
     config.initConfig(context);
+    context.checks.push(`Starting checker ioBroker.repochecker ${version}`);
 
     context.githubUrlOriginal = githubUrl;
     context.githubUrlApi = githubUrl.replace('https://github.com/', 'https://api.github.com/repos/');
     context.branch = githubBranch || null;
 
     getGithubApiData(context)
-        .then((context) => M800_Github.getCommitInfos(context))
-        .then((context) => M000_PackageJson.getPackageJson(context))
-        .then((context) => M100_IOPackageJson.getIOPackageJson(context))
-        .then((context) => M000_PackageJson.checkPackageJson(context))
-        .then((context) => M100_IOPackageJson.checkIOPackageJson(context))
-        .then((context) => M250_Npm.checkNpm(context))
-        .then((context) => M400_Repository.checkRepository(context))
-        .then((context) => M500_Code.checkCode(context))
-        .then((context) => M300_Testing.checkTests(context))
-        .then((context) => M800_Github.checkGithubRepo(context))
-        .then((context) => M600_Readme.checkReadme(context))
-        .then((context) => M700_License.checkLicenseFile(context))
-        .then((context) => M900_GitNpmIgnore.checkNpmIgnore(context))
-        .then((context) => M900_GitNpmIgnore.checkGitIgnore(context))
-        .then((context) => {
+        .then(context => M800_Github.getCommitInfos(context))
+        .then(context => M000_PackageJson.getPackageJson(context))
+        .then(context => M100_IOPackageJson.getIOPackageJson(context))
+        .then(context => M000_PackageJson.checkPackageJson(context))
+        .then(context => M100_IOPackageJson.checkIOPackageJson(context))
+        .then(context => M250_Npm.checkNpm(context))
+        .then(context => M400_Repository.checkRepository(context))
+        .then(context => M500_Code.checkCode(context))
+        .then(context => M300_Testing.checkTests(context))
+        .then(context => M800_Github.checkGithubRepo(context))
+        .then(context => M600_Readme.checkReadme(context))
+        .then(context => M700_License.checkLicenseFile(context))
+        .then(context => M900_GitNpmIgnore.checkNpmIgnore(context))
+        .then(context => M900_GitNpmIgnore.checkGitIgnore(context))
+        .then(context => {
             return callback(
                 null,
                 makeResponse(200, {
@@ -162,8 +163,8 @@ function check(request, ctx, callback) {
                 }),
             );
         })
-        .catch((err) => {
-            console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+        .catch(err => {
+            common.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
             context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
 
             return callback(
@@ -232,7 +233,7 @@ if (typeof module !== 'undefined' && module.parent) {
         repoBranch = process.argv[3];
     }
 
-    common.log(`Checking repository ${repoUrl} (branch ${repoBranch})`);
+    common.debug(`Checking repository ${repoUrl} (branch ${repoBranch})`);
     check(
         {
             queryStringParameters: {
@@ -245,10 +246,17 @@ if (typeof module !== 'undefined' && module.parent) {
             const context = JSON.parse(data.body);
             common.debug(context.result);
 
-            common.log('\n########## SUMMARY ##########');
+            common.debug('\n\n########## SUMMARY ##########\n');
+            if (context.checks.length) {
+                context.checks.forEach(msg => {
+                    common.debug(msg);
+                });
+            }
+
+            common.log('\n\n########## SUMMARY of ISSUES ##########');
             if (context.errors.length) {
-                console.log('\n\nErrors:');
-                context.errors.sort().forEach((err) => {
+                common.log('\n\nErrors:');
+                context.errors.sort().forEach(err => {
                     const issue = err.substring(1, 5);
                     common.error(err);
                     if (issues[issue]) {
@@ -270,22 +278,22 @@ if (typeof module !== 'undefined' && module.parent) {
                 common.log('NO errors encountered.');
             }
             if (context.warnings.length) {
-                console.log('\nWarnings:');
-                context.warnings.sort().forEach((err) => {
+                common.log('\nWarnings:');
+                context.warnings.sort().forEach(err => {
                     const issue = err.substring(1, 5);
-                    console.warn(err);
+                    common.warn(err);
                     if (issues[issue]) {
                         //if (issues[issue].title) {
-                        //    console.warn(getText(issues[issue].title, 'en'));
+                        //    common.warn(getText(issues[issue].title, 'en'));
                         //}
                         if (issues[issue].explanation) {
-                            console.warn(getText(issues[issue].explanation, 'en'));
+                            common.warn(getText(issues[issue].explanation, 'en'));
                         }
                         if (issues[issue].resolving) {
-                            console.warn(getText(issues[issue].resolving, 'en'));
+                            common.warn(getText(issues[issue].resolving, 'en'));
                         }
                         if (issues[issue].notes) {
-                            console.warn(getText(issues[issue].notes, 'en'));
+                            common.warn(getText(issues[issue].notes, 'en'));
                         }
                     }
                 });
