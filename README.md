@@ -34,6 +34,10 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 ## Changelog
 
+### 3.3.2 (2025-01-20)
+
+- (mcm1957) Avoid crash if some file cannot be downloaded.
+
 ### 3.3.1 (2025-01-19)
 
 - (mcm1957) Report malformed semver specifications has been fixed.
