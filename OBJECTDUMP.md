@@ -11,14 +11,14 @@ This file describes how to create an dump of an adapters object structure. This 
 ## Creating the dump
 
 - Open admin interface
-- Activate expert mode - the face symbol should be green
+- Activate expert mode - the face symbol should be green  
   ![image](https://github.com/user-attachments/assets/b1116330-cc44-4c45-97ad-81320401b1b0)
 - open object browser and expand adapter you want to analyse
-- select instance of adapter (typically 0)
+- select instance of adapter (typically 0)  
   ![image](https://github.com/user-attachments/assets/f000a927-0ee8-46e4-9f1e-4bf5cbaf95f8)
-- select download Button
+- select download Button  
   ![image](https://github.com/user-attachments/assets/26fec9b9-2f56-44ca-9d7d-5911a91b3310)
-- keep defaults (as shown below) and click "Only selected"
+- keep defaults (as shown below) and click "Only selected"  
   !![image](https://github.com/user-attachments/assets/5c447e3e-b4b9-4bb3-89e3-52b74e045d79)
 
 You will see a fileselector to specify the filename for download. The defaul filename will be adapter.instance#.json. Feel free to keep the name or name the file as you prefer.
