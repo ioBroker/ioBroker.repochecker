@@ -1,6 +1,6 @@
 # How to create an object dump
 
-This file describes how to creat an dump of an adapters object structure. This json based dump can be used for analyses of correct object definitions and to verify type and roles used.
+This file describes how to create an dump of an adapters object structure. This json based dump can be used for analyses of correct object definitions and to verify type and roles used.
 
 ## Preparation
 
