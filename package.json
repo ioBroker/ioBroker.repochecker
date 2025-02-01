@@ -13,7 +13,7 @@
     "compare-versions": "^6.1.1",
     "image-size": "^1.2.0",
     "json5": "^2.2.3",
-    "semver": "^7.6.3",
+    "semver": "^7.7.0",
     "unzipper": "^0.12.3"
   },
   "publishConfig": {
