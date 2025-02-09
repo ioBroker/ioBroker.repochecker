@@ -5,7 +5,7 @@ This file describes how to create an dump of an adapters object structure. This 
 ## Preparation
 
 - Install the latest version of the adapter and configure it according to its description. 
-- Start the adapetr and ensure that it is working as expected. Make sure that it is connected to a device (if used by this adapter) and that all typical data is retrieved.
+- Start the adapter and ensure that it is working as expected. Make sure that it is connected to a device (if used by this adapter) and that all typical data is retrieved.
 - Verify at admin -> objectbrowser that all statey typiocally created by this adapter exist.
 
 ## Creating the dump
