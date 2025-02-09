@@ -18,9 +18,11 @@ This file describes how to create an dump of an adapters object structure. This 
   ![image](https://github.com/user-attachments/assets/f000a927-0ee8-46e4-9f1e-4bf5cbaf95f8)
 - select download Button  
   ![image](https://github.com/user-attachments/assets/26fec9b9-2f56-44ca-9d7d-5911a91b3310)
-- keep defaults (as shown below) and click "Only selected"  
-  !![image](https://github.com/user-attachments/assets/5c447e3e-b4b9-4bb3-89e3-52b74e045d79)
-
+- keep defaults (as shown below) and click "Only selected" (unless your states contain sensitive data)
+  ![image](https://github.com/user-attachments/assets/5c447e3e-b4b9-4bb3-89e3-52b74e045d79)
+  **Attention**:  
+  If your state values constain sensitive data or data you want to keep private feel free to activate "Do not export values of states".
+  
 You will see a fileselector to specify the filename for download. The defaul filename will be adapter.instance#.json. Feel free to keep the name or name the file as you prefer.
 
 ## Result
