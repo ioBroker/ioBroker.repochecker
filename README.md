@@ -36,6 +36,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ### **WORK IN PROGRESS**
 
 - (mcm1957) Fix duplicated warning E432 and E434.
+- (mcm1957) Adapt copyright year advisory.
 
 ### 3.3.2 (2025-01-20)
 
