@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+- (mcm1957) Log an error if dependency is listed multiple times (#316).
 - (mcm1957) Check package.json for invalid attributes.
 - (mcm1957) Fix duplicated warning E432 and E434.
 - (mcm1957) Adapt copyright year advisory.
