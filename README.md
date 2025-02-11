@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+- (mcm1957) Adapter-core 3.2. required now.
 - (mcm1957) Blacklists for peerDependencies and optionalDependencies have been added (#364).
 - (mcm1957) Suggestings for typical devDependencies have been added (#344).
 - (mcm1957) Checking of package dependencies has been enhanced.
