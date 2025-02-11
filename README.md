@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+- (mcm1957) Checking of package dependencies has been enhanced.
 - (mcm1957) Warn if axios is listed as devDependency (#314).
 - (mcm1957) Adapt common.materialize deprecation message (#315).
 - (mcm1957) Log an error if dependency is listed multiple times (#316).

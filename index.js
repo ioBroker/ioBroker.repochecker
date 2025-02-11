@@ -138,6 +138,7 @@ function check(request, ctx, callback) {
         .then(context => M800_Github.getCommitInfos(context))
         .then(context => M000_PackageJson.getPackageJson(context))
         .then(context => M100_IOPackageJson.getIOPackageJson(context))
+        .then(context => config.updateConfig(context))
         .then(context => M000_PackageJson.checkPackageJson(context))
         .then(context => M100_IOPackageJson.checkIOPackageJson(context))
         .then(context => M250_Npm.checkNpm(context))
