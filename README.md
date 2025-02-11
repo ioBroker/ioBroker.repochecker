@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+- (mcm1957) Suggestings for typical devDependencies have been added (#344).
 - (mcm1957) Checking of package dependencies has been enhanced.
 - (mcm1957) Allow legacy-testing instead of testing.
 - (mcm1957) Warn if axios is listed as devDependency (#314).
