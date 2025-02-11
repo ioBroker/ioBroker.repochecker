@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+- (mcm1957) Do not suggest to migrate to adapter-dev if only gulpfile.js exists. (#334).
 - (mcm1957) Warn if onlyWWW adapter uses adapter-core (#251).
 - (mcm1957) Singleton checks have been reduced to suggestion level.
 - (mcm1957) Adapter-core 3.2. required now.
