@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.4.0 (2025-02-11)
 
 - (mcm1957) Do not suggest to migrate to adapter-dev if only gulpfile.js exists. (#334).
 - (mcm1957) Warn if onlyWWW adapter uses adapter-core (#251).
