@@ -33,6 +33,10 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+
+- (mcm1957) Some external attributes added to valid package.json attributes.
+
 ### 3.4.2 (2025-02-12)
 
 - (mcm1957) 'type' and 'types' added to valid package.json attributes.
