@@ -71,7 +71,8 @@ axios.defaults.headers = {
 
 function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
-        console.log('\ngetGithubApiData');
+        common.debug('getGithubApiData');
+        common.debug(`reading url '${context.githubUrlApi}'`);
         axios
             .get(context.githubUrlApi, { cache: false })
             .then(response => {
@@ -80,13 +81,13 @@ function getGithubApiData(context) {
 
                 if (!context.branch) {
                     context.branch = context.githubApiData.default_branch; // main vs. master
-                    console.log(`Branch was not defined by user - checking branch: ${context.branch}`);
+                    common.debug(`Branch was not defined by user - checking branch: ${context.branch}`);
                 }
 
                 context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
-                console.log(`Original URL: ${context.githubUrlOriginal}`);
-                console.log(`raw:          ${context.githubUrl}`);
-                console.log(`api:          ${context.githubUrlApi}`);
+                common.debug(`Original URL: ${context.githubUrlOriginal}`);
+                common.debug(`raw:          ${context.githubUrl}`);
+                common.debug(`api:          ${context.githubUrlApi}`);
 
                 resolve(context);
             })
@@ -110,6 +111,8 @@ function makeResponse(code, data) {
 
 function check(request, ctx, callback) {
     //    console.log('PROCESS: ' + JSON.stringify(request));
+    console.log ('');
+
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, { error: 'No github URL provided' }));
     }
@@ -217,6 +220,13 @@ if (typeof module !== 'undefined' && module.parent) {
         common.setLocal(true);
     }
 
+    if (process.argv.includes('--noinfo')) {
+        process.argv.splice(process.argv.indexOf('--noinfo'), 1);
+        common.setInfo(common.isDebug() ? true : false);
+    } else {
+        common.setInfo(true);
+    }
+
     // Get url from parameters if possible
     if (process.argv.length > 2) {
         repoUrl = process.argv[2];
@@ -225,7 +235,7 @@ if (typeof module !== 'undefined' && module.parent) {
             repoUrl = `https://github.com/${repoUrl}`;
         }
     } else {
-        console.log('ERROR: No repository specified');
+        common.error('No repository specified');
         process.exit(1);
     }
 
@@ -234,7 +244,7 @@ if (typeof module !== 'undefined' && module.parent) {
         repoBranch = process.argv[3];
     }
 
-    console.log(`Checking repository ${repoUrl} (branch ${repoBranch})`);
+    common.info(`Checking repository ${repoUrl} (branch ${repoBranch})`);
     check(
         {
             queryStringParameters: {
@@ -245,13 +255,15 @@ if (typeof module !== 'undefined' && module.parent) {
         null,
         (err, data) => {
             const context = JSON.parse(data.body);
-            console.log(context.result);
+            console.log(`\nFINAL status '${context.result}'`);
 
-            console.log('\n\n########## SUMMARY ##########\n');
-            if (context.checks.length) {
-                context.checks.forEach(msg => {
-                    console.log(msg);
-                });
+            if (common.isInfo()) {
+                console.log('\n\n########## SUMMARY ##########\n');
+                if (context.checks.length) {
+                    context.checks.forEach(msg => {
+                        console.log(msg);
+                    });
+                }
             }
 
             console.log('\n\n########## SUMMARY of ISSUES ##########');
