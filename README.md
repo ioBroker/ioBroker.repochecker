@@ -33,6 +33,11 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+
+- (mcm1957) New commandline option --noinfo added.
+- (mcm1957) Logging has been adapted.
+
 ### 3.4.4 (2025-02-12)
 
 - (mcm1957) Some external attributes added to valid package.json attributes.
