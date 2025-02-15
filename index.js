@@ -111,12 +111,16 @@ function makeResponse(code, data) {
 
 function check(request, ctx, callback) {
     //    console.log('PROCESS: ' + JSON.stringify(request));
-    console.log ('');
+    console.log('');
 
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, { error: 'No github URL provided' }));
     }
-    const context = { checks: [], errors: [], warnings: [] };
+    const context = {};
+    context.checks = [];
+    context.warnings = [];
+    context.errors = [];
+
     let githubUrl = request.queryStringParameters.url;
     const githubBranch = request.queryStringParameters.branch;
 
@@ -177,7 +181,6 @@ function check(request, ctx, callback) {
                     result: 'Errors found',
                     checks: context.checks,
                     errors: context.errors,
-                    issues,
                     warnings: context.warnings,
                     version,
                     hasTravis: context.hasTravis,
