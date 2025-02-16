@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+- (mcm1957) List of suspicious keys to protect has been extended. [#358]
 - (mcm1957) checking of 'admin'  globalDependency has been added.
 - (mcm1957) checking of 'publishConfig.registry' has been added.
 - (mcm1957) New commandline option --noinfo added.
