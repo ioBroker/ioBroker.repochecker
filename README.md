@@ -35,6 +35,8 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+- (mcm1957) Check that key listed at encryptedNative or protectedNative is listed at native too. [#218]
+- (mcm1957) Check that key listed at encryptedNative is listed at protectedNative too. [#342]
 - (mcm1957) Check that extension adapters require web adapter. [#311]
 - (mcm1957) List of suspicious keys to protect has been extended. [#358]
 - (mcm1957) checking of 'admin'  globalDependency has been added.
