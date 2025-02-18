@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.5.0 (2025-02-18)
 
 - (mcm1957) Fixed dependency warning ([W174]) has been reduces to suggestion. [#374]
 - (mcm1957) Some changes to jsonConfig check have been implemented.
