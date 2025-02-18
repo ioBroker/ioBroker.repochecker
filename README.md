@@ -35,6 +35,8 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 
+- (mcm1957) Fixed dependency warning ([W174]) has been reduces to suggestion. [#374]
+- (mcm1957) Some changes to jsonConfig check have been implemented.
 - (mcm1957) common.supportCustoms check has been added. [#379]
 - (mcm1957) Check that key listed at encryptedNative or protectedNative is listed at native too. [#218]
 - (mcm1957) Check that key listed at encryptedNative is listed at protectedNative too. [#342]
