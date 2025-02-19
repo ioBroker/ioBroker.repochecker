@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.5.2 (2025-02-19)
 
 - (mcm1957) Incorrect admin suggestion for very olf html adapters corrected. [#383]
 - (mcm1957) Errors during parsing if icon improved. [#381]
