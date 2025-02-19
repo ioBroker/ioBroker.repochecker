@@ -33,6 +33,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (mcm1957) Crash if protectedNative or encryptedNative is missing. [#382]
+
 ### 3.5.0 (2025-02-18)
 
 - (mcm1957) Fixed dependency warning ([W174]) has been reduces to suggestion. [#374]
