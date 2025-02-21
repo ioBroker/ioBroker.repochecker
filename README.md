@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.5.3 (2025-02-21)
 
 - (mcm1957) Crash has been fixed if protectedNative/encryptedNative is not an array. [#385]
 

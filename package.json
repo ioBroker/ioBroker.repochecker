@@ -1,5 +1,5 @@
 {
-  "version": "3.5.2",
+  "version": "3.5.3",
   "name": "@iobroker/repochecker",
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",
