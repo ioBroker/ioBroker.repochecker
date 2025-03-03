@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.5.4 (2025-03-03)
 - (mcm1957) Ignore boolean paramters when checking protectedNative/encryptedNative. [#395]
 
 ### 3.5.3 (2025-02-21)
