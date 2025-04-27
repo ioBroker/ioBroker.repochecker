@@ -33,7 +33,14 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+
+- (mcm1957) Node.js 20 is suggested now.
+- (mcm1957) Suggested release for several packages has been encreased.
+- (mcm1957) Do not raise E186 if E190 is raised anyway. [#387]
+- (mcm1957) Dependencies have been updated.
+
 ### 3.5.4 (2025-03-03)
+
 - (mcm1957) Ignore boolean paramters when checking protectedNative/encryptedNative. [#395]
 
 ### 3.5.3 (2025-02-21)
