@@ -33,8 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 3.5.5 (2025-04-28)
 
 - (mcm1957) Node.js 20 is suggested now.
 - (mcm1957) Suggested release for several packages has been encreased.
