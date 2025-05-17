@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### 3.5.6 (2025-05-17)
+### **WORK IN PROGRESS**
 
 - (mcm1957) add authorization for github using OWN_GITHUB_TOKEN.
 
