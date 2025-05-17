@@ -33,6 +33,10 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+
+- (mcm1957) add authorization for github using OWN_GITHUB_TOKEN.
+
 ### 3.5.5 (2025-04-28)
 
 - (mcm1957) Node.js 20 is suggested now.
