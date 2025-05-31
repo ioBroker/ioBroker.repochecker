@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.0.0-alpha.2 (2025-05-31)
 
 - (mcm1957) use jsdelivr.com to retrive files from github.
 
