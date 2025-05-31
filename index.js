@@ -14,7 +14,7 @@
  */
 const axios = require('axios');
 
-const issues = require('./doc/issues');
+//const issues = require('./doc/issues');
 const version = require('./package.json').version;
 
 // include submodules
@@ -32,11 +32,11 @@ const M800_Github = require('./lib/M800_Github.js');
 const M900_GitNpmIgnore = require('./lib/M900_GitNpmIgnore.js');
 
 // disable axios caching
-axios.defaults.headers = {
-    'Cache-Control': 'no-cache',
-    Pragma: 'no-cache',
-    Expires: '0',
-};
+// axios.defaults.headers = {
+//     'Cache-Control': 'no-cache',
+//     Pragma: 'no-cache',
+//     Expires: '0',
+// };
 
 // Error ranges
 // E0xx
@@ -74,7 +74,7 @@ function getGithubApiData(context) {
         common.debug('getGithubApiData');
         common.debug(`reading url '${context.githubUrlApi}'`);
         axios
-            .get(context.githubUrlApi, { cache: false })
+            .get(context.githubUrlApi)
             .then(response => {
                 context.githubApiData = response.data;
                 // console.log(`API Data: ${JSON.stringify(context.githubApiData)}`);
@@ -116,6 +116,7 @@ function check(request, ctx, callback) {
     if (!request.queryStringParameters.url) {
         return callback(null, makeResponse(500, { error: 'No github URL provided' }));
     }
+
     const context = {};
     context.checks = [];
     context.warnings = [];
@@ -140,12 +141,14 @@ function check(request, ctx, callback) {
     context.githubUrlOriginal = githubUrl;
     context.githubUrlApi = githubUrl.replace('https://github.com/', 'https://api.github.com/repos/');
     context.branch = githubBranch || null;
+    context.repository = githubUrl.replace('https://github.com/', '');
 
     getGithubApiData(context)
         .then(context => M800_Github.getCommitInfos(context))
         .then(context => M000_PackageJson.getPackageJson(context))
         .then(context => M100_IOPackageJson.getIOPackageJson(context))
         .then(context => config.updateConfig(context))
+        .then(context => config.logEnvironment(context))
         .then(context => M000_PackageJson.checkPackageJson(context))
         .then(context => M100_IOPackageJson.checkIOPackageJson(context))
         .then(context => M250_Npm.checkNpm(context))
@@ -191,15 +194,15 @@ function check(request, ctx, callback) {
         });
 }
 
-function getText(text, lang) {
-    if (typeof text === 'object') {
-        if (text[lang]) {
-            return text[lang];
-        }
-        return text.en;
-    }
-    return text;
-}
+// function getText(text, lang) {
+//     if (typeof text === 'object') {
+//         if (text[lang]) {
+//             return text[lang];
+//         }
+//         return text.en;
+//     }
+//     return text;
+// }
 
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
@@ -218,16 +221,21 @@ if (typeof module !== 'undefined' && module.parent) {
         common.setDebug(true);
     }
 
-    if (process.argv.includes('--local')) {
-        process.argv.splice(process.argv.indexOf('--local'), 1);
-        common.setLocal(true);
-    }
-
     if (process.argv.includes('--noinfo')) {
         process.argv.splice(process.argv.indexOf('--noinfo'), 1);
         common.setInfo(common.isDebug() ? true : false);
     } else {
         common.setInfo(true);
+    }
+
+    if (process.argv.includes('--success')) {
+        process.argv.splice(process.argv.indexOf('--success'), 1);
+        common.setSuccess(true);
+    }
+
+    if (process.argv.includes('--local')) {
+        process.argv.splice(process.argv.indexOf('--local'), 1);
+        common.setLocal(true);
     }
 
     // Get url from parameters if possible
@@ -258,10 +266,15 @@ if (typeof module !== 'undefined' && module.parent) {
         null,
         (err, data) => {
             const context = JSON.parse(data.body);
+            if (!common.isSuccess()) {
+                common.info('');
+                common.info('Summary of successful checks skipped, use --success to enable output');
+            }
+
             console.log(`\nFINAL status '${context.result}'`);
 
-            if (common.isInfo()) {
-                console.log('\n\n########## SUMMARY ##########\n');
+            if (common.isSuccess()) {
+                console.log('\n\n########## SUMMARY of successfull checks ##########\n');
                 if (context.checks.length) {
                     context.checks.forEach(msg => {
                         console.log(msg);
@@ -273,22 +286,22 @@ if (typeof module !== 'undefined' && module.parent) {
             if (context.errors.length) {
                 console.log('\n\nErrors:');
                 context.errors.sort().forEach(err => {
-                    const issue = err.substring(1, 5);
+                    // const issue = err.substring(1, 5);
                     console.error(err);
-                    if (issues[issue]) {
-                        //if (issues[issue].title) {
-                        //    console.error(getText(issues[issue].title, 'en'));
-                        //}
-                        if (issues[issue].explanation) {
-                            console.error(getText(issues[issue].explanation, 'en'));
-                        }
-                        if (issues[issue].resolving) {
-                            console.error(getText(issues[issue].resolving, 'en'));
-                        }
-                        if (issues[issue].notes) {
-                            console.error(getText(issues[issue].notes, 'en'));
-                        }
-                    }
+                    // if (issues[issue]) {
+                    //     //if (issues[issue].title) {
+                    //     //    console.error(getText(issues[issue].title, 'en'));
+                    //     //}
+                    //     if (issues[issue].explanation) {
+                    //         console.error(getText(issues[issue].explanation, 'en'));
+                    //     }
+                    //     if (issues[issue].resolving) {
+                    //         console.error(getText(issues[issue].resolving, 'en'));
+                    //     }
+                    //     if (issues[issue].notes) {
+                    //         console.error(getText(issues[issue].notes, 'en'));
+                    //     }
+                    // }
                 });
             } else {
                 console.log('\n\nNO errors encountered.');
@@ -296,22 +309,22 @@ if (typeof module !== 'undefined' && module.parent) {
             if (context.warnings.length) {
                 console.log('\nWarnings:');
                 context.warnings.sort().forEach(err => {
-                    const issue = err.substring(1, 5);
+                    //const issue = err.substring(1, 5);
                     console.warn(err);
-                    if (issues[issue]) {
-                        //if (issues[issue].title) {
-                        //    console.warn(getText(issues[issue].title, 'en'));
-                        //}
-                        if (issues[issue].explanation) {
-                            console.warn(getText(issues[issue].explanation, 'en'));
-                        }
-                        if (issues[issue].resolving) {
-                            console.warn(getText(issues[issue].resolving, 'en'));
-                        }
-                        if (issues[issue].notes) {
-                            console.warn(getText(issues[issue].notes, 'en'));
-                        }
-                    }
+                    // if (issues[issue]) {
+                    //     //if (issues[issue].title) {
+                    //     //    console.warn(getText(issues[issue].title, 'en'));
+                    //     //}
+                    //     if (issues[issue].explanation) {
+                    //         console.warn(getText(issues[issue].explanation, 'en'));
+                    //     }
+                    //     if (issues[issue].resolving) {
+                    //         console.warn(getText(issues[issue].resolving, 'en'));
+                    //     }
+                    //     if (issues[issue].notes) {
+                    //         console.warn(getText(issues[issue].notes, 'en'));
+                    //     }
+                    // }
                 });
             } else {
                 console.log('\n\nNO warnings encountered.');

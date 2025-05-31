@@ -33,6 +33,10 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+
+- (mcm1957) use jsdelivr.com to retrive files from github.
+
 ### 3.5.8 (2025-05-17)
 
 - (mcm1957) add authorization for github using OWN_GITHUB_TOKEN.
