@@ -11,7 +11,7 @@
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",
     "@iobroker/eslint-config": "^2.0.2",
-    "@tsconfig/node20": "^20.1.5",
+    "@tsconfig/node20": "^20.1.6",
     "@types/node": "^22.15.29",
     "@types/semver": "^7.7.0"
   },
