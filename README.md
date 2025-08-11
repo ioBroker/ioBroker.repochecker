@@ -33,9 +33,12 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (mcm1957) Wrong suggestion to add admin dependency has been corrected [#452].
+
 ### 4.0.0 (2025-08-05)
 - (mcm1957) use jsdelivr.com to retrive files from github.
-- (mcm1957) Dependencies have been updated.0
+- (mcm1957) Dependencies have been updated.
 
 ### 3.5.8 (2025-05-17)
 - (mcm1957) add authorization for github using OWN_GITHUB_TOKEN.
