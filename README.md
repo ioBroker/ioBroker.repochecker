@@ -37,6 +37,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 - (mcm1957) Wrong suggestion to add admin dependency has been corrected [#452].
 - (mcm1957) Text for E952 has been corrected [#446].
 - (mcm1957) Adapt wording at W098 / E029 [#448].
+- (mcm1957) Adapter-core 3.3.1 suggestion added [#455].
 
 ### 4.0.0 (2025-08-05)
 - (mcm1957) use jsdelivr.com to retrive files from github.
