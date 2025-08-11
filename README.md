@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.0.1 (2025-08-11)
 - (mcm1957) Wrong suggestion to add admin dependency has been corrected [#452].
 - (mcm1957) Text for E952 has been corrected [#446].
 - (mcm1957) Adapt wording at W098 / E029 [#448].
