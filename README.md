@@ -33,6 +33,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (mcm1957) js-controller 6.0.11 recommended now.
+
 ### 4.0.1 (2025-08-11)
 - (mcm1957) Wrong suggestion to add admin dependency has been corrected [#452].
 - (mcm1957) Text for E952 has been corrected [#446].
