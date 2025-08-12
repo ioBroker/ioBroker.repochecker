@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.0.2 (2025-08-12)
 - (mcm1957) js-controller 6.0.11 recommended now.
 
 ### 4.0.1 (2025-08-11)
