@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.1.0-alpha.0 (2025-08-13)
 - (mcm1957) Using @iobroker/eslint-config is suggested now.
 - (mcm1957) Adding @iobroker/testing to dependencies is logged as error now [#447].
 - (mcm1957) Text for S191 has been extended [#393].
