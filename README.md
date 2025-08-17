@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.1.0-alpha.2 (2025-08-17)
 - (mcm1957) URGENT and IMPORTANT issued are watched now.
 
 ### 4.1.0-alpha.1 (2025-08-13)
