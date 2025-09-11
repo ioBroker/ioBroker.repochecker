@@ -31,6 +31,8 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK_IN_PROGRESS**
+- (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
 
 ## Changelog
 ### 4.1.0 (2025-09-11)
