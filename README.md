@@ -33,7 +33,8 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### 4.1.0-alpha.4 (2025-08-24)
+
+### **WORK IN PROGRESS**
 - (mcm1957) eslint-config and testing suggestions have been updated.
 - (mcm1957) adapter-core suggestions has been updated.
 - (mcm1957) URGENT and IMPORTANT issued are watched now.
