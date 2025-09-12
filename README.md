@@ -33,6 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 ### **WORK_IN_PROGRESS**
 - (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
+- (copilot) Add suggestion to restart 'vis-2' when 'vis' is in restartAdapters (S202) [#412].
 
 ## Changelog
 ### 4.1.0 (2025-09-11)
