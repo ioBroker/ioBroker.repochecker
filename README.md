@@ -33,6 +33,8 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK_IN_PROGRESS**
+- (copilot) @types/* packages in dependencies now raise warning W063 [#421].
 ### 4.1.0 (2025-09-11)
 - (mcm1957) eslint-config and testing suggestions have been updated.
 - (mcm1957) adapter-core suggestions has been updated.
