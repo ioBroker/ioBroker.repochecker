@@ -15,6 +15,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript master
 ```
 
 Branch (`master/main/dev`) is optional.
+
 For extra debugging outputs you can pass the `--debug` parameter.
 
 For a local test you can pass the `--local` parameter. Most of the files are read locally.
@@ -371,4 +372,5 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
 
