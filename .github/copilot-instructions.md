@@ -9,7 +9,8 @@ This repository contains the code for the frontend and backend of the service <h
 ## Code Contribution Guidelines
 
 ### Issue Management
-- **DO NOT** close issues that are resolved by a PR
+- **DO NOT** close issues that are resolved by a PR.
+- **DO NOT** add a note 'Fixes ...' to comments of any PR created.
 - **DO** attach the label 'fixed' to resolved issues
 - **DO** add a reference to the PR as a comment on the resolved issue
 - Let the maintainers handle the actual closing of issues
