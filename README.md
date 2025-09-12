@@ -29,10 +29,12 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
-	### **WORK IN PROGRESS**
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (copilot) Renumbered all issues in M500__JsonConfig.js from 500-511 range to 550-561 range [#481].
+
 ### 4.2.0-alpha.0 (2025-09-12)
 - (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
 - (copilot) Add suggestion to restart 'vis-2' when 'vis' is in restartAdapters (S202) [#412].
@@ -372,4 +374,5 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+
 THE SOFTWARE.
