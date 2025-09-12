@@ -15,15 +15,6 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript master
 ```
 
 Branch (`master/main/dev`) is optional.
-
-For extra debugging outputs you can pass the `--debug` parameter.
-
-For a local test you can pass the `--local` parameter. Most of the files are read locally.
-The link to the GitHub repository is still necessary because data from the project settings on GitHub is also checked.
-
-Example:
-
-```bash
 npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --local
 ```
 
@@ -31,11 +22,13 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK_IN_PROGRESS**
-- (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
-- (copilot) Add suggestion to restart 'vis-2' when 'vis' is in restartAdapters (S202) [#412].
 
 ## Changelog
+### **WORK_IN_PROGRESS**
+- (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
+- (copilot) @types/* packages in dependencies now raise warning W063 [#421].
+- (copilot) Add suggestion to restart 'vis-2' when 'vis' is in restartAdapters (S202) [#412].
+
 ### 4.1.0 (2025-09-11)
 - (mcm1957) eslint-config and testing suggestions have been updated.
 - (mcm1957) adapter-core suggestions has been updated.
