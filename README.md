@@ -33,6 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 ### **WORK_IN_PROGRESS**
 - (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
+- (copilot) Fix W195 warning for array elements - add W203 warning for unsupported array encryption [#399].
 
 ## Changelog
 ### 4.1.0 (2025-09-11)
