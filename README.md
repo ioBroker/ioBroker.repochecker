@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK_IN_PROGRESS**
+### **WORK IN PROGRESS**
 - (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
 - (copilot) Add suggestion to restart 'vis-2' when 'vis' is in restartAdapters (S202) [#412].
 - (copilot) Modify W513 gulpfile.js warning to check for @iobroker/adapter-dev dependency and add S531 suggestion [#469].
