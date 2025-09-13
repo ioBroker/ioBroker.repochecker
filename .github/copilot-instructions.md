@@ -106,3 +106,42 @@ This repository contains the code for the frontend and backend of the service <h
 6. **Consistency**: Follow existing code patterns and naming conventions
 
 Remember: This is a critical tool used by the ioBroker community to validate adapter repositories. Changes should be thoroughly tested and carefully considered for their impact on the ecosystem.
+
+### **CRITICAL REQUIREMENTS**
+**NEVER use keywords that automatically close issues.** Issues must be closed manually by maintainers after validation.
+
+**Key Rules:**
+1. Use "Related to #123" instead of "Fixes #123" 
+2. Add "fixed" label when PR fully addresses an issue (if you have permissions)
+3. Issues are closed manually by maintainers, not by PR merge
+
+### Issue Handling Guidelines
+When creating PRs that address GitHub issues, follow these specific practices:
+
+**NEVER** use GitHub keywords that automatically close issues (like "fixes", "closes", "resolves") in PR titles or descriptions. Instead:
+
+1. **Link without closing**: Reference issues using neutral language:
+   - Use "Related to #123" instead of "Fixes #123"
+   - Use "Addresses #123" instead of "Closes #123"
+   - Use "Implements #123" instead of "Resolves #123"
+
+2. **Add issue comments**: After creating a PR, add a comment to the referenced issue with:
+   - Link to the PR
+   - Brief description of the changes made
+   - Request for review/testing if applicable
+
+3. **Set issue labels**: When a PR fully addresses an issue, manually set the "fixed" label on the issue (if you have permissions).
+
+### Changelog Management
+**ALWAYS** add a user-focused changelog entry for every PR to the README.md file:
+
+1. **Location**: Add entries under the "### **WORK IN PROGRESS**" section in README.md
+2. **Format**: Follow the existing changelog format:
+   ```
+   - (@your-username) Brief user-focused description of the change
+   ```
+3. **Style**: Keep entries concise and focused on user impact, not technical implementation details
+4. **Examples**:
+   - Good: "Fixed login issues with special characters in passwords"
+   - Bad: "Refactored authentication service to handle URL encoding"
+
