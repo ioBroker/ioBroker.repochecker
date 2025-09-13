@@ -36,6 +36,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 - (copilot) Change W510 to E510: Convert missing admin i18n files from warning to error [#400].
 - (copilot) Renumbered all issues in M500__JsonConfig.js from 500-511 range to 550-561 range [#481].
 - (copilot) Add check for .commitinfo file - error if present (E905), warning if not in .gitignore (W906) [#467].
+- (copilot) Ensure adapter does not list itself in common.restartAdapters - error E176 if found [#485].
 
 ### 4.2.0-alpha.0 (2025-09-12)
 - (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
