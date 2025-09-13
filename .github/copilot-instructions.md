@@ -73,6 +73,11 @@ This repository contains the code for the frontend and backend of the service <h
 - Handle missing files gracefully
 - Respect rate limits and implement appropriate error handling
 
+#### Schema URLs
+- When referencing schema URLs for io-package.json or jsonConfig validation, use the constants defined in `lib/config.js` via `config.schemaUrls`
+- **DO NOT** hardcode schema URLs directly in the code - always use the centralized definitions from `lib/config.js`
+- Available schema URLs: `config.schemaUrls['io-package']` and `config.schemaUrls.jsonConfig`
+
 #### Version Management
 - Version numbers follow semantic versioning
 - Release scripts are configured for automated releases
