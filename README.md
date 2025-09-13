@@ -33,6 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 ## Changelog
 ### **WORK IN PROGRESS**
+- (@copilot) Add config.usesJson5 global configuration key to detect JSON5 files in repository
 - (copilot) Implement caching for getFilesList and getFile functions to improve performance by avoiding duplicate downloads
 - (copilot) Change W510 to E510: Convert missing admin i18n files from warning to error [#400].
 - (copilot) Renumbered all issues in M500__JsonConfig.js from 500-511 range to 550-561 range [#481].
