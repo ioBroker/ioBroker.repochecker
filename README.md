@@ -29,12 +29,13 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
+	### **WORK IN PROGRESS**
 -->
 
+## Changelog
 ### **WORK IN PROGRESS**
 - (copilot) Add check for outdated lib/tools.js file usage (W532) [#432].
 
-## Changelog
 ### 4.2.0-alpha.1 (2025-09-14)
 - (copilot) Add VS Code schema definitions checker for .vscode/settings.json - validates json.schemas for io-package.json and jsonConfig files [#336].
 - (copilot) Change W510 to E510: Convert missing admin i18n files from warning to error [#400].
@@ -379,5 +380,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+
 
 THE SOFTWARE.
