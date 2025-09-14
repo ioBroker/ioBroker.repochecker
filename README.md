@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 ## Changelog
 ### **WORK IN PROGRESS**
-- (copilot) Add VS Code schema definitions checker for .vscode/settings.json - validates json.schemas for io-package.json and jsonConfig files (E436-E449).
+- (copilot) Add VS Code schema definitions checker for .vscode/settings.json - validates json.schemas for io-package.json and jsonConfig files [#336].
 - (copilot) Change W510 to E510: Convert missing admin i18n files from warning to error [#400].
 - (copilot) Renumbered all issues in M500__JsonConfig.js from 500-511 range to 550-561 range [#481].
 - (copilot) Add check for .commitinfo file - error if present (E905), warning if not in .gitignore (W906) [#467].
