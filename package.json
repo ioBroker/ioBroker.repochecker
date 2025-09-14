@@ -1,5 +1,5 @@
 {
-  "version": "4.2.0-alpha.0",
+  "version": "4.2.0-alpha.1",
   "name": "@iobroker/repochecker",
   "dependencies": {
     "axios": "^1.11.0",
