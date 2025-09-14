@@ -36,6 +36,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ### **WORK IN PROGRESS**
 - (copilot) Add check for deprecated adapter methods (createState/createChannel/createDevice/deleteState/deleteChannel/deleteDevice) - warns when these methods are used as they will be removed in js-controller 6 (W533) [#182].
 - (copilot) Add check for outdated lib/tools.js file usage (W532) [#432].
+- (@copilot) Add check for outdated ESLint version - warns when ESLint < 9.0.0 is used (W063).
 
 ### 4.2.0-alpha.1 (2025-09-14)
 - (copilot) Add VS Code schema definitions checker for .vscode/settings.json - validates json.schemas for io-package.json and jsonConfig files [#336].
