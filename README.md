@@ -32,6 +32,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+- (copilot) Add check for outdated lib/tools.js file usage (W532) [#432].
+
 ## Changelog
 ### 4.1.0 (2025-09-11)
 - (mcm1957) eslint-config and testing suggestions have been updated.
