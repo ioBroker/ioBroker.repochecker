@@ -31,6 +31,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 -->
 
+### **WORK IN PROGRESS**
+- (copilot) Add check for outdated lib/tools.js file usage (W532) [#432].
+
 ## Changelog
 ### 4.2.0-alpha.1 (2025-09-14)
 - (copilot) Add VS Code schema definitions checker for .vscode/settings.json - validates json.schemas for io-package.json and jsonConfig files [#336].
