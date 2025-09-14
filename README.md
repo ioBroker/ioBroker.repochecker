@@ -29,13 +29,23 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
-	### **WORK IN PROGRESS**
 -->
 
 ### **WORK IN PROGRESS**
 - (copilot) Add check for outdated lib/tools.js file usage (W532) [#432].
 
 ## Changelog
+### 4.2.0-alpha.1 (2025-09-14)
+- (copilot) Add VS Code schema definitions checker for .vscode/settings.json - validates json.schemas for io-package.json and jsonConfig files [#336].
+- (copilot) Change W510 to E510: Convert missing admin i18n files from warning to error [#400].
+- (copilot) Renumbered all issues in M500__JsonConfig.js from 500-511 range to 550-561 range [#481].
+- (copilot) Add check for .commitinfo file - error if present (E905), warning if not in .gitignore (W906) [#467].
+- (copilot) Add check for allowInit attribute - warn (W204) if true on non-scheduled adapters, suggest (S204) if false on non-scheduled adapters [#181].
+- (copilot) Add detection for empty dependency objects in io-package.json (E200, E201) [#422].
+- (copilot) Add suggestion to restart 'vis-2' when 'vis' is in restartAdapters (S202) [#412].
+- (copilot) Modify W513 gulpfile.js warning to check for @iobroker/adapter-dev dependency and add S531 suggestion [#469].
+- (copilot) Fix W195 warning for array elements - add W203 warning for unsupported array encryption [#399].
+
 ### 4.1.0 (2025-09-11)
 - (mcm1957) eslint-config and testing suggestions have been updated.
 - (mcm1957) adapter-core suggestions has been updated.
@@ -369,4 +379,5 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+
 THE SOFTWARE.
