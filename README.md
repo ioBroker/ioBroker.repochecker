@@ -33,11 +33,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### 4.2.0-alpha.2 (2025-09-15)
+### **WORK IN PROGRESS**
 - (copilot) Added check for deprecated adapter methods (createState/createChannel/createDevice/deleteState/deleteChannel/deleteDevice) (W533) [#182].
 - (copilot) Added check for outdated lib/tools.js file usage (W532) [#432].
-
-### 4.2.0-alpha.1 (2025-09-14)
 - (copilot) Added VS Code schema definitions checker for .vscode/settings.json - validates json.schemas for io-package.json and jsonConfig files [#336].
 - (copilot) Change W510 to E510: Convert missing admin i18n files from warning to error [#400].
 - (copilot) Renumbered all issues in M500__JsonConfig.js from 500-511 range to 550-561 range [#481].
