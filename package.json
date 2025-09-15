@@ -33,6 +33,7 @@
     "prepublishOnly": "node doc/readme.js",
     "start": "node index.js",
     "lint": "eslint -c eslint.config.mjs .",
+    "test": "node test/test-runner.js",
     "release": "release-script",
     "release-patch": "release-script patch --yes --no-update-lockfile",
     "release-minor": "release-script minor --yes --no-update-lockfile",
