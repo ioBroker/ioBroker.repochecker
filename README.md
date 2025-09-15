@@ -33,7 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.2.0-alpha.2 (2025-09-15)
 - (copilot) Added check for deprecated adapter methods (createState/createChannel/createDevice/deleteState/deleteChannel/deleteDevice) (W533) [#182].
 - (copilot) Added check for outdated lib/tools.js file usage (W532) [#432].
 
