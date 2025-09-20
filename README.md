@@ -35,6 +35,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ## Changelog
 ### **WORK IN PROGRESS**
 - (mcm1957) '[W438] .vscode/settings.json file missing "json.schemas" property' has been converted to suggestion [#516].
+- (mcm1957) Severity of '[S191] admin dependency...' has been corrected [#510].
 
 ### 4.2.0-alpha.5 (2025-09-15)
 - (copilot) Added io-package.json schema validation against official schema (W205, W207, W208) [#503].
