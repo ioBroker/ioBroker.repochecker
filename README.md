@@ -34,6 +34,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 ## Changelog
 ### **WORK IN PROGRESS**
+- (mcm1957) 'Request replacement text changed to suggest node:fetch [#498].
 - (@copilot) Fixed false positive W533 warnings for deprecated adapter methods when called on local functions with same names [#520].
 - (mcm1957) '[W438] .vscode/settings.json file missing "json.schemas" property' has been converted to suggestion [#516].
 - (mcm1957) Severity of '[S191] admin dependency...' has been corrected [#510].
