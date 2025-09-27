@@ -1,0 +1,53 @@
+name: 'Close stale issues and PRs'
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Run every Monday at 9:00 AM UTC
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          # Only process issues with specific labels
+          only-labels: 'TRIAGE,DISCUSSION'
+          
+          # Ignore PRs completely
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          
+          # Issue timing: 90 days warning + 14 days to close = 104 days total
+          days-before-issue-stale: 90
+          days-before-issue-close: 14
+          
+          # Messages for issues
+          stale-issue-message: |
+            This issue has been automatically marked as stale because it has not had recent activity for 90 days.
+            
+            If this issue is still relevant and requires attention, please add a comment to keep it open.
+            
+            The issue will be automatically closed in 14 days if no further activity occurs.
+          
+          close-issue-message: |
+            This issue has been automatically closed due to inactivity for more than 104 days.
+            
+            If you believe this issue is still relevant, please feel free to reopen it or create a new issue with updated information.
+          
+          # Labels to use
+          stale-issue-label: 'stale'
+          close-issue-label: 'auto-closed'
+          
+          # Remove stale label when there's activity
+          remove-stale-when-updated: true
+          
+          # Debugging
+          debug-only: false
+          
+          # Operations limit to prevent API rate limiting
+          operations-per-run: 30

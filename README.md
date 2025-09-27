@@ -33,6 +33,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (@copilot) Added stale bot configuration to automatically manage issues with TRIAGE or DISCUSSION labels after 90 days of inactivity
+
 ### 4.2.0 (2025-09-20)
 - (mcm1957) 'Request' replacement text changed to suggest 'node:fetch' [#498].
 - (@copilot) Fixed false positive W533 warnings for deprecated adapter methods when called on local functions with same names [#520].
