@@ -2,7 +2,7 @@
 name: FALSE POSITIVE - report incorrectly reported finding
 description: Report a finding which is incorrectly reported
 title: "[FALSE POSITIVE] "
-labels: ["FALSE POSITIVE", "TRIAGE"]
+labels: ["false positive", "TRIAGE"]
 assignees: []
 body:
   - type: markdown
