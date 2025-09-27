@@ -34,7 +34,6 @@ body:
       label: Link to repository
       description: Please provide a link to a repository where this check applies (optional)
       placeholder: "https://github.com/username/ioBroker.adaptername"
-      required: false
     validations:
       required: false
   
