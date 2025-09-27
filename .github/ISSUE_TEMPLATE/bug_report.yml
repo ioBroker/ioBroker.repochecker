@@ -2,7 +2,7 @@
 name: BUG - report a malfunction
 description: Report a malfunction like checker crashes
 title: "[BUG] "
-labels: ["BUG", "TRIAGE"]
+labels: ["bug", "TRIAGE"]
 assignees: []
 body:
   - type: markdown
