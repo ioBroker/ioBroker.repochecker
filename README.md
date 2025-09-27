@@ -33,6 +33,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) Added structured GitHub issue templates for bug reports, false positives, new checks, check changes, and enhancements
+- (@copilot) Fixed deprecated function checking for adapter methods called outside class context
 
 ## Changelog
 ### 4.2.0 (2025-09-20)
