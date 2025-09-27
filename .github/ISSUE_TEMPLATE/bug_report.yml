@@ -25,6 +25,7 @@ body:
       label: Can be reproduced
       description: Is this issue consistently reproducible?
       options:
+        - "Please select"
         - "Yes"
         - "No"
     validations:
@@ -44,6 +45,6 @@ body:
     attributes:
       label: Checker version
       description: What version of the repochecker are you using?
-      placeholder: "4.2.0"
+      value: "4.2.0"
     validations:
       required: true
