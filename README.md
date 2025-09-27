@@ -31,11 +31,10 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 4.2.1-alpha.0 (2025-09-27)
 - (@copilot) Added structured GitHub issue templates for bug reports, false positives, new checks, check changes, and enhancements
 - (@copilot) Fixed deprecated function checking for adapter methods called outside class context
 
-## Changelog
 ### 4.2.0 (2025-09-20)
 - (mcm1957) 'Request' replacement text changed to suggest 'node:fetch' [#498].
 - (@copilot) Fixed false positive W533 warnings for deprecated adapter methods when called on local functions with same names [#520].
