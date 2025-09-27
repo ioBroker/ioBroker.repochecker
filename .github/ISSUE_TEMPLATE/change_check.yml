@@ -1,0 +1,48 @@
+---
+name: CHANGE CHECK - suggest to modify an existing check
+description: Suggest to remove or downgrade a check
+title: "[CHANGE CHECK] "
+labels: ["TRIAGE"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a change to an existing check. Please provide all required information below.
+  
+  - type: input
+    id: issue_line
+    attributes:
+      label: Complete issue line reported
+      description: Please provide the complete issue line as reported by the checker
+      placeholder: "[E123] Issue description here"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: change_description
+    attributes:
+      label: Description of suggested change
+      description: Please describe what change you suggest and why
+      placeholder: Describe the suggested change (remove, downgrade severity, modify criteria, etc.)...
+    validations:
+      required: true
+  
+  - type: input
+    id: repository_link
+    attributes:
+      label: Link to repository
+      description: Please provide a link to a repository where this check applies (optional)
+      placeholder: "https://github.com/username/ioBroker.adaptername"
+      required: false
+    validations:
+      required: false
+  
+  - type: input
+    id: checker_version
+    attributes:
+      label: Checker version
+      description: What version of the repochecker are you using?
+      placeholder: "4.2.0"
+    validations:
+      required: true
