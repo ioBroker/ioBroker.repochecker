@@ -1,0 +1,58 @@
+---
+name: FALSE POSITIVE - report incorrectly reported finding
+description: Report a finding which is incorrectly reported
+title: "[FALSE POSITIVE] "
+labels: ["FALSE POSITIVE", "TRIAGE"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a false positive. Please provide all required information below.
+  
+  - type: input
+    id: issue_line
+    attributes:
+      label: Complete issue line reported
+      description: Please provide the complete issue line as reported by the checker
+      placeholder: "[E123] Issue description here"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: problem_description
+    attributes:
+      label: Description of problem
+      description: Please explain why this finding is incorrectly reported
+      placeholder: Describe why this should not be flagged as an issue...
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: reproducible
+    attributes:
+      label: Can be reproduced
+      description: Is this false positive consistently reproducible?
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+  
+  - type: input
+    id: repository_link
+    attributes:
+      label: Link to repository
+      description: Please provide the link to the repository where the false positive occurs
+      placeholder: "https://github.com/username/ioBroker.adaptername"
+    validations:
+      required: true
+  
+  - type: input
+    id: checker_version
+    attributes:
+      label: Checker version
+      description: What version of the repochecker are you using?
+      placeholder: "4.2.0"
+    validations:
+      required: true

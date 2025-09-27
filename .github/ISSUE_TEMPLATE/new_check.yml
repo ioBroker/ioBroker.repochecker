@@ -1,0 +1,38 @@
+---
+name: NEW CHECK - suggest a new check
+description: Suggest to add a new check or to extend an existing check
+title: "[NEW CHECK] "
+labels: ["ENHANCEMENT", "TRIAGE"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new check. Please provide all required information below.
+  
+  - type: textarea
+    id: check_description
+    attributes:
+      label: Description of check to be added
+      description: Please provide a detailed description of the new check you would like to see added
+      placeholder: Describe the new check, what it should validate, and why it would be useful...
+    validations:
+      required: true
+  
+  - type: input
+    id: repository_link
+    attributes:
+      label: Link to repository
+      description: Please provide a link to a repository that would benefit from this check
+      placeholder: "https://github.com/username/ioBroker.adaptername"
+    validations:
+      required: true
+  
+  - type: input
+    id: checker_version
+    attributes:
+      label: Checker version
+      description: What version of the repochecker are you using?
+      placeholder: "4.2.0"
+    validations:
+      required: true

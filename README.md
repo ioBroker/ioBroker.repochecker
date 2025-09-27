@@ -31,6 +31,8 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added structured GitHub issue templates for bug reports, false positives, new checks, check changes, and enhancements
 
 ## Changelog
 ### 4.2.0 (2025-09-20)

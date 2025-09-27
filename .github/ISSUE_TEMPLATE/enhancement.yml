@@ -1,0 +1,47 @@
+---
+name: ENHANCEMENT - suggest new functionality
+description: Suggestion to add new functionality
+title: "[ENHANCEMENT] "
+labels: ["TRIAGE"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an enhancement. Please provide all required information below.
+  
+  - type: checkboxes
+    id: not_check_related
+    attributes:
+      label: Confirmation
+      description: Please confirm that your suggestion does not relate to a specific check
+      options:
+        - label: "Suggestion does not relate to specific check"
+          required: true
+  
+  - type: textarea
+    id: change_description
+    attributes:
+      label: Description of suggested change
+      description: Please provide a detailed description of the enhancement you're suggesting
+      placeholder: Describe the new functionality or improvement you would like to see...
+    validations:
+      required: true
+  
+  - type: input
+    id: repository_link
+    attributes:
+      label: Link to repository
+      description: Please provide a link to a repository where this enhancement would be useful
+      placeholder: "https://github.com/username/ioBroker.adaptername"
+    validations:
+      required: true
+  
+  - type: input
+    id: checker_version
+    attributes:
+      label: Checker version
+      description: What version of the repochecker are you using?
+      placeholder: "4.2.0"
+    validations:
+      required: true

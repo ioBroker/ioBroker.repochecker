@@ -1,0 +1,49 @@
+---
+name: BUG - report a malfunction
+description: Report a malfunction like checker crashes
+title: "[BUG] "
+labels: ["BUG", "TRIAGE"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug. Please fill out all required fields below.
+  
+  - type: textarea
+    id: problem_description
+    attributes:
+      label: Description of problem
+      description: Please provide a detailed description of the problem
+      placeholder: Describe the issue you're experiencing...
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: reproducible
+    attributes:
+      label: Can be reproduced
+      description: Is this issue consistently reproducible?
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+  
+  - type: input
+    id: repository_link
+    attributes:
+      label: Link to repository
+      description: Please provide the link to the repository where the issue occurs
+      placeholder: "https://github.com/username/ioBroker.adaptername"
+    validations:
+      required: true
+  
+  - type: input
+    id: checker_version
+    attributes:
+      label: Checker version
+      description: What version of the repochecker are you using?
+      placeholder: "4.2.0"
+    validations:
+      required: true
