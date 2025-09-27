@@ -8,12 +8,12 @@ daysUntilStale: 90
 daysUntilClose: 7
 
 # Only issues or pull requests with all of these labels are check if stale. Defaults to `[]` (disabled)
-onlyLabels: []
+onlyLabels:
+  - DISCUSSION
+  - TRIAGE
 
 # Issues or Pull Requests with these labels will never be considered stale. Set to `[]` to disable
-exemptLabels:
-    - enhancement
-    - security
+exemptLabels: []
 
 # Set to true to ignore issues in a project (defaults to false)
 exemptProjects: true
@@ -31,17 +31,11 @@ staleLabel: wontfix
 markComment: >
     This issue has been automatically marked as stale because it has not had
     recent activity. It will be closed if no further activity occurs within the next 7 days.
-    Please check if the issue is still relevant in the most current version of the adapter
-    and tell us. Also check that all relevant details, logs and reproduction steps
-    are included and update them if needed.
-    Thank you for your contributions.
+    Thank you.
 
     Dieses Problem wurde automatisch als veraltet markiert, da es in letzter Zeit keine Aktivitäten gab.
     Es wird geschlossen, wenn nicht innerhalb der nächsten 7 Tage weitere Aktivitäten stattfinden.
-    Bitte überprüft, ob das Problem auch in der aktuellsten Version des Adapters noch relevant ist,
-    und teilt uns dies mit. Überprüft auch, ob alle relevanten Details, Logs und Reproduktionsschritte
-    enthalten sind bzw. aktualisiert diese.
-    Vielen Dank für Eure Unterstützung.
+    Vielen Dank.
 
 # Comment to post when removing the stale label.
 # unmarkComment: >
@@ -50,14 +44,12 @@ markComment: >
 # Comment to post when closing a stale Issue or Pull Request.
 closeComment: >
     This issue has been automatically closed because of inactivity. Please open a new
-    issue if still relevant and make sure to include all relevant details, logs and
-    reproduction steps.
-    Thank you for your contributions.
+    issue if still relevant.
+    Thank you.
 
     Dieses Problem wurde aufgrund von Inaktivität automatisch geschlossen. Bitte ein
-    neues Issue eröffnen, falls dies noch relevant ist und lle relevanten Details,
-    Logs und Reproduktionsschritte einfügen.
-    Vielen Dank für die Unterstützung.
+    neues Issue eröffnen, falls dies noch relevant ist.
+    Vielen Dank.
 
 # Limit the number of actions per hour, from 1-30. Default is 30
 limitPerRun: 30
