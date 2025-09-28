@@ -8,8 +8,24 @@ body:
   - type: markdown
     attributes:
       value: |
+        Please ensure that this issue really descroibes a 'false positive' detection. 
+
+        If you want to to request a change to an existing check please use the appopiate template.
         Thank you for reporting a false positive. Please provide all required information below.
   
+  - type: checkboxes
+    attributes:
+      label: I'm sure that
+      options:
+        - label: This issue really reports a **false-positive** detection
+          required: true
+        - label: This issue does not request a **change or removal of existing check** (use dedicated template for this)
+          required: true
+        - label: This issue does not request a **new feature** (use dedicated template for this)
+          required: true
+        - label: There is no other (open) issue with the same topic (use the search!)
+          required: true
+
   - type: input
     id: issue_line
     attributes:
