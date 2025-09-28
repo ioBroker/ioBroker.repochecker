@@ -1,5 +1,5 @@
 ---
-name: 1 - FALSE POSITIVE - report incorrectly reported finding
+name: FALSE POSITIVE - report incorrectly reported finding
 description: Report a finding which is incorrectly reported
 title: "[FALSE POSITIVE] "
 labels: ["false positive", "TRIAGE"]
