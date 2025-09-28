@@ -8,9 +8,10 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for taking the time to report a bug. Please fill out all required fields below. |
-        Please ensure that this issue does NOT report any **false positive** detections. |
-        To report 'false positive' issues use the aapriate template.
+        Thank you for taking the time to report a bug. Please fill out all required fields below. 
+        
+        Please ensure that this issue does NOT report any **false positive** detections. 
+        To report 'false positive' detections use the apropiate template.
   
   - type: checkboxes
     attributes:
