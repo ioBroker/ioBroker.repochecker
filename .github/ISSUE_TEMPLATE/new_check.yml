@@ -1,5 +1,5 @@
 ---
-name: NEW CHECK - suggest a new check
+name: 2 - NEW CHECK - suggest a new check
 description: Suggest to add a new check or to extend an existing check
 title: "[NEW CHECK] "
 labels: ["enhancement", "TRIAGE"]
