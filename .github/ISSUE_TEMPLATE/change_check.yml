@@ -1,5 +1,5 @@
 ---
-name: CHANGE CHECK - suggest to modify an existing check
+name: 4 - CHANGE CHECK - suggest to modify an existing check
 description: Suggest to remove or downgrade a check
 title: "[CHANGE CHECK] "
 labels: ["TRIAGE"]
