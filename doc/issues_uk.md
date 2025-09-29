@@ -150,311 +150,311 @@
 - [W901 .gitignore not found](#w901-gitignore-not-found)
 
 ## Issues
-### [E001] Не вдається розібрати`package.json`
+### [E0001] Не вдається розібрати`package.json`
 #### Пояснення
 Під час розбору `package.json` сталася помилка. Див. Додані повідомлення про помилки для отримання додаткової інформації.
 #### Необхідний крок для вирішення проблеми
 Виправте файл `package.json`, щоб він став дійсним файлом json.
 
-### [E002] В імені репозиторію не знайдено `ioBroker.`
+### [E0002] В імені репозиторію не знайдено `ioBroker.`
 #### Пояснення
 The name of the repository must start with `ioBroker.` ioBroker must be written with an capital `B`
 #### Необхідний крок для вирішення проблеми
 Correct the name of the repository by renaming it to meet standards
 
-### [E003] Repository must have name ioBroker.adaptername, but now io`b`roker is in lowercase
+### [E0003] Repository must have name ioBroker.adaptername, but now io`b`roker is in lowercase
 #### Пояснення
 The name of the repository must be ioBroker.. ioBroker must be written with an capital B
 #### Необхідний крок для вирішення проблеми
 Correct the name of the repository by renaming it to meet standards
 
-### [E004] No adapter name found in URL
+### [E0004] No adapter name found in URL
 
-### [E005] Adapter name must be lowercase
+### [E0005] Adapter name must be lowercase
 
-### [E006] Invalid characters found in adapter name. Only lowercase chars, digits, `-` and `_` are allowed
+### [E0006] Invalid characters found in adapter name. Only lowercase chars, digits, `-` and `_` are allowed
 
-### [E007] Cannot find author repo in the URL
+### [E0007] Cannot find author repo in the URL
 
-### [E009] No version found in the package.json
+### [E0009] No version found in the package.json
 
-### [E010] No description found in the package.json
+### [E0010] No description found in the package.json
 
-### [E013] No author found in the package.json
+### [E0013] No author found in the package.json
 
-### [E014] NPM information found in package.json. Please remove all attributes starting with `_`
+### [E0014] NPM information found in package.json. Please remove all attributes starting with `_`
 
-### [E015] No license found in package.json
+### [E0015] No license found in package.json
 
-### [E016] No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/
+### [E0016] No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/
 
-### [E017] No repository found in the package.json
+### [E0017] No repository found in the package.json
 
-### [E018] Invalid repository type in package.json. It should be git
+### [E0018] Invalid repository type in package.json. It should be git
 
-### [E019] Invalid repository URL in package.json.
+### [E0019] Invalid repository URL in package.json.
 
-### [E020] Name of adapter in package.json must be lowercase
+### [E0020] Name of adapter in package.json must be lowercase
 
-### [E021] `licenses` in package.json are deprecated. Please use only `license`: `NAME` field.
+### [E0021] `licenses` in package.json are deprecated. Please use only `license`: `NAME` field.
 
-### [E022] Adapter name is reserved!
+### [E0022] Adapter name is reserved!
 
-### [E023] Do not include `npm` as dependency!
+### [E0023] Do not include `npm` as dependency!
 
-### [E024] Adapter name may not start with '_'
+### [E0024] Adapter name may not start with '_'
 
-### [E025] Do not include `iobroker.js-controller` as dependency!
+### [E0025] Do not include `iobroker.js-controller` as dependency!
 
-### [E100] Cannot parse io-package.json
+### [E1000] Cannot parse io-package.json
 
-### [E101] io-package.json must have at least empty `native` attribute
+### [E1001] io-package.json must have at least empty `native` attribute
 
-### [E102] io-package.json must have common object
+### [E1002] io-package.json must have common object
 
-### [E103] `common.name` in io-package.json is invalid
+### [E1003] `common.name` in io-package.json is invalid
 
-### [E104] No `common.titleLang` found in io-package.json
+### [E1004] No `common.titleLang` found in io-package.json
 
-### [E105] `common.titleLang` must be an object
+### [E1005] `common.titleLang` must be an object
 
-### [E106] `common.titleLang` should not contain word `adapter` in the name. It is clear, that this is adapter
+### [E1006] `common.titleLang` should not contain word `adapter` in the name. It is clear, that this is adapter
 
-### [E107] No `common.version` found in io-package.json
+### [E1007] No `common.version` found in io-package.json
 
-### [E108] No `common.desc` found in io-package.json
+### [E1008] No `common.desc` found in io-package.json
 
-### [E109] `common.desc` in io-package.json should be an object for many languages
+### [E1009] `common.desc` in io-package.json should be an object for many languages
 
-### [E110] Icon not found in the io-package.json
+### [E1010] Icon not found in the io-package.json
 
-### [E111] extIcon not found in the io-package.json
+### [E1011] extIcon not found in the io-package.json
 
-### [E112] extIcon must be the same as an icon but with github path
+### [E1012] extIcon must be the same as an icon but with github path
 
-### [E114] No adapter are allowed in the repo without admin support (set `common.noConfig = true` and `common.adminUI.config = none` if adapter has no configuration)
+### [E1014] No adapter are allowed in the repo without admin support (set `common.noConfig = true` and `common.adminUI.config = none` if adapter has no configuration)
 
-### [E115] No licenseInformation found in io-package.json
+### [E1015] No licenseInformation found in io-package.json
 
-### [E116] No SPDX license found. Please use one of listed here: https://spdx.org/licenses/
+### [E1016] No SPDX license found. Please use one of listed here: https://spdx.org/licenses/
 
-### [E117] Licenses in package.json and in io-package.json are different
+### [E1017] Licenses in package.json and in io-package.json are different
 
-### [E118] Versions in package.json and in io-package.json are different
+### [E1018] Versions in package.json and in io-package.json are different
 
-### [E119] No type found in io-package.json
+### [E1019] No type found in io-package.json
 
-### [E120] Unknown type found in io-package.json
+### [E1020] Unknown type found in io-package.json
 
-### [E121] No authors found in io-package.json
+### [E1021] No authors found in io-package.json
 
-### [E122] authors must be an Array in io-package.json
+### [E1022] authors must be an Array in io-package.json
 
-### [E123] Authors may not be empty in io-package.json
+### [E1023] Authors may not be empty in io-package.json
 
-### [E124] Main file not found under URL
+### [E1024] Main file not found under URL
 
-### [E125] External icon not found under URL
+### [E1025] External icon not found under URL
 
-### [E130] No `common.news` found in io-package.json
+### [E1030] No `common.news` found in io-package.json
 
-### [E140] width and height of logo are not equal
+### [E1040] width and height of logo are not equal
 
-### [E141] logo is too small. It must be greater or equal than 32x32
+### [E1041] logo is too small. It must be greater or equal than 32x32
 
-### [E142] logo is too big. It must be less or equal than 512x512
+### [E1042] logo is too big. It must be less or equal than 512x512
 
-### [E143] No main found in the package.json
+### [E1043] No main found in the package.json
 
-### [E144] common.installedFrom field found in io-package.json. Must be removed.
+### [E1044] common.installedFrom field found in io-package.json. Must be removed.
 
-### [E145] No `common.news` found for actual version
+### [E1045] No `common.news` found for actual version
 
-### [E146] instanceObjects must be an Array in io-package.json
+### [E1046] instanceObjects must be an Array in io-package.json
 
-### [E147] instanceObject type has an invalid type
+### [E1047] instanceObject type has an invalid type
 
-### [E148] instanceObject common.type has an invalid type! Expected `string`
+### [E1048] instanceObject common.type has an invalid type! Expected `string`
 
-### [E149] instanceObject common.type has an invalid value
+### [E1049] instanceObject common.type has an invalid value
 
-### [E150] No common.connectionType found in io-package.json
+### [E1050] No common.connectionType found in io-package.json
 
-### [E151] common.connectionType type has an invalid value
+### [E1051] common.connectionType type has an invalid value
 
-### [E152] No common.dataSource found in io-package.json
+### [E1052] No common.dataSource found in io-package.json
 
-### [E153] common.dependencies must contain {`js-controller`: `>=1.5.8`} or later
+### [E1053] common.dependencies must contain {`js-controller`: `>=1.5.8`} or later
 
-### [E154] common.dependencies must contain [{`js-controller`: `>=2.0.0`}] or later
+### [E1054] common.dependencies must contain [{`js-controller`: `>=2.0.0`}] or later
 
-### [E155] Invalid tier value. Only 1, 2 or 3 are allowed!
+### [E1055] Invalid tier value. Only 1, 2 or 3 are allowed!
 
-### [E157] common.protectedNative requires dependency {`js-controller`: `>=2.0.2`} or later
+### [E1057] common.protectedNative requires dependency {`js-controller`: `>=2.0.2`} or later
 
-### [E158] common.encryptedNative requires dependency {`js-controller`: `>=3.0.3`} or later
+### [E1058] common.encryptedNative requires dependency {`js-controller`: `>=3.0.3`} or later
 
-### [E159] common.dependencies `js-controller` dependency should always allow future versions (>=x.x.x)
+### [E1059] common.dependencies `js-controller` dependency should always allow future versions (>=x.x.x)
 
-### [E160] `admin` is not allowed in common.dependencies
+### [E1060] `admin` is not allowed in common.dependencies
 
-### [E161] `js-controller` is not allowed in common.globalDependencies
+### [E1061] `js-controller` is not allowed in common.globalDependencies
 
-### [E162] onlyWWW should have common.mode `none` in io-package.json
+### [E1062] onlyWWW should have common.mode `none` in io-package.json
 
-### [E163] common.mode requires JavaScript file for `main` in package.json
+### [E1063] common.mode requires JavaScript file for `main` in package.json
 
-### [E165] Node mode found in package.json
+### [E1065] Node mode found in package.json
 
-### [E166] Unknown type found in io-package.json
+### [E1066] Unknown type found in io-package.json
 
-### [E167] schedule adapters must have common.schedule property in io-package.json
+### [E1067] schedule adapters must have common.schedule property in io-package.json
 
-### [E168] common.notifications requires dependency {`js-controller`: `>=3.2.0`} or later
+### [E1068] common.notifications requires dependency {`js-controller`: `>=3.2.0`} or later
 
-### [E169] `common.keywords` must be an array in the io-package.json
+### [E1069] `common.keywords` must be an array in the io-package.json
 
-### [E170] `common.licenseInformation.type` is invalid. Select valid type (e.g. free)
+### [E1070] `common.licenseInformation.type` is invalid. Select valid type (e.g. free)
 
-### [E171] `common.licenseInformation.link` is required for non-free adapters
+### [E1071] `common.licenseInformation.link` is required for non-free adapters
 
-### [E172] `common.automaticUpgrade` will be defined by the user. Remove the attribute from io-package.json
+### [E1072] `common.automaticUpgrade` will be defined by the user. Remove the attribute from io-package.json
 
-### [E200] Not found on npm. Please publish
+### [E1100] Not found on npm. Please publish
 
-### [E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`
+### [E1101] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`
 
-### [E300] Not found on travis. Please setup travis or use github actions (preferred)
+### [E3000] Not found on travis. Please setup travis or use github actions (preferred)
 
-### [E301] Tests on Travis-ci.org are broken. Please fix.
+### [E3001] Tests on Travis-ci.org are broken. Please fix.
 
-### [E400] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json
+### [E4000] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json
 
-### [E402] Types of adapter in latest repository and in io-package.json are different
+### [E4002] Types of adapter in latest repository and in io-package.json are different
 
-### [E403] Version set in latest repository
+### [E4003] Version set in latest repository
 
-### [E404] Icon not found in latest repository
+### [E4004] Icon not found in latest repository
 
-### [E405] Icon (latest) must be in the following path: ${url}
+### [E4005] Icon (latest) must be in the following path: ${url}
 
-### [E406] Meta URL (latest) not found in latest repository
+### [E4006] Meta URL (latest) not found in latest repository
 
-### [E407] Meta URL (latest) must be equal to ${url}io-package.json
+### [E4007] Meta URL (latest) must be equal to ${url}io-package.json
 
-### [E420] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json
+### [E4020] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json
 
-### [E422] Types of adapter in stable repository and in io-package.json are different
+### [E4022] Types of adapter in stable repository and in io-package.json are different
 
-### [E423] Adapter was found in stable repository but not in latest repo
+### [E4023] Adapter was found in stable repository but not in latest repo
 
-### [E424] No version set in stable repository
+### [E4024] No version set in stable repository
 
-### [E425] Icon not found in stable repository
+### [E4025] Icon not found in stable repository
 
-### [E426] Icon (stable) must be in the following path
+### [E4026] Icon (stable) must be in the following path
 
-### [E427] Meta URL (stable) not found in latest repository
+### [E4027] Meta URL (stable) not found in latest repository
 
-### [E428] Meta URL (stable) is invalid
+### [E4028] Meta URL (stable) is invalid
 
-### [E429] Adapter name should use `-` instead of `_`
+### [E4029] Adapter name should use `-` instead of `_`
 
-### [E500] node_modules found in repo. Please delete it
+### [E5000] node_modules found in repo. Please delete it
 
-### [E501] Cannot get zip on GitHub
+### [E5001] Cannot get zip on GitHub
 
-### [E502] `admin/img/info-big.png` not found, but selectID.js used in index_m.html 
+### [E5002] `admin/img/info-big.png` not found, but selectID.js used in index_m.html 
 
-### [E503] `iob_npm.done` found in repo! Remove that file
+### [E5003] `iob_npm.done` found in repo! Remove that file
 
-### [E504] setInterval found in main, but no clearInterval detected
+### [E5004] setInterval found in main, but no clearInterval detected
 
-### [E505] setTimeout found in main, but no clearTimeout detected
+### [E5005] setTimeout found in main, but no clearTimeout detected
 
-### [E506] More non translated in german or russian words found in admin/words.js. You can use https://translator.iobroker.in/ for translations
+### [E5006] More non translated in german or russian words found in admin/words.js. You can use https://translator.iobroker.in/ for translations
 
-### [E507] Cannot parse `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}`: ${e}
+### [E5007] Cannot parse `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}`: ${e}
 
-### [E508] `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}` not found, but admin support is declared
+### [E5008] `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}` not found, but admin support is declared
 
-### [E509] Cannot parse `admin/i18n/${lang}/translations.json`
+### [E5009] Cannot parse `admin/i18n/${lang}/translations.json`
 
-### [E510] `/admin/i18n/${lang}/translations.json` or `admin/i18n/${lang}.json` not found, but admin support is declared
+### [E5010] `/admin/i18n/${lang}/translations.json` or `admin/i18n/${lang}.json` not found, but admin support is declared
 
-### [E511] Cannot parse `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}`
+### [E5011] Cannot parse `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}`
 
-### [E512] `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}` not found, but custom support is declared
+### [E5012] `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}` not found, but custom support is declared
 
-### [E514] `admin/blockly.js` not found, but blockly support is declared
+### [E5014] `admin/blockly.js` not found, but blockly support is declared
 
-### [E515] JavaScript-Rules support is declared, but no location in property url defined
+### [E5015] JavaScript-Rules support is declared, but no location in property url defined
 
-### [E516] `${context.ioPackageJson.common.javascriptRules.url}` not found, but JavaScript-Rules support is declared
+### [E5016] `${context.ioPackageJson.common.javascriptRules.url}` not found, but JavaScript-Rules support is declared
 
-### [E518] `@alcalzone/release-script` is used, but `.releaseconfig.json` not found
+### [E5018] `@alcalzone/release-script` is used, but `.releaseconfig.json` not found
 
-### [E519] `${context.packageJson.main}` found in package.json, but not found as file
+### [E5019] `${context.packageJson.main}` found in package.json, but not found as file
 
-### [E601] No README.md found
+### [E6001] No README.md found
 
-### [E603] NO `## Changelog` found in README.md
+### [E6003] NO `## Changelog` found in README.md
 
-### [E604] No `## License` found in README.md
+### [E6004] No `## License` found in README.md
 
-### [E605] No actual year found in copyright. Please add `Copyright (c) XXXX-YYYY Author` at the end of README.md
+### [E6005] No actual year found in copyright. Please add `Copyright (c) XXXX-YYYY Author` at the end of README.md
 
-### [E606] Current adapter version ${context.packageJson.version} not found in README.md
+### [E6006] Current adapter version ${context.packageJson.version} not found in README.md
 
-### [E701] NO LICENSE file found
+### [E7001] NO LICENSE file found
 
-### [E801] No repository about text found. Please go to GitHub, press the settings button beside the about title and add the description.
+### [E8001] No repository about text found. Please go to GitHub, press the settings button beside the about title and add the description.
 
-### [E802] No topics found in the repository. Please go to GitHub, press the settings button beside the about title and add some topics.
+### [E8002] No topics found in the repository. Please go to GitHub, press the settings button beside the about title and add some topics.
 
-### [E803] Archived repositories are not allowed.
+### [E8003] Archived repositories are not allowed.
 
-### [E804] node_modules not found in 
+### [E8004] node_modules not found in 
 
-### [E902] node_modules not found in .npmignore
+### [E9002] node_modules not found in .npmignore
 
-### [E903] iob_npm.done not found in .gitignore
+### [E9003] iob_npm.done not found in .gitignore
 
-### [W105] `common.titleLang` should be translated into all supported languages
+### [W1005] `common.titleLang` should be translated into all supported languages
 
-### [W109] `common.desc` should be translated into all supported languages
+### [W1009] `common.desc` should be translated into all supported languages
 
-### [W113] Adapter should support compact mode
+### [W1013] Adapter should support compact mode
 
-### [W114] `common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`
+### [W1014] `common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`
 
-### [W115] `common.tier` is required in io-package.json
+### [W1015] `common.tier` is required in io-package.json
 
-### [W145] Each `common.news` should be translated into all supported languages
+### [W1045] Each `common.news` should be translated into all supported languages
 
-### [W156] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI
+### [W1056] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI
 
-### [W164] Adapters without config `common.noConfig = true` should also set `common.adminUI.config = none`
+### [W1064] Adapters without config `common.noConfig = true` should also set `common.adminUI.config = none`
 
-### [W170] `common.keywords` should not contain `iobroker`, `adapter`, `smart home` in io-package.json
+### [W1070] `common.keywords` should not contain `iobroker`, `adapter`, `smart home` in io-package.json
 
-### [W171] `common.title` is deprecated in io-package.json
+### [W1071] `common.title` is deprecated in io-package.json
 
-### [W172] `common.localLink` in io-package.json is deprecated. Please define object `common.localLinks`: { `_default`: `...` }
+### [W1072] `common.localLink` in io-package.json is deprecated. Please define object `common.localLinks`: { `_default`: `...` }
 
-### [W302] Use github actions instead of travis-ci
+### [W3002] Use github actions instead of travis-ci
 
-### [W400] Cannot find adapter in latest repository
+### [W4000] Cannot find adapter in latest repository
 
-### [W504] setInterval found in main, but no clearInterval detected
+### [W5004] setInterval found in main, but no clearInterval detected
 
-### [W505] setTimeout found in main, but no clearTimeout detected
+### [W5005] setTimeout found in main, but no clearTimeout detected
 
-### [W513] `gulpfile.js` found in repo! Think about migrating to @iobroker/adapter-dev package
+### [W5013] `gulpfile.js` found in repo! Think about migrating to @iobroker/adapter-dev package
 
-### [W515] Why you decided to disable i18n support?
+### [W5015] Why you decided to disable i18n support?
 
-### [W801] .npmignore not found
+### [W8001] .npmignore not found
 
-### [W901] .gitignore not found
+### [W9001] .gitignore not found
 
