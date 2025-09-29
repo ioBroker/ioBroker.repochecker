@@ -20,16 +20,16 @@ const version = require('./package.json').version;
 // include submodules
 const common = require('./lib/common.js');
 const config = require('./lib/config.js');
-const M000_PackageJson = require('./lib/M000_PackageJson.js');
-const M100_IOPackageJson = require('./lib/M100_IOPackageJson.js');
-const M250_Npm = require('./lib/M250_Npm.js');
-const M300_Testing = require('./lib/M300_Testing.js');
-const M400_Repository = require('./lib/M400_Repository.js');
-const M500_Code = require('./lib/M500_Code.js');
-const M600_Readme = require('./lib/M600_Readme.js');
-const M700_License = require('./lib/M700_License.js');
-const M800_Github = require('./lib/M800_Github.js');
-const M900_GitNpmIgnore = require('./lib/M900_GitNpmIgnore.js');
+const M0000_PackageJson = require('./lib/M0000_PackageJson.js');
+const M1000_IOPackageJson = require('./lib/M1000_IOPackageJson.js');
+const M2000_Npm = require('./lib/M2000_Npm.js');
+const M3000_Testing = require('./lib/M3000_Testing.js');
+const M4000_Repository = require('./lib/M4000_Repository.js');
+const M5000_Code = require('./lib/M5000_Code.js');
+const M6000_Readme = require('./lib/M6000_Readme.js');
+const M7000_License = require('./lib/M7000_License.js');
+const M8000_Github = require('./lib/M8000_Github.js');
+const M9000_GitNpmIgnore = require('./lib/M9000_GitNpmIgnore.js');
 
 // disable axios caching
 // axios.defaults.headers = {
@@ -39,34 +39,34 @@ const M900_GitNpmIgnore = require('./lib/M900_GitNpmIgnore.js');
 // };
 
 // Error ranges
-// E0xx
+// 0001 - 0999
 //      check package.json
 //
-// E100 - 249
+// 1000 - 1999
 //      check io-package.json
 //
-// E250 - 299
+// 2000 - 2999
 //      check npm and npmjs.org
 //
-// E3xx
+// 3000 - 3999
 //      check testing
 //
-// E4xx
+// 4000 - 4999
 //      check repositories
 //
-// E5xx
+// 5000 - 5999
 //      check code
 //
-// E6xx
+// 6000 - 6999
 //      check README file
 //
-// E7xx
+// 7000 - 7000
 //      check license file
 //
-// E8xx
+// 8000 - 8999
 //      check github repository
 //
-// E9xx
+// 9000 - 9998
 //      check .gitignore file
 
 function getGithubApiData(context) {
@@ -144,22 +144,22 @@ function check(request, ctx, callback) {
     context.repository = githubUrl.replace('https://github.com/', '');
 
     getGithubApiData(context)
-        .then(context => M800_Github.getCommitInfos(context))
-        .then(context => M000_PackageJson.getPackageJson(context))
-        .then(context => M100_IOPackageJson.getIOPackageJson(context))
+        .then(context => M8000_Github.getCommitInfos(context))
+        .then(context => M0000_PackageJson.getPackageJson(context))
+        .then(context => M1000_IOPackageJson.getIOPackageJson(context))
         .then(context => config.updateConfig(context))
         .then(context => config.logEnvironment(context))
-        .then(context => M000_PackageJson.checkPackageJson(context))
-        .then(context => M100_IOPackageJson.checkIOPackageJson(context))
-        .then(context => M250_Npm.checkNpm(context))
-        .then(context => M400_Repository.checkRepository(context))
-        .then(context => M500_Code.checkCode(context))
-        .then(context => M300_Testing.checkTests(context))
-        .then(context => M800_Github.checkGithubRepo(context))
-        .then(context => M600_Readme.checkReadme(context))
-        .then(context => M700_License.checkLicenseFile(context))
-        .then(context => M900_GitNpmIgnore.checkNpmIgnore(context))
-        .then(context => M900_GitNpmIgnore.checkGitIgnore(context))
+        .then(context => M0000_PackageJson.checkPackageJson(context))
+        .then(context => M1000_IOPackageJson.checkIOPackageJson(context))
+        .then(context => M2000_Npm.checkNpm(context))
+        .then(context => M4000_Repository.checkRepository(context))
+        .then(context => M5000_Code.checkCode(context))
+        .then(context => M3000_Testing.checkTests(context))
+        .then(context => M8000_Github.checkGithubRepo(context))
+        .then(context => M6000_Readme.checkReadme(context))
+        .then(context => M7000_License.checkLicenseFile(context))
+        .then(context => M9000_GitNpmIgnore.checkNpmIgnore(context))
+        .then(context => M9000_GitNpmIgnore.checkGitIgnore(context))
         .then(context => {
             return callback(
                 null,
