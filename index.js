@@ -77,7 +77,7 @@ function getGithubApiData(context) {
             .get(context.githubUrlApi)
             .then(response => {
                 context.githubApiData = response.data;
-                // console.log(`API Data: ${JSON.stringify(context.githubApiData)}`);
+                common.debug(`API Data: ${JSON.stringify(context.githubApiData)}`);
 
                 if (!context.branch) {
                     context.branch = context.githubApiData.default_branch; // main vs. master
