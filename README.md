@@ -31,7 +31,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 4.3.0-alpha.0 (2025-09-29)
 - (@copilot) Added version format validation check (E061) for invalid semver format according to ioBroker requirements
 - (@copilot) Added structured GitHub issue templates for bug reports, false positives, new checks, check changes, and enhancements
 - (@copilot) Fixed deprecated function checking for adapter methods called outside class context
