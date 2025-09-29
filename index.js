@@ -42,10 +42,10 @@ const M900_GitNpmIgnore = require('./lib/M900_GitNpmIgnore.js');
 // E0xx
 //      check package.json
 //
-// E100 - 249
+// [E1000] - 249
 //      check io-package.json
 //
-// E250 - 299
+// [E2000] - 299
 //      check npm and npmjs.org
 //
 // E3xx
@@ -92,7 +92,7 @@ function getGithubApiData(context) {
                 resolve(context);
             })
             .catch(e => {
-                context.errors.push(`[E000] FATAL: cannot access repository ${context.githubUrlApi}`);
+                context.errors.push(`[E0000] FATAL: cannot access repository ${context.githubUrlApi}`);
                 reject(e);
             }); // E0xx
     });
@@ -176,7 +176,7 @@ function check(request, ctx, callback) {
         })
         .catch(err => {
             console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
-            context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+            context.errors.push(`[E9999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
 
             return callback(
                 null,
@@ -286,7 +286,7 @@ if (typeof module !== 'undefined' && module.parent) {
             if (context.errors.length) {
                 console.log('\n\nErrors:');
                 context.errors.sort().forEach(err => {
-                    // const issue = err.substring(1, 5);
+                    // const issue = err.substring(1, 6);
                     console.error(err);
                     // if (issues[issue]) {
                     //     //if (issues[issue].title) {
@@ -309,7 +309,7 @@ if (typeof module !== 'undefined' && module.parent) {
             if (context.warnings.length) {
                 console.log('\nWarnings:');
                 context.warnings.sort().forEach(err => {
-                    //const issue = err.substring(1, 5);
+                    //const issue = err.substring(1, 6);
                     console.warn(err);
                     // if (issues[issue]) {
                     //     //if (issues[issue].title) {

@@ -31,6 +31,10 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (@copilot) Renumbered all issue codes from 3-digit to 4-digit format according to specified mapping system
+
 ### 4.3.0-alpha.0 (2025-09-29)
 - (@copilot) Added version format validation check (E061) for invalid semver format according to ioBroker requirements
 - (@copilot) Added structured GitHub issue templates for bug reports, false positives, new checks, check changes, and enhancements
@@ -39,8 +43,8 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ### 4.2.0 (2025-09-20)
 - (mcm1957) 'Request' replacement text changed to suggest 'node:fetch' [#498].
 - (@copilot) Fixed false positive W533 warnings for deprecated adapter methods when called on local functions with same names [#520].
-- (mcm1957) '[W438] .vscode/settings.json file missing "json.schemas" property' has been converted to suggestion [#516].
-- (mcm1957) Severity of '[S191] admin dependency...' has been corrected [#510].
+- (mcm1957) '[W4038] .vscode/settings.json file missing "json.schemas" property' has been converted to suggestion [#516].
+- (mcm1957) Severity of '[S1091] admin dependency...' has been corrected [#510].
 - (copilot) Added io-package.json schema validation against official schema (W205, W207, W208) [#503].
 - (copilot) Added check for deprecated adapter methods (createState/createChannel/createDevice/deleteState/deleteChannel/deleteDevice) (W533) [#182].
 - (copilot) Added check for outdated lib/tools.js file usage (W532) [#432].
@@ -102,7 +106,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 - (mcm1957) Crash if protectedNative or encryptedNative is missing. [#382]
 
 ### 3.5.0 (2025-02-18)
-- (mcm1957) Fixed dependency warning ([W174]) has been reduces to suggestion. [#374]
+- (mcm1957) Fixed dependency warning ([W1074]) has been reduces to suggestion. [#374]
 - (mcm1957) Some changes to jsonConfig check have been implemented.
 - (mcm1957) common.supportCustoms check has been added. [#379]
 - (mcm1957) Check that key listed at encryptedNative or protectedNative is listed at native too. [#218]
@@ -180,7 +184,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 - (mcm1957) linter has been activated and issues reported have been fixed.
 - (mcm1957) Blacklist for package/dependencies has been extended.
 - (mcm1957) Recommend adapter-core 3.2.2 now.
-- (mcm1957) Clearify test for "[E952] .npmignore not found". [#320]
+- (mcm1957) Clearify test for "[E9052] .npmignore not found". [#320]
 - (mcm1957) Abort processing if iobroker.live not reachable. [#321]
 
 ### 3.1.3 (2024-10-11)
@@ -190,22 +194,22 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 - (mcm1957) Require node 18 minimum as engines clause.
 
 ### 3.1.1 (2024-10-04)
-- (mcm1957) "[E166] 'common.mode: extension' is unknown" has been fixed [#308]
-- (mcm1957) "[E904] file iob_npm.done found in repository, but not found in .gitignore" removed as covered by [E503]. [#309]
-- (mcm1957) "[E500] node_modules found" has been retricted to adapetr root. [#297]
+- (mcm1957) "[E1066] 'common.mode: extension' is unknown" has been fixed [#308]
+- (mcm1957) "[E9004] file iob_npm.done found in repository, but not found in .gitignore" removed as covered by [E5003]. [#309]
+- (mcm1957) "[E5000] node_modules found" has been retricted to adapetr root. [#297]
 - (mcm1957) Do not check main entry if common.mode none or extension.
-- (mcm1957) Change "[W113] Adapter should support compact mode" text and honor common.compact set to false. [#300]
+- (mcm1957) Change "[W1013] Adapter should support compact mode" text and honor common.compact set to false. [#300]
 
 ### 3.1.0 (2024-09-29)
 - (mcm1957) "@iobroker/plugin-sentry" blacklisted as dependency [#301]
 - (mcm1957) Accept .ts files as main file too. [#303]
-- (mcm1957) [E405] and [E426] incorrect path has been corrected. [#299]
+- (mcm1957) [E4005] and [E4026] incorrect path has been corrected. [#299]
 
 ### 3.0.7 (2024-09-19)
-- (mcm1957) "[W523] 'package-lock.json"'not found in repo!" reduced to suggestion. [#298]
+- (mcm1957) "[W5023] 'package-lock.json"'not found in repo!" reduced to suggestion. [#298]
 
 ### 3.0.6 (2024-09-13)
-- (mcm1957) "[E124] Main file not found" no longer raised if `common.nogit` is set
+- (mcm1957) "[E1024] Main file not found" no longer raised if `common.nogit` is set
 - (mcm1957) 'Text of "common.main" is deprecated' has been adapted. [#266]
 - (mcm1957) Ignore errors caused by complex .gitignor/.npmignore. [#288]
 
@@ -226,7 +230,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 ### 3.0.2 (2024-09-11)
 - (mcm1957) Handling of a missing LICENSE file corrected. [#282]
-- (mcm1957) [W126] Missing mandatory translation is an error now. [#293]
+- (mcm1957) [W1026] Missing mandatory translation is an error now. [#293]
 - (mcm1957) Record repochcker version used for tests.
 - (mcm1957) Record GitHub commit-sha of last commit used for tests.
 
@@ -271,7 +275,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 
 ### 2.7.0 (2024-07-26)
 - (mcm1957) Some non trivial keywords related to adapter are enforced now [#234].
-- (mcm1957) Severity if [E105] / [W105] has been corrected [#204].
+- (mcm1957) Severity if [E1005] / [W1005] has been corrected [#204].
 - (mcm1957) Disallow 'globalDependencies' at package.json [#204].
 - (mcm1957) Several false positives for wwwOnly widgetadapters have been fixed [#230, #222].
 - (mcm1957) Missing .npmignore is now considered an error [#229].
@@ -283,7 +287,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 - (mcm1957) Copyright year now honors commit year and npm publish year too [#237].
 
 ### 2.6.1 (2024-06-24)
-- (mcm1957) Check "[W156] Adapter should support admin 5 UI (jsonConfig)" checks for reactUi now.
+- (mcm1957) Check "[W1056] Adapter should support admin 5 UI (jsonConfig)" checks for reactUi now.
 
 ### 2.6.0 (2024-06-24)
 - (mcm1957) Check has been aded to ensure keywords and common.keywords are present. [#200]
@@ -308,7 +312,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 ### 2.3.0 (2024-05-07)
 - (mcm1957) Elements marked as deprectaed added to blacklist.
 - (mcm1957) Blacklist added to block elements at package.json and io-package.json.
-- (mcm1957) Error [E000] will be raised now if repository cannot be accessed at all [#194].
+- (mcm1957) Error [E0000] will be raised now if repository cannot be accessed at all [#194].
 - (mcm1957) Reading of package.json and io-package.json has been moved to head of tests.
 - (mcm1957) Check minimum and recommended node version at package.json (#160)
 - (mcm1957) Raise an error if version at package.json is lower than latest release at npmjs [#192]

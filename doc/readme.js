@@ -7,9 +7,9 @@ function extractFromIndex() {
     let added = false;
     const lines = fs.readFileSync(`${__dirname}/../index.js`, {encoding: 'utf8'}).split('\n');
     for (let i = 0; i < lines.length; i++) {
-        const m = lines[i].match(/`(\[[EW]\d\d\d] [^`]+)`/) || lines[i].match(/'(\[[EW]\d\d\d] [^`]+)'/) || lines[i].match(/"(\[[EW]\d\d\d] [^`]+)"/);
+        const m = lines[i].match(/`(\[[EW]\d\d\d\d] [^`]+)`/) || lines[i].match(/'(\[[EW]\d\d\d\d] [^`]+)'/) || lines[i].match(/"(\[[EW]\d\d\d\d] [^`]+)"/);
         if (m) {
-            const parts = m[1].match(/\[([EW]\d\d\d)] (.+)/);
+            const parts = m[1].match(/\[([EW]\d\d\d\d)] (.+)/);
             if (parts) {
                 console.log(parts[1], parts[2]);
                 if (!issues[parts[1]]) {
