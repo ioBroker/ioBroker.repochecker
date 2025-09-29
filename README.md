@@ -31,10 +31,20 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### 5.0.0-alpha.0 (2025-09-29)
+### **WORK IN PROGRESS**
+- (mcm1957) Strict mode requirements have been loosend at schema validation.
+- (mcm1957) Do not log missing jsonConfig schema at vscode is no jsonConfig is used. [#548]
+- (mcm1957) News entry at io-package.json is no longer required for alpha release. [#532]
+- (mcm1957) Report missing README changelog for alpha releases as suggestion only. [#533]
+- (mcm1957) Release of @iobroker/testing has been updated to 5.1.1.
+- (mcm1957) Text for dependency update suggestion has been changed to make more clear that this should be really done. [#515]
+- (mcm1957) Suggestion to migrate to jsonConfig has been changed to suggest jsonConfig or react based UI. [#524]
+- (mcm1957) Alpha release are no longer reported as missing at npm / latest. [#425]
+- (mcm1957) Suggestions to avoid fixed dependencies has been compressed to a maximum of one suggestion even if multiple ffixed dependencies exist [#512].
+- (mcm1957) E4033 is always an error [#541].
+- (mcm1957) Empty adaptername in finding has been fixed [#549].
+- (mcm1957) Text for 9006 has been changed (.commitinfo hint) [#542].
 - (@copilot) Renumbered all error, warning and suggestion codes from 3-digit to 4-digit format according to new numbering system
-
-### 4.3.0-alpha.0 (2025-09-29)
 - (@copilot) Added version format validation check (E061) for invalid semver format according to ioBroker requirements
 - (@copilot) Added structured GitHub issue templates for bug reports, false positives, new checks, check changes, and enhancements
 - (@copilot) Fixed deprecated function checking for adapter methods called outside class context
