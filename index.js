@@ -92,7 +92,7 @@ function getGithubApiData(context) {
                 resolve(context);
             })
             .catch(e => {
-                context.errors.push(`[E000] FATAL: cannot access repository ${context.githubUrlApi}`);
+                context.errors.push(`[E0000] FATAL: cannot access repository ${context.githubUrlApi}`);
                 reject(e);
             }); // E0xx
     });
@@ -176,7 +176,7 @@ function check(request, ctx, callback) {
         })
         .catch(err => {
             console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
-            context.errors.push(`[E999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+            context.errors.push(`[E9999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
 
             return callback(
                 null,

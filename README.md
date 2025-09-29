@@ -31,6 +31,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Renumbered all error, warning and suggestion codes from 3-digit to 4-digit format according to new numbering system
+
 ### 4.3.0-alpha.0 (2025-09-29)
 - (@copilot) Added version format validation check (E061) for invalid semver format according to ioBroker requirements
 - (@copilot) Added structured GitHub issue templates for bug reports, false positives, new checks, check changes, and enhancements
