@@ -31,6 +31,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Improved setInterval/setTimeout checks (E5004/E5005) to scan all .js and .ts files, ignore this./adapter. prefixed calls, and suggest proper usage based on context
+
 ### 5.0.0-alpha.1 (2025-09-29)
 - (mcm1957) Strict mode requirements have been loosend at schema validation.
 - (mcm1957) Do not log missing jsonConfig schema at vscode is no jsonConfig is used. [#548]
