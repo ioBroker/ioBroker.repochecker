@@ -31,6 +31,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added validation to ensure i18n directories are included in npm packages
+
 ### 5.0.0-alpha.1 (2025-09-29)
 - (mcm1957) Strict mode requirements have been loosend at schema validation.
 - (mcm1957) Do not log missing jsonConfig schema at vscode is no jsonConfig is used. [#548]
