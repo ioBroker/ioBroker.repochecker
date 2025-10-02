@@ -422,8 +422,18 @@
   "E606": {
     "title": "Current adapter version ${context.packageJson.version} not found in README.md"
   },
+  "W609": {
+    "title": "Multiple copyright lines in README.md missing trailing spaces",
+    "explanation": "When a LICENSE section in README.md contains multiple copyright lines, each line (except the last) must end with two spaces. In Markdown, two trailing spaces create a line break, ensuring proper formatting of multiple copyright holders.",
+    "resolving": "Add two spaces at the end of each copyright line except the last one in the LICENSE section of README.md."
+  },
   "E701": {
     "title": "NO LICENSE file found"
+  },
+  "W703": {
+    "title": "Multiple copyright lines in LICENSE file missing trailing spaces",
+    "explanation": "When the LICENSE file contains multiple copyright lines, each line (except the last) must end with two spaces. In Markdown-formatted LICENSE files, two trailing spaces create a line break, ensuring proper formatting of multiple copyright holders.",
+    "resolving": "Add two spaces at the end of each copyright line except the last one in the LICENSE file."
   },
   "E801": {
     "title": "No repository about text found. Please go to GitHub, press the settings button beside the about title and add the description."
