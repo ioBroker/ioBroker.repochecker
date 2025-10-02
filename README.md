@@ -32,6 +32,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added check for conflicting JavaScript file extensions (.js, .cjs, .mjs) in the same directory (E5034)
 - (@copilot) Improved copyright year check to find all years in multiple copyright entries and use the newest one
 - (@copilot) Added check for missing trailing spaces in multiple copyright lines (W6009, W7003)
 
