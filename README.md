@@ -38,8 +38,6 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 - (@copilot) Added check for conflicting JavaScript file extensions (.js, .cjs, .mjs) in the same directory (E5034)
 - (@copilot) Improved copyright year check to find all years in multiple copyright entries and use the newest one
 - (@copilot) Added check for missing trailing spaces in multiple copyright lines (W6009, W7003)
-
-### 5.0.0-alpha.1 (2025-09-29)
 - (mcm1957) Strict mode requirements have been loosend at schema validation.
 - (mcm1957) Do not log missing jsonConfig schema at vscode is no jsonConfig is used. [#548]
 - (mcm1957) News entry at io-package.json is no longer required for alpha release. [#532]
