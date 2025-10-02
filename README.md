@@ -32,6 +32,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added check for deprecated common.jsonConfig property - warns if adminUI exists (W1109), errors if adminUI missing (E1109)
 - (@copilot) Added check (W0063) for unneeded devDependencies when @iobroker/testing >= 5.1.1 is installed
 - (@copilot) Added check for conflicting JavaScript file extensions (.js, .cjs, .mjs) in the same directory (E5034)
 - (@copilot) Improved copyright year check to find all years in multiple copyright entries and use the newest one
