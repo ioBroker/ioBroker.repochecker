@@ -31,6 +31,9 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (mcm1957) A crash at adapters which do not contain news entry at io-package.json has been fixed. [#572]
+
 ### 5.0.0 (2025-10-02)
 - (mcm1957) Suppress W6010 if adapter not yet published at npm. [#567]
 - (@copilot) Added check for deprecated common.jsonConfig property - warns if adminUI exists (W1109), errors if adminUI missing (E1109)
