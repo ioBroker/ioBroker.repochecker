@@ -31,7 +31,7 @@ npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --loca
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.0.2 (2025-10-03)
 - (mcm1957) Some debug log hsa been removed.
 
 ### 5.0.1 (2025-10-03)
