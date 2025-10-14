@@ -6,15 +6,11 @@ If you want to add your adapter to the public ioBroker repository, all tests on 
 
 ## How to test via cli
 
-You can pass your repository as a parameter to test
+When running the repository checker via the command line, you **need** to add the repository as parameter, while the branch parameter (`master/main/dev`) is optional.
 
-`npx @iobroker/repochecker <repo> [branch]`
-
-```bash
-npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript master
 ```
-
-Branch (`master/main/dev`) is optional.
+npx @iobroker/repochecker <repo> [branch]`
+```
 
 For extra debugging outputs you can pass the `--debug` parameter.
 
@@ -23,9 +19,7 @@ The link to the GitHub repository is still necessary because data from the proje
 
 Example:
 
-```bash
-npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --local
-```
+`npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.repochecker --local`
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
