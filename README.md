@@ -6,7 +6,7 @@ If you want to add your adapter to the public ioBroker repository, all tests on 
 
 ## How to test via cli
 
-When running the repository checker via the command line, you **need** to add the repository as parameter, while the branch parameter (`master/main/dev`) is optional. If this parameter is omitted, the `master` branch will be checked.
+When running the repository checker via the command line, you **need** to add the repository as parameter, while the branch parameter (`master/main/dev`) is optional. If this parameter is omitted, the `default` branch (typically master / main) will be checked.
 
 ```
 npx @iobroker/repochecker <repo> [branch]`
