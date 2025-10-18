@@ -33,7 +33,7 @@ body:
     attributes:
       label: Link to related PR
       description: Please provide a link to the PR this report refers to
-      placeholder: ""
+      placeholder: "https://github.com/_owner_/_reponame_/pull/_number_"
     validations:
       required: true
   
