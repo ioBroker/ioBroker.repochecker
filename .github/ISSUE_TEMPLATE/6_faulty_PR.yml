@@ -2,7 +2,7 @@
 name: FAULTY PR - something is wrong with a PR created by ioobroker-bot
 description: Reposrt some error related to an iobroker-bot created PR
 title: "[FAULTY PR] "
-labels: ["TRIAGE"]
+labels: ["TRIAGE", "faulty PR"]
 assignees: []
 body:
   - type: markdown
