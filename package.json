@@ -7,7 +7,7 @@
     "compare-versions": "^6.1.1",
     "image-size": "^1.2.0",
     "json5": "^2.2.3",
-    "semver": "^7.7.2"
+    "semver": "^7.7.3"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",
