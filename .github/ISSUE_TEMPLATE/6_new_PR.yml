@@ -1,7 +1,7 @@
 ---
 name: NEW PR - suggest a new PR to be created by iobroker-bot
 description: Suggest a new PR to nbe created by iobroker-bot
-title: "[FAULTY PR] "
+title: "[NEW PR] "
 labels: ["TRIAGE", "new PR"]
 assignees: []
 body:
