@@ -23,7 +23,6 @@ body:
       label: Description of suggested PR changes
       description: Please provide a detailed description of the your suggestion
       placeholder: Describe the suggested changes provided by PR
-      validations:
       required: true
   
   - type: input
@@ -32,6 +31,5 @@ body:
       label: related checker issue
       description: If this PR is intended to solve one or more issues reported by rpository checker please list them
       placeholder: Expample of related issue
-    validations:
       required: false
   
