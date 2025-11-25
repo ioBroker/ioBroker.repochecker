@@ -25,8 +25,14 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (mcm1957) add warning if iobroker bot PRs are open. [#596]
+- (mcm1957) remove S1094, protectedNative elements need not be encrypted. [#579]
+- (mcm1957) required and suggested releases of standard pacakges have been updated.
+- (mcm1957) Log errors at io-package validation as errors now.
+
 ### 5.0.2 (2025-10-03)
-- (mcm1957) Some debug log hsa been removed.
+- (mcm1957) Some debug log has been removed.
 
 ### 5.0.1 (2025-10-03)
 - (mcm1957) A crash at adapters which do not contain news entry at io-package.json has been fixed. [#572]
