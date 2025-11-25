@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added .releaseconfig.json verification to check plugins listed match installed devDependencies (E5036, W5037)
 - (@copilot) Added YAML file validation check (E5035) to verify .yml and .yaml files are well-structured [#618]
 - (@copilot) Added flexible conditional dependency requirements support [#609]
 - (mcm1957) add warning if iobroker bot PRs are open. [#596]
