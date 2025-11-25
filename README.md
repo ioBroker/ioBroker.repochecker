@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added flexible conditional dependency requirements support [#609]
 - (mcm1957) add warning if iobroker bot PRs are open. [#596]
 - (mcm1957) remove S1094, protectedNative elements need not be encrypted. [#579]
 - (mcm1957) required and suggested releases of standard pacakges have been updated.
