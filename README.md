@@ -30,6 +30,7 @@ Example:
 - (mcm1957) remove S1094, protectedNative elements need not be encrypted. [#579]
 - (mcm1957) required and suggested releases of standard pacakges have been updated.
 - (mcm1957) Log errors at io-package validation as errors now.
+- (mcm1957) Text for E1000 has been corrected. [#576]
 
 ### 5.0.2 (2025-10-03)
 - (mcm1957) Some debug log has been removed.
