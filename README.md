@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.1.0 (2025-11-25)
 - (@copilot) Added check for conflicting JSON/JSON5 files with same base name in same directory (E5038) [#169]
 - (@copilot) Added .releaseconfig.json verification to check plugins listed match installed devDependencies (E5036, W5037)
 - (@copilot) Added YAML file validation check (E5035) to verify .yml and .yaml files are well-structured [#618]
