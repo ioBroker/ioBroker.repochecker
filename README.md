@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.1.1 (2025-12-01)
 - (@copilot) Updated repository URLs from http://repo.iobroker.live to https://download.iobroker.net
 
 ### 5.1.0 (2025-11-25)
