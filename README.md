@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added jsonConfig component `yamlEditor` with minAdmin 7.7.31. [#660]
 - (@copilot) Restructured `validComponents` entries in M5500__JsonConfig.js to objects with `function` and `minAdmin` properties.
 - (@copilot) Added `checkDocker` and `infoBox` as known jsonConfig components to fix false-positive E5504 errors.
 - (mcm1957) require js-controlelr 6 and admin 7 now. [#641] [#589]
