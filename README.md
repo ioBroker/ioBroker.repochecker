@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (mcm1957) require js-controlelr 6 and admin 7 now. [#641] [#589]
+- (mcm1957) required and suggested releases of standard packages have been updated.
+
 ### 5.1.1 (2025-12-01)
 - (@copilot) Updated repository URLs from http://repo.iobroker.live to https://download.iobroker.net
 
