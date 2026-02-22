@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added `checkDocker` and `infoBox` as known jsonConfig components to fix false-positive E5504 errors.
 - (mcm1957) require js-controlelr 6 and admin 7 now. [#641] [#589]
 - (mcm1957) required and suggested releases of standard packages have been updated.
 - (mcm1957) Dependencies to packages named 'admin' and 'iobroker' have been disallowed. [#617]
