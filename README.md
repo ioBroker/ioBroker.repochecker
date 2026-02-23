@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added W6011/W7004 checks: warn when copyright lines in README.md or LICENSE are separated by an empty line instead of trailing two spaces.
 - (@copilot) Fixed false positive W6009/W7003: warning for non-consecutive copyright lines (separated by other text or empty lines) is no longer issued. [#672]
 - (@copilot) Fixed false positive S0048/S0047 for npm alias dependencies (e.g. `"npm:real-package@^1.2.3"`). [#667]
 - (@copilot) Added jsonConfig components `iframe` and `iframeSendTo` with minAdmin 7.7.28.
