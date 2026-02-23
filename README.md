@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Fixed false positive S0048/S0047 for npm alias dependencies (e.g. `"npm:real-package@^1.2.3"`). [#667]
 - (@copilot) Added jsonConfig components `iframe` and `iframeSendTo` with minAdmin 7.7.28.
 - (@copilot) Added jsonConfig component `yamlEditor` with minAdmin 7.7.31. [#660]
 - (@copilot) Restructured `validComponents` entries in M5500__JsonConfig.js to objects with `function` and `minAdmin` properties.
