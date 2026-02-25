@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.2.2-alpha.2 (2026-02-25)
 - (mcm1957) Add warning if fa-icon entry still exists.
 - (@copilot) Added W6011/W7004 checks: warn when copyright lines in README.md or LICENSE are separated by an empty line instead of trailing two spaces.
 - (@copilot) Fixed false positive W6009/W7003: warning for non-consecutive copyright lines (separated by other text or empty lines) is no longer issued. [#672]
