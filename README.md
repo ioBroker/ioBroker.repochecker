@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.2.3 (2026-02-26)
 - (@copilot) Fixed crash when `devDependencies` is missing from package.json. [#675]
 
 ### 5.2.2 (2026-02-25)
