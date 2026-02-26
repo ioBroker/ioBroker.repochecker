@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Fixed crash when `devDependencies` is missing from package.json. [#675]
+
 ### 5.2.2 (2026-02-25)
 - (mcm1957) Add warning if fa-icon entry still exists.
 - (@copilot) Added W6011/W7004 checks: warn when copyright lines in README.md or LICENSE are separated by an empty line instead of trailing two spaces.
