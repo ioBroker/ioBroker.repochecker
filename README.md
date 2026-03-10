@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added check for deprecated `ahmadnassri/action-dependabot-auto-merge` action [E3001], missing auto-merge workflow when dependabot config is present [W3002], and suggestion to add auto-merge via `iobroker-bot-orga/action-automerge-dependabot@v1` [S3003].
+
 ### 5.2.3 (2026-02-26)
 - (@copilot) Fixed crash when `devDependencies` is missing from package.json. [#675]
 

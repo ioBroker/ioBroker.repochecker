@@ -156,6 +156,7 @@ function check(request, ctx, callback) {
         .then(context => M4000_Repository.checkRepository(context))
         .then(context => M5000_Code.checkCode(context))
         .then(context => M3000_Testing.checkTests(context))
+        .then(context => M3000_Testing.checkDependabotAutomerge(context))
         .then(context => M8000_Github.checkGithubRepo(context))
         .then(context => M6000_Readme.checkReadme(context))
         .then(context => M7000_License.checkLicenseFile(context))
