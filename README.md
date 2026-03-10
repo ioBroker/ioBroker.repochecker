@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Extended testing checks (M3000_Testing.js): added checks for testing devDependency, test-and-release.yml workflow file presence, validity and required configuration.
+
 ### 5.2.3 (2026-02-26)
 - (@copilot) Fixed crash when `devDependencies` is missing from package.json. [#675]
 
