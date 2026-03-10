@@ -6,15 +6,11 @@ If you want to add your adapter to the public ioBroker repository, all tests on 
 
 ## How to test via cli
 
-You can pass your repository as a parameter to test
+When running the repository checker via the command line, you **need** to add the repository as parameter, while the branch parameter (`master/main/dev`) is optional. If this parameter is omitted, the `default` branch (typically master / main) will be checked.
 
-`npx @iobroker/repochecker <repo> [branch]`
-
-```bash
-npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript master
 ```
-
-Branch (`master/main/dev`) is optional.
+npx @iobroker/repochecker <repo> [branch]`
+```
 
 For extra debugging outputs you can pass the `--debug` parameter.
 
@@ -23,18 +19,64 @@ The link to the GitHub repository is still necessary because data from the proje
 
 Example:
 
-```bash
-npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.javascript --local
-```
+`npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.repochecker --local`
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
 ### **WORK IN PROGRESS**
 - (@copilot) Improved setInterval/setTimeout checks (E5004/E5005) to scan all .js and .ts files, ignore this./adapter. prefixed calls, and suggest proper usage based on context
+- (@copilot) Extended W5034 check to also warn when `.ts` and `.js`/`.cjs`/`.mjs` versions of the same file exist in the same directory.
+- (@copilot) E3003 YAML parse error for workflow files now logs only the first line (without the file excerpt).
+- (@copilot) Added DEPENDABOT issue template for GitHub Copilot tasks.
+- (@copilot) Extended testing checks (M3000_Testing.js): added checks for testing devDependency, test-and-release.yml workflow file presence, validity and required configuration.
 
-### 5.0.0-alpha.1 (2025-09-29)
+### 5.2.3 (2026-02-26)
+- (@copilot) Fixed crash when `devDependencies` is missing from package.json. [#675]
+
+### 5.2.2 (2026-02-25)
+- (mcm1957) Add warning if fa-icon entry still exists.
+- (@copilot) Added W6011/W7004 checks: warn when copyright lines in README.md or LICENSE are separated by an empty line instead of trailing two spaces.
+- (@copilot) Fixed false positive W6009/W7003: warning for non-consecutive copyright lines (separated by other text or empty lines) is no longer issued. [#672]
+- (@copilot) Fixed false positive S0048/S0047 for npm alias dependencies (e.g. `"npm:real-package@^1.2.3"`). [#667]
+- (@copilot) Added jsonConfig components `iframe` and `iframeSendTo` with minAdmin 7.7.28.
+- (@copilot) Added jsonConfig component `yamlEditor` with minAdmin 7.7.31. [#660]
+- (@copilot) Restructured `validComponents` entries in M5500__JsonConfig.js to objects with `function` and `minAdmin` properties.
+- (@copilot) Added `checkDocker` and `infoBox` as known jsonConfig components to fix false-positive E5504 errors; set minAdmin 7.7.31 for `checkDocker`. [#663]
+- (mcm1957) require js-controlelr 6 and admin 7 now. [#641] [#589]
+- (mcm1957) required and suggested releases of standard packages have been updated.
+- (mcm1957) Dependencies to packages named 'admin' and 'iobroker' have been disallowed. [#617]
+
+### 5.1.1 (2025-12-01)
+- (@copilot) Updated repository URLs from http://repo.iobroker.live to https://download.iobroker.net
+
+### 5.1.0 (2025-11-25)
+- (@copilot) Added check for conflicting JSON/JSON5 files with same base name in same directory (E5038) [#169]
+- (@copilot) Added .releaseconfig.json verification to check plugins listed match installed devDependencies (E5036, W5037)
+- (@copilot) Added YAML file validation check (E5035) to verify .yml and .yaml files are well-structured [#618]
+- (@copilot) Added flexible conditional dependency requirements support [#609]
+- (mcm1957) add warning if iobroker bot PRs are open. [#596]
+- (mcm1957) remove S1094, protectedNative elements need not be encrypted. [#579]
+- (mcm1957) required and suggested releases of standard pacakges have been updated.
+- (mcm1957) Log errors at io-package validation as errors now.
+- (mcm1957) Text for E1000 has been corrected. [#576]
+- (mcm1957) Pathc information has been added to error E5509. [#394]
+
+### 5.0.2 (2025-10-03)
+- (mcm1957) Some debug log has been removed.
+
+### 5.0.1 (2025-10-03)
+- (mcm1957) A crash at adapters which do not contain news entry at io-package.json has been fixed. [#572]
+
+### 5.0.0 (2025-10-02)
+- (mcm1957) Suppress W6010 if adapter not yet published at npm. [#567]
+- (@copilot) Added check for deprecated common.jsonConfig property - warns if adminUI exists (W1109), errors if adminUI missing (E1109)
+- (@copilot) Added check (W0063) for unneeded devDependencies when @iobroker/testing >= 5.1.1 is installed
+- (@copilot) Added check for conflicting JavaScript file extensions (.js, .cjs, .mjs) in the same directory (E5034)
+- (@copilot) Improved copyright year check to find all years in multiple copyright entries and use the newest one
+- (@copilot) Added check for missing trailing spaces in multiple copyright lines (W6009, W7003)
 - (mcm1957) Strict mode requirements have been loosend at schema validation.
 - (mcm1957) Do not log missing jsonConfig schema at vscode is no jsonConfig is used. [#548]
 - (mcm1957) News entry at io-package.json is no longer required for alpha release. [#532]

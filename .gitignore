@@ -1,9 +1,16 @@
-/.idea
-/node_modules
-/config.json
-/package-lock.json
-/gulpfile.js
+# No dot-directories except github/vscode
+.*/
+!.vscode/
+!.github/
+.commitinfo
+
+*.code-workspace
+node_modules
 nbproject
-/index.zip
-package.zip
-/frontend/package-lock.json
+
+# npm package files
+iobroker.*.tgz
+
+Thumbs.db
+*.zip
+

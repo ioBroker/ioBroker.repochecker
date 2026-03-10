@@ -122,7 +122,9 @@
 - [E604 No `## License` found in README.md](#e604-no--license-found-in-readmemd)
 - [E605 No actual year found in copyright. Please add `Copyright (c) XXXX-YYYY Author` at the end of README.md](#e605-no-actual-year-found-in-copyright-please-add-copyright-c-xxxx-yyyy-author-at-the-end-of-readmemd)
 - [E606 Current adapter version ${context.packageJson.version} not found in README.md](#e606-current-adapter-version-contextpackagejsonversion-not-found-in-readmemd)
+- [W609 Multiple copyright lines in README.md missing trailing spaces](#w609-multiple-copyright-lines-in-readmemd-missing-trailing-spaces)
 - [E701 NO LICENSE file found](#e701-no-license-file-found)
+- [W703 Multiple copyright lines in LICENSE file missing trailing spaces](#w703-multiple-copyright-lines-in-license-file-missing-trailing-spaces)
 - [E801 No repository about text found. Please go to GitHub, press the settings button beside the about title and add the description.](#e801-no-repository-about-text-found-please-go-to-github-press-the-settings-button-beside-the-about-title-and-add-the-description)
 - [E802 No topics found in the repository. Please go to GitHub, press the settings button beside the about title and add some topics.](#e802-no-topics-found-in-the-repository-please-go-to-github-press-the-settings-button-beside-the-about-title-and-add-some-topics)
 - [E803 Archived repositories are not allowed.](#e803-archived-repositories-are-not-allowed)
@@ -150,311 +152,323 @@
 - [W901 .gitignore not found](#w901-gitignore-not-found)
 
 ## Issues
-### [E0001] Cannot parse `package.json`
+### [E001] Cannot parse `package.json`
 #### Explanation
 Some problem parsing the `package.json` occurred. See error messages added for details.
 #### Required step to resolve the problem
 Correct the file `package.json` so that it becomes a valid json file.
 
-### [E0002] No `ioBroker.` found in the name of the repository
+### [E002] No `ioBroker.` found in the name of the repository
 #### Explanation
 The name of the repository must start with `ioBroker.` ioBroker must be written with an capital `B`
 #### Required step to resolve the problem
 Correct the name of the repository by renaming it to meet standards
 
-### [E0003] Repository must have name ioBroker.adaptername, but now io`b`roker is in lowercase
+### [E003] Repository must have name ioBroker.adaptername, but now io`b`roker is in lowercase
 #### Explanation
 The name of the repository must be ioBroker.. ioBroker must be written with an capital B
 #### Required step to resolve the problem
 Correct the name of the repository by renaming it to meet standards
 
-### [E0004] No adapter name found in URL
+### [E004] No adapter name found in URL
 
-### [E0005] Adapter name must be lowercase
+### [E005] Adapter name must be lowercase
 
-### [E0006] Invalid characters found in adapter name. Only lowercase chars, digits, `-` and `_` are allowed
+### [E006] Invalid characters found in adapter name. Only lowercase chars, digits, `-` and `_` are allowed
 
-### [E0007] Cannot find author repo in the URL
+### [E007] Cannot find author repo in the URL
 
-### [E0009] No version found in the package.json
+### [E009] No version found in the package.json
 
-### [E0010] No description found in the package.json
+### [E010] No description found in the package.json
 
-### [E0013] No author found in the package.json
+### [E013] No author found in the package.json
 
-### [E0014] NPM information found in package.json. Please remove all attributes starting with `_`
+### [E014] NPM information found in package.json. Please remove all attributes starting with `_`
 
-### [E0015] No license found in package.json
+### [E015] No license found in package.json
 
-### [E0016] No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/
+### [E016] No SPDX license found in package.json. Please use one of listed here: https://spdx.org/licenses/
 
-### [E0017] No repository found in the package.json
+### [E017] No repository found in the package.json
 
-### [E0018] Invalid repository type in package.json. It should be git
+### [E018] Invalid repository type in package.json. It should be git
 
-### [E0019] Invalid repository URL in package.json.
+### [E019] Invalid repository URL in package.json.
 
-### [E0020] Name of adapter in package.json must be lowercase
+### [E020] Name of adapter in package.json must be lowercase
 
-### [E0021] `licenses` in package.json are deprecated. Please use only `license`: `NAME` field.
+### [E021] `licenses` in package.json are deprecated. Please use only `license`: `NAME` field.
 
-### [E0022] Adapter name is reserved!
+### [E022] Adapter name is reserved!
 
-### [E0023] Do not include `npm` as dependency!
+### [E023] Do not include `npm` as dependency!
 
-### [E0024] Adapter name may not start with '_'
+### [E024] Adapter name may not start with '_'
 
-### [E0025] Do not include `iobroker.js-controller` as dependency!
+### [E025] Do not include `iobroker.js-controller` as dependency!
 
-### [E1000] Cannot parse io-package.json
+### [E100] Cannot parse io-package.json
 
-### [E1001] io-package.json must have at least empty `native` attribute
+### [E101] io-package.json must have at least empty `native` attribute
 
-### [E1002] io-package.json must have common object
+### [E102] io-package.json must have common object
 
-### [E1003] `common.name` in io-package.json is invalid
+### [E103] `common.name` in io-package.json is invalid
 
-### [E1004] No `common.titleLang` found in io-package.json
+### [E104] No `common.titleLang` found in io-package.json
 
-### [E1005] `common.titleLang` must be an object
+### [E105] `common.titleLang` must be an object
 
-### [E1006] `common.titleLang` should not contain word `adapter` in the name. It is clear, that this is adapter
+### [E106] `common.titleLang` should not contain word `adapter` in the name. It is clear, that this is adapter
 
-### [E1007] No `common.version` found in io-package.json
+### [E107] No `common.version` found in io-package.json
 
-### [E1008] No `common.desc` found in io-package.json
+### [E108] No `common.desc` found in io-package.json
 
-### [E1009] `common.desc` in io-package.json should be an object for many languages
+### [E109] `common.desc` in io-package.json should be an object for many languages
 
-### [E1010] Icon not found in the io-package.json
+### [E110] Icon not found in the io-package.json
 
-### [E1011] extIcon not found in the io-package.json
+### [E111] extIcon not found in the io-package.json
 
-### [E1012] extIcon must be the same as an icon but with github path
+### [E112] extIcon must be the same as an icon but with github path
 
-### [E1014] No adapter are allowed in the repo without admin support (set `common.noConfig = true` and `common.adminUI.config = none` if adapter has no configuration)
+### [E114] No adapter are allowed in the repo without admin support (set `common.noConfig = true` and `common.adminUI.config = none` if adapter has no configuration)
 
-### [E1015] No licenseInformation found in io-package.json
+### [E115] No licenseInformation found in io-package.json
 
-### [E1016] No SPDX license found. Please use one of listed here: https://spdx.org/licenses/
+### [E116] No SPDX license found. Please use one of listed here: https://spdx.org/licenses/
 
-### [E1017] Licenses in package.json and in io-package.json are different
+### [E117] Licenses in package.json and in io-package.json are different
 
-### [E1018] Versions in package.json and in io-package.json are different
+### [E118] Versions in package.json and in io-package.json are different
 
-### [E1019] No type found in io-package.json
+### [E119] No type found in io-package.json
 
-### [E1020] Unknown type found in io-package.json
+### [E120] Unknown type found in io-package.json
 
-### [E1021] No authors found in io-package.json
+### [E121] No authors found in io-package.json
 
-### [E1022] authors must be an Array in io-package.json
+### [E122] authors must be an Array in io-package.json
 
-### [E1023] Authors may not be empty in io-package.json
+### [E123] Authors may not be empty in io-package.json
 
-### [E1024] Main file not found under URL
+### [E124] Main file not found under URL
 
-### [E1025] External icon not found under URL
+### [E125] External icon not found under URL
 
-### [E1030] No `common.news` found in io-package.json
+### [E130] No `common.news` found in io-package.json
 
-### [E1040] width and height of logo are not equal
+### [E140] width and height of logo are not equal
 
-### [E1041] logo is too small. It must be greater or equal than 32x32
+### [E141] logo is too small. It must be greater or equal than 32x32
 
-### [E1042] logo is too big. It must be less or equal than 512x512
+### [E142] logo is too big. It must be less or equal than 512x512
 
-### [E1043] No main found in the package.json
+### [E143] No main found in the package.json
 
-### [E1044] common.installedFrom field found in io-package.json. Must be removed.
+### [E144] common.installedFrom field found in io-package.json. Must be removed.
 
-### [E1045] No `common.news` found for actual version
+### [E145] No `common.news` found for actual version
 
-### [E1046] instanceObjects must be an Array in io-package.json
+### [E146] instanceObjects must be an Array in io-package.json
 
-### [E1047] instanceObject type has an invalid type
+### [E147] instanceObject type has an invalid type
 
-### [E1048] instanceObject common.type has an invalid type! Expected `string`
+### [E148] instanceObject common.type has an invalid type! Expected `string`
 
-### [E1049] instanceObject common.type has an invalid value
+### [E149] instanceObject common.type has an invalid value
 
-### [E1050] No common.connectionType found in io-package.json
+### [E150] No common.connectionType found in io-package.json
 
-### [E1051] common.connectionType type has an invalid value
+### [E151] common.connectionType type has an invalid value
 
-### [E1052] No common.dataSource found in io-package.json
+### [E152] No common.dataSource found in io-package.json
 
-### [E1053] common.dependencies must contain {`js-controller`: `>=1.5.8`} or later
+### [E153] common.dependencies must contain {`js-controller`: `>=1.5.8`} or later
 
-### [E1054] common.dependencies must contain [{`js-controller`: `>=2.0.0`}] or later
+### [E154] common.dependencies must contain [{`js-controller`: `>=2.0.0`}] or later
 
-### [E1055] Invalid tier value. Only 1, 2 or 3 are allowed!
+### [E155] Invalid tier value. Only 1, 2 or 3 are allowed!
 
-### [E1057] common.protectedNative requires dependency {`js-controller`: `>=2.0.2`} or later
+### [E157] common.protectedNative requires dependency {`js-controller`: `>=2.0.2`} or later
 
-### [E1058] common.encryptedNative requires dependency {`js-controller`: `>=3.0.3`} or later
+### [E158] common.encryptedNative requires dependency {`js-controller`: `>=3.0.3`} or later
 
-### [E1059] common.dependencies `js-controller` dependency should always allow future versions (>=x.x.x)
+### [E159] common.dependencies `js-controller` dependency should always allow future versions (>=x.x.x)
 
-### [E1060] `admin` is not allowed in common.dependencies
+### [E160] `admin` is not allowed in common.dependencies
 
-### [E1061] `js-controller` is not allowed in common.globalDependencies
+### [E161] `js-controller` is not allowed in common.globalDependencies
 
-### [E1062] onlyWWW should have common.mode `none` in io-package.json
+### [E162] onlyWWW should have common.mode `none` in io-package.json
 
-### [E1063] common.mode requires JavaScript file for `main` in package.json
+### [E163] common.mode requires JavaScript file for `main` in package.json
 
-### [E1065] Node mode found in package.json
+### [E165] Node mode found in package.json
 
-### [E1066] Unknown type found in io-package.json
+### [E166] Unknown type found in io-package.json
 
-### [E1067] schedule adapters must have common.schedule property in io-package.json
+### [E167] schedule adapters must have common.schedule property in io-package.json
 
-### [E1068] common.notifications requires dependency {`js-controller`: `>=3.2.0`} or later
+### [E168] common.notifications requires dependency {`js-controller`: `>=3.2.0`} or later
 
-### [E1069] `common.keywords` must be an array in the io-package.json
+### [E169] `common.keywords` must be an array in the io-package.json
 
-### [E1070] `common.licenseInformation.type` is invalid. Select valid type (e.g. free)
+### [E170] `common.licenseInformation.type` is invalid. Select valid type (e.g. free)
 
-### [E1071] `common.licenseInformation.link` is required for non-free adapters
+### [E171] `common.licenseInformation.link` is required for non-free adapters
 
-### [E1072] `common.automaticUpgrade` will be defined by the user. Remove the attribute from io-package.json
+### [E172] `common.automaticUpgrade` will be defined by the user. Remove the attribute from io-package.json
 
-### [E1100] Not found on npm. Please publish
+### [E200] Not found on npm. Please publish
 
-### [E1101] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`
+### [E201] Bluefox was not found in the collaborators on NPM!. Please execute in adapter directory: `npm owner add bluefox iobroker.adapterName`
 
-### [E3000] Not found on travis. Please setup travis or use github actions (preferred)
+### [E300] Not found on travis. Please setup travis or use github actions (preferred)
 
-### [E3001] Tests on Travis-ci.org are broken. Please fix.
+### [E301] Tests on Travis-ci.org are broken. Please fix.
 
-### [E4000] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json
+### [E400] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist.json
 
-### [E4002] Types of adapter in latest repository and in io-package.json are different
+### [E402] Types of adapter in latest repository and in io-package.json are different
 
-### [E4003] Version set in latest repository
+### [E403] Version set in latest repository
 
-### [E4004] Icon not found in latest repository
+### [E404] Icon not found in latest repository
 
-### [E4005] Icon (latest) must be in the following path: ${url}
+### [E405] Icon (latest) must be in the following path: ${url}
 
-### [E4006] Meta URL (latest) not found in latest repository
+### [E406] Meta URL (latest) not found in latest repository
 
-### [E4007] Meta URL (latest) must be equal to ${url}io-package.json
+### [E407] Meta URL (latest) must be equal to ${url}io-package.json
 
-### [E4020] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json
+### [E420] Cannot download https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json
 
-### [E4022] Types of adapter in stable repository and in io-package.json are different
+### [E422] Types of adapter in stable repository and in io-package.json are different
 
-### [E4023] Adapter was found in stable repository but not in latest repo
+### [E423] Adapter was found in stable repository but not in latest repo
 
-### [E4024] No version set in stable repository
+### [E424] No version set in stable repository
 
-### [E4025] Icon not found in stable repository
+### [E425] Icon not found in stable repository
 
-### [E4026] Icon (stable) must be in the following path
+### [E426] Icon (stable) must be in the following path
 
-### [E4027] Meta URL (stable) not found in latest repository
+### [E427] Meta URL (stable) not found in latest repository
 
-### [E4028] Meta URL (stable) is invalid
+### [E428] Meta URL (stable) is invalid
 
-### [E4029] Adapter name should use `-` instead of `_`
+### [E429] Adapter name should use `-` instead of `_`
 
-### [E5000] node_modules found in repo. Please delete it
+### [E500] node_modules found in repo. Please delete it
 
-### [E5001] Cannot get zip on GitHub
+### [E501] Cannot get zip on GitHub
 
-### [E5002] `admin/img/info-big.png` not found, but selectID.js used in index_m.html 
+### [E502] `admin/img/info-big.png` not found, but selectID.js used in index_m.html 
 
-### [E5003] `iob_npm.done` found in repo! Remove that file
+### [E503] `iob_npm.done` found in repo! Remove that file
 
-### [E5004] setInterval found in main, but no clearInterval detected
+### [E504] setInterval found in main, but no clearInterval detected
 
-### [E5005] setTimeout found in main, but no clearTimeout detected
+### [E505] setTimeout found in main, but no clearTimeout detected
 
-### [E5006] More non translated in german or russian words found in admin/words.js. You can use https://translator.iobroker.in/ for translations
+### [E506] More non translated in german or russian words found in admin/words.js. You can use https://translator.iobroker.in/ for translations
 
-### [E5007] Cannot parse `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}`: ${e}
+### [E507] Cannot parse `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}`: ${e}
 
-### [E5008] `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}` not found, but admin support is declared
+### [E508] `admin/jsonConfig.json${context['/admin/jsonConfig.json'] ? '' : '5'}` not found, but admin support is declared
 
-### [E5009] Cannot parse `admin/i18n/${lang}/translations.json`
+### [E509] Cannot parse `admin/i18n/${lang}/translations.json`
 
-### [E5010] `/admin/i18n/${lang}/translations.json` or `admin/i18n/${lang}.json` not found, but admin support is declared
+### [E510] `/admin/i18n/${lang}/translations.json` or `admin/i18n/${lang}.json` not found, but admin support is declared
 
-### [E5011] Cannot parse `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}`
+### [E511] Cannot parse `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}`
 
-### [E5012] `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}` not found, but custom support is declared
+### [E512] `admin/jsonCustom.json${context['/admin/jsonCustom.json'] ? '' : '5'}` not found, but custom support is declared
 
-### [E5014] `admin/blockly.js` not found, but blockly support is declared
+### [E514] `admin/blockly.js` not found, but blockly support is declared
 
-### [E5015] JavaScript-Rules support is declared, but no location in property url defined
+### [E515] JavaScript-Rules support is declared, but no location in property url defined
 
-### [E5016] `${context.ioPackageJson.common.javascriptRules.url}` not found, but JavaScript-Rules support is declared
+### [E516] `${context.ioPackageJson.common.javascriptRules.url}` not found, but JavaScript-Rules support is declared
 
-### [E5018] `@alcalzone/release-script` is used, but `.releaseconfig.json` not found
+### [E518] `@alcalzone/release-script` is used, but `.releaseconfig.json` not found
 
-### [E5019] `${context.packageJson.main}` found in package.json, but not found as file
+### [E519] `${context.packageJson.main}` found in package.json, but not found as file
 
-### [E6001] No README.md found
+### [E601] No README.md found
 
-### [E6003] NO `## Changelog` found in README.md
+### [E603] NO `## Changelog` found in README.md
 
-### [E6004] No `## License` found in README.md
+### [E604] No `## License` found in README.md
 
-### [E6005] No actual year found in copyright. Please add `Copyright (c) XXXX-YYYY Author` at the end of README.md
+### [E605] No actual year found in copyright. Please add `Copyright (c) XXXX-YYYY Author` at the end of README.md
 
-### [E6006] Current adapter version ${context.packageJson.version} not found in README.md
+### [E606] Current adapter version ${context.packageJson.version} not found in README.md
 
-### [E7001] NO LICENSE file found
+### [W609] Multiple copyright lines in README.md missing trailing spaces
+#### Explanation
+When a LICENSE section in README.md contains multiple copyright lines, each line (except the last) must end with two spaces. In Markdown, two trailing spaces create a line break, ensuring proper formatting of multiple copyright holders.
+#### Required step to resolve the problem
+Add two spaces at the end of each copyright line except the last one in the LICENSE section of README.md.
 
-### [E8001] No repository about text found. Please go to GitHub, press the settings button beside the about title and add the description.
+### [E701] NO LICENSE file found
 
-### [E8002] No topics found in the repository. Please go to GitHub, press the settings button beside the about title and add some topics.
+### [W703] Multiple copyright lines in LICENSE file missing trailing spaces
+#### Explanation
+When the LICENSE file contains multiple copyright lines, each line (except the last) must end with two spaces. In Markdown-formatted LICENSE files, two trailing spaces create a line break, ensuring proper formatting of multiple copyright holders.
+#### Required step to resolve the problem
+Add two spaces at the end of each copyright line except the last one in the LICENSE file.
 
-### [E8003] Archived repositories are not allowed.
+### [E801] No repository about text found. Please go to GitHub, press the settings button beside the about title and add the description.
 
-### [E8004] node_modules not found in 
+### [E802] No topics found in the repository. Please go to GitHub, press the settings button beside the about title and add some topics.
 
-### [E9002] node_modules not found in .npmignore
+### [E803] Archived repositories are not allowed.
 
-### [E9003] iob_npm.done not found in .gitignore
+### [E804] node_modules not found in 
 
-### [W1005] `common.titleLang` should be translated into all supported languages
+### [E902] node_modules not found in .npmignore
 
-### [W1009] `common.desc` should be translated into all supported languages
+### [E903] iob_npm.done not found in .gitignore
 
-### [W1013] Adapter should support compact mode
+### [W105] `common.titleLang` should be translated into all supported languages
 
-### [W1014] `common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`
+### [W109] `common.desc` should be translated into all supported languages
 
-### [W1015] `common.tier` is required in io-package.json
+### [W113] Adapter should support compact mode
 
-### [W1045] Each `common.news` should be translated into all supported languages
+### [W114] `common.license` in io-package.json is deprecated. Please define object `common.licenseInformation`
 
-### [W1056] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI
+### [W115] `common.tier` is required in io-package.json
 
-### [W1064] Adapters without config `common.noConfig = true` should also set `common.adminUI.config = none`
+### [W145] Each `common.news` should be translated into all supported languages
 
-### [W1070] `common.keywords` should not contain `iobroker`, `adapter`, `smart home` in io-package.json
+### [W156] Adapter should support admin 5 UI (jsonConfig) if you do not use a React based UI
 
-### [W1071] `common.title` is deprecated in io-package.json
+### [W164] Adapters without config `common.noConfig = true` should also set `common.adminUI.config = none`
 
-### [W1072] `common.localLink` in io-package.json is deprecated. Please define object `common.localLinks`: { `_default`: `...` }
+### [W170] `common.keywords` should not contain `iobroker`, `adapter`, `smart home` in io-package.json
 
-### [W3002] Use github actions instead of travis-ci
+### [W171] `common.title` is deprecated in io-package.json
 
-### [W4000] Cannot find adapter in latest repository
+### [W172] `common.localLink` in io-package.json is deprecated. Please define object `common.localLinks`: { `_default`: `...` }
 
-### [W5004] setInterval found in main, but no clearInterval detected
+### [W302] Use github actions instead of travis-ci
 
-### [W5005] setTimeout found in main, but no clearTimeout detected
+### [W400] Cannot find adapter in latest repository
 
-### [W5013] `gulpfile.js` found in repo! Think about migrating to @iobroker/adapter-dev package
+### [W504] setInterval found in main, but no clearInterval detected
 
-### [W5015] Why you decided to disable i18n support?
+### [W505] setTimeout found in main, but no clearTimeout detected
 
-### [W8001] .npmignore not found
+### [W513] `gulpfile.js` found in repo! Think about migrating to @iobroker/adapter-dev package
 
-### [W9001] .gitignore not found
+### [W515] Why you decided to disable i18n support?
+
+### [W801] .npmignore not found
+
+### [W901] .gitignore not found
 
