@@ -29,7 +29,6 @@ const M5000_Code = require('./lib/M5000_Code.js');
 const M6000_Readme = require('./lib/M6000_Readme.js');
 const M7000_License = require('./lib/M7000_License.js');
 const M8000_Github = require('./lib/M8000_Github.js');
-const M8900__Dependabot = require('./lib/M8900__Dependabot.js');
 const M9000_GitNpmIgnore = require('./lib/M9000_GitNpmIgnore.js');
 
 // disable axios caching
@@ -162,7 +161,6 @@ function check(request, ctx, callback) {
         .then(context => M7000_License.checkLicenseFile(context))
         .then(context => M9000_GitNpmIgnore.checkNpmIgnore(context))
         .then(context => M9000_GitNpmIgnore.checkGitIgnore(context))
-        .then(context => M8900__Dependabot.checkDependabot(context))
         .then(context => {
             return callback(
                 null,
