@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Extended W5034 check to also warn when `.ts` and `.js`/`.cjs`/`.mjs` versions of the same file exist in the same directory.
 - (@copilot) E3003 YAML parse error for workflow files now logs only the first line (without the file excerpt).
 - (@copilot) Added DEPENDABOT issue template for GitHub Copilot tasks.
 - (@copilot) Extended testing checks (M3000_Testing.js): added checks for testing devDependency, test-and-release.yml workflow file presence, validity and required configuration.
