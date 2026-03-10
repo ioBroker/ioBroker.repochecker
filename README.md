@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) E3003 YAML parse error for workflow files now logs only the first line (without the file excerpt).
 - (@copilot) Added DEPENDABOT issue template for GitHub Copilot tasks.
 - (@copilot) Extended testing checks (M3000_Testing.js): added checks for testing devDependency, test-and-release.yml workflow file presence, validity and required configuration.
 
