@@ -25,7 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
 ### **WORK IN PROGRESS**
+- (@copilot) Improved setInterval/setTimeout checks (E5004/E5005) to scan all .js and .ts files, ignore this./adapter. prefixed calls, and suggest proper usage based on context
 - (@copilot) Extended W5034 check to also warn when `.ts` and `.js`/`.cjs`/`.mjs` versions of the same file exist in the same directory.
 - (@copilot) E3003 YAML parse error for workflow files now logs only the first line (without the file excerpt).
 - (@copilot) Added DEPENDABOT issue template for GitHub Copilot tasks.
