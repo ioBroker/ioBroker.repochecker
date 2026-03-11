@@ -1,5 +1,5 @@
 ---
-name: DEPENDABOT - suggest changes to be implemented by GitHub Copilot
+name: COPILOT - suggest changes to be implemented by GitHub Copilot
 description: Suggest changes to be implemented by GitHub Copilot (for maintainers only)
 title: "[COPILOT] "
 labels: ["TRIAGE", "copilot"]
@@ -13,29 +13,11 @@ body:
         > It must NOT be used for any other purpose.
         > **Any issue not designed to be handled by Copilot will be closed immediately without further notice.**
 
-  - type: checkboxes
-    attributes:
-      label: I'm sure that
-      options:
-        - label: This issue is intended to be implemented by GitHub Copilot
-          required: true
-        - label: There is no other (open) issue with the same topic (use the search!)
-          required: true
-
   - type: textarea
     id: description
     attributes:
-      label: Description of requested changes
+      label: Description of task
       description: Please provide a detailed description of the changes you want GitHub Copilot to implement
       placeholder: Describe the changes to be implemented
     validations:
       required: true
-
-  - type: textarea
-    id: additional_context
-    attributes:
-      label: Additional context
-      description: Add any other context, links, or references relevant to this task
-      placeholder: Any additional information
-    validations:
-      required: false
