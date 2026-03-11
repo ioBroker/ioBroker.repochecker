@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) OnlyWWW adapters no longer require testing dependencies or adapter test workflows (skips E3000, E3011, and W3015 checks for adapters with `common.onlyWWW = true`).
+
 ### 5.3.0 (2026-03-11)
 - (@copilot) Added validation for dependabot configuration: checks for required ecosystems (github-actions, npm), schedule settings, open-pull-requests-limit, and automerge workflow configuration (checks S8901–S8914).
 - (@copilot) Extended W5034 check to also warn when `.ts` and `.js`/`.cjs`/`.mjs` versions of the same file exist in the same directory.
