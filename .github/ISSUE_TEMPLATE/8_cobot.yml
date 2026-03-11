@@ -21,3 +21,15 @@ body:
       placeholder: Describe the changes to be implemented
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        > Additional instructions for @copilot:
+        >
+        > Do not add any comment which causes this issue to be closed like 'fixes:...' to the generated PR or any commit 
+        > created during processing this issue. This issue should be closed manually by maintainer only.
+        >
+        > Do not try to extend numbering range, so do not create any M10000_xxx.js script. If splitting code into an extra 
+        > file seems to be appropiate, add it to the best matching area or the area requested by this issue and name the
+        > file like the are uesed using two underscores. See M8900_Dependabot.js as an example.
