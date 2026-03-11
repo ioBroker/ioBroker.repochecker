@@ -31,6 +31,7 @@ Example:
 - (@copilot) E3003 YAML parse error for workflow files now logs only the first line (without the file excerpt).
 - (@copilot) Added DEPENDABOT issue template for GitHub Copilot tasks.
 - (@copilot) Extended testing checks (M3000_Testing.js): added checks for testing devDependency, test-and-release.yml workflow file presence, validity and required configuration.
+- (@copilot) OnlyWWW adapters no longer require testing dependencies or adapter test workflows (skips E3000, E3011, and W3015 checks for adapters with `common.onlyWWW = true`). [#575]
 
 ### 5.2.3 (2026-02-26)
 - (@copilot) Fixed crash when `devDependencies` is missing from package.json. [#675]
