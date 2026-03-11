@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.3.0 (2026-03-11)
 - (@copilot) Added validation for dependabot configuration: checks for required ecosystems (github-actions, npm), schedule settings, open-pull-requests-limit, and automerge workflow configuration (checks S8901–S8914).
 - (@copilot) Extended W5034 check to also warn when `.ts` and `.js`/`.cjs`/`.mjs` versions of the same file exist in the same directory.
 - (@copilot) E3003 YAML parse error for workflow files now logs only the first line (without the file excerpt).
