@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) OnlyWWW adapters no longer require testing dependencies or adapter test workflows (skips E3000, E3011, and W3015 checks for adapters with `common.onlyWWW = true`).
+- (@copilot) Suggestions [Sxxxx] are now shown in a dedicated "Suggestions" section, separate from Warnings [Wxxxx], in both CLI output and the web frontend.
 
 ### 5.3.0 (2026-03-11)
 - (@copilot) Added validation for dependabot configuration: checks for required ecosystems (github-actions, npm), schedule settings, open-pull-requests-limit, and automerge workflow configuration (checks S8901–S8914).

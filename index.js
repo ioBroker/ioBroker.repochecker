@@ -168,7 +168,8 @@ function check(request, ctx, callback) {
                     result: 'OK',
                     checks: context.checks,
                     errors: context.errors,
-                    warnings: context.warnings,
+                    warnings: context.warnings.filter(w => !w.startsWith('[S')),
+                    suggestions: context.warnings.filter(w => w.startsWith('[S')),
                     version,
                     hasTravis: context.hasTravis,
                     lastCommitSha: context.lastCommitSha,
@@ -185,7 +186,8 @@ function check(request, ctx, callback) {
                     result: 'Errors found',
                     checks: context.checks,
                     errors: context.errors,
-                    warnings: context.warnings,
+                    warnings: context.warnings.filter(w => !w.startsWith('[S')),
+                    suggestions: context.warnings.filter(w => w.startsWith('[S')),
                     version,
                     hasTravis: context.hasTravis,
                     lastCommitSha: context.lastCommitSha,
@@ -307,28 +309,23 @@ if (typeof module !== 'undefined' && module.parent) {
             } else {
                 console.log('\n\nNO errors encountered.');
             }
-            if (context.warnings.length) {
+            const warnings = context.warnings.filter(w => !w.startsWith('[S'));
+            const suggestions = context.warnings.filter(w => w.startsWith('[S'));
+            if (warnings.length) {
                 console.log('\nWarnings:');
-                context.warnings.sort().forEach(err => {
-                    //const issue = err.substring(1, 5);
+                warnings.sort().forEach(err => {
                     console.warn(err);
-                    // if (issues[issue]) {
-                    //     //if (issues[issue].title) {
-                    //     //    console.warn(getText(issues[issue].title, 'en'));
-                    //     //}
-                    //     if (issues[issue].explanation) {
-                    //         console.warn(getText(issues[issue].explanation, 'en'));
-                    //     }
-                    //     if (issues[issue].resolving) {
-                    //         console.warn(getText(issues[issue].resolving, 'en'));
-                    //     }
-                    //     if (issues[issue].notes) {
-                    //         console.warn(getText(issues[issue].notes, 'en'));
-                    //     }
-                    // }
                 });
             } else {
                 console.log('\n\nNO warnings encountered.');
+            }
+            if (suggestions.length) {
+                console.log('\nSuggestions:');
+                suggestions.sort().forEach(sug => {
+                    console.log(sug);
+                });
+            } else {
+                console.log('\n\nNO suggestions encountered.');
             }
             console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
         },

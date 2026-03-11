@@ -14,7 +14,7 @@ import {
     CircularProgress,
 } from '@mui/material';
 
-import { DoneOutlined as CheckIcon, Cancel as ErrorIcon, Announcement as WarningIcon } from '@mui/icons-material';
+import { DoneOutlined as CheckIcon, Cancel as ErrorIcon, Announcement as WarningIcon, EmojiObjects as SuggestionIcon } from '@mui/icons-material';
 
 import { Utils, Theme, DialogMessage, I18n } from '@iobroker/adapter-react-v5';
 
@@ -83,6 +83,9 @@ const styles = {
     warning: {
         color: '#bf9100',
     },
+    suggestion: {
+        color: '#1976d2',
+    },
 };
 
 class App extends Component {
@@ -112,6 +115,7 @@ class App extends Component {
             requesting: false,
             errors: [],
             warnings: [],
+            suggestions: [],
             result: [],
             screenWidth: window.innerWidth,
             version: 'Adapter checker',
@@ -160,7 +164,7 @@ class App extends Component {
             url = url.substring(0, url.length - 1);
         }
 
-        this.setState({ errors: [], result: [], warnings: [], requesting: true });
+        this.setState({ errors: [], result: [], warnings: [], suggestions: [], requesting: true });
 
         Comm.check(url, this.state.branch.trim(), (err, data) => {
             if (err) {
@@ -168,6 +172,7 @@ class App extends Component {
                     errors: data.errors || [],
                     globalError: err,
                     warnings: (data && data.warnings) || [],
+                    suggestions: (data && data.suggestions) || [],
                     result: (data && data.checks) || [],
                     requesting: false,
                     hasTravis: (data && data.hasTravis) || false,
@@ -176,6 +181,7 @@ class App extends Component {
                 this.setState({
                     errors: data.errors || [],
                     warnings: data.warnings || [],
+                    suggestions: data.suggestions || [],
                     result: data.checks || [],
                     version: 'v' + data.version,
                     requesting: false,
@@ -235,6 +241,25 @@ class App extends Component {
                         </ListItemIcon>
                         <ListItemText
                             style={styles.warning}
+                            primary={typeof line === 'string' ? line : JSON.stringify(line)}
+                            secondary={i + 1}
+                        />
+                    </ListItem>
+                ))}
+            </List>
+        );
+    }
+
+    renderSuggestions() {
+        return (
+            <List component="nav">
+                {this.state.suggestions.map((line, i) => (
+                    <ListItem key={line}>
+                        <ListItemIcon>
+                            <SuggestionIcon style={styles.suggestion} />
+                        </ListItemIcon>
+                        <ListItemText
+                            style={styles.suggestion}
                             primary={typeof line === 'string' ? line : JSON.stringify(line)}
                             secondary={i + 1}
                         />
@@ -435,8 +460,18 @@ class App extends Component {
                                       ) : null,
                                   ]
                                 : null}
-                            {this.state.errors ? this.renderError() : null}
-                            {this.state.warnings ? this.renderWarnings() : null}
+                            {this.state.errors && this.state.errors.length ? (
+                                <h3 style={{ ...styles.title, color: styles.error.color }}>Errors</h3>
+                            ) : null}
+                            {this.state.errors && this.state.errors.length ? this.renderError() : null}
+                            {this.state.warnings && this.state.warnings.length ? (
+                                <h3 style={{ ...styles.title, color: styles.warning.color }}>Warnings</h3>
+                            ) : null}
+                            {this.state.warnings && this.state.warnings.length ? this.renderWarnings() : null}
+                            {this.state.suggestions && this.state.suggestions.length ? (
+                                <h3 style={{ ...styles.title, color: styles.suggestion.color }}>Suggestions</h3>
+                            ) : null}
+                            {this.state.suggestions && this.state.suggestions.length ? this.renderSuggestions() : null}
                             {this.state.result ? this.renderResult() : null}
                         </div>
                         {this.showError()}
