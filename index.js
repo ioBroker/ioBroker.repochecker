@@ -307,28 +307,27 @@ if (typeof module !== 'undefined' && module.parent) {
             } else {
                 console.log('\n\nNO errors encountered.');
             }
-            if (context.warnings.length) {
+            if (context.warnings.filter(txt => txt.startsWith('[W')).length) {
                 console.log('\nWarnings:');
-                context.warnings.sort().forEach(err => {
-                    //const issue = err.substring(1, 5);
-                    console.warn(err);
-                    // if (issues[issue]) {
-                    //     //if (issues[issue].title) {
-                    //     //    console.warn(getText(issues[issue].title, 'en'));
-                    //     //}
-                    //     if (issues[issue].explanation) {
-                    //         console.warn(getText(issues[issue].explanation, 'en'));
-                    //     }
-                    //     if (issues[issue].resolving) {
-                    //         console.warn(getText(issues[issue].resolving, 'en'));
-                    //     }
-                    //     if (issues[issue].notes) {
-                    //         console.warn(getText(issues[issue].notes, 'en'));
-                    //     }
-                    // }
-                });
+                context.warnings
+                    .filter(txt => txt.startsWith('[W'))
+                    .sort()
+                    .forEach(err => {
+                        console.warn(err);
+                    });
             } else {
                 console.log('\n\nNO warnings encountered.');
+            }
+            if (context.warnings.filter(txt => txt.startsWith('[S')).length) {
+                console.log('\nSuggestionss:');
+                context.warnings
+                    .filter(txt => txt.startsWith('[S'))
+                    .sort()
+                    .forEach(err => {
+                        console.warn(err);
+                    });
+            } else {
+                console.log('\n\nNO suggestions encountered.');
             }
             console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
         },
