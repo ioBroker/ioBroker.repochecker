@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (mcm197) E3008 has been fixed
+
 ### 5.4.0 (2026-03-11)
 - (@copilot) OnlyWWW adapters no longer require testing dependencies or adapter test workflows (skips E3000, E3011, and W3015 checks for adapters with `common.onlyWWW = true`).
 
