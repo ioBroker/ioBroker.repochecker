@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Fixed E1111: no longer raised when adapter uses jsonConfig (`common.adminUI.config = 'json'`), as `option1`/`option2` may be legitimate field names in that context.
+- (@copilot) Fixed W1111 (renumbered to W5040): corrected numbering to be in valid range for `M5000_Code.js` (5000–5499); no longer raised when adapter has a jsonConfig definition file (`jsonConfig.json` or `jsonConfig.json5`).
+
 ### 5.5.1 (2026-03-17)
 - (@copilot) Added W5039 check: warns when `admin/words.js` exists but is not referenced anywhere in the codebase for adapters using jsonConfig. The file seems to be outdated and should be removed [#745].
 - (@copilot) Added W3018 and W3019 checks: when deploy job uses `ioBroker/testing-action-deploy@v1`, warns if job-level permissions (`contents: write`, `id-token: write`) are missing (W3018) or if the `npm-token` parameter is specified (W3019), as trusted publishing will not work in either case. Related to [#742].
