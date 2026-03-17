@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) E5040 and W5041 messages now include the specific detected key(s) (e.g. `option1`, `option2`, or both) instead of the generic `option1/option2` placeholder. Only one issue is raised even when multiple keys are detected.
 - (@copilot) Fixed E1111/W1111 checks: E1111 and W1111 are now renamed to E5040 and W5041 (correct numbering range for M5000_Code module). Both checks now correctly exempt adapters where `option1`/`option2` keys are genuinely used in `admin/index.html`, `admin/index_m.html`, or as keys in `admin/jsonConfig.json`/`admin/jsonConfig.json5`. Related to [#746].
 
 ### 5.5.1 (2026-03-17)
