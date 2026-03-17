@@ -27,6 +27,9 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) Multiple S8906 suggestions for dependabot entries using `schedule: interval: monthly` are now combined into a single suggestion. [#696]
+- (@copilot) Added E6012 check: error when README.md contains direct npm install instructions (`npm install iobroker.*`, `npm i iobroker.*`, `cd /opt/iobroker`). Related to [#722].
+- (@copilot) Added E6013 check: error when README.md instructs users to install from GitHub using `iobroker url`. Related to [#722].
+- (@copilot) Added S6014 suggestion: when README.md contains an `## Installation` section. Related to [#722].
 
 ### 5.4.1 (2026-03-13)
 - (mcm197) E3008 has been fixed
