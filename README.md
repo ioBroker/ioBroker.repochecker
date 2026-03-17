@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added W5039 check: warns when `admin/words.js` exists but is not referenced anywhere in the codebase for adapters using jsonConfig. The file seems to be outdated and should be removed [#745].
 - (@copilot) Added W3018 and W3019 checks: when deploy job uses `ioBroker/testing-action-deploy@v1`, warns if job-level permissions (`contents: write`, `id-token: write`) are missing (W3018) or if the `npm-token` parameter is specified (W3019), as trusted publishing will not work in either case. Related to [#742].
 - (@copilot) Added W1113 check: warns when `native` config object contains properties but `common.adminUI.config` is set to `"none"`, as the native config will not be used without an admin UI config.
 - (@copilot) Added E1112 check: error when `notifications` in `io-package.json` are not translated into all supported languages (en, de, ru, pt, nl, fr, it, es, pl, uk, zh-cn) [#734].
