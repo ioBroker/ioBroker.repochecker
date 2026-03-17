@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) Multiple S8906 suggestions for dependabot entries using `schedule: interval: monthly` are now combined into a single suggestion. [#696]
+- (@copilot) Added W1111 check: warns when example configuration keys `option1`/`option2` are found in `io-package.json` native section or i18n translation files. Only one warning is issued even if both locations contain example config.
 
 ### 5.4.1 (2026-03-13)
 - (mcm197) E3008 has been fixed
