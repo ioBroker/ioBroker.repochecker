@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added W3018 and W3019 checks: when deploy job uses `ioBroker/testing-action-deploy@v1`, warns if job-level permissions (`contents: write`, `id-token: write`) are missing (W3018) or if the `npm-token` parameter is specified (W3019), as trusted publishing will not work in either case. Related to [#742].
 - (@copilot) Added W1113 check: warns when `native` config object contains properties but `common.adminUI.config` is set to `"none"`, as the native config will not be used without an admin UI config.
 - (@copilot) Added E1112 check: error when `notifications` in `io-package.json` are not translated into all supported languages (en, de, ru, pt, nl, fr, it, es, pl, uk, zh-cn) [#734].
 - (@copilot) Fixed E3016 false positive: no longer requires `deploy` job to declare `needs` for `check-and-lint`/`adapter-tests` when those jobs do not exist in the workflow (e.g. `onlyWWW` adapters). Related to [#733].
