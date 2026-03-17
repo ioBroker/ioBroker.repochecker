@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Fixed E1111/W1111 checks: E1111 and W1111 are now renamed to E5040 and W5041 (correct numbering range for M5000_Code module). Both checks now correctly exempt adapters where `option1`/`option2` keys are genuinely used in `admin/index.html`, `admin/index_m.html`, or as keys in `admin/jsonConfig.json`/`admin/jsonConfig.json5`. Related to [#746].
+
 ### 5.5.1 (2026-03-17)
 - (@copilot) Added W5039 check: warns when `admin/words.js` exists but is not referenced anywhere in the codebase for adapters using jsonConfig. The file seems to be outdated and should be removed [#745].
 - (@copilot) Added W3018 and W3019 checks: when deploy job uses `ioBroker/testing-action-deploy@v1`, warns if job-level permissions (`contents: write`, `id-token: write`) are missing (W3018) or if the `npm-token` parameter is specified (W3019), as trusted publishing will not work in either case. Related to [#742].
