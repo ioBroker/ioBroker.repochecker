@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) Multiple S8906 suggestions for dependabot entries using `schedule: interval: monthly` are now combined into a single suggestion. [#696]
+- (@copilot) Added W1111 check: warns when example configuration keys `option1`/`option2` are found in `io-package.json` native section or i18n translation files. Only one warning is issued even if both locations contain example config.
 - (@copilot) Added E6012 check: error when README.md contains direct npm install instructions (`npm install iobroker.*`, `npm i iobroker.*`, `cd /opt/iobroker`). Related to [#722].
 - (@copilot) Added E6013 check: error when README.md instructs users to install from GitHub using `iobroker url`. Related to [#722].
 - (@copilot) Added S6014 suggestion: when README.md contains an `## Installation` section. Related to [#722].
