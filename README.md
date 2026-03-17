@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Multiple S8906 suggestions for dependabot entries using `schedule: interval: monthly` are now combined into a single suggestion. [#696]
+
 ### 5.4.1 (2026-03-13)
 - (mcm197) E3008 has been fixed
 
