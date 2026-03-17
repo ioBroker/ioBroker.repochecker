@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Fixed E3016 false positive: no longer requires `deploy` job to declare `needs` for `check-and-lint`/`adapter-tests` when those jobs do not exist in the workflow (e.g. `onlyWWW` adapters). Related to [#733].
 - (@copilot) Added E6015 check: error when README.md contains German language words. Added W6016 check: warning when README.md does not appear to be written in English.
 - (@copilot) Multiple S8906 suggestions for dependabot entries using `schedule: interval: monthly` are now combined into a single suggestion. [#696]
 - (@copilot) Added W1111 check: warns when example configuration keys `option1`/`option2` are found in `io-package.json` native section or i18n translation files. Only one warning is issued even if both locations contain example config.
