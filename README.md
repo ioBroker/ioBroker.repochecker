@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Fixed E3016 false positive: transitive `needs` dependencies are now considered, so `deploy` depending on `adapter-tests` which already depends on `check-and-lint` is correctly accepted. Related to [#756].
 - (@copilot) W5041 warning now includes the list of languages that contain the example keys (e.g. `languages: en, de, ru`).
 
 ### 5.5.2 (2026-03-17)
