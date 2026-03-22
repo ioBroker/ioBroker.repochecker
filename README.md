@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Fixed E6015 false positive: error is now only raised when at least 3 distinct German words are detected (not just 1). The error message now shows a 3-word context snippet around the first detected word and reads "README.md must use English language only but appears to contain German text (detected: "..."). Please remove or translate." [#759]
+
 ### 5.5.3 (2026-03-19)
 - (@copilot) Fixed E3016 false positive: transitive `needs` dependencies are now considered, so `deploy` depending on `adapter-tests` which already depends on `check-and-lint` is correctly accepted. Related to [#756].
 - (@copilot) W5041 warning now includes the list of languages that contain the example keys (e.g. `languages: en, de, ru`).
