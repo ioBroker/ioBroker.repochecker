@@ -26,7 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (@copilot) Fixed E6015 false positive: error is now only raised when at least 3 distinct German words are detected (not just 1). The error message now shows a 3-word context snippet around the first detected word and reads "README.md must use English language only but appears to contain German text (detected: "..."). Please remove or translate." [#759]
+- (@copilot) Fixed E6015/W6016 false positives: German (and English) language detection now ignores fenced code blocks, inline code, blockquote lines, link URLs, and image markup before analyzing the README text.
 
 ### 5.5.3 (2026-03-19)
 - (@copilot) Fixed E3016 false positive: transitive `needs` dependencies are now considered, so `deploy` depending on `adapter-tests` which already depends on `check-and-lint` is correctly accepted. Related to [#756].
