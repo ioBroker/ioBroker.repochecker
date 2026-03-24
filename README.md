@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+. (mcm1957) remove '[S6014] README.md section "## Installation" should be removed unless the adapter requires special installation handling.'
+
 ### 5.5.4 (2026-03-22)
 - (@copilot) Fixed E6015/W6016 false positives: German (and English) language detection now ignores fenced code blocks, inline code, blockquote lines, link URLs, and image markup before analyzing the README text.
 
