@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.5.5 (2026-03-24)
 . (mcm1957) remove '[S6014] README.md section "## Installation" should be removed unless the adapter requires special installation handling.'
 
 ### 5.5.4 (2026-03-22)
