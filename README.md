@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added W5042 and S5043 checks: source files (`*.js`, `*.mjs`, `*.cjs`, `*.ts`) are now scanned for `require`/`import` statements (excluding `admin/`, `doc/`, `src-admin/`, `test/` directories and `*.test.*`/`*.config.*` files). W5042 warns when an imported package is not listed in `dependencies` of `package.json`. S5043 suggests using the `node:` prefix when importing known Node.js built-in modules without it.
+
 ### 5.5.5 (2026-03-24)
 . (mcm1957) remove '[S6014] README.md section "## Installation" should be removed unless the adapter requires special installation handling.'
 
