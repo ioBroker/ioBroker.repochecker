@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Fixed W5042/S5043 false positives: `from 'package'` in log messages, comments, and non-import strings is no longer incorrectly detected as an import. Comments are now stripped before scanning, and `from` is only matched when preceded by `import` or `export`.
 - (@copilot) Improved W5042/S5043 checks: `build/` directory is now excluded from source file scanning; `@types/*` packages and `@iobroker/types` are no longer flagged when listed in `devDependencies`; `@types/iobroker` in `devDependencies` is also accepted as an alternative for `@iobroker/types`.
 - (@copilot) Added W5042 and S5043 checks: source files (`*.js`, `*.mjs`, `*.cjs`, `*.ts`) are now scanned for `require`/`import` statements (excluding `admin/`, `doc/`, `src-admin/`, `test/` directories and `*.test.*`/`*.config.*` files). W5042 warns when an imported package is not listed in `dependencies` of `package.json`. S5043 suggests using the `node:` prefix when importing known Node.js built-in modules without it.
 
