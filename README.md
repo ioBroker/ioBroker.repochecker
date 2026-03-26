@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Suppress unwanted npm E404 error output when checking adapters that are not published on npm.
 - (@copilot) Added E2006 error when an npm package has no published versions available, instead of silently skipping version checks.
 - (@copilot) Handle unpublished npm packages: detect "Unpublished on ..." response from npm registry and report a specific E2000 error instead of the generic "not found" message; suppress raw npm error logs for unpublished packages in README/LICENSE year checks. [#766]
 - (@copilot) Fixed crash in checkNpm (E2000-E2999) when npm package has no `dist-tags` or `versions` field in registry response. [#764].
