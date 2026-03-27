@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-#### **WORK IN PROGRESS**
+### **WORK IN PROGRESS**
 - (@copilot) Exclude `gulpfile.js` and `lib/tools.js` from W5042/S5043 dependency scanning; added easy-to-extend `excludedSourceFiles` and `excludedSourceRelPaths` Sets for future exclusions.
 
 ### 5.6.2 (2026-03-27)
