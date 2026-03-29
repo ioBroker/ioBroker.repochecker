@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.6.6 (2026-03-29)
 - (mcm1957) Severity for [S3010] has been corrected.
 
 ### 5.6.5 (2026-03-27)
