@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Fixed false positive package detection in `extractImports`: dynamic imports like `import("pkg")` no longer incorrectly trigger the `import ... from ...` pattern, preventing values in log strings (e.g. `from 'force_full'`) from being mistaken for package names.
+
 ### 5.6.6 (2026-03-29)
 - (mcm1957) Severity for [S3010] has been corrected.
 
