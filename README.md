@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### 5.6.9-alpha.0 (2026-04-02)
+### **WORK IN PROGRESS**
 - (mcm1957) Ignore "widgets" directory when scanning for imported packages.
 
 ### 5.6.7 (2026-04-02)
