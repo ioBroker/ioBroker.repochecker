@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) Language detection: `GERMAN_WORDS` and `ENGLISH_WORDS` arrays sorted alphabetically; chapters titled "Haftungsausschluss" in README.md are now ignored when checking for German text.
+- (@copilot) Added [W8915]: warn when a dependabot npm entry has no cooldown or a cooldown of less than 5 days configured, recommending at least 7 days to reduce supply chain risk.
 
 ### 5.6.9 (2026-04-02)
 - (mcm1957) Ignore "widgets" directory when scanning for imported packages.
