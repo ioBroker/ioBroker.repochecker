@@ -27,6 +27,8 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) Language detection: `GERMAN_WORDS` and `ENGLISH_WORDS` arrays sorted alphabetically; chapters titled "Haftungsausschluss" in README.md are now ignored when checking for German text.
+- (@copilot) Added JSON5 support for `jsonTab.json5`: `admin/jsonTab.json` and `admin/jsonTab.json5` are now read and parsed; E5044 is raised for parse errors and E5045 when the file is missing but tab support is declared. [#780]
+- (@copilot) Fixed false-positive W4042/W4044 warnings for adapters using only `jsonConfig.json5`: the VS Code schema checks now detect which config files actually exist in the repository and use `some()` instead of `every()` to match schema entries, preventing false warnings when a valid json5-only schema is configured. [#780]
 
 ### 5.6.9 (2026-04-02)
 - (mcm1957) Ignore "widgets" directory when scanning for imported packages.
