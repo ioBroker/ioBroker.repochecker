@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Language detection: `GERMAN_WORDS` and `ENGLISH_WORDS` arrays sorted alphabetically; chapters titled "Haftungsausschluss" in README.md are now ignored when checking for German text.
+
 ### 5.6.9 (2026-04-02)
 - (mcm1957) Ignore "widgets" directory when scanning for imported packages.
 
