@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.7.1 (2026-04-07)
 - (mcm1957) Improve jsonConfig schema validation messages.
 
 ### 5.7.0 (2026-04-06)
