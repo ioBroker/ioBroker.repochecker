@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) [W5046] Added warning when `admin/jsonConfig.json` or `admin/jsonConfig.json5` is present but `common.adminUI.config` is not set to `"json"` in `io-package.json`.
+- (@copilot) [W5047] Added warning listing obsolete files (`admin/index.html`, `admin/index_m.html`, `admin/style.css`) when jsonConfig is used.
+
 ### 5.7.1 (2026-04-07)
 - (mcm1957) Improve jsonConfig schema validation messages.
 
