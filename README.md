@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (mcm1957) Improve jsonConfig schema validation messages.
+
 ### 5.7.0 (2026-04-06)
 - (@copilot) [S8913] automerge suggestion is no longer shown when dependabot is not configured ([S8901]).
 - (@copilot) Language detection: `GERMAN_WORDS` and `ENGLISH_WORDS` arrays sorted alphabetically; chapters titled "Haftungsausschluss" in README.md are now ignored when checking for German text.
