@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.8.0 (2026-04-07)
 - (@copilot) Limit the listing of `allowedValues` in schema validation errors (E1105, W5512) to 5 values, appending `...` when there are more possibilities.
 - (@copilot) [W5046] Added warning when `admin/jsonConfig.json` or `admin/jsonConfig.json5` is present but `common.adminUI.config` is not set to `"json"` in `io-package.json`.
 - (@copilot) [W5047] Added warning listing obsolete files (`admin/index.html`, `admin/index_m.html`, `admin/style.css`) when jsonConfig is used.
