@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.9.1 (2026-04-08)
 - (@copilot) Added `isNewAdapter` flag: set to `true` when adapter is not listed in the latest repository, with an info log when set.
 - (@copilot) Added `--strict` command line option: when active, outputs an info log "running in strict mode".
 - (@copilot) `[S6020]` suggestion to add `CHANGELOG_OLD.md` is now only shown when `isNewAdapter` is set or strict mode is active.
