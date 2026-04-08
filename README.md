@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added [W4047]: warn when adapter is found in the latest repository but not yet available in the stable repository. Related to [#820].
+
 ### 5.9.1 (2026-04-08)
 - (@copilot) Added `isNewAdapter` flag: set to `true` when adapter is not listed in the latest repository, with an info log when set.
 - (@copilot) Added `--strict` command line option: when active, outputs an info log "running in strict mode".
