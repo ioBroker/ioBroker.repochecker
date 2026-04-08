@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added `[E9506]`: error when an i18n directory is explicitly excluded by `.npmignore`, which would cause translations to be missing from the npm package.
+- (@copilot) Added `[E9507]`: error when an i18n directory is present in the repository but not covered by the `"files"` field in `package.json`, which would cause translations to be missing from the npm package.
+
 ### 5.9.1 (2026-04-08)
 - (@copilot) Added `isNewAdapter` flag: set to `true` when adapter is not listed in the latest repository, with an info log when set.
 - (@copilot) Added `--strict` command line option: when active, outputs an info log "running in strict mode".
