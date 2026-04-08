@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added [W4047]: warn when adapter is found in the latest repository but not yet available in the stable repository. Related to [#820].
 - (@copilot) Added `[E9506]`: error when an i18n directory is explicitly excluded by `.npmignore`, which would cause translations to be missing from the npm package.
 - (@copilot) Added `[E9507]`: error when an i18n directory is present in the repository but not covered by the `"files"` field in `package.json`, which would cause translations to be missing from the npm package.
 
