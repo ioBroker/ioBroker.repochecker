@@ -27,6 +27,9 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) Added [W5048] check: warns about obsolete eslint/prettier config files (`.eslintignore`, `.eslintrc.json`, `.prettierignore`, `.prettierrc.js`, `.prettierrc.json`) when `@iobroker/eslint-config` is used as a devDependency.
+- (@copilot) Added [W4047]: warn when adapter is found in the latest repository but not yet available in the stable repository. Related to [#820].
+- (@copilot) Added `[E9506]`: error when an i18n directory is explicitly excluded by `.npmignore`, which would cause translations to be missing from the npm package.
+- (@copilot) Added `[E9507]`: error when an i18n directory is present in the repository but not covered by the `"files"` field in `package.json`, which would cause translations to be missing from the npm package.
 
 ### 5.9.1 (2026-04-08)
 - (@copilot) Added `isNewAdapter` flag: set to `true` when adapter is not listed in the latest repository, with an info log when set.
