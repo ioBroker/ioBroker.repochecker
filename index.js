@@ -239,6 +239,11 @@ if (typeof module !== 'undefined' && module.parent) {
         common.setLocal(true);
     }
 
+    if (process.argv.includes('--strict')) {
+        process.argv.splice(process.argv.indexOf('--strict'), 1);
+        common.setStrict(true);
+    }
+
     // Get url from parameters if possible
     if (process.argv.length > 2) {
         repoUrl = process.argv[2];

@@ -25,6 +25,11 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added `isNewAdapter` flag: set to `true` when adapter is not listed in the latest repository, with an info log when set.
+- (@copilot) Added `--strict` command line option: when active, outputs an info log "running in strict mode".
+- (@copilot) `[S6020]` suggestion to add `CHANGELOG_OLD.md` is now only shown when `isNewAdapter` is set or strict mode is active.
+
 ### 5.9.0 (2026-04-08)
 - (@copilot) Added checks W1114/S1114: warn when `common.schedule` is set to a non-empty value for daemon adapters (not supported), and suggest removal when `common.schedule` is an empty string for daemon adapters (unused). Related to [#806].
 - (@copilot) Added checks to help maintain organized changelog files: warns when CHANGELOG.md is present (changelog belongs in README.md), when both CHANGELOG.md and CHANGELOG_OLD.md coexist, when the README changelog exceeds 20 entries without a CHANGELOG_OLD.md, and suggests adding CHANGELOG_OLD.md when no such file exists. [W6017, W6018, W6019, S6020]
