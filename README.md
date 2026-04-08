@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added checks W1114/S1114: warn when `common.schedule` is set to a non-empty value for daemon adapters (not supported), and suggest removal when `common.schedule` is an empty string for daemon adapters (unused). Related to [#806].
 - (@copilot) Added checks to help maintain organized changelog files: warns when CHANGELOG.md is present (changelog belongs in README.md), when both CHANGELOG.md and CHANGELOG_OLD.md coexist, when the README changelog exceeds 20 entries without a CHANGELOG_OLD.md, and suggests adding CHANGELOG_OLD.md when no such file exists. [W6017, W6018, W6019, S6020]
 
 ### 5.8.0 (2026-04-07)
