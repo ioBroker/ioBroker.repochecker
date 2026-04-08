@@ -25,9 +25,21 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.8.0 (2026-04-07)
+- (@copilot) Limit the listing of `allowedValues` in schema validation errors (E1105, W5512) to 5 values, appending `...` when there are more possibilities.
+- (@copilot) [W5046] Added warning when `admin/jsonConfig.json` or `admin/jsonConfig.json5` is present but `common.adminUI.config` is not set to `"json"` in `io-package.json`.
+- (@copilot) [W5047] Added warning listing obsolete files (`admin/index.html`, `admin/index_m.html`, `admin/style.css`) when jsonConfig is used.
+
+### 5.7.1 (2026-04-07)
+- (mcm1957) Improve jsonConfig schema validation messages.
+
+### 5.7.0 (2026-04-06)
+- (@copilot) [S8913] automerge suggestion is no longer shown when dependabot is not configured ([S8901]).
 - (@copilot) Language detection: `GERMAN_WORDS` and `ENGLISH_WORDS` arrays sorted alphabetically; chapters titled "Haftungsausschluss" in README.md are now ignored when checking for German text.
 - (@copilot) Added [W8915]: warn when a dependabot npm entry has no cooldown or a cooldown of less than 5 days configured, recommending at least 7 days to reduce supply chain risk.
+- (@copilot) Added JSON5 support for `jsonTab.json5`: `admin/jsonTab.json` and `admin/jsonTab.json5` are now read and parsed; E5044 is raised for parse errors and E5045 when the file is missing but tab support is declared. [#780]
+- (@copilot) Fixed false-positive W4042/W4044 warnings for adapters using only `jsonConfig.json5`: the VS Code schema checks now detect which config files actually exist in the repository and use `some()` instead of `every()` to match schema entries, preventing false warnings when a valid json5-only schema is configured. [#780]
+- (@copilot) Added schema validation for all present jsonConfig files (`admin/jsonConfig.json`, `admin/jsonCustom.json`, `admin/jsonTab.json` and their `.json5` variants) against the official jsonConfig JSON schema; errors reported as E5512, schema download failures as W5513, and exceptions as E5514. [#803]
 
 ### 5.6.9 (2026-04-02)
 - (mcm1957) Ignore "widgets" directory when scanning for imported packages.
