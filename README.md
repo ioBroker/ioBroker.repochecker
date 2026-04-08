@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added checks to help maintain organized changelog files: warns when CHANGELOG.md is present (changelog belongs in README.md), when both CHANGELOG.md and CHANGELOG_OLD.md coexist, when the README changelog exceeds 20 entries without a CHANGELOG_OLD.md, and suggests adding CHANGELOG_OLD.md when no such file exists. [W6017, W6018, W6019, S6020]
+
 ### 5.8.0 (2026-04-07)
 - (@copilot) Limit the listing of `allowedValues` in schema validation errors (E1105, W5512) to 5 values, appending `...` when there are more possibilities.
 - (@copilot) [W5046] Added warning when `admin/jsonConfig.json` or `admin/jsonConfig.json5` is present but `common.adminUI.config` is not set to `"json"` in `io-package.json`.
