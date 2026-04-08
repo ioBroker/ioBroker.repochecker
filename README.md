@@ -26,10 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (@copilot) [W6017] Added warning when `CHANGELOG.md` exists (changelog should be located in README.md), with an allowlist for `js-controller` and `admin`.
-- (@copilot) [W6018] Added warning when both `CHANGELOG.md` and `CHANGELOG_OLD.md` exist simultaneously.
-- (@copilot) [W6019] Added warning when README.md changelog contains more than 20 entries and no `CHANGELOG_OLD.md` file exists.
-- (@copilot) [S6020] Added suggestion to add a `CHANGELOG_OLD.md` file when README.md changelog has 20 or fewer entries and no such file exists.
+- (@copilot) Added checks to help maintain organized changelog files: warns when CHANGELOG.md is present (changelog belongs in README.md), when both CHANGELOG.md and CHANGELOG_OLD.md coexist, when the README changelog exceeds 20 entries without a CHANGELOG_OLD.md, and suggests adding CHANGELOG_OLD.md when no such file exists. [W6017, W6018, W6019, S6020]
 
 ### 5.8.0 (2026-04-07)
 - (@copilot) Limit the listing of `allowedValues` in schema validation errors (E1105, W5512) to 5 values, appending `...` when there are more possibilities.
