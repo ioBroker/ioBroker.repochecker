@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added [W5048] check: warns about obsolete eslint/prettier config files (`.eslintignore`, `.eslintrc.json`, `.prettierignore`, `.prettierrc.js`, `.prettierrc.json`) when `@iobroker/eslint-config` is used as a devDependency.
+
 ### 5.9.1 (2026-04-08)
 - (@copilot) Added `isNewAdapter` flag: set to `true` when adapter is not listed in the latest repository, with an info log when set.
 - (@copilot) Added `--strict` command line option: when active, outputs an info log "running in strict mode".
