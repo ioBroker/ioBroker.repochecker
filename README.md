@@ -26,6 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@copilot) Added `minimatch` as an explicit dependency in `package.json` (used by `M9000_GitNpmIgnore.js` for glob pattern matching).
 - (@copilot) Fixed false positives in `[E9507]` when i18n directories are covered by glob patterns in `package.json` `"files"` field.
 - (@copilot) Added [W4047]: warn when adapter is found in the latest repository but not yet available in the stable repository. Related to [#820].
 - (@copilot) Added `[E9506]`: error when an i18n directory is explicitly excluded by `.npmignore`, which would cause translations to be missing from the npm package.
