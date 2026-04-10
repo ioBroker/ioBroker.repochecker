@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.10.0 (2026-04-10)
 - (@copilot) Added `minimatch` as an explicit dependency in `package.json` (used by `M9000_GitNpmIgnore.js` for glob pattern matching).
 - (@copilot) Fixed false positives in `[E9507]` when i18n directories are covered by glob patterns in `package.json` `"files"` field.
 - (@copilot) Added [W4047]: warn when adapter is found in the latest repository but not yet available in the stable repository. Related to [#820].
