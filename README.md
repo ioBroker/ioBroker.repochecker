@@ -26,7 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (@copilot) Fixed false positives for `[E9507]`: glob patterns in `package.json` `"files"` (e.g. `admin{,/!(src)/**}/*.json`) are now correctly evaluated against actual repository files using `minimatch`, so i18n directories covered by globs are no longer incorrectly flagged.
+- (@copilot) Fixed false positives in `[E9507]` when i18n directories are covered by glob patterns in `package.json` `"files"` field.
 - (@copilot) Added [W4047]: warn when adapter is found in the latest repository but not yet available in the stable repository. Related to [#820].
 - (@copilot) Added `[E9506]`: error when an i18n directory is explicitly excluded by `.npmignore`, which would cause translations to be missing from the npm package.
 - (@copilot) Added `[E9507]`: error when an i18n directory is present in the repository but not covered by the `"files"` field in `package.json`, which would cause translations to be missing from the npm package.
