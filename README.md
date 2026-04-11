@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Fixed false positive `[E9507]` for i18n directories inside source directories (`src-rules`, `rules-src`, `src-editor`, `src-widgets`, `admin/src`, etc.) by expanding the ignored source directory list and checking the full parent path instead of only the top-level segment. Related to [#831].
+
 ### 5.10.1 (2026-04-10)
 - (@copilot) Fixed `TypeError: minimatch is not a function` in `checkNpmIgnore` by correctly destructuring `minimatch` from the `minimatch` v10+ package export.
 - (@copilot) Added `minimatch` as an explicit dependency in `package.json` (used by `M9000_GitNpmIgnore.js` for glob pattern matching).
