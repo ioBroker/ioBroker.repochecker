@@ -27,6 +27,8 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 - (@copilot) Fixed false positive `[E9507]` for i18n directories inside source directories (`src-rules`, `rules-src`, `src-editor`, `src-widgets`, `admin/src`, etc.) by expanding the ignored source directory list and checking the full parent path instead of only the top-level segment. Related to [#828].
+- (@copilot) Added adapter-specific exceptions to E0050 blacklist: `@iobroker/plugin-sentry` is now allowed as a dependency for `ioBroker.javascript`.
+- (@copilot) Added system-provided packages ignore list for W5042: `@iobroker/plugin-sentry` will no longer raise "dependency might be missing" warnings as it is provided by js-controller.
 
 ### 5.10.1 (2026-04-10)
 - (@copilot) Fixed `TypeError: minimatch is not a function` in `checkNpmIgnore` by correctly destructuring `minimatch` from the `minimatch` v10+ package export.
