@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Fixed false positive W5042 for TypeScript type-only imports: `import type { Foo } from 'pkg'` no longer registers `pkg` as a required runtime dependency. Related to [#833]
+
 ### 5.10.2 (2026-04-11)
 - (@copilot) Fixed false positive `[E9507]` for i18n directories inside source directories (`src-rules`, `rules-src`, `src-editor`, `src-widgets`, `admin/src`, etc.) by expanding the ignored source directory list and checking the full parent path instead of only the top-level segment. Related to [#828].
 - (@copilot) Added adapter-specific exceptions to E0050 blacklist: `@iobroker/plugin-sentry` is now allowed as a dependency for `ioBroker.javascript`.
