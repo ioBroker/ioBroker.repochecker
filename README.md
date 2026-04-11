@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.10.2 (2026-04-11)
 - (@copilot) Fixed false positive `[E9507]` for i18n directories inside source directories (`src-rules`, `rules-src`, `src-editor`, `src-widgets`, `admin/src`, etc.) by expanding the ignored source directory list and checking the full parent path instead of only the top-level segment. Related to [#828].
 - (@copilot) Added adapter-specific exceptions to E0050 blacklist: `@iobroker/plugin-sentry` is now allowed as a dependency for `ioBroker.javascript`.
 - (@copilot) Added system-provided packages ignore list for W5042: `@iobroker/plugin-sentry` will no longer raise "dependency might be missing" warnings as it is provided by js-controller.
