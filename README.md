@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Extended E6013 check: now also triggers on `iobroker/iob url owner/iobroker.adaptername`, `iobroker/iob npm install owner/iobroker.adaptername`, and `npm install/i owner/iobroker.adaptername` patterns (case-insensitive, extra whitespace allowed). Updated error message to mention "directly from GitHub, directly from npm or using npm commands".
+
 ### 5.10.3 (2026-04-11)
 - (@copilot) Fixed false positive W5042 for TypeScript type-only imports: `import type { Foo } from 'pkg'` no longer registers `pkg` as a required runtime dependency. Related to [#833]
 
