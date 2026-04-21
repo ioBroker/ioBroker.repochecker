@@ -30,6 +30,7 @@ const M6000_Readme = require('./lib/M6000_Readme.js');
 const M7000_License = require('./lib/M7000_License.js');
 const M8000_Github = require('./lib/M8000_Github.js');
 const M9000_GitNpmIgnore = require('./lib/M9000_GitNpmIgnore.js');
+const postprocessing = require('./lib/postprocessing.js');
 
 // disable axios caching
 // axios.defaults.headers = {
@@ -162,6 +163,7 @@ function check(request, ctx, callback) {
         .then(context => M7000_License.checkLicenseFile(context))
         .then(context => M9000_GitNpmIgnore.checkNpmIgnore(context))
         .then(context => M9000_GitNpmIgnore.checkGitIgnore(context))
+        .then(context => postprocessing.postprocessing(context))
         .then(context => {
             return callback(
                 null,
