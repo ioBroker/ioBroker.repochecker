@@ -26,7 +26,7 @@ Example:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (@copilot) Moved `isNewAdapter` detection into a new `M4000_Repository.getLatestRepo` preprocessing step that runs before `config.updateConfig`, so the flag is correctly set when the environment is logged. The redundant assignment in `checkRepository` has been removed.
+- (@copilot) Fixed adapter detection to ensure the `isNewAdapter` flag is set before configuration logging. Added a new `getLatestRepo` preprocessing step so that the flag is correctly visible in the environment log output.
 - (@copilot) Added German translation of OBJECTDUMP.md as OBJECTDUMP_de.md.
 
 ### 5.10.4 (2026-04-12)
