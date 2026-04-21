@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.11.0 (2026-04-21)
 - (@copilot) Added `[W2007]`: warn when the npm `latest` dist-tag points to an alpha/pre-release version, as such releases will be ignored by repository updates.
 - (@copilot) Added `lib/postprocessing.js` module: new adapters (where `isNewAdapter` is set) now have selected warnings and suggestions promoted to errors or warnings according to a configurable severity-remap table, making the checker stricter for new adapter submissions.
 - (@copilot) Fixed adapter detection to ensure the `isNewAdapter` flag is set before configuration logging. Added a new `getLatestRepo` preprocessing step so that the flag is correctly visible in the environment log output.
