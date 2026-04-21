@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added German translation of OBJECTDUMP.md as OBJECTDUMP_de.md.
+
 ### 5.10.4 (2026-04-12)
 - (@copilot) Enhanced E6013 check: detects additional discouraged installation methods in README.md, including `iobroker`/`iob` npm install and url commands, and `npm install`/`npm i` with `owner/iobroker.adaptername` GitHub shorthand. Updated error message to mention "directly from GitHub, directly from npm or using npm commands".
 
