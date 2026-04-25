@@ -70,7 +70,7 @@ const postprocessing = require('./lib/postprocessing.js');
 // 9000 - 9998
 //      check .gitignore file
 
-function getGithubApiData(context) {
+function getGithubApiData (context) {
     return new Promise((resolve, reject) => {
         common.debug('getGithubApiData');
         common.debug(`reading url '${context.githubUrlApi}'`);
@@ -99,7 +99,7 @@ function getGithubApiData(context) {
     });
 }
 
-function makeResponse(code, data) {
+function makeResponse (code, data) {
     return {
         statusCode: code || 200,
         headers: {
@@ -110,7 +110,7 @@ function makeResponse(code, data) {
     };
 }
 
-function check(request, ctx, callback) {
+function check (request, ctx, callback) {
     //    console.log('PROCESS: ' + JSON.stringify(request));
     console.log('');
 
@@ -249,7 +249,7 @@ if (typeof module !== 'undefined' && module.parent) {
 
     // Get url from parameters if possible
     if (process.argv.length > 2) {
-        repoUrl = process.argv[2];
+        repoUrl = process.argv[ 2 ];
 
         if (!repoUrl.toLowerCase().includes('github.com')) {
             repoUrl = `https://github.com/${repoUrl}`;
@@ -261,7 +261,7 @@ if (typeof module !== 'undefined' && module.parent) {
 
     // Get branch from parameters if possible
     if (process.argv.length > 3) {
-        repoBranch = process.argv[3];
+        repoBranch = process.argv[ 3 ];
     }
 
     common.info(`Checking repository ${repoUrl} (branch ${repoBranch})`);
@@ -338,6 +338,10 @@ if (typeof module !== 'undefined' && module.parent) {
                 console.log('\n\nNO suggestions encountered.');
             }
             console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
+
+            if (context.errors.length) {
+                process.exit(1);
+            }
         },
     );
 }
