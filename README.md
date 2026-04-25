@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.11.1 (2026-04-25)
 - (@ticaki) Local mode has been fixed.
 
 ### 5.11.0 (2026-04-21)
