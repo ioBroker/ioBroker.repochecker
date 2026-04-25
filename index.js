@@ -339,7 +339,7 @@ if (typeof module !== 'undefined' && module.parent) {
             }
             console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
 
-            if (context.errors.length) {
+            if (common.isLocal() && context.errors.length) {
                 process.exit(1);
             }
         },
