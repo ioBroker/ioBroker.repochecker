@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Added `[W8917]`: warn when a dependabot npm entry covering the root directory is missing an ignore block for `@types/node` major version updates. Related to #856.
+
 ### 5.11.1 (2026-04-25)
 - (@ticaki) Local mode has been fixed.
 
