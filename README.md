@@ -30,6 +30,7 @@ Example:
 
 - (@copilot) Fixed `GLOBAL ERROR: TypeError: Cannot read properties of undefined (reading 'includes')` in `checkCode` when running in local mode (`--local`).
 - (@copilot) CLI now exits with code `1` when errors are found, enabling use in command chains like `npx @iobroker/repochecker repo --local && npm run release`.
+- (@copilot) Added `[S0065]`/`[W0066]`/`[S0067]`: check `@types/node` devDependency against the minimum Node.js version from the `engines` clause in package.json. Suggests adding it if missing, warns if it allows a higher major version, and suggests updating if it only covers lower versions.
 ### **WORK IN PROGRESS**
 - (@copilot) Added [E5049]/[W5049]: scan source files for `process.env` usage. Reports an error when `common.compact` is `true` or not defined (compact mode incompatible), and a warning when `common.compact` is explicitly `false`.
 - (@copilot) Warn when dependabot npm root entries do not ignore major or minor @types/node updates.
