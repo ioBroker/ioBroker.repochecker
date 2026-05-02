@@ -28,6 +28,7 @@ Example:
 
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added `[S5051]`: suggest using `this.delay()` instead of custom `sleep`/`wait` function implementations found in adapter source files.
 - (@mcm1957) Require node.js 20 and recommedn node.js 22 now
 - (@copilot) Fixed `GLOBAL ERROR: TypeError: Cannot read properties of undefined (reading 'includes')` in `checkCode` when running in local mode (`--local`).
 - (@copilot) CLI now exits with code `1` when errors are found, enabling use in command chains like `npx @iobroker/repochecker repo --local && npm run release`.
