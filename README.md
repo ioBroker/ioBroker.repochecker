@@ -37,6 +37,7 @@ Example:
 - (@copilot) Warn when dependabot npm root entries do not ignore major or minor @types/node updates.
 - (@copilot) Added `[W6021]`: warn when `## License` is not the last section in README.md.
 - (@copilot) Added `[W1115]`: warn when a plugin listed in `common.plugins` of io-package.json is missing its corresponding `@iobroker/plugin-<name>` dependency in package.json.
+- (@copilot) Added `[S5050]`: scan source files for custom `sleep`/`wait` function definitions and suggest using the standard `this.delay()` method provided by ioBroker instead.
 
 ### 5.11.1 (2026-04-25)
 
