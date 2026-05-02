@@ -30,6 +30,8 @@ Example:
 
 - (@copilot) Fixed `GLOBAL ERROR: TypeError: Cannot read properties of undefined (reading 'includes')` in `checkCode` when running in local mode (`--local`).
 - (@copilot) CLI now exits with code `1` when errors are found, enabling use in command chains like `npx @iobroker/repochecker repo --local && npm run release`.
+### **WORK IN PROGRESS**
+- (@copilot) Warn when dependabot npm root entries do not ignore major or minor @types/node updates.
 
 ### 5.11.1 (2026-04-25)
 

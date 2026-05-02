@@ -2,8 +2,8 @@
   "version": "5.11.1",
   "name": "@iobroker/repochecker",
   "dependencies": {
-    "ajv": "^8.18.0",
-    "axios": "^1.15.0",
+    "ajv": "^8.20.0",
+    "axios": "^1.15.2",
     "compare-versions": "^6.1.1",
     "image-size": "^1.2.0",
     "js-yaml": "^4.1.1",
@@ -15,7 +15,7 @@
     "@alcalzone/release-script": "^5.1.1",
     "@iobroker/eslint-config": "^2.2.0",
     "@tsconfig/node20": "^20.1.9",
-    "@types/node": "^24.12.0",
+    "@types/node": "^24.12.2",
     "@types/semver": "^7.7.1"
   },
   "repository": {
