@@ -28,6 +28,7 @@ Example:
 
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added `[W1116]`: warn when the sentry plugin is configured in `common.plugins` of io-package.json but `@sentry/*` packages are listed as `dependencies` in package.json (explicit sentry dependencies are not needed when using the sentry plugin).
 - (@copilot) Added `[S5051]`: suggest using `this.delay()` instead of custom `sleep`/`wait` function implementations found in adapter source files.
 - (@mcm1957) Require node.js 20 and recommedn node.js 22 now
 - (@copilot) Fixed `GLOBAL ERROR: TypeError: Cannot read properties of undefined (reading 'includes')` in `checkCode` when running in local mode (`--local`).
