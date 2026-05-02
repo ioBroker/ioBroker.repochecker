@@ -31,12 +31,16 @@ Example:
 - (@copilot) Added node.js version checks for `check-and-lint` (E3020, S3021) and `deploy` (E3022, S3023) jobs in `test-and-release.yml`, raising an error if below minimum and a suggestion if below recommended version. Minimum/recommended values are adjusted upward if the adapter's `engines:node` clause requires a higher version.
 - (@copilot) Added checks for `adapter-tests` matrix: warns (W3024) about non-recommended node versions, errors (E3025) when required node versions are missing, warns (W3026) when recommended node versions are absent, and warns (W3027) when OS entries (`ubuntu-latest`, `windows-latest`, `macos-latest`) are missing from the matrix.
 - (@copilot) Added `testingNodeJs` constants to `lib/config.js` for configuring node.js version requirements and OS requirements for `test-and-release.yml` checks.
+- (@copilot) Added `[W1116]`: warn when the sentry plugin is configured in `common.plugins` of io-package.json but `@sentry/*` packages are listed as `dependencies` in package.json (explicit sentry dependencies are not needed when using the sentry plugin).
+- (@copilot) Added `[S5051]`: suggest using `this.delay()` instead of custom `sleep`/`wait` function implementations found in adapter source files.
 - (@mcm1957) Require node.js 20 and recommedn node.js 22 now
 - (@copilot) Fixed `GLOBAL ERROR: TypeError: Cannot read properties of undefined (reading 'includes')` in `checkCode` when running in local mode (`--local`).
 - (@copilot) CLI now exits with code `1` when errors are found, enabling use in command chains like `npx @iobroker/repochecker repo --local && npm run release`.
+- (@copilot) Added `[W8918]`: warn when any workflow in `.github/workflows/` references an action from `iobroker`, `iobroker-community-adapters`, or `iobroker-bot-orga` without a versioned tag (e.g. `@main` or `@master`). [#851]
 - (@copilot) Added `[S0065]`/`[W0066]`/`[S0067]`: check `@types/node` devDependency against the minimum Node.js version from the `engines` clause in package.json. Suggests adding it if missing, warns if it allows a higher major version, and suggests updating if it only covers lower versions.
 - (@copilot) Fixed `[W0066]` `@types/node` semver check to correctly detect ranges that allow any higher major version (e.g. `^24.10.1` with min Node.js 20 now raises the warning as expected).
 - (@copilot) Added [E5049]/[W5049]: scan source files for `process.env` usage. Reports an error when `common.compact` is `true` or not defined (compact mode incompatible), and a warning when `common.compact` is explicitly `false`.
+- (@copilot) Added [E5050]/[W5050]: scan source files for `process.exit()` calls. Reports an error when `common.compact` is `true` or not defined (incompatible with compact mode), and a warning when `common.compact` is explicitly `false`.
 - (@copilot) Warn when dependabot npm root entries do not ignore major or minor @types/node updates.
 - (@copilot) Added `[W6021]`: warn when `## License` is not the last section in README.md.
 - (@copilot) Added `[W1115]`: warn when a plugin listed in `common.plugins` of io-package.json is missing its corresponding `@iobroker/plugin-<name>` dependency in package.json.
