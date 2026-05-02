@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@copilot) Warn when dependabot npm root entries do not ignore major or minor @types/node updates.
+
 ### 5.11.1 (2026-04-25)
 - (@ticaki) Local mode has been fixed.
 
