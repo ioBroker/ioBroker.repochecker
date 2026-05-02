@@ -36,6 +36,7 @@ Example:
 - (@copilot) Added [E5049]/[W5049]: scan source files for `process.env` usage. Reports an error when `common.compact` is `true` or not defined (compact mode incompatible), and a warning when `common.compact` is explicitly `false`.
 - (@copilot) Warn when dependabot npm root entries do not ignore major or minor @types/node updates.
 - (@copilot) Added `[W6021]`: warn when `## License` is not the last section in README.md.
+- (@copilot) Added `[W1115]`: warn when a plugin listed in `common.plugins` of io-package.json is missing its corresponding `@iobroker/plugin-<name>` dependency in package.json.
 
 ### 5.11.1 (2026-04-25)
 
