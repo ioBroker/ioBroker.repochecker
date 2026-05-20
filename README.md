@@ -28,6 +28,7 @@ Example:
 
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added `[S6022]`: suggest adding a link to `CHANGELOG_OLD.md` in `README.md` when the file exists but no reference to it is found in the readme.
 - (@copilot) Extended `@types/node` version checks (`W0066`, `S0067`, `E0068`) to cover all dependency types (`dependencies`, `devDependencies`, `optionalDependencies`), not just `devDependencies`. Defaults to Node.js 20 when no `engines` clause is present. Fixed `context.error.push` typo bug and `0;` no-op in `S0065` check. Related to #855.
 - (@copilot) Added workflow run tagging checks in `M3000_Testing.js`: validates latest `test-and-release.yml` run status, verifies GitHub tags for current/package and npm (`latest` and newest) releases, and checks tag-triggered workflow run outcomes with clickable run links.
 - (@copilot) Extended testing workflow checks to use configurable required action versions (`ioBroker/testing-action-check`, `ioBroker/testing-action-adapter`, `ioBroker/testing-action-deploy`) and warn when lower action versions are used.
