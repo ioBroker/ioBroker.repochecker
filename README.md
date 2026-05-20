@@ -28,6 +28,7 @@ Example:
 
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added workflow/run tagging checks in `M3000_Testing.js`: validates latest `test-and-release.yml` run status, verifies GitHub tags for current/package and npm (`latest` and newest) releases, and checks tag-triggered workflow run outcomes with clickable run links.
 - (@copilot) Added node.js version checks for `check-and-lint` (E3020, S3021) and `deploy` (E3022, S3023) jobs in `test-and-release.yml`, raising an error if below minimum and a suggestion if below recommended version. Minimum/recommended values are adjusted upward if the adapter's `engines:node` clause requires a higher version.
 - (@copilot) Added checks for `adapter-tests` matrix: warns (W3024) about non-recommended node versions, errors (E3025) when required node versions are missing, warns (W3026) when recommended node versions are absent, and warns (W3027) when OS entries (`ubuntu-latest`, `windows-latest`, `macos-latest`) are missing from the matrix.
 - (@copilot) Added `testingNodeJs` constants to `lib/config.js` for configuring node.js version requirements and OS requirements for `test-and-release.yml` checks.
