@@ -25,8 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 5.12.0 (2026-05-20)
 
 - (@copilot) Added `[S6022]`: suggest adding a link to `CHANGELOG_OLD.md` in `README.md` when the file exists but no reference to it is found in the readme.
 - (@copilot) Extended `@types/node` version checks (`W0066`, `S0067`, `E0068`) to cover all dependency types (`dependencies`, `devDependencies`, `optionalDependencies`), not just `devDependencies`. Defaults to Node.js 20 when no `engines` clause is present. Fixed `context.error.push` typo bug and `0;` no-op in `S0065` check. Related to #855.
