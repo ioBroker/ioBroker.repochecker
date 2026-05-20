@@ -25,6 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (mcm197) cleanup some duplicate numbers
+
 ### 5.12.0 (2026-05-20)
 
 - (@copilot) Added `[S6022]`: suggest adding a link to `CHANGELOG_OLD.md` in `README.md` when the file exists but no reference to it is found in the readme.
