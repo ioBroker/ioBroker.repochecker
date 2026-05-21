@@ -28,9 +28,16 @@ Example:
 ### **WORK IN PROGRESS**
 
 - (@copilot) Extended `instanceObjects` validation for `io-package.json`: now checks `_id`, valid object/state types, state `common.*` structure/types, and role compatibility against official ioBroker state-role definitions, reporting findings as warnings.
+- (@copilot) Added `[W5516]`: warns when the `default` value in a jsonConfig component definition has a JavaScript type that does not match the expected type for that component (e.g. a `number` component with a string default like `"5"`, or a `checkbox` with a numeric default). Related to [#857].
+- (@mcm1957) Added `[E6025]`: `README.md` now raises an error when it does not contain exactly one H1 (`#`) heading. Related to #176.
+- (@copilot) Added `[W5053]`: warns when `admin/jsonCustom.json(5)` exists but custom support is not declared in io-package.json. Related to [#760].
+- (@copilot) Added `[W5054]`: warns when `admin/blockly.js` exists but blockly support is not declared in io-package.json (`common.blockly` not set). Related to [#760].
+- (@copilot) Added `[W5055]`: warns when `admin/index.html` exists but materialize UI is used (the file is for admin2 and is outdated). Related to [#760].
+- (@copilot) Added `[W5056]`: warns when `admin/custom.html` or `admin/custom_m.html` exists — these HTML-based custom dialogs are no longer supported; migrate to `admin/jsonCustom.json`. Related to [#760].
 - (@copilot) Added `[W6023]`/`[W6024]` README checks for adapters using the Sentry plugin: warn when the required Sentry notice is missing and when it appears too far down in the document.
 - (@copilot) Added `[W5052]`: warns for adapter-core `setObject()` usage (`this.setObject(...)` / `adapter.setObject(...)`) and suggests using `setObjectNotExists()` or `extendObject()` instead. Detection ignores comments and string literals to avoid false positives.
 - (@copilot) Added `[E9508]` and extended `.npmignore` packaging checks so `CHANGELOG_OLD.md` is not shipped in npm packages.
+- (@copilot) Added `[W5052]`/`[W5053]`: when jsonConfig is used, password fields found in `admin/*.json` and `admin/*.json5` (outside table components) are now checked against `protectedNative` and `encryptedNative` in `io-package.json`.
 
 ### 5.12.1 (2026-05-20)
 - (mcm197) cleanup some duplicate numbers
