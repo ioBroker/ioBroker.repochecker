@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added `[W0069]`/`[S0070]`: checks that all dependencies in `package-lock.json` require a Node.js version compatible with the adapter's `engines.node` minimum. If `package-lock.json` is absent, attempts to create it via `npm install --package-lock-only`. Reports `[W0069]` for incompatible packages and `[S0070]` when the check cannot be performed. Related to #310
 - (@copilot) Added `[W6023]`/`[W6024]` README checks for adapters using the Sentry plugin: warn when the required Sentry notice is missing and when it appears too far down in the document.
 - (@copilot) Added `[W5052]`: warns for adapter-core `setObject()` usage (`this.setObject(...)` / `adapter.setObject(...)`) and suggests using `setObjectNotExists()` or `extendObject()` instead. Detection ignores comments and string literals to avoid false positives.
 - (@copilot) Added `[E9508]` and extended `.npmignore` packaging checks so `CHANGELOG_OLD.md` is not shipped in npm packages.

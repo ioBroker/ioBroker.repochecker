@@ -157,6 +157,7 @@ function check(request, ctx, callback) {
         .then(context => M2000_Npm.checkNpm(context))
         .then(context => M4000_Repository.checkRepository(context))
         .then(context => M5000_Code.checkCode(context))
+        .then(context => M0000_PackageJson.checkDependencyNodeRequirements(context))
         .then(context => M3000_Testing.checkTests(context))
         .then(context => M8000_Github.checkGithubRepo(context))
         .then(context => M6000_Readme.checkReadme(context))
