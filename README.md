@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added an error for `common.nondeletable=true` in `io-package.json`, with a prepared (currently empty) allowlist for adapters that are allowed to use this reserved flag.
 - (@copilot) Added `[W0069]`/`[S0070]`: checks that all dependencies in `package-lock.json` require a Node.js version compatible with the adapter's `engines.node` minimum. If `package-lock.json` is absent, attempts to create it via `npm install --package-lock-only`. Reports `[W0069]` for incompatible packages and `[S0070]` when the check cannot be performed. Related to #310
 - (@copilot) Extended `instanceObjects` validation for `io-package.json`: now checks `_id`, valid object/state types, state `common.*` structure/types, and role compatibility against official ioBroker state-role definitions, reporting findings as warnings.
 - (@copilot) Added `[W5516]`: warns when the `default` value in a jsonConfig component definition has a JavaScript type that does not match the expected type for that component (e.g. a `number` component with a string default like `"5"`, or a `checkbox` with a numeric default). Related to [#857].
