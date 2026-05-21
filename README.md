@@ -28,6 +28,7 @@ Example:
 ### **WORK IN PROGRESS**
 
 - (@copilot) Added `[E9508]` and extended `.npmignore` packaging checks so `CHANGELOG_OLD.md` is not shipped in npm packages.
+- (@copilot) Added `[W5052]`/`[W5053]`: when jsonConfig is used, password fields found in `admin/*.json` and `admin/*.json5` (outside table components) are now checked against `protectedNative` and `encryptedNative` in `io-package.json`.
 
 ### 5.12.1 (2026-05-20)
 - (mcm197) cleanup some duplicate numbers
