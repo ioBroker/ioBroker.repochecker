@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (@copilot) Added `[W5052]`: warns for adapter-core `setObject()` usage (`this.setObject(...)` / `adapter.setObject(...)`) and suggests using `setObjectNotExists()` or `extendObject()` instead. Detection ignores comments and string literals to avoid false positives.
+
 ### 5.12.1 (2026-05-20)
 - (mcm197) cleanup some duplicate numbers
 
