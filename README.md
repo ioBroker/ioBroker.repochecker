@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added `[W5516]`: warns when the `default` value in a jsonConfig component definition has a JavaScript type that does not match the expected type for that component (e.g. a `number` component with a string default like `"5"`, or a `checkbox` with a numeric default). Related to [#857].
 - (@mcm1957) Added `[E6025]`: `README.md` now raises an error when it does not contain exactly one H1 (`#`) heading. Related to #176.
 - (@copilot) Added `[W5053]`: warns when `admin/jsonCustom.json(5)` exists but custom support is not declared in io-package.json. Related to [#760].
 - (@copilot) Added `[W5054]`: warns when `admin/blockly.js` exists but blockly support is not declared in io-package.json (`common.blockly` not set). Related to [#760].
