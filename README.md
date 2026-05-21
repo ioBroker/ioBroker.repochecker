@@ -27,7 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
-- (@mcm1957) Added `[E6025]`: `README.md` now raises an error when it does not contain exactly one H1 (`#`) heading.
+- (@mcm1957) Added `[E6025]`: `README.md` now raises an error when it does not contain exactly one H1 (`#`) heading. [#176].
 - (@copilot) Added `[W6023]`/`[W6024]` README checks for adapters using the Sentry plugin: warn when the required Sentry notice is missing and when it appears too far down in the document.
 - (@copilot) Added `[W5052]`: warns for adapter-core `setObject()` usage (`this.setObject(...)` / `adapter.setObject(...)`) and suggests using `setObjectNotExists()` or `extendObject()` instead. Detection ignores comments and string literals to avoid false positives.
 - (@copilot) Added `[E9508]` and extended `.npmignore` packaging checks so `CHANGELOG_OLD.md` is not shipped in npm packages.
