@@ -28,6 +28,7 @@ Example:
 ### **WORK IN PROGRESS**
 
 - (@copilot) Added `[W5052]`: warns for adapter-core `setObject()` usage (`this.setObject(...)` / `adapter.setObject(...)`) and suggests using `setObjectNotExists()` or `extendObject()` instead. Detection ignores comments and string literals to avoid false positives.
+- (@copilot) Added `[E9508]` and extended `.npmignore` packaging checks so `CHANGELOG_OLD.md` is not shipped in npm packages.
 
 ### 5.12.1 (2026-05-20)
 - (mcm197) cleanup some duplicate numbers
