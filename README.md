@@ -27,6 +27,10 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added `[W5053]`: warns when `admin/jsonCustom.json(5)` exists but custom support is not declared in io-package.json. Related to [#760].
+- (@copilot) Added `[W5054]`: warns when `admin/blockly.js` exists but blockly support is not declared in io-package.json (`common.blockly` not set). Related to [#760].
+- (@copilot) Added `[W5055]`: warns when `admin/index.html` exists but materialize UI is used (the file is for admin2 and is outdated). Related to [#760].
+- (@copilot) Added `[W5056]`: warns when `admin/custom.html` or `admin/custom_m.html` exists — these HTML-based custom dialogs are no longer supported; migrate to `admin/jsonCustom.json`. Related to [#760].
 - (@copilot) Added `[W6023]`/`[W6024]` README checks for adapters using the Sentry plugin: warn when the required Sentry notice is missing and when it appears too far down in the document.
 - (@copilot) Added `[W5052]`: warns for adapter-core `setObject()` usage (`this.setObject(...)` / `adapter.setObject(...)`) and suggests using `setObjectNotExists()` or `extendObject()` instead. Detection ignores comments and string literals to avoid false positives.
 - (@copilot) Added `[E9508]` and extended `.npmignore` packaging checks so `CHANGELOG_OLD.md` is not shipped in npm packages.
