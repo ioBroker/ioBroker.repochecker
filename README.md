@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Extended `instanceObjects` validation for `io-package.json`: now checks `_id`, valid object/state types, state `common.*` structure/types, and role compatibility against official ioBroker state-role definitions, reporting findings as warnings.
 - (@copilot) Added `[W6023]`/`[W6024]` README checks for adapters using the Sentry plugin: warn when the required Sentry notice is missing and when it appears too far down in the document.
 - (@copilot) Added `[W5052]`: warns for adapter-core `setObject()` usage (`this.setObject(...)` / `adapter.setObject(...)`) and suggests using `setObjectNotExists()` or `extendObject()` instead. Detection ignores comments and string literals to avoid false positives.
 - (@copilot) Added `[E9508]` and extended `.npmignore` packaging checks so `CHANGELOG_OLD.md` is not shipped in npm packages.
