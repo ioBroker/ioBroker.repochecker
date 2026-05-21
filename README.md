@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Fixed `[W0069]` scope: now checks only packages reachable from `dependencies` in `package.json` (including their transitive sub-dependencies), while ignoring packages that are only brought in by `devDependencies` or `optionalDependencies`.
 - (@copilot) Stopped source-code checks from scanning files in `doc/` and `docs/` directories, preventing false positives like `[E5049]` from documentation helper files [#874].
 - (@copilot) Added `[W0069]`/`[S0070]`: checks that all dependencies in `package-lock.json` require a Node.js version compatible with the adapter's `engines.node` minimum. If `package-lock.json` is absent, attempts to create it via `npm install --package-lock-only`. Reports `[W0069]` for incompatible packages and `[S0070]` when the check cannot be performed. Related to #310
 - (@copilot) Extended `instanceObjects` validation for `io-package.json`: now checks `_id`, valid object/state types, state `common.*` structure/types, and role compatibility against official ioBroker state-role definitions, reporting findings as warnings.
