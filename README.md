@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@mcm1957) Added `[E6025]`: `README.md` now raises an error when it does not contain exactly one H1 (`#`) heading. Related to #176.
 - (@copilot) Added `[W5053]`: warns when `admin/jsonCustom.json(5)` exists but custom support is not declared in io-package.json. Related to [#760].
 - (@copilot) Added `[W5054]`: warns when `admin/blockly.js` exists but blockly support is not declared in io-package.json (`common.blockly` not set). Related to [#760].
 - (@copilot) Added `[W5055]`: warns when `admin/index.html` exists but materialize UI is used (the file is for admin2 and is outdated). Related to [#760].
