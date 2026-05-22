@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Ignored `/www`, `/template`, and `/templates` during source dependency scanning, ignored `native.webInstance` for extension adapters in native checks, and updated `[W1130]` array default validation to require a JSON-stringified array. Related to [#881].
 - (@copilot) Added an error for `common.nondeletable=true` in `io-package.json`, with a prepared (currently empty) allowlist for adapters that are allowed to use this reserved flag.
 - (@copilot) Fixed `[W0069]` scope: now checks only packages reachable from `dependencies` in `package.json` (including their transitive sub-dependencies), while ignoring packages that are only brought in by `devDependencies` or `optionalDependencies`.
 - (@copilot) Stopped source-code checks from scanning files in `doc/` and `docs/` directories, preventing false positives like `[E5049]` from documentation helper files [#874].
