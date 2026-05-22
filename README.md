@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added an error for `common.nondeletable=true` in `io-package.json`, with a prepared (currently empty) allowlist for adapters that are allowed to use this reserved flag.
 - (@copilot) Fixed `[W0069]` scope: now checks only packages reachable from `dependencies` in `package.json` (including their transitive sub-dependencies), while ignoring packages that are only brought in by `devDependencies` or `optionalDependencies`.
 - (@copilot) Stopped source-code checks from scanning files in `doc/` and `docs/` directories, preventing false positives like `[E5049]` from documentation helper files [#874].
 - (@copilot) Added `[W0069]`/`[S0070]`: checks that all dependencies in `package-lock.json` require a Node.js version compatible with the adapter's `engines.node` minimum. If `package-lock.json` is absent, attempts to create it via `npm install --package-lock-only`. Reports `[W0069]` for incompatible packages and `[S0070]` when the check cannot be performed. Related to #310
