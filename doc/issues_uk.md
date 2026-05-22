@@ -123,6 +123,7 @@
 - [E605 No actual year found in copyright. Please add `Copyright (c) XXXX-YYYY Author` at the end of README.md](#e605-no-actual-year-found-in-copyright-please-add-copyright-c-xxxx-yyyy-author-at-the-end-of-readmemd)
 - [E606 Current adapter version ${context.packageJson.version} not found in README.md](#e606-current-adapter-version-contextpackagejsonversion-not-found-in-readmemd)
 - [W609 Multiple copyright lines in README.md missing trailing spaces](#w609-multiple-copyright-lines-in-readmemd-missing-trailing-spaces)
+- [W621 `## License` is not the last section in README.md](#w621--license-is-not-the-last-section-in-readmemd)
 - [E701 NO LICENSE file found](#e701-no-license-file-found)
 - [W703 Multiple copyright lines in LICENSE file missing trailing spaces](#w703-multiple-copyright-lines-in-license-file-missing-trailing-spaces)
 - [E801 No repository about text found. Please go to GitHub, press the settings button beside the about title and add the description.](#e801-no-repository-about-text-found-please-go-to-github-press-the-settings-button-beside-the-about-title-and-add-the-description)
@@ -413,6 +414,12 @@ Correct the name of the repository by renaming it to meet standards
 When a LICENSE section in README.md contains multiple copyright lines, each line (except the last) must end with two spaces. In Markdown, two trailing spaces create a line break, ensuring proper formatting of multiple copyright holders.
 #### Необхідний крок для вирішення проблеми
 Add two spaces at the end of each copyright line except the last one in the LICENSE section of README.md.
+
+### [W621] `## License` is not the last section in README.md
+#### Пояснення
+The `## License` section should be the last section in README.md. Having content after the license section makes it harder to find and may indicate that the license information is incomplete or misplaced.
+#### Необхідний крок для вирішення проблеми
+Move the `## License` section and its content to the end of README.md so that it is the last `##` section in the file.
 
 ### [E701] NO LICENSE file found
 

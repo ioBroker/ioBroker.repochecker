@@ -30,6 +30,7 @@ const M6000_Readme = require('./lib/M6000_Readme.js');
 const M7000_License = require('./lib/M7000_License.js');
 const M8000_Github = require('./lib/M8000_Github.js');
 const M9000_GitNpmIgnore = require('./lib/M9000_GitNpmIgnore.js');
+const postprocessing = require('./lib/postprocessing.js');
 
 // disable axios caching
 // axios.defaults.headers = {
@@ -148,6 +149,7 @@ function check(request, ctx, callback) {
         .then(context => M0000_PackageJson.getPackageJson(context))
         .then(context => M1000_IOPackageJson.getIOPackageJson(context))
         .then(context => M2000_Npm.getNpm(context))
+        .then(context => M4000_Repository.getLatestRepo(context))
         .then(context => config.updateConfig(context))
         .then(context => config.logEnvironment(context))
         .then(context => M0000_PackageJson.checkPackageJson(context))
@@ -155,12 +157,14 @@ function check(request, ctx, callback) {
         .then(context => M2000_Npm.checkNpm(context))
         .then(context => M4000_Repository.checkRepository(context))
         .then(context => M5000_Code.checkCode(context))
+        .then(context => M0000_PackageJson.checkDependencyNodeRequirements(context))
         .then(context => M3000_Testing.checkTests(context))
         .then(context => M8000_Github.checkGithubRepo(context))
         .then(context => M6000_Readme.checkReadme(context))
         .then(context => M7000_License.checkLicenseFile(context))
         .then(context => M9000_GitNpmIgnore.checkNpmIgnore(context))
         .then(context => M9000_GitNpmIgnore.checkGitIgnore(context))
+        .then(context => postprocessing.postprocessing(context))
         .then(context => {
             return callback(
                 null,
@@ -239,6 +243,11 @@ if (typeof module !== 'undefined' && module.parent) {
         common.setLocal(true);
     }
 
+    if (process.argv.includes('--strict')) {
+        process.argv.splice(process.argv.indexOf('--strict'), 1);
+        common.setStrict(true);
+    }
+
     // Get url from parameters if possible
     if (process.argv.length > 2) {
         repoUrl = process.argv[2];
@@ -307,30 +316,33 @@ if (typeof module !== 'undefined' && module.parent) {
             } else {
                 console.log('\n\nNO errors encountered.');
             }
-            if (context.warnings.length) {
+            if (context.warnings.filter(txt => txt.startsWith('[W')).length) {
                 console.log('\nWarnings:');
-                context.warnings.sort().forEach(err => {
-                    //const issue = err.substring(1, 5);
-                    console.warn(err);
-                    // if (issues[issue]) {
-                    //     //if (issues[issue].title) {
-                    //     //    console.warn(getText(issues[issue].title, 'en'));
-                    //     //}
-                    //     if (issues[issue].explanation) {
-                    //         console.warn(getText(issues[issue].explanation, 'en'));
-                    //     }
-                    //     if (issues[issue].resolving) {
-                    //         console.warn(getText(issues[issue].resolving, 'en'));
-                    //     }
-                    //     if (issues[issue].notes) {
-                    //         console.warn(getText(issues[issue].notes, 'en'));
-                    //     }
-                    // }
-                });
+                context.warnings
+                    .filter(txt => txt.startsWith('[W'))
+                    .sort()
+                    .forEach(err => {
+                        console.warn(err);
+                    });
             } else {
                 console.log('\n\nNO warnings encountered.');
             }
+            if (context.warnings.filter(txt => txt.startsWith('[S')).length) {
+                console.log('\nSuggestionss:');
+                context.warnings
+                    .filter(txt => txt.startsWith('[S'))
+                    .sort()
+                    .forEach(err => {
+                        console.warn(err);
+                    });
+            } else {
+                console.log('\n\nNO suggestions encountered.');
+            }
             console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
+
+            if (common.isLocal() && context.errors.length) {
+                process.exit(1);
+            }
         },
     );
 }
