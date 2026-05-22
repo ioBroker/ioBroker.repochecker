@@ -41,6 +41,7 @@ Example:
 - (@copilot) Added `[W6023]`/`[W6024]` README checks for adapters using the Sentry plugin: warn when the required Sentry notice is missing and when it appears too far down in the document.
 - (@copilot) Added `[W5052]`: warns for adapter-core `setObject()` usage (`this.setObject(...)` / `adapter.setObject(...)`) and suggests using `setObjectNotExists()` or `extendObject()` instead. Detection ignores comments and string literals to avoid false positives.
 - (@copilot) Added `[E9508]` and extended `.npmignore` packaging checks so `CHANGELOG_OLD.md` is not shipped in npm packages.
+- (@copilot) Added `[E9509]`/`[E9510]`: error when `.dev-server` directory is present in repository but not excluded from npm packaging (via `package.json "files"` or `.npmignore`). Related to #875.
 - (@copilot) Added `[W5052]`/`[W5053]`: when jsonConfig is used, password fields found in `admin/*.json` and `admin/*.json5` (outside table components) are now checked against `protectedNative` and `encryptedNative` in `io-package.json`.
 
 ### 5.12.1 (2026-05-20)
