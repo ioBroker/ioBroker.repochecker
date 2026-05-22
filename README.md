@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.13.0 (2026-05-22)
 
 - (@copilot) Ignored `/www`, `/template`, and `/templates` during source dependency scanning, ignored `native.webInstance` for extension adapters in native checks, and updated `[W1130]` array default validation to require a JSON-stringified array. Related to [#881].
 - (@copilot) Fixed `[W8905]` dependabot coverage logic to accept matching npm `directory`/`directories` entries (including wildcard patterns) for each non-root `package.json`.
