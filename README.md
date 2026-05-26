@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.13.2 (2026-05-26)
 
 - (mcm1957) Adapter some severities for new adapters.
 - (mcm1957) Missing state common attributes added.
