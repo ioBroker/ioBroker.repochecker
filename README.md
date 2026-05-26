@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.14.0 (2026-05-26)
 
 - (@copilot) Added `[E1143]`: when `package.json` `main` points to a `.ts` file, `io-package.json` must set `common.compact` to `false`. In this case `[S1039]` is no longer emitted.
 - (@copilot) Added `[W5060]`: warns when a package is listed in `dependencies` of `package.json` but is not imported or required by any scanned source file. Plugin packages implied by `io-package.json common.plugins` are ignored to avoid false positives.
