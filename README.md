@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (@copilot) Added eslint migration/config checks for package/workflow validation, including `lint: true` verification in `test-and-release.yml`.
+
 ### 5.13.2 (2026-05-26)
 
 - (mcm1957) Adapter some severities for new adapters.
