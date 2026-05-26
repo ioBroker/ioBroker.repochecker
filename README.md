@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added eslint migration/config checks for package/workflow validation, including `lint: true` verification in `test-and-release.yml`.
 - (@copilot) Improved `test-and-release.yml` OS checks to evaluate matrix or action-step OS coverage against `package.json` `os` restrictions, including alias mapping (`linux`/`win32`/`darwin`).
 
 ### 5.13.2 (2026-05-26)
