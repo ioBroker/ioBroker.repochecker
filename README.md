@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (mcm1957) support for exceptions for some package update suggestions added
+
 ### 5.14.0 (2026-05-26)
 
 - (@copilot) Added `[E1143]`: when `package.json` `main` points to a `.ts` file, `io-package.json` must set `common.compact` to `false`. In this case `[S1039]` is no longer emitted.
