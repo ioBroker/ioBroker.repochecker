@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added notification scope checks in `io-package.json`: errors when `notifications[].scope` is missing and warns when the scope is neither the adapter name nor in a general allowlist (currently empty).
 - (@copilot) Moved file-list-based eslint config file checks to run after code file discovery and now abort on missing internal `context.filesList`.
 - (@copilot) Added eslint migration/config checks for package/workflow validation, including `lint: true` verification in `test-and-release.yml`.
 - (@copilot) Improved `test-and-release.yml` OS checks to evaluate matrix or action-step OS coverage against `package.json` `os` restrictions, including alias mapping (`linux`/`win32`/`darwin`).
