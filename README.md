@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (@copilot) Improved `test-and-release.yml` OS checks to evaluate matrix or action-step OS coverage against `package.json` `os` restrictions, including alias mapping (`linux`/`win32`/`darwin`).
+
 ### 5.13.2 (2026-05-26)
 
 - (mcm1957) Adapter some severities for new adapters.
