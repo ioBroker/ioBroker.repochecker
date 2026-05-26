@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+- (@copilot) Added `[W5060]`: warns when a package is listed in `dependencies` of `package.json` but is not imported or required by any scanned source file. Plugin packages implied by `io-package.json common.plugins` are ignored to avoid false positives.
 - (@copilot) Added `[S3042]`/`[S3043]`/`[S3044]`: suggest using only the major version tag (e.g. `@v2`) when `test-and-release.yml` pins a specific minor/patch version (e.g. `@v2.0.0`) for `ioBroker/testing-action-check`, `ioBroker/testing-action-adapter`, or `ioBroker/testing-action-deploy`.
 - (@copilot) Added notification scope checks in `io-package.json`: errors when `notifications[].scope` is missing and warns when the scope is neither the adapter name nor in a general allowlist (currently empty).
 - (@copilot) Moved file-list-based eslint config file checks to run after code file discovery and now abort on missing internal `context.filesList`.
