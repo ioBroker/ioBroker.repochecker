@@ -28,6 +28,7 @@ Example:
 ### **WORK IN PROGRESS**
 
 - (@copilot) Improved `test-and-release.yml` OS checks to evaluate matrix or action-step OS coverage against `package.json` `os` restrictions, including alias mapping (`linux`/`win32`/`darwin`).
+- (@copilot) Added `[W5059]`: warns when adapters using class mode (`class ... extends utils.Adapter`) still call `utils.adapter(...)` in source files.
 
 ### 5.13.2 (2026-05-26)
 
