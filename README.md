@@ -28,6 +28,7 @@ Example:
 ### **WORK IN PROGRESS**
 
 - (mcm1957) Adapter some severities for new adapters.
+- (mcm1957) Missing state common attributes added.
 
 ### 5.13.1 (2026-05-24)
 
