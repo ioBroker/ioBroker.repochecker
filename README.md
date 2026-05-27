@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (mcm1957) Crash when checking github dependencies has been fixed
+
 ### 5.14.1 (2026-05-26)
 
 - (mcm1957) support for exceptions for some package update suggestions added
