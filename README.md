@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.16.1 (2026-05-28)
 
 - (mcm1957) Processing of require / import filenames has been adapterd.
 
