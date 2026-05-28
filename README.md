@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.16.0 (2026-05-28)
 
 - (mcm1957) Incorrect checking of provenence / trusted publishing has benn fixed.
 - (mcm1957) Checking of @tsconfig/nodeNN has been added
