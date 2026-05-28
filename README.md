@@ -25,9 +25,13 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (mcm1957) Processing of require / import filenames has been adapterd.
+
 ### 5.16.0 (2026-05-28)
 
-- (mcm1957) Incorrect checking of provenence / trusted publishing has benn fixed.
+- (mcm1957) Incorrect checking of provenence / trusted publishing has been fixed.
 - (mcm1957) Checking of @tsconfig/nodeNN has been added
 - (mcm1957) Checing of state roles has been renewed
 - (mcm1957) Component qrCodeSendTo has been added
