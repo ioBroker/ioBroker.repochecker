@@ -27,7 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
-- (@copilot) Changed `[W5020]` to `[E5020]`: `gulpfile.js` present without `gulp` in `devDependencies` is now a blocking error instead of a warning. [#478]
+- (@copilot) Changed `[W5020]` to `[E5020]`: `gulpfile.js` present without `gulp` in `devDependencies` is now a blocking error instead of a warning. Related to [#268]
 
 ### 5.16.1 (2026-05-28)
 
