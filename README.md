@@ -30,6 +30,7 @@ Example:
 - (mcm1957) Incorrect checking of provenence / trusted publishing has benn fixed.
 - (mcm1957) Checking of @tsconfig/nodeNN has been added
 - (mcm1957) Checing of state roles has been renewed
+- (mcm1957) Component qrCodeSendTo has been added
 
 ### 5.15.1 (2026-05-27)
 
