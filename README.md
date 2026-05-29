@@ -29,6 +29,7 @@ Example:
 
 - (mcm1957) jsonConfig component oauth2 added.
 - (mcm1957) Some translation issue are compacted better.
+- (mcm1957) handle package alias definitiosn from tsconfig.json
 
 ### 5.16.1 (2026-05-28)
 
