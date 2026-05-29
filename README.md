@@ -31,6 +31,7 @@ Example:
 - (mcm1957) Some translation issue are compacted better.
 - (mcm1957) handle package alias definitiosn from tsconfig.json
 - (@copilot) Improved `[E5004]`/`[W5004]`/`[W5005]` checks: `setInterval()`/`setTimeout()` are now scanned across all source files (not just the main file); bare calls (not prefixed with `this.` or `adapter.`) are flagged with a suggestion to use `this.setInterval()`/`adapter.setInterval()` or `this.setTimeout()`/`adapter.setTimeout()` instead. Messages also note when no matching `clearInterval()`/`clearTimeout()` is detected in the file.
+- (@copilot) Added support for `// @repochecker: optional dependency 'pkg'` comments in source files: missing dependency warnings (`[W5042]`) are suppressed for declared optional packages, and dedicated warning/suggestion messages are emitted for invalid/unused/optional-missing declarations.
 
 ### 5.16.1 (2026-05-28)
 
