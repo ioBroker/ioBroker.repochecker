@@ -15,7 +15,7 @@
     "@alcalzone/release-script": "^5.2.0",
     "@iobroker/eslint-config": "^2.3.4",
     "@tsconfig/node20": "^20.1.9",
-    "@types/node": "^22.19.17",
+    "@types/node": "^24.12.4",
     "@types/semver": "^7.7.1"
   },
   "repository": {
