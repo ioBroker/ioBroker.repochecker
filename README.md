@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (mcm1957) Disable [E6031] Changelog section in README.md is missing entry/entries.
+
 ### 5.17.0 (2026-05-30)
 
 - (mcm1957) jsonConfig component oauth2 added.
