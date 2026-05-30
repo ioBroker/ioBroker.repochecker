@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (mcm1957) False positive when searching copyright line at README.md fixed.
+
 ### 5.17.1 (2026-05-30)
 
 - (mcm1957) Disable [E6031] Changelog section in README.md is missing entry/entries.
