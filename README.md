@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.17.0 (2026-05-30)
 
 - (mcm1957) jsonConfig component oauth2 added.
 - (mcm1957) Some translation issue are compacted better.
