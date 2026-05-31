@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.17.4 (2026-05-31)
 
 -  (mcm1957) default value for engines corrected.
 
