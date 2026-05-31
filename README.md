@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+-  (mcm1957) default value for engines corrected.
+
 ### 5.17.3 (2026-05-30)
 
 - (mcm1957) exclude 'scripts' directory from scanning
