@@ -6,7 +6,7 @@
     "axios": "^1.15.2",
     "compare-versions": "^6.1.1",
     "image-size": "^1.2.0",
-    "js-yaml": "^4.1.1",
+    "js-yaml": "^4.2.0",
     "json5": "^2.2.3",
     "minimatch": "^10.0.0",
     "semver": "^7.7.4"
