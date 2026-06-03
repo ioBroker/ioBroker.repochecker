@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+-  (mcm1957) Severities have been adapted.
+
 ### 5.17.5 (2026-06-02)
 
 -  (mcm1957) Minor checkings at README formatting have been done.
