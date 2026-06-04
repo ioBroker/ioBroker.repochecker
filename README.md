@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### 5.17.7 (2026-06-04)
+### **WORK IN PROGRESS**
 
 -  (mcm1957) Require release-script 5.2.1.
 
