@@ -25,9 +25,9 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### 5.18.0 (2026-06-05)
+### **WORK IN PROGRESS**
 
--  (mcm1957) Support for objectStructure chek added
+-  (mcm1957) Support for objectStructure check added
 
 ### 5.17.9 (2026-06-04)
 
