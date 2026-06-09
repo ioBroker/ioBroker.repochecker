@@ -38,5 +38,10 @@
     "start": "node index.js",
     "lint": "eslint -c eslint.config.mjs .",
     "release": "release-script"
-  }
+  },
+  "homepage": "https://github.com/ioBroker/ioBroker.repochecker",
+  "bugs": {
+    "url": "https://github.com/ioBroker/ioBroker.repochecker/issues"
+  },
+  "license": "MIT License"
 }
