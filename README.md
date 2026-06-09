@@ -25,6 +25,15 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+-  (mcm1957) build directory excluded from I18n scans
+-  (mcm1957) Handling of alpha releasea at changelog corrected
+-  (mcm1957) Changing text for missing updates limited to 50 days
+-  (mcm1957) Encrypted / protected UI data depuplicated
+-  (mcm1957) Scanning for sourcefiles and imports corrected
+-  (mcm1957) Special filtering added
+
 ### 5.18.3 (2026-06-06)
 
 -  (mcm1957) Support for objectStructure check added
