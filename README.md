@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.18.4 (2026-06-09)
 
 -  (mcm1957) build directory excluded from I18n scans
 -  (mcm1957) Handling of alpha releasea at changelog corrected
