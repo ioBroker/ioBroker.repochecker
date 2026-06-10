@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+-  (mcm1957) Support header 'Older versions' within changelog
+
 ### 5.18.5 (2026-06-09)
 
 -  (mcm1957) mode.* roles fixed
