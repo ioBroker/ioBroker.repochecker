@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+-  (mcm1957) Detection of github install guide extended
+
 ### 5.18.6 (2026-06-10)
 
 -  (mcm1957) Support role definitions containing wildcards
