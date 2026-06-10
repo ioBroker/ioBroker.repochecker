@@ -27,6 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+-  (mcm1957) Support role definitions containing wildcards
 -  (mcm1957) Support header 'Older versions' within changelog
 
 ### 5.18.5 (2026-06-09)
