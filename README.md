@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.18.6 (2026-06-10)
 
 -  (mcm1957) Support role definitions containing wildcards
 -  (mcm1957) Support header 'Older versions' within changelog
