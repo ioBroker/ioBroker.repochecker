@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+-  (mcm1957) Sentry text check has been adapted
+
 ### 5.18.7 (2026-06-10)
 
 -  (mcm1957) Detection of github install guide extended
