@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.18.8 (2026-06-21)
 
 -  (mcm1957) Sentry text check has been adapted
 -  (mcm1957) Fixed validation of serialized default values for array, object, mixed, json, and file states
