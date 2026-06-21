@@ -28,7 +28,7 @@ Example:
 ### **WORK IN PROGRESS**
 
 -  (mcm1957) Sentry text check has been adapted
--  (@copilot) Fixed object dump validation so serialized `common.def` values for `array`, `object`, `mixed`, `json`, and `file` are type-checked correctly
+-  (mcm1957) Fixed validation of serialized default values for array, object, mixed, json, and file states
 
 ### 5.18.7 (2026-06-10)
 
