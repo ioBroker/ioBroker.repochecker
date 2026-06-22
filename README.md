@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.18.9 (2026-06-22)
 
 -  (mcm1957) eslint-config import check has been adapted
 -  (mcm1957) EXCEPTION: exceptions added flase positive apiKey paramaters
