@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.18.10 (2026-06-23)
 
 -  (mcm1957) some more directories have been excluded from dependency scan
 
