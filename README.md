@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.18.11 (2026-06-24)
 
 -  (mcm1957) blacklisting for dependency versionchecking checking added
 -  (mcm1957) handling of i18n attirbute at jsonConfig has been adapted
