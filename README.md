@@ -25,6 +25,12 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+-  (mcm1957) github install detection has been enhanced
+-  (mcm1957) checking of untranslated i18n keys has been enhanced
+-  (mcm1957) disallow npm installation scripts
+
 ### 5.18.11 (2026-06-24)
 
 -  (mcm1957) blacklisting for dependency versionchecking checking added
