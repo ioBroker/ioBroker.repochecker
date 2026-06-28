@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.19.1 (2026-06-28)
 
 -  (mcm1957) checking of untranslated i18n keys has been adapted
 
