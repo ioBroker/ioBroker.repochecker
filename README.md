@@ -25,7 +25,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.19.3 (2026-06-28)
 
 - (mcm1957) false positives for test-and.release workflow logs ans wwwOnly adapters has been fixed
 
