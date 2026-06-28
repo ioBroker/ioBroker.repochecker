@@ -28,6 +28,7 @@ Example:
 ### **WORK IN PROGRESS**
 
 - (mcm1957) suggest to always use i18n flag at jsonCOnfig.json
+- (mcm1957) check of test-and.release workflow logs has been added
 
 ### 5.19.1 (2026-06-28)
 
