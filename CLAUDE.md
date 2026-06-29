@@ -11,11 +11,10 @@ Validates ioBroker adapter repositories for compliance. Two main use cases:
 ## Commands
 
 ```bash
-npm start                                          # Start Express server (PORT env or 3005)
+npm run start <repo-url> [branch] [--debug] [--local] [--noinfo] [--strict]  # local testing
 npx @iobroker/repochecker <repo-url> [branch] [--debug] [--local] [--noinfo] [--strict]  # CLI
 node scripts/checkObjectStructure.js <path-to-json> # Validate object dump
 ```
-
 No automated test suite exists.
 
 ## Architecture
@@ -63,7 +62,5 @@ No automated test suite exists.
 Every PR must add a user-friendly entry in `README.md` under `## **WORK IN PROGRESS**` using the format:
 
 ```
-* (author) **TYPE**: Description of user-visible change
+* (author) Description of user-visible change
 ```
-
-Accepted types: **NEW** (feature), **FIXED** (bug fix), **ENHANCED** (improvement), **TESTING** (tests), **CI/CD** (automation). Focus on user impact, not technical details. Reference issues with `fixes #XX` or `solves #XX`. On release, the release-script replaces the `WORK IN PROGRESS` heading with the version number and date.
