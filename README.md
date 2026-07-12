@@ -25,6 +25,11 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (mcm1957) Checker accepst node.js 26 testing now
+- (mcm1957) Missing tests for os raised to error level
+
 ### 5.19.8 (2026-07-04)
 
 - (mcm1957) more check for package.json lifecycle scripts
