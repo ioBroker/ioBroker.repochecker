@@ -29,6 +29,7 @@ Example:
 
 - (mcm1957) Checker accepst node.js 26 testing now
 - (mcm1957) Missing tests for os raised to error level
+- (mcm1957) Version parsing at changelog has been adapted
 
 ### 5.19.8 (2026-07-04)
 
