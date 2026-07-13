@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (mcm1957) Workflow runs older than 90 days now emit a single suggestion instead of one per job log (S3056)
+
 ### 5.19.9 (2026-07-12)
 
 - (mcm1957) Checker accepst node.js 26 testing now
