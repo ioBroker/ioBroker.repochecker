@@ -183,7 +183,7 @@ function check(request, ctx, callback) {
         })
         .catch(err => {
             const sanitizedError = common.redactAxiosError(err);
-            const sanitizedErrorJson = common.stringifyError(sanitizedError);
+            const sanitizedErrorJson = common.stringifyError(sanitizedError, true);
             console.error(`GLOBAL ERROR: ${sanitizedError.toString()}, ${sanitizedErrorJson}`);
             context.errors.push(`[E9999] GLOBAL ERROR: ${sanitizedError.toString()}, ${sanitizedErrorJson}`);
 
