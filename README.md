@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (Copilot) Redact sensitive Axios error fields so `OWN_GITHUB_TOKEN`/authorization values are never logged in clear text.
+
 ### 5.19.11 (2026-07-13)
 
 - (Copilot) Send `OWN_GITHUB_TOKEN` only for GitHub URLs to avoid forwarding it to jsDelivr.

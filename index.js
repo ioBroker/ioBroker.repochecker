@@ -182,8 +182,10 @@ function check(request, ctx, callback) {
             );
         })
         .catch(err => {
-            console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
-            context.errors.push(`[E9999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+            const sanitizedError = common.redactAxiosError(err);
+            const sanitizedErrorJson = common.stringifyError(sanitizedError);
+            console.error(`GLOBAL ERROR: ${sanitizedError.toString()}, ${sanitizedErrorJson}`);
+            context.errors.push(`[E9999] GLOBAL ERROR: ${sanitizedError.toString()}, ${sanitizedErrorJson}`);
 
             return callback(
                 null,
@@ -195,7 +197,7 @@ function check(request, ctx, callback) {
                     version,
                     hasTravis: context.hasTravis,
                     lastCommitSha: context.lastCommitSha,
-                    error: `${err.request ? err.request.path : ''} ${err.message}`,
+                    error: `${sanitizedError.request ? sanitizedError.request.path : ''} ${sanitizedError.message}`,
                 }),
             );
         });
