@@ -25,6 +25,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (copilot) Send `OWN_GITHUB_TOKEN` only for GitHub URLs to avoid forwarding it to jsDelivr.
+
 ### 5.19.10 (2026-07-13)
 
 - (mcm1957) Workflow runs older than 90 days now emit a single suggestion instead of one per job log (S3056)
