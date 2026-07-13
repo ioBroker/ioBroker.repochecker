@@ -27,7 +27,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
-- (copilot) Send `OWN_GITHUB_TOKEN` only for GitHub URLs to avoid forwarding it to jsDelivr.
+- (Copilot) Send `OWN_GITHUB_TOKEN` only for GitHub URLs to avoid forwarding it to jsDelivr.
 
 ### 5.19.10 (2026-07-13)
 
