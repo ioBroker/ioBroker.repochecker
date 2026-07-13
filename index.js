@@ -182,8 +182,9 @@ function check(request, ctx, callback) {
             );
         })
         .catch(err => {
-            console.error(`GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
-            context.errors.push(`[E9999] GLOBAL ERROR: ${err.toString()}, ${JSON.stringify(err)}`);
+            const sanitizedErrorJson = common.stringifyError(err);
+            console.error(`GLOBAL ERROR: ${err.toString()}, ${sanitizedErrorJson}`);
+            context.errors.push(`[E9999] GLOBAL ERROR: ${err.toString()}, ${sanitizedErrorJson}`);
 
             return callback(
                 null,
