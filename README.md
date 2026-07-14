@@ -26,6 +26,7 @@ Example:
 
 `npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.repochecker --local`
 
+## Changelog
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
