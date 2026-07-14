@@ -4,7 +4,7 @@ This is a code for frontend and back-end of the service <https://adapter-check.i
 
 If you want to add your adapter to the public ioBroker repository, all tests on this page must be OK.
 
-## How to test via cli
+## How to test via cli (standard tests accessing repository data)
 
 When running the repository checker via the command line, you **need** to add the repository as parameter, while the branch parameter (`master/main/dev`) is optional. If this parameter is omitted, the `default` branch (typically master / main) will be checked.
 
