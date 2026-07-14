@@ -12,6 +12,11 @@ When running the repository checker via the command line, you **need** to add th
 npx @iobroker/repochecker <repo> [branch]`
 ```
 
+## How to test via cli using local mode
+
+> [!NOTE]  
+> local mode feature is experimental and untested. 
+
 For extra debugging outputs you can pass the `--debug` parameter.
 
 For a local test you can pass the `--local` parameter. Most of the files are read locally.
