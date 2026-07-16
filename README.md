@@ -31,6 +31,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (Copilot) Add a workflow check that rejects `always()` on standard test-and-release jobs and flags it for review on custom jobs.
+
 ### 5.19.12 (2026-07-13)
 
 - (Copilot) Redact sensitive Axios error fields so `OWN_GITHUB_TOKEN`/authorization values are never logged in clear text.
