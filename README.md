@@ -31,6 +31,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (krobipd) Skip dependency update suggestions when the newer version would violate a peer dependency range declared by the adapter's toolchain, e.g. suggesting `typescript` 7 while `typescript-eslint` (pulled in by `@iobroker/eslint-config`) requires `<6.1.0`.
+
 ### 5.20.1 (2026-07-17)
 
 * (Copilot) Add a workflow check that rejects `always()` on standard test-and-release jobs and flags it for review on custom jobs.
