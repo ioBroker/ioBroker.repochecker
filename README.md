@@ -27,20 +27,18 @@ Example:
 `npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.repochecker --local`
 
 ## Changelog
-
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
 ### **WORK IN PROGRESS**
 
 * (krobipd) Skip dependency update suggestions when the newer version would violate a peer dependency range declared by the adapter's toolchain, e.g. suggesting `typescript` 7 while `typescript-eslint` (pulled in by `@iobroker/eslint-config`) requires `<6.1.0`.
 
 ### 5.20.1 (2026-07-17)
 
-- (Copilot) Add a workflow check that rejects `always()` on standard test-and-release jobs and flags it for review on custom jobs.
-- (Copilot) Warn when tracked files or directories are still covered by `.gitignore` and error if a tracked `/build` directory is ignored.
+* (Copilot) Add a workflow check that rejects `always()` on standard test-and-release jobs and flags it for review on custom jobs.
+* (Copilot) Warn when tracked files or directories are still covered by `.gitignore` and error if a tracked `/build` directory is ignored.
 
 ### 5.19.12 (2026-07-13)
 
@@ -87,72 +85,72 @@ Example:
 
 ### 5.19.1 (2026-06-28)
 
-- (mcm1957) checking of untranslated i18n keys has been adapted
+-  (mcm1957) checking of untranslated i18n keys has been adapted
 
 ### 5.19.0 (2026-06-27)
 
-- (mcm1957) github install detection has been enhanced
-- (mcm1957) checking of untranslated i18n keys has been enhanced
-- (mcm1957) disallow npm installation scripts
+-  (mcm1957) github install detection has been enhanced
+-  (mcm1957) checking of untranslated i18n keys has been enhanced
+-  (mcm1957) disallow npm installation scripts
 
 ### 5.18.11 (2026-06-24)
 
-- (mcm1957) blacklisting for dependency versionchecking checking added
-- (mcm1957) handling of i18n attirbute at jsonConfig has been adapted
+-  (mcm1957) blacklisting for dependency versionchecking checking added
+-  (mcm1957) handling of i18n attirbute at jsonConfig has been adapted
 
 ### 5.18.10 (2026-06-23)
 
-- (mcm1957) some more directories have been excluded from dependency scan
+-  (mcm1957) some more directories have been excluded from dependency scan
 
 ### 5.18.9 (2026-06-22)
 
-- (mcm1957) eslint-config import check has been adapted
-- (mcm1957) EXCEPTION: exceptions added flase positive apiKey paramaters
+-  (mcm1957) eslint-config import check has been adapted
+-  (mcm1957) EXCEPTION: exceptions added flase positive apiKey paramaters
 
 ### 5.18.8 (2026-06-21)
 
-- (mcm1957) Sentry text check has been adapted
-- (mcm1957) Fixed validation of serialized default values for array, object, mixed, json, and file states
+-  (mcm1957) Sentry text check has been adapted
+-  (mcm1957) Fixed validation of serialized default values for array, object, mixed, json, and file states
 
 ### 5.18.7 (2026-06-10)
 
-- (mcm1957) Detection of github install guide extended
+-  (mcm1957) Detection of github install guide extended
 
 ### 5.18.6 (2026-06-10)
 
-- (mcm1957) Support role definitions containing wildcards
-- (mcm1957) Support header 'Older versions' within changelog
+-  (mcm1957) Support role definitions containing wildcards
+-  (mcm1957) Support header 'Older versions' within changelog
 
 ### 5.18.5 (2026-06-09)
 
-- (mcm1957) mode.\* roles fixed
-- (mcm1957) build directory excluded from I18n scans
-- (mcm1957) Handling of alpha releasea at changelog corrected
-- (mcm1957) Changing text for missing updates limited to 50 days
-- (mcm1957) Encrypted / protected UI data depuplicated
-- (mcm1957) Scanning for sourcefiles and imports corrected
-- (mcm1957) Special filtering added
+-  (mcm1957) mode.* roles fixed
+-  (mcm1957) build directory excluded from I18n scans
+-  (mcm1957) Handling of alpha releasea at changelog corrected
+-  (mcm1957) Changing text for missing updates limited to 50 days
+-  (mcm1957) Encrypted / protected UI data depuplicated
+-  (mcm1957) Scanning for sourcefiles and imports corrected
+-  (mcm1957) Special filtering added
 
 ### 5.18.3 (2026-06-06)
 
-- (mcm1957) Support for objectStructure check added
+-  (mcm1957) Support for objectStructure check added
 
 ### 5.17.9 (2026-06-04)
 
-- (mcm1957) Require release-script 5.2.1.
-- (mcm1957) Searching for release tag workflow has been fixed.
+-  (mcm1957) Require release-script 5.2.1.
+-  (mcm1957) Searching for release tag workflow has been fixed.
 
 ### 5.17.6 (2026-06-03)
 
-- (mcm1957) Severities have been adapted.
+-  (mcm1957) Severities have been adapted.
 
 ### 5.17.5 (2026-06-02)
 
-- (mcm1957) Minor checkings at README formatting have been done.
+-  (mcm1957) Minor checkings at README formatting have been done.
 
 ### 5.17.4 (2026-05-31)
 
-- (mcm1957) default value for engines corrected.
+-  (mcm1957) default value for engines corrected.
 
 ### 5.17.3 (2026-05-30)
 
@@ -245,7 +243,6 @@ Example:
 - (@copilot) Added `[W5052]`/`[W5053]`: when jsonConfig is used, password fields found in `admin/*.json` and `admin/*.json5` (outside table components) are now checked against `protectedNative` and `encryptedNative` in `io-package.json`.
 
 ### 5.12.1 (2026-05-20)
-
 - (mcm197) cleanup some duplicate numbers
 
 ### 5.12.0 (2026-05-20)
