@@ -35,6 +35,7 @@ Example:
 
 * (Copilot) Add a workflow check that rejects `always()` on standard test-and-release jobs and flags it for review on custom jobs.
 * (Copilot) Warn when tracked files or directories are still covered by `.gitignore` and error if a tracked `/build` directory is ignored.
+* (krobipd) Skip the E9007/W9008 tracked-but-gitignored check in `--local` mode, where the file list is a filesystem walk that includes gitignored build outputs and produces false positives.
 
 ### 5.19.12 (2026-07-13)
 
