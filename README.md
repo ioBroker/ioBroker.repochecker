@@ -33,7 +33,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
-* (mcm1957) Fixed false positive `[S9508]` (and related packaging checks): negation entries (e.g. `!CHANGELOG_OLD.md`) in package.json `"files"` are now handled as exclusions instead of being wrongly matched. Related to #1097 and #1072.
+* (mcm1957) Fixed false positive `[S9508]` (and related packaging/i18n checks): negation entries (e.g. `!CHANGELOG_OLD.md`) in package.json `"files"` are now handled as exclusions instead of being wrongly matched. Related to #1097 and #1072.
 
 ### 5.20.2 (2026-08-07)
 
