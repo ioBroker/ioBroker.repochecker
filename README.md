@@ -31,7 +31,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.20.2 (2026-08-07)
 
 * (mcm1957) React usage is now also detected when `@iobroker/gui-components` is used as dependency.
 
