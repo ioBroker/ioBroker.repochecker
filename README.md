@@ -31,7 +31,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.20.3 (2026-08-07)
 
 * (mcm1957) Fixed false positive `[S9508]` (and related packaging/i18n checks): negation entries (e.g. `!CHANGELOG_OLD.md`) in package.json `"files"` are now handled as exclusions instead of being wrongly matched. Related to #1097 and #1072.
 
