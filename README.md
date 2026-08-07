@@ -31,6 +31,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) React usage is now also detected when `@iobroker/gui-components` is used as dependency.
+
 ### 5.20.1 (2026-07-17)
 
 * (Copilot) Add a workflow check that rejects `always()` on standard test-and-release jobs and flags it for review on custom jobs.
