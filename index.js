@@ -343,6 +343,14 @@ if (typeof module !== 'undefined' && module.parent) {
             }
             console.log(`\ncreated by repochecker ${context.version} based on commit ${context.lastCommitSha}`);
 
+            if (common.isLocal()) {
+                console.log(`\n----------------------------------------------------------`);
+                console.log(`This check has been run using --local mode.`);
+                console.log(`Please note that local mode is experimental state only and`);
+                console.log(`may report false positive findings and miss real issues.`);
+                console.log(`----------------------------------------------------------`);
+            }
+
             if (common.isLocal() && context.errors.length) {
                 process.exit(1);
             }
