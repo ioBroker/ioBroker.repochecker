@@ -31,9 +31,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### 5.20.5 (2026-08-08)
+### **WORK IN PROGRESS**
 
 * (mcm1957) Extended `[E9507]` i18n directory check to also exclude `src-tab` and `src-vis` source directories from packaging checks.
+* (mcm1957) Adaptions for backitup required due to ts migration
 
 ### 5.20.4 (2026-08-08)
 
