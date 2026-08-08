@@ -31,7 +31,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.20.4 (2026-08-08)
 
 * (mcm1957) Fixed `[E6012]`/`[E6013]` not being raised when direct install commands (e.g. `npm install` or `cd /opt/iobroker`) are placed inside fenced code blocks in README.md.
 
