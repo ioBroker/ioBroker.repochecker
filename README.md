@@ -34,6 +34,7 @@ Example:
 ### **WORK IN PROGRESS**
 
 * (mcm1957) Fixed source directory exclusion so multi-level paths (e.g. `src/lib/scripts`, `src/scripts`) are correctly skipped during code scanning, avoiding false positives such as `[S5051]`.
+* (mcm1957) Adaptions for backitup required due to ts migration
 
 ### 5.20.7 (2026-08-09)
 
