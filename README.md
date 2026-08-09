@@ -31,6 +31,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) Fixed source directory exclusion so multi-level paths (e.g. `src/lib/scripts`, `src/scripts`) are correctly skipped during code scanning, avoiding false positives such as `[S5051]`.
+
 ### 5.20.7 (2026-08-09)
 
 * (mcm1957) Exclude directories 'example(s)' from processing
