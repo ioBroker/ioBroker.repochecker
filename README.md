@@ -31,7 +31,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.20.9 (2026-08-10)
 
 * (mcm1957) Added new state roles for air quality and environmental sensors (`value.co`, `value.no`, `value.no2`, `value.o3`, `value.ch2o`, `value.pm1`, `value.pm25`, `value.pm10`, `value.rn`, `value.tvoc`, `value.airquality`, `value.humidity.relative`, `value.humidity.absolute`) and defined type/read/write constraints for `value.temperature.dewpoint`.
 * (mcm1957) Added `level.setting.*` roles mirroring all `level.*` roles for configuration/setting states.
