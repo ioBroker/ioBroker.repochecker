@@ -34,6 +34,9 @@ Example:
 ### **WORK IN PROGRESS**
 
 * (mcm1957) Added new state roles for air quality and environmental sensors (`value.co`, `value.no`, `value.no2`, `value.o3`, `value.ch2o`, `value.pm1`, `value.pm25`, `value.pm10`, `value.rn`, `value.tvoc`, `value.airquality`, `value.humidity.relative`, `value.humidity.absolute`) and defined type/read/write constraints for `value.temperature.dewpoint`.
+* (mcm1957) Added `level.setting.*` roles mirroring all `level.*` roles for configuration/setting states.
+* (mcm1957) Typed all `value.*` roles as `number` (read-only); `value.gps` remains the only `string` exception (enumeration numbers with string display constants are typed `number`).
+* (mcm1957) Corrected `value.gps` to type `string` (combined "longitude;latitude") and `info.port` to type `number`.
 
 ### 5.20.8 (2026-08-09)
 
