@@ -31,7 +31,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.20.10 (2026-08-14)
 
 * (mcm1957) The "check-and-lint" workflow job is now also detected when controlled by a matrix (job names starting with "check-and-lint (").
 
