@@ -31,7 +31,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.20.11 (2026-08-15)
 
 * (GermanBluefox) The jsonConfig component `credential` (available since admin 7.9.0) is now known and no longer reported as unexpected component (E5504).
 
