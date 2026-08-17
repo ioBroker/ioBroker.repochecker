@@ -31,7 +31,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.20.12 (2026-08-17)
 
 * (mcm1957) Do not check src-www directory tree for dependencies.
 
