@@ -12,13 +12,14 @@
                    |_|
 
  */
-const axios = require('axios');
+const path = require('node:path');
 
 //const issues = require('./doc/issues');
 const version = require('./package.json').version;
 
 // include submodules
 const common = require('./lib/common.js');
+const { requestGithub } = require('./lib/githubClient.js');
 const config = require('./lib/config.js');
 const M0000_PackageJson = require('./lib/M0000_PackageJson.js');
 const M1000_IOPackageJson = require('./lib/M1000_IOPackageJson.js');
@@ -74,8 +75,7 @@ function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
         common.debug('getGithubApiData');
         common.debug(`reading url '${context.githubUrlApi}'`);
-        axios
-            .get(context.githubUrlApi)
+        requestGithub(context.githubUrlApi)
             .then(response => {
                 context.githubApiData = response.data;
                 common.debug(`API Data: ${JSON.stringify(context.githubApiData)}`);
@@ -219,6 +219,25 @@ if (typeof module !== 'undefined' && module.parent) {
     let repoBranch = null;
 
     // check options
+    const envParameterIndex = process.argv.indexOf('--env');
+    const hasExplicitEnvFile = envParameterIndex !== -1;
+    let envFilePath = path.resolve(process.cwd(), '..', 'iobroker.env');
+    if (hasExplicitEnvFile) {
+        const envParameterValue = process.argv[envParameterIndex + 1];
+        if (!envParameterValue || envParameterValue.startsWith('--')) {
+            common.error('Parameter --env requires a path to an environment file');
+            process.exit(1);
+        }
+        envFilePath = path.resolve(process.cwd(), envParameterValue);
+        process.argv.splice(envParameterIndex, 2);
+    }
+
+    const envResult = require('dotenv').config({ path: envFilePath, quiet: true });
+    if (envResult.error && (hasExplicitEnvFile || envResult.error.code !== 'ENOENT')) {
+        common.error(`Cannot load environment file ${envFilePath}: ${envResult.error.message}`);
+        process.exit(1);
+    }
+
     if (process.argv.includes('-d')) {
         process.argv.splice(process.argv.indexOf('-d'), 1);
         common.setDebug(true);
