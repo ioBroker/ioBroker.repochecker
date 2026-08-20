@@ -8,14 +8,16 @@ If you want to add your adapter to the public ioBroker repository, all tests on 
 
 When running the repository checker via the command line, you **need** to add the repository as parameter, while the branch parameter (`master/main/dev`) is optional. If this parameter is omitted, the `default` branch (typically master / main) will be checked.
 
-```
+```shell
 npx @iobroker/repochecker <repo> [branch]`
 ```
+
+The checker automatically loads environment variables from `iobroker.env` in the parent directory of the current working directory. Alternatively, pass `--env <path>` to use a file at a relative or absolute path. Existing environment variables are not overwritten. For example, a GitHub token can be provided as `OWN_GITHUB_TOKEN=github_pat_...`.
 
 ## How to test via cli using local mode
 
 > [!NOTE]  
-> local mode feature is experimental and untested. 
+> local mode feature is experimental and untested.
 
 For extra debugging outputs you can pass the `--debug` parameter.
 
@@ -26,65 +28,75 @@ Example:
 
 `npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.repochecker --local`
 
+Windows with environment file:
+
+`npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.repochecker --local --env C:/aaa/bbb/ccc/iobroker.env`
+
 ## Changelog
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- (oweitman) Added environment file support and isolated authenticated GitHub requests from other HTTP services.
+
 ### 5.20.13 (2026-08-19)
 
-* (mcm1957) Text for 5019 (common.nogit) has been corrected.
+- (mcm1957) Text for 5019 (common.nogit) has been corrected.
 
 ### 5.20.12 (2026-08-17)
 
-* (mcm1957) Do not check src-www directory tree for dependencies.
+- (mcm1957) Do not check src-www directory tree for dependencies.
 
 ### 5.20.11 (2026-08-15)
 
-* (GermanBluefox) The jsonConfig component `credential` (available since admin 7.9.0) is now known and no longer reported as unexpected component (E5504).
+- (GermanBluefox) The jsonConfig component `credential` (available since admin 7.9.0) is now known and no longer reported as unexpected component (E5504).
 
 ### 5.20.10 (2026-08-14)
 
-* (mcm1957) The "check-and-lint" workflow job is now also detected when controlled by a matrix (job names starting with "check-and-lint (").
+- (mcm1957) The "check-and-lint" workflow job is now also detected when controlled by a matrix (job names starting with "check-and-lint (").
 
 ### 5.20.9 (2026-08-10)
 
-* (mcm1957) Added new state roles for air quality and environmental sensors (`value.co`, `value.no`, `value.no2`, `value.o3`, `value.ch2o`, `value.pm1`, `value.pm25`, `value.pm10`, `value.rn`, `value.tvoc`, `value.airquality`, `value.humidity.relative`, `value.humidity.absolute`) and defined type/read/write constraints for `value.temperature.dewpoint`.
-* (mcm1957) Added `level.setting.*` roles mirroring all `level.*` roles for configuration/setting states.
-* (mcm1957) Added `number`/read/write constraints to previously unrestricted `level.*` and `level.setting.*` roles.
-* (mcm1957) Typed all `value.*` roles as `number` (read-only); `value.gps` remains the only `string` exception (enumeration numbers with string display constants are typed `number`).
-* (mcm1957) Corrected `value.gps` to type `string` (combined "longitude;latitude") and `info.port` to type `number`.
+- (mcm1957) Added new state roles for air quality and environmental sensors (`value.co`, `value.no`, `value.no2`, `value.o3`, `value.ch2o`, `value.pm1`, `value.pm25`, `value.pm10`, `value.rn`, `value.tvoc`, `value.airquality`, `value.humidity.relative`, `value.humidity.absolute`) and defined type/read/write constraints for `value.temperature.dewpoint`.
+- (mcm1957) Added `level.setting.*` roles mirroring all `level.*` roles for configuration/setting states.
+- (mcm1957) Added `number`/read/write constraints to previously unrestricted `level.*` and `level.setting.*` roles.
+- (mcm1957) Typed all `value.*` roles as `number` (read-only); `value.gps` remains the only `string` exception (enumeration numbers with string display constants are typed `number`).
+- (mcm1957) Corrected `value.gps` to type `string` (combined "longitude;latitude") and `info.port` to type `number`.
 
 ### 5.20.8 (2026-08-09)
 
-* (mcm1957) Fixed source directory exclusion so multi-level paths (e.g. `src/lib/scripts`, `src/scripts`) are correctly skipped during code scanning, avoiding false positives such as `[S5051]`.
-* (mcm1957) Adaptions for backitup required due to ts migration
+- (mcm1957) Fixed source directory exclusion so multi-level paths (e.g. `src/lib/scripts`, `src/scripts`) are correctly skipped during code scanning, avoiding false positives such as `[S5051]`.
+- (mcm1957) Adaptions for backitup required due to ts migration
 
 ### 5.20.7 (2026-08-09)
 
-* (mcm1957) Exclude directories 'example(s)' from processing
+- (mcm1957) Exclude directories 'example(s)' from processing
 
 ### 5.20.6 (2026-08-08)
 
-* (mcm1957) Extended `[E9507]` i18n directory check to also exclude `src-tab` and `src-vis` source directories from packaging checks.
-* (mcm1957) Adaptions for backitup required due to ts migration
+- (mcm1957) Extended `[E9507]` i18n directory check to also exclude `src-tab` and `src-vis` source directories from packaging checks.
+- (mcm1957) Adaptions for backitup required due to ts migration
 
 ### 5.20.4 (2026-08-08)
 
-* (mcm1957) Fixed `[E6012]`/`[E6013]` not being raised when direct install commands (e.g. `npm install` or `cd /opt/iobroker`) are placed inside fenced code blocks in README.md.
+- (mcm1957) Fixed `[E6012]`/`[E6013]` not being raised when direct install commands (e.g. `npm install` or `cd /opt/iobroker`) are placed inside fenced code blocks in README.md.
 
 ### 5.20.3 (2026-08-07)
 
-* (mcm1957) Fixed false positive `[S9508]` (and related packaging/i18n checks): negation entries (e.g. `!CHANGELOG_OLD.md`) in package.json `"files"` are now handled as exclusions instead of being wrongly matched. Related to #1097 and #1072.
+- (mcm1957) Fixed false positive `[S9508]` (and related packaging/i18n checks): negation entries (e.g. `!CHANGELOG_OLD.md`) in package.json `"files"` are now handled as exclusions instead of being wrongly matched. Related to #1097 and #1072.
 
 ### 5.20.2 (2026-08-07)
 
-* (mcm1957) React usage is now also detected when `@iobroker/gui-components` is used as dependency.
+- (mcm1957) React usage is now also detected when `@iobroker/gui-components` is used as dependency.
 
 ### 5.20.1 (2026-07-17)
 
-* (Copilot) Add a workflow check that rejects `always()` on standard test-and-release jobs and flags it for review on custom jobs.
-* (Copilot) Warn when tracked files or directories are still covered by `.gitignore` and error if a tracked `/build` directory is ignored.
+- (Copilot) Add a workflow check that rejects `always()` on standard test-and-release jobs and flags it for review on custom jobs.
+- (Copilot) Warn when tracked files or directories are still covered by `.gitignore` and error if a tracked `/build` directory is ignored.
 
 ### 5.19.12 (2026-07-13)
 
@@ -131,72 +143,72 @@ Example:
 
 ### 5.19.1 (2026-06-28)
 
--  (mcm1957) checking of untranslated i18n keys has been adapted
+- (mcm1957) checking of untranslated i18n keys has been adapted
 
 ### 5.19.0 (2026-06-27)
 
--  (mcm1957) github install detection has been enhanced
--  (mcm1957) checking of untranslated i18n keys has been enhanced
--  (mcm1957) disallow npm installation scripts
+- (mcm1957) github install detection has been enhanced
+- (mcm1957) checking of untranslated i18n keys has been enhanced
+- (mcm1957) disallow npm installation scripts
 
 ### 5.18.11 (2026-06-24)
 
--  (mcm1957) blacklisting for dependency versionchecking checking added
--  (mcm1957) handling of i18n attirbute at jsonConfig has been adapted
+- (mcm1957) blacklisting for dependency versionchecking checking added
+- (mcm1957) handling of i18n attirbute at jsonConfig has been adapted
 
 ### 5.18.10 (2026-06-23)
 
--  (mcm1957) some more directories have been excluded from dependency scan
+- (mcm1957) some more directories have been excluded from dependency scan
 
 ### 5.18.9 (2026-06-22)
 
--  (mcm1957) eslint-config import check has been adapted
--  (mcm1957) EXCEPTION: exceptions added flase positive apiKey paramaters
+- (mcm1957) eslint-config import check has been adapted
+- (mcm1957) EXCEPTION: exceptions added flase positive apiKey paramaters
 
 ### 5.18.8 (2026-06-21)
 
--  (mcm1957) Sentry text check has been adapted
--  (mcm1957) Fixed validation of serialized default values for array, object, mixed, json, and file states
+- (mcm1957) Sentry text check has been adapted
+- (mcm1957) Fixed validation of serialized default values for array, object, mixed, json, and file states
 
 ### 5.18.7 (2026-06-10)
 
--  (mcm1957) Detection of github install guide extended
+- (mcm1957) Detection of github install guide extended
 
 ### 5.18.6 (2026-06-10)
 
--  (mcm1957) Support role definitions containing wildcards
--  (mcm1957) Support header 'Older versions' within changelog
+- (mcm1957) Support role definitions containing wildcards
+- (mcm1957) Support header 'Older versions' within changelog
 
 ### 5.18.5 (2026-06-09)
 
--  (mcm1957) mode.* roles fixed
--  (mcm1957) build directory excluded from I18n scans
--  (mcm1957) Handling of alpha releasea at changelog corrected
--  (mcm1957) Changing text for missing updates limited to 50 days
--  (mcm1957) Encrypted / protected UI data depuplicated
--  (mcm1957) Scanning for sourcefiles and imports corrected
--  (mcm1957) Special filtering added
+- (mcm1957) mode.* roles fixed
+- (mcm1957) build directory excluded from I18n scans
+- (mcm1957) Handling of alpha releasea at changelog corrected
+- (mcm1957) Changing text for missing updates limited to 50 days
+- (mcm1957) Encrypted / protected UI data depuplicated
+- (mcm1957) Scanning for sourcefiles and imports corrected
+- (mcm1957) Special filtering added
 
 ### 5.18.3 (2026-06-06)
 
--  (mcm1957) Support for objectStructure check added
+- (mcm1957) Support for objectStructure check added
 
 ### 5.17.9 (2026-06-04)
 
--  (mcm1957) Require release-script 5.2.1.
--  (mcm1957) Searching for release tag workflow has been fixed.
+- (mcm1957) Require release-script 5.2.1.
+- (mcm1957) Searching for release tag workflow has been fixed.
 
 ### 5.17.6 (2026-06-03)
 
--  (mcm1957) Severities have been adapted.
+- (mcm1957) Severities have been adapted.
 
 ### 5.17.5 (2026-06-02)
 
--  (mcm1957) Minor checkings at README formatting have been done.
+- (mcm1957) Minor checkings at README formatting have been done.
 
 ### 5.17.4 (2026-05-31)
 
--  (mcm1957) default value for engines corrected.
+- (mcm1957) default value for engines corrected.
 
 ### 5.17.3 (2026-05-30)
 
@@ -289,6 +301,7 @@ Example:
 - (@copilot) Added `[W5052]`/`[W5053]`: when jsonConfig is used, password fields found in `admin/*.json` and `admin/*.json5` (outside table components) are now checked against `protectedNative` and `encryptedNative` in `io-package.json`.
 
 ### 5.12.1 (2026-05-20)
+
 - (mcm197) cleanup some duplicate numbers
 
 ### 5.12.0 (2026-05-20)
