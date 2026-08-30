@@ -31,7 +31,7 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.20.14 (2026-08-30)
 
 * (mcm1957) 'allowScripts' is now recognizedd as valid package.json attribute.
 * (mcm1957) npm scripts 'preprepare', 'prepare' and 'postprepare' now raise an error and 'prepublish', 'prepublishOnly', 'publish' and 'postpublish' now raise a warning.
