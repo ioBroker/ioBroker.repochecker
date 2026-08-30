@@ -56,6 +56,7 @@ No automated test suite exists.
 - **Minimal changes**: Make focused changes. Do not modify version numbers, or unrelated files.
 - **Dependencies**: Only add if absolutely necessary; use exact or semver-compatible ranges.
 - **Changelog**: always add a changelog entry into README.md.
+- **Do not close issues**: Do not any comment to a PR which closes a realated issue. Link to issue by "see: <issue number>" not causing github to close the issue..
 
 ## README Changelog
 
