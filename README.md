@@ -31,6 +31,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) 'allowScripts' is now recognizedd as valid package.json attribute.
+
 ### 5.20.13 (2026-08-19)
 
 * (mcm1957) Text for 5019 (common.nogit) has been corrected.
