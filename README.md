@@ -34,6 +34,7 @@ Example:
 ### **WORK IN PROGRESS**
 
 * (mcm1957) 'allowScripts' is now recognizedd as valid package.json attribute.
+* (mcm1957) npm scripts 'preprepare', 'prepare' and 'postprepare' now raise an error and 'prepublish', 'prepublishOnly', 'publish' and 'postpublish' now raise a warning.
 
 ### 5.20.13 (2026-08-19)
 
