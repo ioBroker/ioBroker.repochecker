@@ -31,6 +31,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) An optional 'githubToken' query parameter is now accepted and used for GitHub authorization; axios handling has been reworked to use a per-request instance.
+
 ### 5.20.14 (2026-08-30)
 
 * (mcm1957) 'allowScripts' is now recognizedd as valid package.json attribute.
