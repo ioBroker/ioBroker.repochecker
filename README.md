@@ -31,6 +31,10 @@ Example:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) [S5032] outdated `lib/tools` check now also covers `.mjs` and `.cjs` variants in addition to `.js`.
+
 ### 5.20.14 (2026-08-30)
 
 * (mcm1957) 'allowScripts' is now recognizedd as valid package.json attribute.
