@@ -143,8 +143,9 @@ function check(request, ctx, callback) {
     context.branch = githubBranch || null;
     context.repository = githubUrl.replace('https://github.com/', '');
 
-    if (githubToken) {
-        context.githubToken = githubToken;
+    const githubTokenTrimmed = typeof githubToken === 'string' ? githubToken.trim() : '';
+    if (githubTokenTrimmed) {
+        context.githubToken = githubTokenTrimmed;
     }
 
     // initialize the axios instance (stored at context.axios) before any request is made
