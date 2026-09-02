@@ -12,8 +12,6 @@
                    |_|
 
  */
-const axios = require('axios');
-
 //const issues = require('./doc/issues');
 const version = require('./package.json').version;
 
@@ -74,7 +72,7 @@ function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
         common.debug('getGithubApiData');
         common.debug(`reading url '${context.githubUrlApi}'`);
-        axios
+        context.axios
             .get(context.githubUrlApi)
             .then(response => {
                 context.githubApiData = response.data;
@@ -125,6 +123,7 @@ function check(request, ctx, callback) {
 
     let githubUrl = request.queryStringParameters.url;
     const githubBranch = request.queryStringParameters.branch;
+    const githubToken = request.queryStringParameters.githubToken;
 
     githubUrl = githubUrl
         .replace('http://', 'https://')
@@ -143,6 +142,13 @@ function check(request, ctx, callback) {
     context.githubUrlApi = githubUrl.replace('https://github.com/', 'https://api.github.com/repos/');
     context.branch = githubBranch || null;
     context.repository = githubUrl.replace('https://github.com/', '');
+
+    if (githubToken) {
+        context.githubToken = githubToken;
+    }
+
+    // initialize the axios instance (stored at context.axios) before any request is made
+    common.initAxios(context);
 
     getGithubApiData(context)
         .then(context => M8000_Github.getCommitInfos(context))
