@@ -33,6 +33,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+* (mcm1957) [W3059/E3060] job "adapter-tests" is now checked for the "engine-strict" parameter of "testing-action-adapter"; a warning is raised if it is used and an error if it is set to false.
 * (mcm1957) [S5032] outdated `lib/tools` check now also covers `.mjs` and `.cjs` variants in addition to `.js`.
 * (mcm1957) An optional 'githubToken' query parameter is now accepted and used for GitHub authorization; axios handling has been reworked to use a per-request instance.
 * (mcm1957) Download errors now log the textual message returned by the server (e.g. 'Package size exceeded the configured limit of 50 MB.') in addition to the error code.
