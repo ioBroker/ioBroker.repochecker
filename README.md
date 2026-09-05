@@ -59,6 +59,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ### **WORK IN PROGRESS**
 
 * (mcm1957) React usage detection has been moved to the preprocessing stage; the result is now reported as `usesReact` in the environment info log.
+* (mcm1957) [W0095] `publish` and `prepublish` scripts are no longer flagged for react based adapters, as they are legitimately used to build the UI.
 * (mcm1957) New commandline option `--env <file>` added: reads a `GITHUB_TOKEN` from the specified environment file (parsed but never loaded into the environment) and uses it for GitHub authorization. An info log now states which file the environment is read from.
 * (mcm1957) [W3059/E3060] job "adapter-tests" is now checked for the "engine-strict" parameter of "testing-action-adapter"; a warning is raised if it is used and an error if it is set to false.
 * (mcm1957) [S5032] outdated `lib/tools` check now also covers `.mjs` and `.cjs` variants in addition to `.js`.
