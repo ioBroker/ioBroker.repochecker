@@ -56,6 +56,10 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) require node.js >= 22 now.
+  
 ### 5.21.0 (2026-09-05)
 
 * (mcm1957) [E1144] untranslated `common.news` entries are now reported as an error only if the newest release is affected, otherwise a single warning is logged; nothing is reported if only one or two languages are identical to the English text, unless German is identical to English.
