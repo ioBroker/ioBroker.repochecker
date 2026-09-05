@@ -30,7 +30,7 @@ Example:
 
 Unauthenticated requests to the GitHub API are rate limited. To raise the limit you can provide a
 [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
-via the `--env <file>` parameter. The file must exist and use the standard environment file format
+located in a file via the `--env <file>` parameter. The file must exist and use the standard environment file format
 (e.g. `.env`). Only the `GITHUB_TOKEN` variable is read from it - all other content is ignored and the
 file is **never** loaded into the process environment.
 
