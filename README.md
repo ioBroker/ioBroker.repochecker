@@ -58,6 +58,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -->
 ### **WORK IN PROGRESS**
 
+* (mcm1957) [W5042] is no longer reported for packages provided by `@iobroker/testing` (e.g. `sinon`, `chai`, `mocha`) when `@iobroker/testing` >= 5.1.1 is used.
 * (mcm1957) React usage detection has been moved to the preprocessing stage; the result is now reported as `usesReact` in the environment info log.
 * (mcm1957) [W0095] `publish` and `prepublish` scripts are no longer flagged for react based adapters, as they are legitimately used to build the UI.
 * (mcm1957) New commandline option `--env <file>` added: reads a `GITHUB_TOKEN` from the specified environment file (parsed but never loaded into the environment) and uses it for GitHub authorization. An info log now states which file the environment is read from.
