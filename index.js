@@ -13,6 +13,8 @@
 
  */
 //const issues = require('./doc/issues');
+const fs = require('node:fs');
+const dotenv = require('dotenv');
 const version = require('./package.json').version;
 
 // include submodules
@@ -219,11 +221,58 @@ function check(request, ctx, callback) {
 //     return text;
 // }
 
+// Read and validate the GITHUB_TOKEN from an environment file passed via --env.
+// The file is only parsed - it is NEVER loaded into process.env. Only the
+// GITHUB_TOKEN variable is extracted, all other content is ignored.
+// Returns the trimmed token string, or null if no usable token could be retrieved.
+function getGithubTokenFromEnvFile(envFile) {
+    // The value passed to --env must name an existing file.
+    if (!fs.existsSync(envFile) || !fs.statSync(envFile).isFile()) {
+        common.error(`--env: file "${envFile}" does not exist`);
+        process.exit(1);
+    }
+
+    // Parse the file using dotenv WITHOUT loading it into the environment.
+    let parsed;
+    try {
+        const content = fs.readFileSync(envFile);
+        parsed = dotenv.parse(content);
+    } catch (e) {
+        common.error(`--env: file "${envFile}" could not be parsed as an environment file: ${e.message}`);
+        process.exit(1);
+    }
+
+    // Extract only GITHUB_TOKEN, ignore everything else.
+    if (!Object.prototype.hasOwnProperty.call(parsed, 'GITHUB_TOKEN')) {
+        common.warn(`--env: GITHUB_TOKEN has not been detected in "${envFile}", continuing as if no --env had been specified`);
+        return null;
+    }
+
+    const token = (parsed.GITHUB_TOKEN || '').trim();
+    if (!token) {
+        common.warn(`--env: GITHUB_TOKEN is empty, continuing as if no --env had been specified`);
+        return null;
+    }
+
+    // Verify the token against the known GitHub personal access token formats.
+    // Classic tokens:      "ghp_" prefix, 40 characters total.
+    // Fine-grained tokens: "github_pat_" prefix, 93 characters total.
+    // See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+    const isClassic = token.startsWith('ghp_') && token.length === 40;
+    const isFineGrained = token.startsWith('github_pat_') && token.length === 93;
+    if (!isClassic && !isFineGrained) {
+        common.warn(`--env: GITHUB_TOKEN does not match the expected GitHub personal access token format, continuing with this token anyway`);
+    }
+
+    return token;
+}
+
 if (typeof module !== 'undefined' && module.parent) {
     exports.handler = check;
 } else {
     let repoUrl = null;
     let repoBranch = null;
+    let githubToken = null;
 
     // check options
     if (process.argv.includes('-d')) {
@@ -258,6 +307,19 @@ if (typeof module !== 'undefined' && module.parent) {
         common.setStrict(true);
     }
 
+    // --env <file>: read a GITHUB_TOKEN from an environment file (see getGithubTokenFromEnvFile)
+    if (process.argv.includes('--env')) {
+        const idx = process.argv.indexOf('--env');
+        const envFile = process.argv[idx + 1];
+        if (!envFile || envFile.startsWith('-')) {
+            common.error('--env: no file specified');
+            process.exit(1);
+        }
+        // remove both '--env' and its value from argv before positional parsing
+        process.argv.splice(idx, 2);
+        githubToken = getGithubTokenFromEnvFile(envFile);
+    }
+
     // Get url from parameters if possible
     if (process.argv.length > 2) {
         repoUrl = process.argv[2];
@@ -281,6 +343,7 @@ if (typeof module !== 'undefined' && module.parent) {
             queryStringParameters: {
                 url: repoUrl,
                 branch: repoBranch,
+                githubToken: githubToken,
             },
         },
         null,

@@ -26,6 +26,30 @@ Example:
 
 `npx @iobroker/repochecker https://github.com/ioBroker/ioBroker.repochecker --local`
 
+## Using a GitHub token
+
+Unauthenticated requests to the GitHub API are rate limited. To raise the limit you can provide a
+[GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+via the `--env <file>` parameter. The file must exist and use the standard environment file format
+(e.g. `.env`). Only the `GITHUB_TOKEN` variable is read from it - all other content is ignored and the
+file is **never** loaded into the process environment.
+
+```
+npx @iobroker/repochecker <repo> [branch] --env <file>
+```
+
+Behavior:
+
+* If the file does not exist or cannot be parsed, an error is logged and the checker exits with a non-zero status.
+* If `GITHUB_TOKEN` is missing or empty, a warning is logged and processing continues as if `--env` had not been specified.
+* If `GITHUB_TOKEN` does not match the expected token format, a warning is logged but the token is used anyway.
+
+Example `.env` file:
+
+```
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
 ## Changelog
 <!--
 	Placeholder for the next version (at the beginning of the line):
@@ -33,6 +57,7 @@ Example:
 -->
 ### **WORK IN PROGRESS**
 
+* (mcm1957) New commandline option `--env <file>` added: reads a `GITHUB_TOKEN` from the specified environment file (parsed but never loaded into the environment) and uses it for GitHub authorization.
 * (mcm1957) [W3059/E3060] job "adapter-tests" is now checked for the "engine-strict" parameter of "testing-action-adapter"; a warning is raised if it is used and an error if it is set to false.
 * (mcm1957) [S5032] outdated `lib/tools` check now also covers `.mjs` and `.cjs` variants in addition to `.js`.
 * (mcm1957) An optional 'githubToken' query parameter is now accepted and used for GitHub authorization; axios handling has been reworked to use a per-request instance.
