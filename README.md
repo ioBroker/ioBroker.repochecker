@@ -58,6 +58,8 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -->
 ### **WORK IN PROGRESS**
 
+* (mcm1957) [E1144] untranslated `common.news` entries are now reported as an error only if the newest release is affected, otherwise a single warning is logged; nothing is reported if only one or two languages are identical to the English text, unless German is identical to English.
+* (mcm1957) [W1145] a warning is now logged if more than two languages have `common.news` translations significantly shorter (more than 40%) than the English original.
 * (mcm1957) `lib/tools.js` is no longer excluded from dependency scanning when it is imported (required) by another source file.
 * (mcm1957) [W5042] is no longer reported for packages provided by `@iobroker/testing` (e.g. `sinon`, `chai`, `mocha`) when `@iobroker/testing` >= 5.1.1 is used.
 * (mcm1957) React usage detection has been moved to the preprocessing stage; the result is now reported as `usesReact` in the environment info log.
