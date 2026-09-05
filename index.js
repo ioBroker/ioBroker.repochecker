@@ -226,6 +226,8 @@ function check(request, ctx, callback) {
 // GITHUB_TOKEN variable is extracted, all other content is ignored.
 // Returns the trimmed token string, or null if no usable token could be retrieved.
 function getGithubTokenFromEnvFile(envFile) {
+    common.info(`environment is read from file "${envFile}"`);
+
     // The value passed to --env must name an existing file.
     if (!fs.existsSync(envFile) || !fs.statSync(envFile).isFile()) {
         common.error(`--env: file "${envFile}" does not exist`);
