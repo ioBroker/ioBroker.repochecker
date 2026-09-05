@@ -307,16 +307,28 @@ if (typeof module !== 'undefined' && module.parent) {
         common.setStrict(true);
     }
 
-    // --env <file>: read a GITHUB_TOKEN from an environment file (see getGithubTokenFromEnvFile)
-    if (process.argv.includes('--env')) {
-        const idx = process.argv.indexOf('--env');
-        const envFile = process.argv[idx + 1];
-        if (!envFile || envFile.startsWith('-')) {
+    // --env <file> or --env=<file>: read a GITHUB_TOKEN from an environment file (see getGithubTokenFromEnvFile)
+    const envIdx = process.argv.findIndex(arg => arg === '--env' || arg.startsWith('--env='));
+    if (envIdx !== -1) {
+        let envFile;
+        if (process.argv[envIdx].startsWith('--env=')) {
+            // --env=<file>: value is part of the same argument
+            envFile = process.argv[envIdx].slice('--env='.length);
+            process.argv.splice(envIdx, 1);
+        } else {
+            // --env <file>: value is the next argument
+            envFile = process.argv[envIdx + 1];
+            if (!envFile || envFile.startsWith('-')) {
+                common.error('--env: no file specified');
+                process.exit(1);
+            }
+            // remove both '--env' and its value from argv before positional parsing
+            process.argv.splice(envIdx, 2);
+        }
+        if (!envFile) {
             common.error('--env: no file specified');
             process.exit(1);
         }
-        // remove both '--env' and its value from argv before positional parsing
-        process.argv.splice(idx, 2);
         githubToken = getGithubTokenFromEnvFile(envFile);
     }
 

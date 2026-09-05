@@ -36,6 +36,7 @@ file is **never** loaded into the process environment.
 
 ```
 npx @iobroker/repochecker <repo> [branch] --env <file>
+npx @iobroker/repochecker <repo> [branch] --env=<file>
 ```
 
 Behavior:
