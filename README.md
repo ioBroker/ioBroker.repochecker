@@ -58,7 +58,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -->
 ### **WORK IN PROGRESS**
 
-* (mcm1957) require node.js >= 22 now.
+* (mcm1957) minor fixes
   
 ### 5.21.0 (2026-09-05)
 
