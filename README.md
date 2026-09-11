@@ -56,6 +56,10 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) Disallow github refs for iobroker testing workflows
+
 ### 5.22.1 (2026-09-11)
 
 * (mcm1957) Copyright email check (E4050/E4051) no longer misfires on the standard MIT license text; only real copyright notice lines with a year are validated
