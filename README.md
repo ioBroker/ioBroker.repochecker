@@ -58,6 +58,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -->
 ### **WORK IN PROGRESS**
 
+* (mcm1957) LICENSE file and README license section are now checked for the complete license text (see: 1160)
 * (mcm1957) email addresses of author/maintainer and copyright lines (README, LICENSE) are now validated (see: 1159)
 * (mcm1957) adapt sentry check
 
