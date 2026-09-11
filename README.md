@@ -56,6 +56,10 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) adapt sentry check
+
 ### 5.21.2 (2026-09-08)
 
 * (mcm1957) blacklisted @iobroker/types as dependency
