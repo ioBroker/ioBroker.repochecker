@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.22.0 (2026-09-11)
 
 * (mcm1957) LICENSE file and README license section are now checked for the complete license text (see: 1160)
 * (mcm1957) email addresses of author/maintainer and copyright lines (README, LICENSE) are now validated (see: 1159)
