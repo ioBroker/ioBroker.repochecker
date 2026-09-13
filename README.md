@@ -56,6 +56,10 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) object structure check state roles synchronized with the ioBroker state-roles documentation (new roles added)
+
 ### 5.22.3 (2026-09-13)
 
 * (mcm1957) adapter README.md german and install checks
