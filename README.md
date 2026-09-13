@@ -58,6 +58,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -->
 ### **WORK IN PROGRESS**
 
+* (mcm1957) object structure check now reports states with role 'button' that do not have read:false and write:true
 * (mcm1957) object structure check state roles synchronized with the ioBroker state-roles documentation (new roles added)
 
 ### 5.22.3 (2026-09-13)
