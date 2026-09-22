@@ -56,6 +56,10 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) W5612/E5612 no longer report strings that never need a translation (e.g. "iobroker", "AABBCCDDEEFF"); matched case-insensitively
+
 ### 5.22.4 (2026-09-13)
 
 * (mcm1957) object structure check now reports states with role 'button' that do not have read:false and write:true
