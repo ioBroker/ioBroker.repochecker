@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.22.6 (2026-09-25)
 
 * (mcm1957) @iobroker/testing 6.2.1 is required now
 * (mcm1957) node.js 26 testing is required now
