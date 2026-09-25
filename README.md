@@ -56,6 +56,11 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) @iobroker/testing 6.2.1 is required now
+* (mcm1957) node.js 26 testing is required now
+
 ### 5.22.5 (2026-09-22)
 
 * (mcm1957) W5612/E5612 no longer report strings that never need a translation (e.g. "iobroker", "AABBCCDDEEFF"); matched case-insensitively
