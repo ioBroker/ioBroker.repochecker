@@ -57,7 +57,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (mcm57) postprocessing: add per-adapter severity remapping table; E3025 for zigbee downgraded to warning instead of suppressed
+* (mcm57) postprocessing: add per-adapter severity remapping table
 
 ### 5.22.6 (2026-09-25)
 
