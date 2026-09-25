@@ -56,6 +56,9 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (mcm57) postprocessing: add per-adapter severity remapping table; E3025 for zigbee downgraded to warning instead of suppressed
+
 ### 5.22.6 (2026-09-25)
 
 * (mcm1957) @iobroker/testing 6.2.1 is required now
