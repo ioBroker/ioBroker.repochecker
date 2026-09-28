@@ -56,8 +56,13 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (mcm1957) adapt older changelog titles
+
 ### 5.22.7 (2026-09-25)
-* (mcm57) postprocessing: add per-adapter severity remapping table
+
+* (mcm1957) postprocessing: add per-adapter severity remapping table
 
 ### 5.22.6 (2026-09-25)
 
