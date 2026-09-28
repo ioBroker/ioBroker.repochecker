@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.22.8 (2026-09-28)
 
 * (mcm1957) adapt older changelog titles
 
