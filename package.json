@@ -7,7 +7,7 @@
     "compare-versions": "^6.1.1",
     "dotenv": "^17.4.2",
     "image-size": "^1.2.0",
-    "js-yaml": "^5.4.1",
+    "js-yaml": "^5.4.2",
     "json5": "^2.2.3",
     "minimatch": "^10.2.6",
     "semver": "^7.8.5"
