@@ -55,8 +55,12 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
-* (mcm1957) src-devices directory is now excluded from source code checks like src-admin
 -->
+
+### **WORK IN PROGRESS**
+
+* (mcm1957) src-devices directory is now excluded from source code checks like src-admin
+
 ### 5.22.9 (2026-10-02)
 
 * (mcm1957) drop node 20
