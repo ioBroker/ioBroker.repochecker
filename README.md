@@ -55,6 +55,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
+* (mcm1957) False positive W0084/W5048 fixed: .prettierignore is valid alongside prettier.config.mjs (see: #1185)
 -->
 ### 5.22.10 (2026-10-04)
 
