@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.22.14 (2026-10-12)
 * (mcm1957) E2004 (news version not on NPM) downgraded to W2004 with updated message
 
 ### 5.22.13 (2026-10-12)
