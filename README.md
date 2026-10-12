@@ -55,6 +55,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
+	* (mcm1957) E5507 (missing size attributes in jsonConfig) downgraded to W5507 for existing adapters; stays an error only for new adapters
 -->
 ### 5.22.11 (2026-10-11)
 
