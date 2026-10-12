@@ -56,6 +56,9 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (mcm1957) src-blockly added to source directories excluded from E9507 / E9506 (missing i18n files) check
+
 ### 5.22.14 (2026-10-12)
 * (mcm1957) E2004 (news version not on NPM) downgraded to W2004 with updated message
 
