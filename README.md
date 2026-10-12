@@ -55,6 +55,8 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
+	* (mcm1957) src-chart and src-preview added to source directories excluded from E9507 (missing i18n files) check
+	* (mcm1957) tasks*.js/mjs/cjs files at repo root that import @iobroker/build-tools are now treated like tasks.js and excluded from code checks
 -->
 ### 5.22.12 (2026-10-12)
 
