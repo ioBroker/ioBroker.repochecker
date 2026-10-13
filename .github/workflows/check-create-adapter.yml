@@ -1,0 +1,78 @@
+# Creates a new adapter using @iobroker/create-adapter with the maximum set of options
+# (TypeScript, jsonConfig, extra tab with React, custom state options, ESLint, Prettier,
+# code coverage, devcontainer, release-script, dev-server, dependabot) and runs the
+# repochecker against the generated files using --local mode.
+# The findings are reported at the job summary and uploaded as artifact.
+
+name: Check create-adapter template
+
+on:
+  pull_request: {}
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check-create-adapter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22.x
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Create adapter using create-adapter
+        run: |
+          mkdir -p "$RUNNER_TEMP/adapter"
+          npx --yes @iobroker/create-adapter@latest \
+            --replay "$GITHUB_WORKSPACE/.github/create-adapter/maximum-options.json" \
+            --target "$RUNNER_TEMP/adapter" \
+            --nonInteractive \
+            --skipAdapterExistenceCheck \
+            --ignoreOutdatedVersion 2>&1 | tee "$RUNNER_TEMP/create-adapter.log"
+
+      - name: Run repochecker
+        working-directory: ${{ runner.temp }}/adapter/ioBroker.repocheckertest
+        run: |
+          # local mode exits with code 1 if errors are found - findings are reported, not failing the job
+          node "$GITHUB_WORKSPACE/index.js" https://github.com/ioBroker/ioBroker.repocheckertest --local 2>&1 | tee "$RUNNER_TEMP/repochecker.log" || true
+
+      - name: Report findings
+        run: |
+          {
+            echo "## Repochecker findings for create-adapter template"
+            echo ""
+            echo "create-adapter options: \`.github/create-adapter/maximum-options.json\`"
+            echo ""
+            echo '```'
+            sed -n '/########## SUMMARY of ISSUES ##########/,$p' "$RUNNER_TEMP/repochecker.log"
+            echo '```'
+            if grep -qiE "^Error|Build failed" "$RUNNER_TEMP/create-adapter.log"; then
+              echo ""
+              echo "### create-adapter reported errors while creating the adapter"
+              echo ""
+              echo '```'
+              grep -iE -A2 "^Error|Build failed" "$RUNNER_TEMP/create-adapter.log"
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: create-adapter-check
+          path: |
+            ${{ runner.temp }}/create-adapter.log
+            ${{ runner.temp }}/repochecker.log

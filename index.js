@@ -93,6 +93,24 @@ function getGithubApiData(context) {
                 resolve(context);
             })
             .catch(e => {
+                // In local mode the repository might not exist at GitHub yet (e.g. a freshly created adapter).
+                // Continue using placeholder data derived from the url. GitHub related checks are skipped later.
+                if (common.isLocal()) {
+                    common.warn(`cannot access repository ${context.githubUrlApi} - continuing without GitHub data`);
+                    context.githubOffline = true;
+                    const repoName = context.repository.split('/').pop() || '';
+                    context.githubApiData = {
+                        name: repoName,
+                        html_url: context.githubUrlOriginal,
+                        git_url: `${context.githubUrlOriginal.replace('https://', 'git://')}.git`,
+                        ssh_url: `git@github.com:${context.repository}.git`,
+                        clone_url: `${context.githubUrlOriginal}.git`,
+                    };
+                    context.branch = context.branch || 'main';
+                    context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
+                    resolve(context);
+                    return;
+                }
                 context.errors.push(`[E0000] FATAL: cannot access repository ${context.githubUrlApi}`);
                 reject(e);
             }); // E0xx
