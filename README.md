@@ -59,6 +59,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ### **WORK IN PROGRESS**
 
 * (@mcm1957) Special handling of some core adapters added.
+* (@mcm1957) Fixed: githubToken and axios instance are now isolated per check; concurrent checks no longer share authorization state or redaction context (see [#1193](https://github.com/ioBroker/ioBroker.repochecker/issues/1193)).
 
 ### 5.22.16 (2026-10-13)
 
