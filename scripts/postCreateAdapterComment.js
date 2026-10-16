@@ -43,7 +43,9 @@ function buildComment(context) {
     const warnings = findings.filter(line => line.startsWith('[W'));
     const suggestions = findings.filter(line => line.startsWith('[S'));
 
-    const optionsUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/blob/${context.sha}/.github/create-adapter/maximum-options.json`;
+    // for pull requests context.sha is a temporary merge commit - link to the head commit instead
+    const headSha = context.payload.pull_request?.head?.sha || context.sha;
+    const optionsUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/blob/${headSha}/.github/create-adapter/maximum-options.json`;
     const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
     const lines = [];
