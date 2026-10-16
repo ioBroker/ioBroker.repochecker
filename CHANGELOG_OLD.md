@@ -1,4 +1,9 @@
 # Older changes
+## 5.22.13 (2026-10-12)
+* (mcm1957) src-chart and src-preview added to source directories excluded from E9507 (missing i18n files) check
+* (mcm1957) tasks*.js/mjs/cjs/ts files at repo root that import @iobroker/build-tools are now treated like tasks.js and excluded from code checks
+
+
 ## 5.22.12 (2026-10-12)
 
 * (mcm1957) E5507 (missing size attributes in jsonConfig) downgraded to W5507 for existing adapters; stays an error only for new adapters

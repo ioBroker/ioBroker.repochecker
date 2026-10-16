@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.23.1 (2026-10-16)
 * (@mcm1957) More pecial handling of some core adapters added.
 
 ### 5.23.0 (2026-10-14)
@@ -73,10 +73,6 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### 5.22.14 (2026-10-12)
 * (mcm1957) E2004 (news version not on NPM) downgraded to W2004 with updated message
-
-### 5.22.13 (2026-10-12)
-* (mcm1957) src-chart and src-preview added to source directories excluded from E9507 (missing i18n files) check
-* (mcm1957) tasks*.js/mjs/cjs/ts files at repo root that import @iobroker/build-tools are now treated like tasks.js and excluded from code checks
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

@@ -1,5 +1,5 @@
 {
-  "version": "5.23.0",
+  "version": "5.23.1",
   "name": "@iobroker/repochecker",
   "dependencies": {
     "ajv": "^8.20.0",
