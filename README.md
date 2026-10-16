@@ -61,7 +61,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -->
 ### **WORK IN PROGRESS**
 * (SimonFischer04) Added `--offline` command line option: like `--local`, but the GitHub repository is not accessed, so adapters which do not (yet) exist at GitHub can be checked. GitHub repository checks are skipped.
-* (SimonFischer04) Added workflow checking an adapter created by create-adapter (maximum set of options) using `--offline` mode
+* (SimonFischer04) Added workflow checking an adapter created by create-adapter (maximum set of options) using `--offline` mode, findings are posted as comment to the pull request
 
 ### 5.22.15 (2026-10-12)
 * (mcm1957) src-blockly added to source directories excluded from E9507 / E9506 (missing i18n files) check
