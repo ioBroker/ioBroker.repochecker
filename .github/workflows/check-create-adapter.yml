@@ -1,5 +1,5 @@
 # Creates a new adapter using @iobroker/create-adapter with the maximum set of options
-# (TypeScript, jsonConfig, extra tab with React, custom state options, ESLint, Prettier,
+# (TypeScript, jsonConfig, extra tab (HTML), custom state options, ESLint, Prettier,
 # code coverage, devcontainer, release-script, dev-server, dependabot) and runs the
 # repochecker against the generated files using --offline mode (local files, no GitHub repository access).
 # The findings are posted as comment to the pull request, added to the job summary and uploaded as artifact.

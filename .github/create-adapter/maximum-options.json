@@ -17,7 +17,7 @@
     "language": "TypeScript",
     "nodeVersion": "22",
     "adminUi": "json",
-    "tabReact": "yes",
+    "tabReact": "no",
     "tools": ["ESLint", "Prettier", "code coverage", "devcontainer"],
     "eslintConfig": "official",
     "releaseScript": "yes",
