@@ -1,7 +1,7 @@
 # Creates a new adapter using @iobroker/create-adapter with the maximum set of options
 # (TypeScript, jsonConfig, extra tab with React, custom state options, ESLint, Prettier,
 # code coverage, devcontainer, release-script, dev-server, dependabot) and runs the
-# repochecker against the generated files using --local mode.
+# repochecker against the generated files using --offline mode (local files, no GitHub repository access).
 # The findings are reported at the job summary and uploaded as artifact.
 
 name: Check create-adapter template
@@ -45,8 +45,8 @@ jobs:
       - name: Run repochecker
         working-directory: ${{ runner.temp }}/adapter/ioBroker.repocheckertest
         run: |
-          # local mode exits with code 1 if errors are found - findings are reported, not failing the job
-          node "$GITHUB_WORKSPACE/index.js" https://github.com/ioBroker/ioBroker.repocheckertest --local 2>&1 | tee "$RUNNER_TEMP/repochecker.log" || true
+          # offline mode exits with code 1 if errors are found - findings are reported, not failing the job
+          node "$GITHUB_WORKSPACE/index.js" https://github.com/ioBroker/ioBroker.repocheckertest --offline 2>&1 | tee "$RUNNER_TEMP/repochecker.log" || true
 
       - name: Report findings
         run: |

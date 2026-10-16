@@ -73,6 +73,24 @@ const postprocessing = require('./lib/postprocessing.js');
 function getGithubApiData(context) {
     return new Promise((resolve, reject) => {
         common.debug('getGithubApiData');
+
+        // offline mode: the repository is not accessed at GitHub (it might not even exist yet, e.g. a freshly
+        // created adapter). Use placeholder data derived from the url. GitHub related checks are skipped later.
+        if (common.isOffline()) {
+            const repoName = context.repository.split('/').pop() || '';
+            context.githubApiData = {
+                name: repoName,
+                html_url: context.githubUrlOriginal,
+                git_url: `${context.githubUrlOriginal.replace('https://', 'git://')}.git`,
+                ssh_url: `git@github.com:${context.repository}.git`,
+                clone_url: `${context.githubUrlOriginal}.git`,
+            };
+            context.branch = context.branch || 'main';
+            context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
+            resolve(context);
+            return;
+        }
+
         common.debug(`reading url '${context.githubUrlApi}'`);
         context.axios
             .get(context.githubUrlApi)
@@ -93,24 +111,6 @@ function getGithubApiData(context) {
                 resolve(context);
             })
             .catch(e => {
-                // In local mode the repository might not exist at GitHub yet (e.g. a freshly created adapter).
-                // Continue using placeholder data derived from the url. GitHub related checks are skipped later.
-                if (common.isLocal()) {
-                    common.warn(`cannot access repository ${context.githubUrlApi} - continuing without GitHub data`);
-                    context.githubOffline = true;
-                    const repoName = context.repository.split('/').pop() || '';
-                    context.githubApiData = {
-                        name: repoName,
-                        html_url: context.githubUrlOriginal,
-                        git_url: `${context.githubUrlOriginal.replace('https://', 'git://')}.git`,
-                        ssh_url: `git@github.com:${context.repository}.git`,
-                        clone_url: `${context.githubUrlOriginal}.git`,
-                    };
-                    context.branch = context.branch || 'main';
-                    context.githubUrl = `${context.githubUrlOriginal.replace('https://github.com', 'https://raw.githubusercontent.com')}/${context.branch}`;
-                    resolve(context);
-                    return;
-                }
                 context.errors.push(`[E0000] FATAL: cannot access repository ${context.githubUrlApi}`);
                 reject(e);
             }); // E0xx
@@ -322,6 +322,15 @@ if (typeof module !== 'undefined' && module.parent) {
         common.setLocal(true);
     }
 
+    // --offline: do not access the GitHub repository at all, implies --local
+    if (process.argv.includes('--offline')) {
+        process.argv.splice(process.argv.indexOf('--offline'), 1);
+        common.setOffline(true);
+        if (!common.isLocal()) {
+            common.setLocal(true);
+        }
+    }
+
     if (process.argv.includes('--strict')) {
         process.argv.splice(process.argv.indexOf('--strict'), 1);
         common.setStrict(true);
@@ -448,6 +457,9 @@ if (typeof module !== 'undefined' && module.parent) {
             if (common.isLocal()) {
                 console.log(`\n----------------------------------------------------------`);
                 console.log(`This check has been run using --local mode.`);
+                if (common.isOffline()) {
+                    console.log(`GitHub repository checks were skipped (--offline mode).`);
+                }
                 console.log(`Please note that local mode is experimental state only and`);
                 console.log(`may report false positive findings and miss real issues.`);
                 console.log(`----------------------------------------------------------`);
