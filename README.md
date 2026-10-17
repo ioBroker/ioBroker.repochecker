@@ -56,6 +56,9 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@mcm1957) src-shared directory added to src list.
+
 ### 5.23.1 (2026-10-16)
 * (@mcm1957) More pecial handling of some core adapters added.
 
