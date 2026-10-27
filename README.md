@@ -56,6 +56,9 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@GermanBluefox) src-web directory added to src list.
+
 ### 5.23.2 (2026-10-17)
 * (@mcm1957) src-shared directory added to src list.
 
