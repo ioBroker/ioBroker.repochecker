@@ -56,6 +56,9 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@typhosj) New adapters that only provide vis-2 widgets must be named `vis-2-widgets-xxx` [E4008].
+
 ### 5.23.2 (2026-10-17)
 * (@mcm1957) src-shared directory added to src list.
 
