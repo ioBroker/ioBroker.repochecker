@@ -57,7 +57,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (@typhosj) New adapters that only provide vis-2 widgets must be named `vis-2-widgets-xxx` [E4008].
+* (@typhosj) New adapters that only provide vis-2 widgets must be named `vis-2-widgets-xxx` [E4008]. Adapters that also provide vis-1 widgets are not affected.
 
 ### 5.23.2 (2026-10-17)
 * (@mcm1957) src-shared directory added to src list.
