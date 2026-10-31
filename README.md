@@ -57,6 +57,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (@copilot) jsDelivr file downloads retry transient errors and HTML responses received for JSON files. see: #1201
 * (@mcm1957) Wildcard support added for source directory exclusions; all `src-*` entries replaced by a single `src-*` pattern (fixes false positive E9507 for directories like `src-web`). see: #1209
 * (@copilot) Workflow runs still in progress are now awaited (max. 10 minutes) before logs are analyzed; "could not retrieve log" messages mention if the workflow is still in progress. see: #1214
 
