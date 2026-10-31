@@ -58,6 +58,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -->
 ### **WORK IN PROGRESS**
 * (@mcm1957) Wildcard support added for source directory exclusions; all `src-*` entries replaced by a single `src-*` pattern (fixes false positive E9507 for directories like `src-web`). see: #1209
+* (@copilot) Workflow runs still in progress are now awaited (max. 10 minutes) before logs are analyzed; "could not retrieve log" messages mention if the workflow is still in progress. see: #1214
 
 ### 5.23.2 (2026-10-17)
 * (@mcm1957) src-shared directory added to src list.
