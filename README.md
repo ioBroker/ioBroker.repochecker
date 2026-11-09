@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.24.0 (2026-11-09)
 * (@copilot) jsDelivr file downloads retry transient errors and HTML responses received for JSON files. see: #1201
 * (@mcm1957) Wildcard support added for source directory exclusions; all `src-*` entries replaced by a single `src-*` pattern (fixes false positive E9507 for directories like `src-web`). see: #1209
 * (@copilot) Workflow runs still in progress are now awaited (max. 10 minutes) before logs are analyzed; "could not retrieve log" messages mention if the workflow is still in progress. see: #1214
@@ -76,9 +76,6 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ### 5.22.16 (2026-10-13)
 
 * (@mcm1957) Fixed false positive [E6025] when README.md contains `#` headings inside fenced code blocks.
-
-### 5.22.15 (2026-10-12)
-* (mcm1957) src-blockly added to source directories excluded from E9507 / E9506 (missing i18n files) check
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
