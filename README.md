@@ -57,6 +57,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (mcm1957) Fix W5039 false positive: words.js maintained via translate-adapter script is no longer flagged as unused (see: #1158)
 * (mcm1957) Make E1068 "common.keywords" must not contain ... an error
 
 ### 5.24.0 (2026-11-09)
