@@ -56,6 +56,9 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (mcm1957) [W1068] "common.keywords" contains forbidden keywords is now escalated to an error for new adapters. see: #1228
+
 ### 5.24.0 (2026-11-09)
 * (@copilot) jsDelivr file downloads retry transient errors and HTML responses received for JSON files. see: #1201
 * (@mcm1957) Wildcard support added for source directory exclusions; all `src-*` entries replaced by a single `src-*` pattern (fixes false positive E9507 for directories like `src-web`). see: #1209
