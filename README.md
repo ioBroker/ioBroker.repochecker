@@ -57,6 +57,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (mcm1957) Some stateroles have been corrected 
 * (mcm1957) Fix S4050 false positive: copyright check in README.md now only applies to lines within the Changelog section (see: #1194)
 * (mcm1957) Fix W5042 false positive: TypeScript declaration files (*.d.ts) are no longer scanned for runtime dependencies (see: #1151)
 * (mcm1957) Make E1068 "common.keywords" must not contain ... an error
