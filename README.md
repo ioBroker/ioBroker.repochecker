@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.24.1 (2026-11-11)
 * (mcm1957) Some stateroles have been corrected 
 * (mcm1957) Fix S4050 false positive: copyright check in README.md now only applies to lines within the Changelog section (see: #1194)
 * (mcm1957) Fix W5042 false positive: TypeScript declaration files (*.d.ts) are no longer scanned for runtime dependencies (see: #1151)
@@ -78,10 +78,6 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 * (@mcm1957) Fixed: failed workflow runs now correctly show as [E3032] instead of [W3032] (see [#1196](https://github.com/ioBroker/ioBroker.repochecker/issues/1196)).
 * (@mcm1957) Special handling of some core adapters added.
 * (@mcm1957) Fixed: githubToken and axios instance are now isolated per check; concurrent checks no longer share authorization state or redaction context (see [#1193](https://github.com/ioBroker/ioBroker.repochecker/issues/1193)).
-
-### 5.22.16 (2026-10-13)
-
-* (@mcm1957) Fixed false positive [E6025] when README.md contains `#` headings inside fenced code blocks.
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
