@@ -56,6 +56,9 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (mcm1957) Handling of src-webcomponents directory added
+
 ### 5.24.1 (2026-11-11)
 * (mcm1957) Some stateroles have been corrected 
 * (mcm1957) Fix S4050 false positive: copyright check in README.md now only applies to lines within the Changelog section (see: #1194)
