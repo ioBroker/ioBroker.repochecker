@@ -1,8 +1,14 @@
 # Older changes
+## 5.23.0 (2026-10-14)
+
+* (@mcm1957) Fixed: failed workflow runs now correctly show as [E3032] instead of [W3032] (see [#1196](https://github.com/ioBroker/ioBroker.repochecker/issues/1196)).
+* (@mcm1957) Special handling of some core adapters added.
+* (@mcm1957) Fixed: githubToken and axios instance are now isolated per check; concurrent checks no longer share authorization state or redaction context (see [#1193](https://github.com/ioBroker/ioBroker.repochecker/issues/1193)).
+
+
 ## 5.22.16 (2026-10-13)
 
 * (@mcm1957) Fixed false positive [E6025] when README.md contains `#` headings inside fenced code blocks.
-
 
 ## 5.22.15 (2026-10-12)
 * (mcm1957) src-blockly added to source directories excluded from E9507 / E9506 (missing i18n files) check

@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.24.2 (2026-11-12)
 * (mcm1957) Handling of src-webcomponents directory added
 
 ### 5.24.1 (2026-11-11)
@@ -75,12 +75,6 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### 5.23.1 (2026-10-16)
 * (@mcm1957) More pecial handling of some core adapters added.
-
-### 5.23.0 (2026-10-14)
-
-* (@mcm1957) Fixed: failed workflow runs now correctly show as [E3032] instead of [W3032] (see [#1196](https://github.com/ioBroker/ioBroker.repochecker/issues/1196)).
-* (@mcm1957) Special handling of some core adapters added.
-* (@mcm1957) Fixed: githubToken and axios instance are now isolated per check; concurrent checks no longer share authorization state or redaction context (see [#1193](https://github.com/ioBroker/ioBroker.repochecker/issues/1193)).
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
