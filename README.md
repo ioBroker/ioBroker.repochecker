@@ -56,6 +56,10 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (ticaki) W6019/S6020 now mention that CHANGELOG_OLD.md must not be empty, as @alcalzone/release-script ignores an empty file
+* (ticaki) New check W6035: warn if CHANGELOG_OLD.md exists but is empty
+
 ### 5.24.2 (2026-11-12)
 * (mcm1957) Handling of src-webcomponents directory added
 
