@@ -56,6 +56,9 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (mcm1957) A typo at 1068 has been fixed
+
 ### 5.24.2 (2026-11-12)
 * (mcm1957) Handling of src-webcomponents directory added
 
