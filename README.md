@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.24.3 (2026-11-21)
 * (mcm1957) Object checker: `enums` is now accepted as a valid root key (fixes false positive E3006)
 * (mcm1957) A typo at 1068 has been fixed
 * (mcm1957) Dependency tables now support a `skipModes` attribute to skip checks when the adapter's `common.mode` matches one of the listed modes
@@ -77,9 +77,6 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### 5.23.2 (2026-10-17)
 * (@mcm1957) src-shared directory added to src list.
-
-### 5.23.1 (2026-10-16)
-* (@mcm1957) More pecial handling of some core adapters added.
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
