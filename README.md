@@ -57,6 +57,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (mcm1957) Object checker: `enums` is now accepted as a valid root key (fixes false positive E3006)
 * (mcm1957) A typo at 1068 has been fixed
 * (mcm1957) Dependency tables now support a `skipModes` attribute to skip checks when the adapter's `common.mode` matches one of the listed modes
 
