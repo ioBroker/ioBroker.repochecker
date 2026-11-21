@@ -58,6 +58,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -->
 ### **WORK IN PROGRESS**
 * (mcm1957) A typo at 1068 has been fixed
+* (mcm1957) Dependency tables now support a `skipModes` attribute to skip checks when the adapter's `common.mode` matches one of the listed modes
 
 ### 5.24.2 (2026-11-12)
 * (mcm1957) Handling of src-webcomponents directory added
