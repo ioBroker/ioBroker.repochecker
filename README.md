@@ -56,6 +56,11 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (mcm1957) Fix false download failures for large repos: fall back to raw.githubusercontent.com when jsdelivr returns HTTP 403 "Package size exceeded" instead of retrying 3 times with 30s delays
+* (mcm1957) Improve download logging: retry warnings now include the full error detail; jsdelivr→GitHub fallback is logged at warn level
+* (mcm1957) Detect GitHub API rate limits (HTTP 403/429 with rate-limit headers) and retry up to 3 times after the reset delay, with a warning log for each retry
+
 ### 5.24.3 (2026-11-21)
 * (mcm1957) Object checker: `enums` is now accepted as a valid root key (fixes false positive E3006)
 * (mcm1957) A typo at 1068 has been fixed
