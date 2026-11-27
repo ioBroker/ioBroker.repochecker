@@ -1,7 +1,10 @@
 # Older changes
+## 5.23.2 (2026-10-17)
+* (@mcm1957) src-shared directory added to src list.
+
+
 ## 5.23.1 (2026-10-16)
 * (@mcm1957) More pecial handling of some core adapters added.
-
 
 ## 5.23.0 (2026-10-14)
 

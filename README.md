@@ -56,7 +56,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 5.24.4 (2026-11-27)
 * (mcm1957) Retry workflow run data fetch on transient HTTP 502/503/504 errors to avoid false W3039 warnings
 * (mcm1957) Fix false download failures for large repos: fall back to raw.githubusercontent.com when jsdelivr returns HTTP 403 "Package size exceeded" instead of retrying 3 times with 30s delays
 * (mcm1957) Improve download logging: retry warnings now include the full error detail; jsdelivr→GitHub fallback is logged at warn level
@@ -80,9 +80,6 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 * (@copilot) jsDelivr file downloads retry transient errors and HTML responses received for JSON files. see: #1201
 * (@mcm1957) Wildcard support added for source directory exclusions; all `src-*` entries replaced by a single `src-*` pattern (fixes false positive E9507 for directories like `src-web`). see: #1209
 * (@copilot) Workflow runs still in progress are now awaited (max. 10 minutes) before logs are analyzed; "could not retrieve log" messages mention if the workflow is still in progress. see: #1214
-
-### 5.23.2 (2026-10-17)
-* (@mcm1957) src-shared directory added to src list.
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
