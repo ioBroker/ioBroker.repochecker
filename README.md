@@ -57,6 +57,7 @@ GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (mcm1957) Retry workflow run data fetch on transient HTTP 502/503/504 errors to avoid false W3039 warnings
 * (mcm1957) Fix false download failures for large repos: fall back to raw.githubusercontent.com when jsdelivr returns HTTP 403 "Package size exceeded" instead of retrying 3 times with 30s delays
 * (mcm1957) Improve download logging: retry warnings now include the full error detail; jsdelivr→GitHub fallback is logged at warn level
 * (mcm1957) Detect GitHub API rate limits (HTTP 403/429 with rate-limit headers) and retry up to 3 times after the reset delay, with a warning log for each retry
